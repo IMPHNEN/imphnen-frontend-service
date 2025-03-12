@@ -4,7 +4,7 @@
     "rootDir": ".",
     "sourceMap": true,
     "declaration": false,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
@@ -14,7 +14,16 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@imphnen-frontend-service/ui/atoms": ["libs/ui/src/atoms/index.ts"],
+      "@imphnen-frontend-service/ui/molecules": [
+        "libs/ui/src/molecules/index.ts"
+      ],
+      "@imphnen-frontend-service/ui/organisms": [
+        "libs/ui/src/organisms/index.ts"
+      ],
+      "@imphnen-frontend-service/utils": ["libs/utils/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

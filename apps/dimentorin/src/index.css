@@ -1,0 +1,120 @@
+@import url('https://fonts.googleapis.com/css2?family=Bai+Jamjuree:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --color-primary-50: #f0f8ff;
+  --color-primary-100: #e1f0fd;
+  --color-primary-200: #b8e1f8;
+  --color-primary-300: #a1d4f0;
+  --color-primary-400: #4aa4da;
+  --color-primary-500: #1a8ce6;
+  --color-primary-600: #1673c7;
+  --color-primary-700: #0f5ca5;
+  --color-primary-800: #0a4780;
+  --color-primary-900: #04305d;
+
+  --color-neutral-50: #f7f7f7;
+  --color-neutral-100: #e7e7e7;
+  --color-neutral-200: #d0d0d0;
+  --color-neutral-300: #b7b7b7;
+  --color-neutral-400: #9f9f9f;
+  --color-neutral-500: #7e7e7e;
+  --color-neutral-600: #5d5d5d;
+  --color-neutral-700: #4a4a4a;
+  --color-neutral-800: #3a3a3a;
+  --color-neutral-900: #2f2f2f;
+
+  --color-success-50: #e7f2ee;
+  --color-success-100: #cde6dd;
+  --color-success-200: #9bccbc;
+  --color-success-300: #78bdab;
+  --color-success-400: #4ca88f;
+  --color-success-500: #349078;
+  --color-success-600: #2f7c66;
+  --color-success-700: #26624f;
+  --color-success-800: #1e4a3b;
+  --color-success-900: #1b513b;
+
+  --color-info-50: #e7f4f5;
+  --color-info-100: #cce9ea;
+  --color-info-200: #99d3d5;
+  --color-info-300: #78c4c7;
+  --color-info-400: #3aa9ad;
+  --color-info-500: #279599;
+  --color-info-600: #207d82;
+  --color-info-700: #1a666b;
+  --color-info-800: #124c52;
+  --color-info-900: #093d43;
+
+  --color-warning-50: #fffce6;
+  --color-warning-100: #fff8cc;
+  --color-warning-200: #fef39b;
+  --color-warning-300: #fde967;
+  --color-warning-400: #fbd93d;
+  --color-warning-500: #f3c215;
+  --color-warning-600: #d7a20f;
+  --color-warning-700: #aa7e0c;
+  --color-warning-800: #805c07;
+  --color-warning-900: #665c00;
+
+  --color-danger-50: #ffe7e7;
+  --color-danger-100: #ffcece;
+  --color-danger-200: #ff9f9f;
+  --color-danger-300: #ff6e6e;
+  --color-danger-400: #fa4646;
+  --color-danger-500: #ef1f1f;
+  --color-danger-600: #d11515;
+  --color-danger-700: #a51111;
+  --color-danger-800: #7f0c0c;
+  --color-danger-900: #5d2d2d;
+
+  --radius-none: 0px;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-3xl: 24px;
+  --radius-full: 50%;
+
+  --font-bai-jamjuree: 'Bai Jamjuree', sans-serif;
+
+  --text-h1: 3rem; /* ~48px */
+  --text-h2: 2.4rem; /* ~38.4px */
+  --text-h3: 1.92rem; /* ~30.72px */
+  --text-p1: 1.54rem; /* ~24.58px */
+  --text-p2: 1.23rem; /* ~19.68px */
+  --text-label1: 0.98rem; /* ~15.74px */
+  --text-label2: 0.78rem; /* ~12.59px */
+}
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-neutral-200, currentColor);
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-neutral-50);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #cccccc;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-neutral-300);
+  }
+
+  html {
+    font-family: 'Bai Jamjuree', sans-serif;
+    font-weight: 400;
+  }
+}
