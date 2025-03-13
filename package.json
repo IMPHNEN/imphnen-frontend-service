@@ -2,12 +2,14 @@
   "name": "@imphnen-frontend-service/source",
   "version": "0.0.0",
   "license": "MIT",
+  "type": "module",
   "scripts": {
     "gacha:dev": "nx serve gacha",
     "gacha:build": "nx build gacha",
     "dimentorin:dev": "nx serve dimentorin",
     "dimentorin:build": "nx build dimentorin",
-    "ui:test": "nx test ui"
+    "ui:test": "nx test ui",
+    "ui:build": "nx test ui"
   },
   "private": true,
   "dependencies": {
@@ -36,6 +38,7 @@
     "@swc/core": "~1.5.7",
     "@swc/helpers": "~0.5.11",
     "@tailwindcss/postcss": "^4.0.13",
+    "@tailwindcss/vite": "^4.0.14",
     "@testing-library/dom": "10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.1.0",
