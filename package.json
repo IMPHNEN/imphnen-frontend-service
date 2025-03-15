@@ -30,6 +30,7 @@
     "@nx/eslint-plugin": "20.5.0",
     "@nx/js": "20.5.0",
     "@nx/react": "20.5.0",
+    "@nx/storybook": "^20.6.0",
     "@nx/vite": "20.5.0",
     "@nx/web": "20.5.0",
     "@nx/workspace": "20.5.0",
