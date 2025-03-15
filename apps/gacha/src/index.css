@@ -5,16 +5,17 @@
 @theme {
   --color-primary-50: #f0f8ff;
   --color-primary-100: #e1f0fd;
-  --color-primary-200: #b8e1f8;
-  --color-primary-300: #a1d4f0;
-  --color-primary-400: #4aa4da;
-  --color-primary-500: #1a8ce6;
-  --color-primary-600: #1673c7;
-  --color-primary-700: #0f5ca5;
-  --color-primary-800: #0a4780;
-  --color-primary-900: #04305d;
+  --color-primary-200: #bce1fb;
+  --color-primary-300: #81cbf8;
+  --color-primary-400: #3eb0f2;
+  --color-primary-500: #23a1eb;
+  --color-primary-600: #0877c1;
+  --color-primary-700: #085f9c;
+  --color-primary-800: #0b5181;
+  --color-primary-900: #0f446b;
+  --color-primary-950: #0a2b47;
 
-  --color-neutral-50: #f7f7f7;
+  --color-neutral-50: #f6f6f6;
   --color-neutral-100: #e7e7e7;
   --color-neutral-200: #d0d0d0;
   --color-neutral-300: #b7b7b7;
@@ -24,6 +25,7 @@
   --color-neutral-700: #4a4a4a;
   --color-neutral-800: #3a3a3a;
   --color-neutral-900: #2f2f2f;
+  --color-neutral-950: #2b2b2b;
 
   --color-success-50: #e7f2ee;
   --color-success-100: #cde6dd;
@@ -80,16 +82,28 @@
 
   --font-bai-jamjuree: 'Bai Jamjuree', sans-serif;
 
-  --text-h1: 3rem; /* ~48px */
-  --text-h2: 2.4rem; /* ~38.4px */
-  --text-h3: 1.92rem; /* ~30.72px */
-  --text-p1: 1.54rem; /* ~24.58px */
-  --text-p2: 1.23rem; /* ~19.68px */
-  --text-label1: 0.98rem; /* ~15.74px */
-  --text-label2: 0.78rem; /* ~12.59px */
+  --text-h1: 3.833rem;
+  /* ~46px */
+  --text-h2: 3.083rem;
+  /* ~37px */
+  --text-h3: 2.417rem;
+  /* ~29px */
+  --text-p1: 1.917rem;
+  /* ~23px */
+  --text-p2: 1.583rem;
+  /* ~19px */
+  --text-p3: 1.25rem;
+  /* 15px */
+  --text-label1: 1rem;
+  /* 12px */
+  --text-label2: 0.833rem;
+  /* ~10px */
+  --text-label3: 0.677rem;
+  /* ~8px */
 }
 
 @layer base {
+
   *,
   ::after,
   ::before,
@@ -103,13 +117,16 @@
     width: 6px;
     height: 6px;
   }
+
   ::-webkit-scrollbar-track {
     background: var(--color-neutral-50);
   }
+
   ::-webkit-scrollbar-thumb {
     background: #cccccc;
     border-radius: 3px;
   }
+
   ::-webkit-scrollbar-thumb:hover {
     background: var(--color-neutral-300);
   }
@@ -117,5 +134,7 @@
   html {
     font-family: 'Bai Jamjuree', sans-serif;
     font-weight: 400;
+    font-size: 12px;
+    line-height: 1.2;
   }
 }
