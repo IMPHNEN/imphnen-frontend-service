@@ -9,7 +9,8 @@
     "dimentorin:dev": "nx serve dimentorin",
     "dimentorin:build": "nx build dimentorin",
     "dimentorin:prod": "serve ./dist/apps/dimentorin",
-    "ui:test": "nx test ui"
+    "ui:test": "nx test ui",
+    "ui:build": "nx build ui"
   },
   "private": true,
   "dependencies": {
