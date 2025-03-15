@@ -5,8 +5,10 @@
   "scripts": {
     "gacha:dev": "nx serve gacha",
     "gacha:build": "nx build gacha",
+    "gacha:prod": "serve ./dist/apps/gacha",
     "dimentorin:dev": "nx serve dimentorin",
     "dimentorin:build": "nx build dimentorin",
+    "dimentorin:prod": "serve ./dist/apps/dimentorin",
     "ui:test": "nx test ui"
   },
   "private": true,
@@ -58,6 +60,7 @@
     "nx": "20.5.0",
     "postcss": "^8.5.3",
     "prettier": "^2.6.2",
+    "serve": "^14.2.4",
     "tailwindcss": "^4.0.13",
     "tslib": "^2.3.0",
     "typescript": "~5.7.2",
