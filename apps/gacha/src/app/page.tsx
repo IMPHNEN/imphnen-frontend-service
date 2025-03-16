@@ -15,9 +15,9 @@ export const Components: FC = (): ReactElement => {
       {/* Landing Page */}
       <section
         id="landing-page"
-        className="my-12 md:my-24 flex flex-col md:flex-row flex-wrap max-w-[1280px] items-center justify-center lg:mx-auto"
+        className="my-12 md:my-24 grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 justify-items-center max-w-[1280px] items-center justify-center mx-[32px] md:mx-[60px] lg:mx-[80px] xl:mx-auto"
       >
-        <div className="order-none lg:order-1 flex flex-col xl:flex-2 md:w-full lg:w-fit items-center gap-7 md:gap-13 text-primary-500 mb-10 md:mb-20">
+        <div className="order-none lg:order-1 flex flex-col col-span-4 md:col-span-8 lg:col-span-4 md:w-full lg:w-fit items-center gap-7 md:gap-13 text-primary-500 mb-10 md:mb-20">
           <img
             src="/logos/logo.svg"
             alt="IMPHNEN Logo"
@@ -50,7 +50,7 @@ export const Components: FC = (): ReactElement => {
           </Button>
         </div>
 
-        <div className="order-1 lg:order-none flex flex-col flex-1 justify-center items-center mb-8 relative">
+        <div className="order-1 lg:order-none flex flex-col col-span-4 justify-center items-center mb-8 relative">
           <div className="relative h-[150px] md:h-[230px]">
             <img
               src="/merch/1.png"
@@ -62,6 +62,11 @@ export const Components: FC = (): ReactElement => {
               src="/merch/Vector-1.svg"
               alt=""
             />
+            <img
+              className="absolute hidden lg:block -bottom-[50px] -right-[50px]"
+              src="/landing-arrow-1.svg"
+              alt=""
+            />
           </div>
           <div className="px-3 py-1 text-primary-500 font-semibold text-base md:text-p2 bg-white shadow-md rounded">
             Official Merch IMPHNEN
@@ -69,13 +74,8 @@ export const Components: FC = (): ReactElement => {
           <div className="mt-2 text-primary-500 font-bold text-p2 md:text-h3">
             ~ 175k ~
           </div>
-          <img
-            className="absolute bottom-12 -right-10"
-            src="/landing-arrow-1.svg"
-            alt=""
-          />
         </div>
-        <div className="order-2 flex flex-col flex-1 justify-center items-center mb-8 relative">
+        <div className="order-2 flex flex-col col-span-4 justify-center items-center mb-8 relative">
           <div className="relative h-[130px] md:h-[230px]">
             <img
               src="/merch/2.png"
@@ -87,6 +87,11 @@ export const Components: FC = (): ReactElement => {
               src="/merch/Vector-2.svg"
               alt=""
             />
+            <img
+              className="absolute hidden lg:block -bottom-[100px] -left-[55px]"
+              src="/landing-arrow-2.svg"
+              alt=""
+            />
           </div>
           <div className="px-3 py-1 text-primary-500 font-semibold text-base md:text-p2 bg-white shadow-md rounded">
             IMPHNEN Mini Merch
@@ -94,15 +99,25 @@ export const Components: FC = (): ReactElement => {
           <div className="mt-2 text-primary-500 font-bold text-p2 md:text-h3">
             ~ 90k ~
           </div>
-          <img
-            className="absolute -bottom-10 -left-12"
-            src="/landing-arrow-2.svg"
-            alt=""
-          />
         </div>
       </section>
       {/* Roulette Page */}
-      <section id="roulette" className="h-[100vh]"></section>
+      <section
+        id="roulette"
+        className="h-[100vh] mx-[32px] md:mx-[60px] lg:mx-[80px] xl:mx-auto lg:max-w-[1280px] grid grid-cols-12"
+      >
+        <div>Card</div>
+        <div id="roulette-spin">
+          <div>Here Take Your Prize</div>
+          <div>Rolling Merch</div>
+          <div>
+            <div>Sertifikat + Laminating</div>
+            <Button variant="secondary" size="md">
+              Spin Now
+            </Button>
+          </div>
+        </div>
+      </section>
     </Fragment>
   );
 };

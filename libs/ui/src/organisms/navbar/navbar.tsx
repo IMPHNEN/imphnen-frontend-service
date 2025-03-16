@@ -7,7 +7,7 @@ export const Navbar: FC = (): ReactElement => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
 
   return (
-    <header className="bg-primary-50 w-full px-[32px] md:px-[60px] pt-[60px] sticky top-0 z-50">
+    <div className="bg-primary-50 w-full px-[32px] md:px-[60px] lg:px-[80px] pt-[60px] sticky top-0 z-50">
       <header
         className="bg-white shadow-lg rounded-lg min-h-[47px] max-h-[47px] md:min-h-[60px] md:max-h-[60px] lg:min-h-[71px] lg:max-h-[71px] flex justify-between w-full max-w-[1280px] xl:mx-auto"
         role="navigation"
@@ -76,6 +76,6 @@ export const Navbar: FC = (): ReactElement => {
           </nav>
         </div>
       </header>
-    </header>
+    </div>
   );
 };
