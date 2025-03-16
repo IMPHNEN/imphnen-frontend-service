@@ -2,12 +2,32 @@ import { ArrowDownOutlined } from '@ant-design/icons';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { FC, Fragment, ReactElement } from 'react';
 
+interface GachaItemProps {
+  src: string;
+  label: string;
+}
+
 export const Components: FC = (): ReactElement => {
   const scrollToRoulette = () => {
     const rouletteSection = document.getElementById('roulette');
     if (rouletteSection) {
       rouletteSection.scrollIntoView({ behavior: 'smooth' });
     }
+  };
+
+  const GachaItem: FC<GachaItemProps> = ({ src, label }): ReactElement => {
+    return (
+      <div className="w-full">
+        <div className="max-h-[180px] md:max-h-[270px] mb-2 md:mb-5">
+          <img
+            src={src}
+            alt=""
+            className="h-[170px] md:h-[255px] object-contain"
+          />
+        </div>
+        <p className="font-semibold text-center md:text-p2">{label}</p>
+      </div>
+    );
   };
 
   return (
@@ -104,7 +124,7 @@ export const Components: FC = (): ReactElement => {
       {/* Roulette Page */}
       <section
         id="roulette"
-        className="mt-20 py-90 mx-[32px] md:mx-[60px] lg:mx-[80px] xl:mx-auto lg:max-w-[1280px] grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 justify-items-center gap-y-8 md:gap-y-16"
+        className="mt-20 pb-50 lg:py-90 mx-[32px] md:mx-[60px] lg:mx-[80px] xl:mx-auto lg:max-w-[1280px] grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 justify-items-center gap-y-16 md:gap-y-28"
       >
         <div className="col-span-4 md:col-span-8 lg:col-span-6 text-primary-500 bg-white rounded-lg md:rounded-xl p-5 md:py-9 md:px-13 shadow md:max-w-[430px]">
           <header className="mb-4">
@@ -119,7 +139,7 @@ export const Components: FC = (): ReactElement => {
           <h4 className="font-semibold my-2 text-base md:text-p1">
             How to gacha
           </h4>
-          <ol className="text-base md:text-p2 list-decimal list-inside">
+          <ol className="text-base md:text-p2 list-decimal list-outside ml-4 md:ml-6">
             <li>First, press the "Spin Now" button</li>
             <li>
               If the merch does not match you can reroll by paying IDR5,000
@@ -131,18 +151,27 @@ export const Components: FC = (): ReactElement => {
 
         <div
           id="roulette-spin"
-          className="col-span-4 lg:col-span-6 flex flex-col gap-4"
+          className="col-span-4 md:col-span-8 lg:col-span-6 flex flex-col items-center gap-4 md:gap-8"
         >
-          <div className="bg-white text-primary-500 font-semibold text-p3 shadow py-2 px-4 max-w-fit">
+          <div className="bg-white text-primary-500 font-medium text-p3 md:text-h3 shadow py-2 px-4 md:py-4 md:px-8 max-w-fit rounded-md md:rounded-lg">
             Here Take Your Prize
           </div>
-          <section id="gacha-play" className="flex flex-row overflow-hidden">
-            <div className="flex flex-col gap-6">
-              <div>Rolling Merch</div>
-              <p className="font-semibold text-center">
-                Sertifikat + Laminating
-              </p>
-            </div>
+          <section
+            id="gacha-play"
+            className="flex flex-row flex-nowrap items-center overflow-x-hidden w-full px-8"
+          >
+            <GachaItem
+              src="/gacha/certificate.png"
+              label="Sertifikat + Laminating"
+            />
+            {/* <GachaItem
+              src="/gacha/lanyard-id-card.png"
+              label="Lanyard + ID Card"
+            />
+            <GachaItem src="/gacha/pin.png" label="Pin" />
+            <GachaItem src="/gacha/sticker.png" label="Sticker Isi 3" />
+            <GachaItem src="/gacha/sticker.png" label="Sticker Isi 5" />
+            <GachaItem src="/gacha/gelang-karet.png" label="Gelang Karet" /> */}
           </section>
           <Button variant="secondary" size="md">
             Spin Now
