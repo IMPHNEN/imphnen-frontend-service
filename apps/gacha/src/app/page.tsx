@@ -104,18 +104,49 @@ export const Components: FC = (): ReactElement => {
       {/* Roulette Page */}
       <section
         id="roulette"
-        className="h-[100vh] mx-[32px] md:mx-[60px] lg:mx-[80px] xl:mx-auto lg:max-w-[1280px] grid grid-cols-12"
+        className="mt-20 py-90 mx-[32px] md:mx-[60px] lg:mx-[80px] xl:mx-auto lg:max-w-[1280px] grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 justify-items-center gap-y-8 md:gap-y-16"
       >
-        <div>Card</div>
-        <div id="roulette-spin">
-          <div>Here Take Your Prize</div>
-          <div>Rolling Merch</div>
-          <div>
-            <div>Sertifikat + Laminating</div>
-            <Button variant="secondary" size="md">
-              Spin Now
-            </Button>
+        <div className="col-span-4 md:col-span-8 lg:col-span-6 text-primary-500 bg-white rounded-lg md:rounded-xl p-5 md:py-9 md:px-13 shadow md:max-w-[430px]">
+          <header className="mb-4">
+            <h3 className="font-semibold text-p3 md:text-h2">Gacha Roulette</h3>
+          </header>
+          <h4 className="font-semibold my-2 text-base md:text-p1">
+            How to participate
+          </h4>
+          <p className="text-base md:text-p2">
+            Kamu harus melakukan pembelian merch batch 2 di shopee IMPHNEN
+          </p>
+          <h4 className="font-semibold my-2 text-base md:text-p1">
+            How to gacha
+          </h4>
+          <ol className="text-base md:text-p2 list-decimal list-inside">
+            <li>First, press the "Spin Now" button</li>
+            <li>
+              If the merch does not match you can reroll by paying IDR5,000
+            </li>
+            <li>If it is appropriate you can submit</li>
+            <li>Then fill in the data for your merch delivery process</li>
+          </ol>
+        </div>
+
+        <div
+          id="roulette-spin"
+          className="col-span-4 lg:col-span-6 flex flex-col gap-4"
+        >
+          <div className="bg-white text-primary-500 font-semibold text-p3 shadow py-2 px-4 max-w-fit">
+            Here Take Your Prize
           </div>
+          <section id="gacha-play" className="flex flex-row overflow-hidden">
+            <div className="flex flex-col gap-6">
+              <div>Rolling Merch</div>
+              <p className="font-semibold text-center">
+                Sertifikat + Laminating
+              </p>
+            </div>
+          </section>
+          <Button variant="secondary" size="md">
+            Spin Now
+          </Button>
         </div>
       </section>
     </Fragment>
