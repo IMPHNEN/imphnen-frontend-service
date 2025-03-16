@@ -4,7 +4,7 @@ import { Navbar } from '@imphnen-frontend-service/ui/organisms';
 
 export const AppLayout: FC = (): ReactElement => {
   return (
-    <main className="bg-primary-50 min-h-screen px-8 py-[60px]">
+    <main className="bg-primary-50 min-h-screen">
       <Navbar />
       <Outlet />
     </main>
