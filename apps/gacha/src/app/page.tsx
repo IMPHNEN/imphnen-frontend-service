@@ -212,6 +212,8 @@ export const Components: FC = (): ReactElement => {
           </Button>
         </div>
       </section>
+      {/* Diffuser & Cloud */}
+      <div className="sticky bottom-0 h-[86px] md:h-[200px] bg-gradient-to-b from-primary-500/0 to-primary-500/50 to-80%"></div>
     </Fragment>
   );
 };
