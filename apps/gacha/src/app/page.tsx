@@ -1,7 +1,7 @@
 import { ArrowDownOutlined } from '@ant-design/icons';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { cn } from '@imphnen-frontend-service/utils';
-import { FC, Fragment, ReactElement } from 'react';
+import { FC, Fragment, ReactElement, useEffect } from 'react';
 
 interface GachaItemProps {
   src: string;
@@ -16,6 +16,30 @@ export const Components: FC = (): ReactElement => {
       rouletteSection.scrollIntoView({ behavior: 'smooth' });
     }
   };
+
+  useEffect(() => {
+    const gachaPlaySection = document.getElementById('gacha-play');
+    if (gachaPlaySection) {
+      let currentIndex = 0;
+      const items = gachaPlaySection.children;
+      const totalItems = items.length;
+
+      const scrollItems = () => {
+        if (currentIndex >= totalItems) {
+          currentIndex = 0;
+        }
+        items[currentIndex].scrollIntoView({
+          behavior: 'smooth',
+          inline: 'center',
+        });
+        currentIndex++;
+      };
+
+      const intervalId = setInterval(scrollItems, 2800);
+
+      return () => clearInterval(intervalId);
+    }
+  }, []);
 
   const GachaItem: FC<GachaItemProps> = ({
     src,
@@ -174,7 +198,6 @@ export const Components: FC = (): ReactElement => {
               src="/gacha/lanyard-id-card.png"
               label="Lanyard + ID Card"
             />
-
             <GachaItem src="/gacha/pin.png" label="Pin" />
             <GachaItem src="/gacha/sticker.png" label="Sticker Isi 3" />
             <GachaItem src="/gacha/sticker.png" label="Sticker Isi 5" />
