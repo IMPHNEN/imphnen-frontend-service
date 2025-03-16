@@ -1,10 +1,12 @@
 import { ArrowDownOutlined } from '@ant-design/icons';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
+import { cn } from '@imphnen-frontend-service/utils';
 import { FC, Fragment, ReactElement } from 'react';
 
 interface GachaItemProps {
   src: string;
   label: string;
+  className?: string;
 }
 
 export const Components: FC = (): ReactElement => {
@@ -15,14 +17,18 @@ export const Components: FC = (): ReactElement => {
     }
   };
 
-  const GachaItem: FC<GachaItemProps> = ({ src, label }): ReactElement => {
+  const GachaItem: FC<GachaItemProps> = ({
+    src,
+    label,
+    className,
+  }): ReactElement => {
     return (
-      <div className="w-full">
-        <div className="max-h-[180px] md:max-h-[270px] mb-2 md:mb-5">
+      <div className="snap-center flex-auto justify-center items-center flex flex-col min-w-full">
+        <div className="max-h-[180px] md:max-h-[270px] md:max-w-[500px] mb-2 md:mb-5 flex flex-1 justify-center items-center">
           <img
             src={src}
             alt=""
-            className="h-[170px] md:h-[255px] object-contain"
+            className={cn('h-[150px] md:h-[255px] object-contain', className)}
           />
         </div>
         <p className="font-semibold text-center md:text-p2">{label}</p>
@@ -151,27 +157,32 @@ export const Components: FC = (): ReactElement => {
 
         <div
           id="roulette-spin"
-          className="col-span-4 md:col-span-8 lg:col-span-6 flex flex-col items-center gap-4 md:gap-8"
+          className="col-span-4 md:col-span-8 lg:col-span-6 flex flex-col items-center gap-4 md:gap-8 overflow-x-hidden"
         >
           <div className="bg-white text-primary-500 font-medium text-p3 md:text-h3 shadow py-2 px-4 md:py-4 md:px-8 max-w-fit rounded-md md:rounded-lg">
             Here Take Your Prize
           </div>
           <section
             id="gacha-play"
-            className="flex flex-row flex-nowrap items-center overflow-x-hidden w-full px-8"
+            className="flex flex-nowrap overflow-auto w-full gap-x-8 snap-x snap-mandatory"
           >
             <GachaItem
               src="/gacha/certificate.png"
               label="Sertifikat + Laminating"
             />
-            {/* <GachaItem
+            <GachaItem
               src="/gacha/lanyard-id-card.png"
               label="Lanyard + ID Card"
             />
+
             <GachaItem src="/gacha/pin.png" label="Pin" />
             <GachaItem src="/gacha/sticker.png" label="Sticker Isi 3" />
             <GachaItem src="/gacha/sticker.png" label="Sticker Isi 5" />
-            <GachaItem src="/gacha/gelang-karet.png" label="Gelang Karet" /> */}
+            <GachaItem
+              src="/gacha/gelang-karet.png"
+              label="Gelang Karet"
+              className="h-[86px] md:h-[160px]"
+            />
           </section>
           <Button variant="secondary" size="md">
             Spin Now
