@@ -1,7 +1,9 @@
 import { ArrowDownOutlined } from '@ant-design/icons';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
+import { ModalsGacha } from '@imphnen-frontend-service/ui/organisms';
 import { cn } from '@imphnen-frontend-service/utils';
-import { FC, Fragment, ReactElement, useEffect } from 'react';
+import { FC, Fragment, ReactElement, useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 interface GachaItemProps {
   src: string;
@@ -10,6 +12,10 @@ interface GachaItemProps {
 }
 
 export const Components: FC = (): ReactElement => {
+  // Pinjem
+  const [showModal, setShowModal] = useState(false);
+  //
+
   const scrollToRoulette = () => {
     const rouletteSection = document.getElementById('roulette');
     if (rouletteSection) {
@@ -214,6 +220,19 @@ export const Components: FC = (): ReactElement => {
       </section>
       {/* Diffuser & Cloud */}
       <div className="sticky bottom-0 h-[86px] md:h-[200px] bg-gradient-to-b from-primary-500/0 to-primary-500/50 to-80%"></div>
+
+      {/**Izin pake untuk debug modals gacha */}
+      <div>
+        <p>Debug : Test Modals Gacha</p>
+        <Button onClick={
+          () => setShowModal(true)
+        }>Tekan</Button>
+      </div>
+      {showModal && createPortal(
+        <ModalsGacha></ModalsGacha>,
+        document.body
+      )}
+      {/**Izin pake untuk debug modals gacha */}
     </Fragment>
   );
 };
