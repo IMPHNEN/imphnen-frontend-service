@@ -14,7 +14,8 @@ const meta: Meta<typeof Input> = {
       options: ['sm', 'md', 'lg'],
     },
   },
-};
+  tags: ['autodocs'],
+} satisfies Meta<typeof Input>;
 
 export default meta;
 type Story = StoryObj<typeof Input>;
