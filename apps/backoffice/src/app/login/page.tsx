@@ -1,9 +1,6 @@
 import { FC, ReactElement } from 'react';
-import {
-  Input,
-  Button,
-  PasswordInput,
-} from '@imphnen-frontend-service/ui/atoms';
+import { Button, PasswordInput } from '@imphnen-frontend-service/ui/atoms';
+import { InputForm } from '@imphnen-frontend-service/ui/molecules';
 
 export const Components: FC = (): ReactElement => {
   return (
@@ -13,10 +10,12 @@ export const Components: FC = (): ReactElement => {
         <h1 className="text-primary-500 text-p1 font-semibold">
           Welcome to IMPHNEN Backoffice
         </h1>
-        <div className="flex gap-[8px] flex-col">
-          <div className="self-start text-p3 font-medium">Email</div>
-          <Input placeholder="Masukkan Email" type="email" size="lg" />
-        </div>
+        <InputForm
+          label="Email"
+          placeholder="Masukkan Email"
+          type="email"
+          size="lg"
+        />
         <div className="flex gap-[8px] flex-col">
           <div className="self-start text-p3 font-medium">Password</div>
           <PasswordInput placeholder="Masukkan Password" size="lg" />
