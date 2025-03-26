@@ -61,11 +61,3 @@ export const Disabled: Story = {
     disabled: true,
   },
 };
-
-export const WithError: Story = {
-  args: {
-    size: 'md',
-    type: 'text',
-    error: 'This field is required',
-  },
-};

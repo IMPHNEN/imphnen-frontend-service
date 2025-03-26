@@ -15,7 +15,6 @@ type TInputProps = Omit<
 > & {
   type?: TInputType;
   size?: TInputSize;
-  error?: string;
 };
 
 const sizeClasses: Record<TInputSize, string> = {
@@ -25,15 +24,12 @@ const sizeClasses: Record<TInputSize, string> = {
 };
 
 const disabledClass = 'opacity-50 hover:border-neutral-200 cursor-not-allowed';
-const errorClass =
-  'border-danger-500 hover:border-danger-500 focus:outline-danger-500';
 
 export const Input: FC<TInputProps> = ({
   size = 'md',
-  type,
+  type = 'text',
   placeholder = 'Placeholder',
   disabled,
-  error,
   className,
   ...rest
 }): ReactElement => {
@@ -41,20 +37,16 @@ export const Input: FC<TInputProps> = ({
     'px-[12px] py-[8px] text-neutral-800 placeholder:text-neutral-300 border border-neutral-200 hover:border-blue-300 focus:outline-1 focus:outline-blue-500 rounded-md font-bai-jamjuree',
     sizeClasses[size],
     disabled && disabledClass,
-    error && errorClass,
     className
   );
 
   return (
-    <>
-      <input
-        className={mergedClassName}
-        type={type}
-        disabled={disabled}
-        placeholder={placeholder}
-        {...rest}
-      />
-      {error && <p className="text-danger-500 text-xs mt-1">{error}</p>}
-    </>
+    <input
+      className={mergedClassName}
+      type={type}
+      disabled={disabled}
+      placeholder={placeholder}
+      {...rest}
+    />
   );
 };
