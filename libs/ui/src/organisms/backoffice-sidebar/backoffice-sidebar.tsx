@@ -60,6 +60,7 @@ export const BackofficeSidebar: FC = (): ReactElement => {
 
       {/* Log Out Button */}
       <div className="w-full">
+        <hr className="mb-5 border-primary-200" />
         <Button
           variant="text"
           className="items-start justify-start gap-3 px-[8px] py-[10px] text-gray-700 hover:text-red-500 transition-colors w-full"
