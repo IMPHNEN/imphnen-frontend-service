@@ -64,7 +64,7 @@ export const Pagination: FC<PaginationProps> = ({
               className={`size-[30px] py-[8px] flex items-center justify-center rounded-md cursor-pointer ${
                 currentPage === page
                   ? 'bg-primary-500 text-white'
-                  : 'border border-gray-200 hover:bg-gray-50'
+                  : 'bg-primary-100 hover:bg-primary-200'
               }`}
             >
               {page}

@@ -3,6 +3,7 @@ import {
   FilterOutlined,
   SearchOutlined,
   FileTextOutlined,
+  AuditOutlined,
 } from '@ant-design/icons';
 import { Button, Input } from '@imphnen-frontend-service/ui/atoms';
 import { Pagination } from '@imphnen-frontend-service/ui/molecules';
@@ -139,9 +140,9 @@ export const Components: FC = (): ReactElement => {
                     e.stopPropagation();
                     handleValidate(item.id);
                   }}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 w-full"
                 >
-                  <FileTextOutlined /> Validate
+                  <AuditOutlined className="text-[16px]" /> Validate
                 </Button>
               ),
             },

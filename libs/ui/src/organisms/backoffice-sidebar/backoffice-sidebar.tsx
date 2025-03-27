@@ -6,10 +6,11 @@ import {
 } from '@ant-design/icons';
 import { Button } from '../../atoms';
 import { FC, ReactElement } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 export const BackofficeSidebar: FC = (): ReactElement => {
   const location = useLocation();
+  const navigate = useNavigate();
   const isActive = (path: string) => location.pathname.includes(path);
 
   return (
@@ -61,7 +62,11 @@ export const BackofficeSidebar: FC = (): ReactElement => {
       {/* Log Out Button */}
       <div className="w-full">
         <hr className="mb-5 border-primary-200" />
+
         <Button
+          onClick={() => {
+            navigate('/');
+          }}
           variant="text"
           className="items-start justify-start gap-3 px-[8px] py-[10px] text-gray-700 hover:text-red-500 transition-colors w-full"
         >
