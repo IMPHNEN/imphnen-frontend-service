@@ -7,7 +7,7 @@ import {
 import { Input } from '../../atoms';
 import { cn } from '@imphnen-frontend-service/utils';
 
-type TInputType = 'text' | 'email';
+type TInputType = 'text' | 'email' | 'password';
 type TInputSize = 'sm' | 'md' | 'lg';
 
 type TInputFormProps = Omit<
@@ -27,7 +27,7 @@ type TInputFormProps = Omit<
 const sizeClasses: Record<TInputSize, { label: string; helperText: string }> = {
   lg: {
     label: 'text-p3 font-medium',
-    helperText: 'text-label2 font-normal',
+    helperText: 'text-label3 font-normal',
   },
   md: {
     label: 'text-label1 font-medium',
@@ -35,7 +35,7 @@ const sizeClasses: Record<TInputSize, { label: string; helperText: string }> = {
   },
   sm: {
     label: 'text-label2 font-medium',
-    helperText: 'text-label3 font-normal',
+    helperText: 'text-label2 font-normal',
   },
 };
 
@@ -53,7 +53,13 @@ export const InputForm: FC<TInputFormProps> = ({
 }): ReactElement => {
   return (
     <div className="flex gap-[8px] flex-col">
-      <label htmlFor={htmlFor} className={sizeClasses[size].label}>
+      <label
+        htmlFor={htmlFor}
+        className={cn(
+          'items-start justify-item-start text-start',
+          sizeClasses[size].label
+        )}
+      >
         {label}
       </label>
       <Input
@@ -74,7 +80,7 @@ export const InputForm: FC<TInputFormProps> = ({
         <p className="text-danger-500 text-xs mt-1">{error}</p>
       ) : (
         helperText && (
-          <p className={`${sizeClasses[size].helperText} text-xs mt-1`}>
+          <p className={cn('text-cs mt-1', sizeClasses[size].helperText)}>
             {helperText}
           </p>
         )

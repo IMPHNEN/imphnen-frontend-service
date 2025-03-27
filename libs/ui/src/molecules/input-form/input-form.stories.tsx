@@ -34,36 +34,48 @@ type Story = StoryObj<typeof meta>;
 
 export const Large: Story = {
   args: {
-    label: 'Description',
-    placeholder: 'Enter description',
+    label: 'Label',
+    placeholder: 'Placeholder',
     type: 'text',
     size: 'lg',
+    helperText: 'Helper Text',
   },
 };
 
 export const Medium: Story = {
   args: {
-    label: 'Address',
-    placeholder: 'Enter your address',
+    label: 'Label',
+    placeholder: 'Placeholder',
     type: 'text',
     size: 'md',
+    helperText: 'Helper Text',
   },
 };
 
 export const Small: Story = {
   args: {
-    label: 'Phone',
-    placeholder: 'Enter your phone number',
+    label: 'Label',
+    placeholder: 'Placeholder',
     type: 'text',
     size: 'sm',
+    helperText: 'Helper Text',
   },
 };
 
 export const Default: Story = {
   args: {
-    label: 'Email',
-    placeholder: 'Enter your email',
-    type: 'email',
+    label: 'Default',
+    placeholder: 'Enter your name',
+    type: 'text',
+    size: 'md',
+  },
+};
+
+export const PasswordInput: Story = {
+  args: {
+    label: 'Password',
+    placeholder: 'Enter your password',
+    type: 'password',
     size: 'md',
   },
 };
@@ -80,8 +92,8 @@ export const WithHelperText: Story = {
 
 export const WithoutHelperText: Story = {
   args: {
-    label: 'Password',
-    placeholder: 'Enter your password',
+    label: 'Username',
+    placeholder: 'Enter your username',
     type: 'text',
     size: 'md',
   },
@@ -104,6 +116,16 @@ export const WithHtmlFor: Story = {
     type: 'text',
     size: 'md',
     htmlFor: 'fullname-input',
-    helperText: 'Enter your legal full name',
+    helperText: 'Click on the label',
+  },
+};
+
+export const Disabled: Story = {
+  args: {
+    label: 'Disabled',
+    placeholder: 'This field is disabled',
+    type: 'text',
+    size: 'md',
+    disabled: true,
   },
 };
