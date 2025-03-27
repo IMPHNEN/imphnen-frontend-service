@@ -1,4 +1,4 @@
-import { ArrowDownOutlined } from '@ant-design/icons';
+import { ArrowDownOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { FC, ReactElement } from 'react';
 
@@ -22,9 +22,9 @@ export const Components: FC = (): ReactElement => {
               {[1, 2, 3, 4].map((item) => (
                 <div
                   key={item}
-                  className="bg-white rounded-md shadow py-3 px-6 flex items-center"
+                  className="bg-white rounded-lg shadow-sm py-4 px-6 flex items-center border border-neutral-100"
                 >
-                  <div className="mr-4 text-primary-500 bg-primary-100 p-[8px] rounded border border-neutral-100">
+                  <div className="mr-4 text-primary-500 bg-primary-100 p-[8px] rounded-md">
                     <ArrowDownOutlined className="text-[20px]" />
                   </div>
                   <div className="flex flex-col gap-1">
@@ -39,59 +39,58 @@ export const Components: FC = (): ReactElement => {
           </section>
 
           {/* Gacha Items Section */}
-          <section className="flex flex-col gap-4">
+          <section className="flex flex-col gap-8">
             <div className="flex justify-between items-center">
               <h2 className="text-p2 font-medium text-primary-500">
                 Gacha Items
               </h2>
-              <Button variant="primary"></Button>
-              <button className="bg-primary-500 text-white px-4 py-2 rounded-md flex items-center gap-2">
+              <Button variant="primary" size="sm" className="items-end gap-3">
                 <span>Tambah Item</span>
-                <svg
-                  className="w-4 h-4"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M12 4V20M4 12H20"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                </svg>
-              </button>
+                <PlusOutlined className="text-[16px]" />
+              </Button>
             </div>
 
             {/* Gacha Items List */}
-            <div className="flex flex-col gap-4">
-              {[1, 2, 3, 4].map((item) => (
+            <div className="flex flex-col gap-4 max-h-140 overflow-auto">
+              {[1, 2, 3, 4, 5, 6].map((item) => (
                 <div
                   key={item}
-                  className="bg-white rounded-md shadow p-4 flex justify-between items-center"
+                  className="bg-white max-h-[80px] overflow-clip rounded-lg shadow-sm flex justify-between items-center border border-neutral-100"
                 >
-                  <div className="flex items-center gap-4">
-                    <img
-                      src="/gacha/lanyard-id-card.png"
-                      alt="Lanyard IMPHNEN"
-                      className="w-20 h-20 object-contain"
-                    />
+                  <div className="flex flex-col py-4 px-6 gap-4">
                     <div>
-                      <h3 className="font-medium">Lanyard IMPHNEN</h3>
-                      <div className="flex items-center gap-2 text-sm text-gray-500">
+                      <h3 className="text-p3 text-primary-500 font-medium">
+                        Lanyard IMPHNEN
+                      </h3>
+                      <div className="flex items-center gap-2 text-label2 text-gray-500 mt-1">
                         <span>Prize {item}</span>
-                        <span>•</span>
-                        <span>Chance Rate: (1%)</span>
+                        <span>Chance Rate: (0.1%)</span>
                       </div>
                     </div>
+                    <div className="flex justify-start gap-2">
+                      <Button
+                        variant="text"
+                        size="sm"
+                        className="text-[10px] text-neutral-500 p-0 font-normal hover:bg-transparent hover:text-primary-500"
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        variant="text"
+                        size="sm"
+                        className="text-[10px] text-neutral-500 p-0 font-normal hover:bg-transparent hover:text-red-500"
+                      >
+                        Delete
+                      </Button>
+                    </div>
                   </div>
-                  <div className="flex gap-2">
-                    <button className="text-gray-500 hover:text-primary-500">
-                      Edit
-                    </button>
-                    <button className="text-gray-500 hover:text-red-500">
-                      Delete
-                    </button>
+
+                  <div className="w-60">
+                    <img
+                      src="lanyard-id-card.png"
+                      alt="Lanyard IMPHNEN"
+                      className="object-left-top"
+                    />
                   </div>
                 </div>
               ))}
@@ -100,7 +99,11 @@ export const Components: FC = (): ReactElement => {
         </div>
 
         {/* Right-side illustration */}
-        <img src="gacha.png" alt="" width={436} className="rounded-md" />
+        <img
+          src="gacha.png"
+          alt=""
+          className="rounded-lg min-w-[436px] h-auto object-cover"
+        />
       </div>
     </main>
   );
