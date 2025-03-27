@@ -33,7 +33,7 @@ export const BackofficeSidebar: FC = (): ReactElement => {
           </Link>
 
           <Link
-            to="/users"
+            to="/accounts"
             className={`flex items-center justify-items-start gap-3 px-[8px] py-[10px] ${
               isActive('/accounts')
                 ? 'bg-primary-500 text-white rounded-md'
