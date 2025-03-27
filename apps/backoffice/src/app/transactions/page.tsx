@@ -1,16 +1,34 @@
 import { FC, ReactElement, useState } from 'react';
-import { FilterOutlined, SearchOutlined } from '@ant-design/icons';
+import {
+  FilterOutlined,
+  SearchOutlined,
+  FileTextOutlined,
+} from '@ant-design/icons';
 import { Button, Input } from '@imphnen-frontend-service/ui/atoms';
 import { Pagination } from '@imphnen-frontend-service/ui/molecules';
 import { DataTable } from '@imphnen-frontend-service/ui/organisms';
 
-// Mock data for demonstration
-const mockData = Array.from({ length: 20 }, (_, i) => ({
+// Define status type for better type safety
+type TransactionStatus = 'valid' | 'invalid' | 'unchecked';
+
+// Define transaction interface
+interface Transaction {
+  id: number;
+  name: string;
+  transactionNumber: string;
+  status: TransactionStatus;
+}
+
+// Mock data for transactions
+const mockTransactions: Transaction[] = Array.from({ length: 20 }, (_, i) => ({
   id: i + 1,
   name: i === 0 ? 'Ahmad Wijuana' : 'Nama Lengkap',
-  email: 'Fullname23@gmail.com',
-  phone: '081904423804',
-  address: 'Jl. Pantai Cibaduyut Indonesia',
+  transactionNumber: '25D2133Y9AFYBD',
+  status: (i % 3 === 0
+    ? 'invalid'
+    : i % 5 === 0
+    ? 'unchecked'
+    : 'valid') as TransactionStatus,
 }));
 
 export const Components: FC = (): ReactElement => {
@@ -19,10 +37,10 @@ export const Components: FC = (): ReactElement => {
   const itemsPerPage = 9;
 
   // Filter data based on search query
-  const filteredData = mockData.filter(
+  const filteredData = mockTransactions.filter(
     (item) =>
       item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.email.toLowerCase().includes(searchQuery.toLowerCase())
+      item.transactionNumber.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Paginate data
@@ -30,9 +48,9 @@ export const Components: FC = (): ReactElement => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
 
-  const handleEdit = (id: number) => {
-    console.log(`Edit item with id: ${id}`);
-    // Implement edit functionality
+  const handleValidate = (id: number) => {
+    console.log(`Validate transaction with id: ${id}`);
+    // Implement validation functionality
   };
 
   const handlePageChange = (pageNumber: number) => {
@@ -78,7 +96,57 @@ export const Components: FC = (): ReactElement => {
         </div>
 
         {/* Table */}
-        <DataTable data={currentItems} onEdit={handleEdit} />
+        <DataTable
+          data={currentItems}
+          headers={[
+            {
+              label: 'No.',
+              render: (_, index) => index + 1 + indexOfFirstItem,
+            },
+            { label: 'Nama Lengkap', key: 'name' },
+            { label: 'Nomor Transaksi', key: 'transactionNumber' },
+            {
+              label: 'Order Valid?',
+              render: (item: Transaction) => {
+                const statusColors: Record<TransactionStatus, string> = {
+                  valid: 'bg-success-500 text-white',
+                  invalid: 'bg-danger-500 text-white',
+                  unchecked: 'bg-yellow-400 text-black',
+                };
+                const statusText: Record<TransactionStatus, string> = {
+                  valid: 'Valid',
+                  invalid: 'Invalid',
+                  unchecked: 'Unchecked',
+                };
+                return (
+                  <div
+                    className={`py-1 px-3 rounded-md text-center ${
+                      statusColors[item.status]
+                    }`}
+                  >
+                    {statusText[item.status]}
+                  </div>
+                );
+              },
+            },
+            {
+              label: 'Action',
+              render: (item: Transaction) => (
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleValidate(item.id);
+                  }}
+                  className="flex items-center gap-2"
+                >
+                  <FileTextOutlined /> Validate
+                </Button>
+              ),
+            },
+          ]}
+        />
 
         {/* Pagination */}
         <Pagination

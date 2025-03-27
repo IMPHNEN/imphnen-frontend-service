@@ -1,11 +1,24 @@
 import { FC, ReactElement, useState } from 'react';
-import { FilterOutlined, SearchOutlined } from '@ant-design/icons';
+import {
+  FilterOutlined,
+  SearchOutlined,
+  EditOutlined,
+} from '@ant-design/icons';
 import { Button, Input } from '@imphnen-frontend-service/ui/atoms';
 import { Pagination } from '@imphnen-frontend-service/ui/molecules';
 import { DataTable } from '@imphnen-frontend-service/ui/organisms';
 
+// Define account interface
+interface Account {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+}
+
 // Mock data for demonstration
-const mockData = Array.from({ length: 20 }, (_, i) => ({
+const mockData: Account[] = Array.from({ length: 20 }, (_, i) => ({
   id: i + 1,
   name: i === 0 ? 'Ahmad Wijuana' : 'Nama Lengkap',
   email: 'Fullname23@gmail.com',
@@ -79,7 +92,35 @@ export const Components: FC = (): ReactElement => {
         </div>
 
         {/* Table */}
-        <DataTable data={currentItems} onEdit={handleEdit} />
+        <DataTable
+          data={currentItems}
+          headers={[
+            {
+              label: 'No.',
+              render: (_, index) => index + 1 + indexOfFirstItem,
+            },
+            { label: 'Nama Lengkap', key: 'name' },
+            { label: 'Email', key: 'email' },
+            { label: 'Nomor Telp', key: 'phone' },
+            { label: 'Alamat Pengiriman', key: 'address' },
+            {
+              label: 'Action',
+              render: (item: Account) => (
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleEdit(item.id);
+                  }}
+                  className="flex items-center gap-2"
+                >
+                  <EditOutlined /> Edit
+                </Button>
+              ),
+            },
+          ]}
+        />
 
         {/* Pagination */}
         <Pagination

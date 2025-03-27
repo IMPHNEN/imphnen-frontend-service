@@ -1,66 +1,80 @@
-import { FC, ReactElement } from 'react';
-import { EditOutlined } from '@ant-design/icons';
-import { Button } from '../../atoms'; // Use relative import for Button
+import { FC, ReactElement, ReactNode } from 'react';
 
-interface DataTableProps {
-  data: Array<{
-    id: number;
-    name: string;
-    email: string;
-    phone: string;
-    address: string;
-  }>;
-  onEdit: (id: number) => void;
+interface DataTableProps<T> {
+  data: T[];
+  headers: {
+    label: string;
+    key?: keyof T;
+    render?: (item: T, index: number) => ReactNode;
+    className?: string;
+  }[];
+  showCheckbox?: boolean;
+  onRowClick?: (item: T) => void;
 }
 
-export const DataTable: FC<DataTableProps> = ({
+export const DataTable = <T extends Record<string, any>>({
   data,
-  onEdit,
-}): ReactElement => {
+  headers,
+  showCheckbox = true,
+  onRowClick,
+}: DataTableProps<T>): ReactElement => {
   return (
     <div className="w-full overflow-x-auto">
       <table className="w-full min-w-full text-base">
         <thead className="bg-primary-50 mb-3">
           <tr>
-            <th className="py-3 px-5 text-left font-normal rounded-l-lg">
-              <input type="checkbox" className="rounded" />
-            </th>
-            <th className="py-3 px-5 text-left font-normal">No.</th>
-            <th className="py-3 px-5 text-left font-normal">Nama Lengkap</th>
-            <th className="py-3 px-5 text-left font-normal">Email</th>
-            <th className="py-3 px-5 text-left font-normal">Nomor Telp</th>
-            <th className="py-3 px-5 text-left font-normal">
-              Alamat Pengiriman
-            </th>
-            <th className="py-3 px-5 text-left font-normal rounded-r-lg">
-              Action
-            </th>
+            {showCheckbox && (
+              <th className="py-3 px-5 text-left font-normal rounded-l-lg">
+                <input type="checkbox" className="rounded" />
+              </th>
+            )}
+            {headers.map((header, index) => {
+              const isFirst = index === 0 && !showCheckbox;
+              const isLast = index === headers.length - 1;
+              return (
+                <th
+                  key={index}
+                  className={`py-3 px-5 text-left font-normal ${
+                    isFirst ? 'rounded-l-lg' : ''
+                  } ${isLast ? 'rounded-r-lg' : ''} ${header.className || ''}`}
+                >
+                  {header.label}
+                </th>
+              );
+            })}
           </tr>
         </thead>
         <tbody className="mt-3">
-          {data.map((item, index) => (
+          {data.map((item, rowIndex) => (
             <tr
-              key={item.id}
-              className={index % 2 === 0 ? 'bg-white' : 'bg-primary-100'}
+              key={rowIndex}
+              className={rowIndex % 2 === 0 ? 'bg-white' : 'bg-primary-100'}
+              onClick={() => onRowClick && onRowClick(item)}
             >
-              <td className="py-3 px-5 rounded-l-lg">
-                <input type="checkbox" className="rounded" />
-              </td>
-              <td className="py-3 px-5">{index + 1}</td>
-              <td className="py-3 px-5">{item.name}</td>
-              <td className="py-3 px-5 truncate">{item.email}</td>
-              <td className="py-3 px-5">{item.phone}</td>
-              <td className="py-3 px-5 truncate">{item.address}</td>
-              <td className="py-3 px-5 rounded-r-lg">
-                <Button
-                  variant="primary"
-                  size="sm"
-                  onClick={() => onEdit(item.id)}
-                  className="flex items-center gap-2"
-                >
-                  <EditOutlined /> Edit
-                </Button>
-              </td>
+              {showCheckbox && (
+                <td className="py-3 px-5 rounded-l-lg">
+                  <input type="checkbox" className="rounded" />
+                </td>
+              )}
+              {headers.map((header, colIndex) => {
+                const isFirst = colIndex === 0 && !showCheckbox;
+                const isLast = colIndex === headers.length - 1;
+
+                return (
+                  <td
+                    key={colIndex}
+                    className={`py-3 px-5 ${isFirst ? 'rounded-l-lg' : ''} ${
+                      isLast ? 'rounded-r-lg' : ''
+                    }`}
+                  >
+                    {header.render
+                      ? header.render(item, rowIndex)
+                      : header.key
+                      ? item[header.key]
+                      : null}
+                  </td>
+                );
+              })}
             </tr>
           ))}
         </tbody>
