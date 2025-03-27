@@ -101,7 +101,7 @@ export const Components: FC = (): ReactElement => {
         <img
           src="gacha.png"
           alt=""
-          className="rounded-lg min-w-[436px] h-auto object-cover"
+          className="rounded-lg hidden xl:block xl:min-w-[436px] h-auto object-cover"
         />
       </div>
     </main>
