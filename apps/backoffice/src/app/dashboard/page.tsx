@@ -55,7 +55,7 @@ export const Components: FC = (): ReactElement => {
               {[1, 2, 3, 4, 5, 6].map((item) => (
                 <div
                   key={item}
-                  className="bg-white max-h-[80px] overflow-clip rounded-lg shadow-sm flex justify-between items-center border border-neutral-100"
+                  className="bg-white max-h-[80px] overflow-clip rounded-lg shadow-sm flex justify-between border border-neutral-100"
                 >
                   <div className="flex flex-col py-4 px-6 gap-4">
                     <div>
@@ -85,13 +85,12 @@ export const Components: FC = (): ReactElement => {
                     </div>
                   </div>
 
-                  <div className="w-60">
-                    <img
-                      src="lanyard-id-card.png"
-                      alt="Lanyard IMPHNEN"
-                      className="object-left-top"
-                    />
-                  </div>
+                  {/* Lebih baik gunakan gambar yang sudah di-clip dengan size height: 78px daripada hard-code object-position dan margin */}
+                  <img
+                    src="gacha-clip.png"
+                    alt="Lanyard IMPHNEN"
+                    className="h-full"
+                  />
                 </div>
               ))}
             </div>
