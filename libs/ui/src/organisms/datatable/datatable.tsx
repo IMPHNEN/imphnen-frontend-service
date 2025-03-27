@@ -1,84 +1,96 @@
 import { ReactElement, ReactNode } from 'react';
+import {
+  useReactTable,
+  getCoreRowModel,
+  getPaginationRowModel,
+  getFilteredRowModel,
+} from '@tanstack/react-table';
 
 interface DataTableProps<T> {
   data: T[];
   headers: {
-    label: string;
-    key?: keyof T;
-    render?: (item: T, index: number) => ReactNode;
-    className?: string;
+    accessorKey?: keyof T;
+    header: string;
+    cell?: (info: any) => ReactNode;
   }[];
-  showCheckbox?: boolean;
   onRowClick?: (item: T) => void;
 }
 
 export const DataTable = <T extends Record<string, any>>({
   data,
   headers,
-  showCheckbox = true,
   onRowClick,
 }: DataTableProps<T>): ReactElement => {
+  const table = useReactTable({
+    data,
+    columns: headers.map((header) => ({
+      accessorKey: header.accessorKey,
+      header: header.header,
+      cell: header.cell,
+    })),
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+  });
   return (
     <div className="w-full overflow-x-auto">
       <table className="w-full min-w-full text-base">
         <thead className="bg-primary-50 mb-3">
-          <tr>
-            {showCheckbox && (
-              <th className="py-3 px-5 text-left font-normal rounded-l-lg">
-                <input type="checkbox" className="rounded" />
-              </th>
-            )}
-            {headers.map((header, index) => {
-              const isFirst = index === 0 && !showCheckbox;
-              const isLast = index === headers.length - 1;
-              return (
-                <th
-                  key={index}
-                  className={`py-3 px-5 text-left font-normal ${
-                    isFirst ? 'rounded-l-lg' : ''
-                  } ${isLast ? 'rounded-r-lg' : ''} ${header.className || ''}`}
-                >
-                  {header.label}
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <th key={header.id}>
+                  {header.isPlaceholder ? null : (
+                    <div>
+                      {typeof header.column.columnDef.header === 'function'
+                        ? header.column.columnDef.header(header.getContext())
+                        : header.column.columnDef.header}
+                    </div>
+                  )}
                 </th>
-              );
-            })}
-          </tr>
+              ))}
+            </tr>
+          ))}
         </thead>
         <tbody className="mt-3">
-          {data.map((item, rowIndex) => (
+          {table.getRowModel().rows.map((row) => (
             <tr
-              key={rowIndex}
-              className={rowIndex % 2 === 0 ? 'bg-white' : 'bg-primary-100'}
-              onClick={() => onRowClick && onRowClick(item)}
+              key={row.id}
+              onClick={() => onRowClick && onRowClick(row.original)}
             >
-              {showCheckbox && (
-                <td className="py-3 px-5 rounded-l-lg">
-                  <input type="checkbox" className="rounded" />
-                </td>
-              )}
-              {headers.map((header, colIndex) => {
-                const isFirst = colIndex === 0 && !showCheckbox;
-                const isLast = colIndex === headers.length - 1;
-
-                return (
-                  <td
-                    key={colIndex}
-                    className={`py-3 px-5 ${isFirst ? 'rounded-l-lg' : ''} ${
-                      isLast ? 'rounded-r-lg' : ''
-                    }`}
-                  >
-                    {header.render
-                      ? header.render(item, rowIndex)
-                      : header.key
-                      ? item[header.key]
-                      : null}
-                  </td>
-                );
-              })}
+              {row.getVisibleCells().map((cell) => (
+                <td key={cell.id}>{cell.getValue() as ReactNode}</td>
+              ))}
             </tr>
           ))}
         </tbody>
       </table>
+      <div>
+        <button
+          onClick={() => table.setPageIndex(0)}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {'<<'}
+        </button>
+        <button
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {'<'}
+        </button>
+        <button
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          {'>'}
+        </button>
+        <button
+          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+          disabled={!table.getCanNextPage()}
+        >
+          {'>>'}
+        </button>
+      </div>
     </div>
   );
 };
