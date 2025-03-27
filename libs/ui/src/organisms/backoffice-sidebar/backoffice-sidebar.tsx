@@ -14,7 +14,7 @@ export const BackofficeSidebar: FC = (): ReactElement => {
   const isActive = (path: string) => location.pathname.includes(path);
 
   return (
-    <aside className="w-[280px] bg-white min-h-screen py-[60px] px-[28px] shadow-xl flex flex-col justify-between">
+    <aside className="sticky top-0 left-0 w-[280px] bg-white min-h-screen py-[60px] px-[28px] shadow-xl flex flex-col justify-between">
       <div className="flex flex-col gap-20 justify-between items-center">
         {/* Logo */}
         <img src="/logos/simple.svg" alt="IMPHNEN Logo" className="w-[150px]" />
