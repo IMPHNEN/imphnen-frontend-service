@@ -1,7 +1,7 @@
 import { FC, ReactElement } from 'react';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 
-interface PaginationProps {
+export interface PaginationProps {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;

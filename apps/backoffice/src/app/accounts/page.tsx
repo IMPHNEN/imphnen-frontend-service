@@ -1,7 +1,8 @@
 import { FC, ReactElement, useState } from 'react';
 import { FilterOutlined, SearchOutlined } from '@ant-design/icons';
 import { Button, Input } from '@imphnen-frontend-service/ui/atoms';
-import { DataTable, Pagination } from './components';
+import { Pagination } from '@imphnen-frontend-service/ui/molecules';
+import { DataTable } from '@imphnen-frontend-service/ui/organisms';
 
 // Mock data for demonstration
 const mockData = Array.from({ length: 20 }, (_, i) => ({

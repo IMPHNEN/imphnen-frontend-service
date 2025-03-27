@@ -1,6 +1,6 @@
 import { FC, ReactElement } from 'react';
 import { EditOutlined } from '@ant-design/icons';
-import { Button } from '@imphnen-frontend-service/ui/atoms';
+import { Button } from '../../atoms'; // Use relative import for Button
 
 interface DataTableProps {
   data: Array<{
@@ -14,6 +14,8 @@ interface DataTableProps {
 }
 
 export const DataTable: FC<DataTableProps> = ({
+  // Exporting DataTableProps for use in stories
+
   data,
   onEdit,
 }): ReactElement => {
@@ -65,4 +67,4 @@ export const DataTable: FC<DataTableProps> = ({
   );
 };
 
-export default DataTable;
+export default DataTable; // Default export of DataTable component
