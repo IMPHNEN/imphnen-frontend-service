@@ -1,5 +1,5 @@
 import { FC, ReactElement } from 'react';
-import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
 
 export interface PaginationProps {
   currentPage: number;
@@ -15,7 +15,7 @@ export const Pagination: FC<PaginationProps> = ({
   // Generate page numbers to display
   const getPageNumbers = () => {
     const pages = [];
-    const maxPagesToShow = 5;
+    // const maxPagesToShow = 5;
 
     // Always show first page
     if (currentPage > 3) {
@@ -45,45 +45,47 @@ export const Pagination: FC<PaginationProps> = ({
   };
 
   return (
-    <div className="flex items-center justify-center mt-4 gap-2">
+    <div className="flex items-center justify-center mt-4 gap-[40px]">
       <button
         onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="p-2 rounded-md border border-gray-200 disabled:opacity-50"
+        className="disabled:opacity-50 cursor-pointer"
         aria-label="Previous page"
       >
-        <LeftOutlined />
+        <ArrowLeftOutlined className="text-[16px] text-neutral-800" />
       </button>
 
-      {getPageNumbers().map((page, index) =>
-        typeof page === 'number' ? (
-          <button
-            key={index}
-            onClick={() => onPageChange(page)}
-            className={`w-8 h-8 flex items-center justify-center rounded-md ${
-              currentPage === page
-                ? 'bg-primary-500 text-white'
-                : 'border border-gray-200 hover:bg-gray-50'
-            }`}
-          >
-            {page}
-          </button>
-        ) : (
-          <span key={index} className="px-1">
-            {page}
-          </span>
-        )
-      )}
+      <div className="flex gap-4 items-baseline">
+        {getPageNumbers().map((page, index) =>
+          typeof page === 'number' ? (
+            <button
+              key={index}
+              onClick={() => onPageChange(page)}
+              className={`size-[30px] py-[8px] flex items-center justify-center rounded-md cursor-pointer ${
+                currentPage === page
+                  ? 'bg-primary-500 text-white'
+                  : 'border border-gray-200 hover:bg-gray-50'
+              }`}
+            >
+              {page}
+            </button>
+          ) : (
+            <span key={index} className="px-1">
+              {page}
+            </span>
+          )
+        )}
+      </div>
 
       <button
         onClick={() =>
           currentPage < totalPages && onPageChange(currentPage + 1)
         }
         disabled={currentPage === totalPages}
-        className="p-2 rounded-md border border-gray-200 disabled:opacity-50"
+        className="disabled:opacity-50 cursor-pointer"
         aria-label="Next page"
       >
-        <RightOutlined />
+        <ArrowRightOutlined className="text-[16px] text-neutral-800" />
       </button>
     </div>
   );
