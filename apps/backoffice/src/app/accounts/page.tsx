@@ -54,20 +54,25 @@ export const Components: FC = (): ReactElement => {
       {/* Account Table Section */}
       <section className="flex flex-col gap-6 p-8 bg-white rounded-md">
         {/* Search and Filter */}
-        <div className="flex justify-between items-center">
-          <div className="relative w-full max-w-[400px]">
+        <div className="flex justify-between items-center gap-8 mb-2">
+          <div className="relative w-full">
             <Input
               placeholder="Cari berdasarkan nama lengkap, email"
               value={searchQuery}
               onChange={handleSearch}
-              className="pl-10"
+              className="pl-12 w-full max-h-full"
             />
-            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[16px]">
               <SearchOutlined />
             </div>
           </div>
 
-          <Button variant="secondary" className="flex items-center gap-2">
+          <Button
+            variant="primary"
+            disabled
+            size="md"
+            className="flex items-center gap-3"
+          >
             <FilterOutlined />
             Filters
           </Button>

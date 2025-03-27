@@ -45,7 +45,7 @@ export const Pagination: FC<PaginationProps> = ({
   };
 
   return (
-    <div className="flex items-center justify-center mt-4 gap-[40px]">
+    <div className="flex items-center justify-center gap-[40px]">
       <button
         onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
         disabled={currentPage === 1}

@@ -45,14 +45,14 @@ export const Input: FC<TInputProps> = ({
   };
 
   const mergedClassName = cn(
-    'px-[12px] py-[8px] text-neutral-800 placeholder:text-neutral-300 border border-neutral-200 hover:border-blue-300 focus:outline-1 focus:outline-blue-500 rounded-md font-bai-jamjuree w-full',
+    'px-[12px] py-[8px] text-neutral-800 placeholder:text-neutral-300 border border-neutral-200 hover:border-blue-300 focus:outline-1 focus:outline-blue-500 rounded-md font-bai-jamjuree min-w-70',
     sizeClasses[size].textSize,
     disabled && disabledClass,
     className
   );
 
   return (
-    <div className="relative inline-flex min-w-70 items-center">
+    <div className="relative flex items-center">
       <input
         className={mergedClassName}
         type={type === 'password' && showPassword ? 'text' : type}
