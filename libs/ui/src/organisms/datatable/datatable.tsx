@@ -1,4 +1,4 @@
-import { FC, ReactElement, ReactNode } from 'react';
+import { ReactElement, ReactNode } from 'react';
 
 interface DataTableProps<T> {
   data: T[];
