@@ -14,47 +14,49 @@ interface DataTableProps {
 }
 
 export const DataTable: FC<DataTableProps> = ({
-  // Exporting DataTableProps for use in stories
-
   data,
   onEdit,
 }): ReactElement => {
   return (
     <div className="w-full overflow-x-auto">
-      <table className="w-full min-w-full">
-        <thead>
-          <tr className="border-b border-gray-200">
-            <th className="p-4 text-left">
+      <table className="w-full min-w-full text-base">
+        <thead className="bg-primary-50 mb-3">
+          <tr>
+            <th className="py-3 px-5 text-left font-normal rounded-l-lg">
               <input type="checkbox" className="rounded" />
             </th>
-            <th className="p-4 text-left">No.</th>
-            <th className="p-4 text-left">Nama Lengkap</th>
-            <th className="p-4 text-left">Email</th>
-            <th className="p-4 text-left">Nomor Telp</th>
-            <th className="p-4 text-left">Alamat Pengiriman</th>
-            <th className="p-4 text-left">Action</th>
+            <th className="py-3 px-5 text-left font-normal">No.</th>
+            <th className="py-3 px-5 text-left font-normal">Nama Lengkap</th>
+            <th className="py-3 px-5 text-left font-normal">Email</th>
+            <th className="py-3 px-5 text-left font-normal">Nomor Telp</th>
+            <th className="py-3 px-5 text-left font-normal">
+              Alamat Pengiriman
+            </th>
+            <th className="py-3 px-5 text-left font-normal rounded-r-lg">
+              Action
+            </th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="mt-3">
           {data.map((item, index) => (
             <tr
               key={item.id}
-              className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}
+              className={index % 2 === 0 ? 'bg-white' : 'bg-primary-100'}
             >
-              <td className="p-4">
+              <td className="py-3 px-5 rounded-l-lg">
                 <input type="checkbox" className="rounded" />
               </td>
-              <td className="p-4">{index + 1}</td>
-              <td className="p-4">{item.name}</td>
-              <td className="p-4">{item.email}</td>
-              <td className="p-4">{item.phone}</td>
-              <td className="p-4">{item.address}</td>
-              <td className="p-4">
+              <td className="py-3 px-5">{index + 1}</td>
+              <td className="py-3 px-5">{item.name}</td>
+              <td className="py-3 px-5 truncate">{item.email}</td>
+              <td className="py-3 px-5">{item.phone}</td>
+              <td className="py-3 px-5 truncate">{item.address}</td>
+              <td className="py-3 px-5 rounded-r-lg">
                 <Button
                   variant="primary"
                   size="sm"
                   onClick={() => onEdit(item.id)}
-                  className="flex items-center gap-1"
+                  className="flex items-center gap-2"
                 >
                   <EditOutlined /> Edit
                 </Button>
@@ -67,4 +69,4 @@ export const DataTable: FC<DataTableProps> = ({
   );
 };
 
-export default DataTable; // Default export of DataTable component
+export default DataTable;

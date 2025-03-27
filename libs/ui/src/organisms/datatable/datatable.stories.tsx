@@ -51,6 +51,13 @@ Default.args = {
       phone: '987-654-3210',
       address: '456 Elm St',
     },
+    {
+      id: 3,
+      name: 'John Smith',
+      email: 'johns@example.com',
+      phone: '456-789-1230',
+      address: '789 Cedar St',
+    },
   ],
   onEdit: (id: number) => console.log('Edit item with id:', id),
 };
