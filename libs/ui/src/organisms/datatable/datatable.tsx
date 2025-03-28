@@ -5,6 +5,7 @@ import {
   getPaginationRowModel,
   flexRender,
   ColumnDef,
+  Table,
 } from '@tanstack/react-table';
 import { Pagination } from '../../molecules';
 
@@ -13,6 +14,7 @@ import React from 'react';
 interface DataTableProps<T> {
   data: T[];
   columns: ColumnDef<T>[];
+  table: Table<T>;
   pageSize?: number;
 }
 
