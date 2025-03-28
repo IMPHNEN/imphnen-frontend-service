@@ -4,17 +4,8 @@ import { Input } from './input';
 const meta: Meta<typeof Input> = {
   title: 'Components/Input',
   component: Input,
-  argTypes: {
-    type: {
-      control: 'select',
-      options: ['text', 'email'],
-    },
-    size: {
-      control: 'select',
-      options: ['sm', 'md', 'lg'],
-    },
-  },
-};
+  tags: ['autodocs'],
+} satisfies Meta<typeof Input>;
 
 export default meta;
 type Story = StoryObj<typeof Input>;
@@ -22,6 +13,7 @@ type Story = StoryObj<typeof Input>;
 export const Large: Story = {
   args: {
     size: 'lg',
+    type: 'text',
     placeholder: 'Placeholder',
   },
 };
@@ -29,6 +21,7 @@ export const Large: Story = {
 export const Medium: Story = {
   args: {
     size: 'md',
+    type: 'text',
     placeholder: 'Placeholder',
   },
 };
@@ -36,6 +29,7 @@ export const Medium: Story = {
 export const Small: Story = {
   args: {
     size: 'sm',
+    type: 'text',
     placeholder: 'Placeholder',
   },
 };
@@ -54,18 +48,17 @@ export const EmailInput: Story = {
   },
 };
 
+export const PasswordInput: Story = {
+  args: {
+    size: 'md',
+    type: 'password',
+  },
+};
+
 export const Disabled: Story = {
   args: {
     size: 'md',
     type: 'text',
     disabled: true,
-  },
-};
-
-export const WithError: Story = {
-  args: {
-    size: 'md',
-    type: 'text',
-    error: 'This field is required',
   },
 };
