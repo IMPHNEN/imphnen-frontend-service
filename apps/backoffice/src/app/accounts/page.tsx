@@ -1,3 +1,5 @@
+import * as React from 'react';
+
 import { FC, ReactElement, useState } from 'react';
 import {
   FilterOutlined,
@@ -7,6 +9,13 @@ import {
 import { Button, Input } from '@imphnen-frontend-service/ui/atoms';
 import { Pagination } from '@imphnen-frontend-service/ui/molecules';
 import { DataTable } from '@imphnen-frontend-service/ui/organisms';
+
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from '@tanstack/react-table';
 
 // Define account interface
 interface Account {
@@ -18,13 +27,73 @@ interface Account {
 }
 
 // Mock data for demonstration
-const mockData: Account[] = Array.from({ length: 20 }, (_, i) => ({
+const mockData: Account[] = Array.from({ length: 90 }, (_, i) => ({
   id: i + 1,
   name: i === 0 ? 'Ahmad Wijuana' : 'Nama Lengkap',
-  email: 'Fullname23@gmail.com',
+  email: 'fullname23@gmail.com',
   phone: '081904423804',
   address: 'Jl. Pantai Cibaduyut Indonesia',
 }));
+
+const columns: ColumnDef<any>[] = [
+  {
+    header: 'No',
+    accessorKey: 'id',
+  },
+  {
+    header: 'Nama Lengkap',
+    accessorKey: 'name',
+  },
+  {
+    header: 'Email',
+    accessorKey: 'email',
+  },
+  {
+    header: 'Nomor Telp',
+    accessorKey: 'phone',
+  },
+  {
+    header: 'Alamat Pengiriman',
+    accessorKey: 'address',
+  },
+  {
+    header: 'Action',
+    cell: ({ row }) => {
+      return (
+        <Button
+          variant="primary"
+          size="sm"
+          onClick={(e) => {
+            e.stopPropagation();
+            // handleEdit(row.id);
+          }}
+          className="flex items-center gap-2"
+        >
+          <EditOutlined /> Edit
+        </Button>
+      );
+    },
+  },
+];
+
+// const columnHelper = createColumnHelper<Account>();
+// const columns = [
+//   columnHelper.accessor('id', {
+//     cell: (info) => info.column.id,
+//   }),
+//   columnHelper.accessor('name', {
+//     header: 'Nama Lengkap',
+//     cell: (info) => info.getValue(),
+//   }),
+//   columnHelper.accessor('name', {
+//     header: 'Nama Lengkap',
+//     cell: (info) => info.getValue(),
+//   }),
+//   columnHelper.accessor('name', {
+//     header: 'Nama Lengkap',
+//     cell: (info) => info.getValue(),
+//   }),
+// ];
 
 export const Components: FC = (): ReactElement => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -43,10 +112,10 @@ export const Components: FC = (): ReactElement => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
 
-  const handleEdit = (id: number) => {
-    console.log(`Edit item with id: ${id}`);
-    // Implement edit functionality
-  };
+  // const handleEdit = (id: number) => {
+  //   console.log(`Edit item with id: ${id}`);
+  //   // Implement edit functionality
+  // };
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -56,6 +125,14 @@ export const Components: FC = (): ReactElement => {
     setSearchQuery(e.target.value);
     setCurrentPage(1); // Reset to first page when searching
   };
+
+  // const [data, _setData] = React.useState(() => [...mockData]);
+
+  const table = useReactTable({
+    data: mockData,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+  });
 
   return (
     <main className="w-full px-[48px] py-[40px] flex flex-col gap-8">
@@ -92,7 +169,47 @@ export const Components: FC = (): ReactElement => {
         </div>
 
         {/* Table */}
-        <DataTable
+        <div className="w-full overflow-x-auto">
+          <table className="w-full min-w-full text-base">
+            <thead className="bg-primary-50 mb-3 text-left">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <th
+                      key={header.id}
+                      className="py-3 px-5 font-normal first:rounded-l-lg last:rounded-r-lg"
+                    >
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody className="mt-3">
+              {table.getRowModel().rows.map((row) => (
+                <tr key={row.id} className="bg-primary-100 odd:bg-white">
+                  {row.getVisibleCells().map((cell, index) => (
+                    <td
+                      key={index}
+                      className="py-3 px-5 first:rounded-l-lg last:rounded-r-lg"
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        {/* <DataTable
           data={currentItems}
           headers={[
             {
@@ -120,7 +237,7 @@ export const Components: FC = (): ReactElement => {
               ),
             },
           ]}
-        />
+        /> */}
 
         {/* Pagination */}
         <Pagination
