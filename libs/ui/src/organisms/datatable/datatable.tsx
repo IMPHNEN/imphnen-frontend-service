@@ -1,52 +1,57 @@
-import { ReactElement, ReactNode } from 'react';
 import {
+  PaginationState,
   useReactTable,
   getCoreRowModel,
   getPaginationRowModel,
-  getFilteredRowModel,
+  flexRender,
+  ColumnDef,
 } from '@tanstack/react-table';
+import React from 'react';
 
 interface DataTableProps<T> {
   data: T[];
-  headers: {
-    accessorKey?: keyof T;
-    header: string;
-    cell?: (info: any) => ReactNode;
-  }[];
-  onRowClick?: (item: T) => void;
+  columns: ColumnDef<T>[];
+  pageSize?: number;
 }
 
-export const DataTable = <T extends Record<string, any>>({
+export const DataTable = <T,>({
   data,
-  headers,
-  onRowClick,
-}: DataTableProps<T>): ReactElement => {
+  columns,
+  pageSize = 9,
+}: DataTableProps<T>) => {
+  const [pagination, setPagination] = React.useState<PaginationState>({
+    pageIndex: 0,
+    pageSize,
+  });
+
   const table = useReactTable({
     data,
-    columns: headers.map((header) => ({
-      accessorKey: header.accessorKey,
-      header: header.header,
-      cell: header.cell,
-    })),
+    columns,
+    state: {
+      pagination,
+    },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
+    onPaginationChange: setPagination,
   });
+
   return (
     <div className="w-full overflow-x-auto">
       <table className="w-full min-w-full text-base">
-        <thead className="bg-primary-50 mb-3">
+        <thead className="bg-primary-50 mb-3 text-left">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <th key={header.id}>
-                  {header.isPlaceholder ? null : (
-                    <div>
-                      {typeof header.column.columnDef.header === 'function'
-                        ? header.column.columnDef.header(header.getContext())
-                        : header.column.columnDef.header}
-                    </div>
-                  )}
+                <th
+                  key={header.id}
+                  className="py-3 px-5 font-normal first:rounded-l-lg last:rounded-r-lg"
+                >
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
                 </th>
               ))}
             </tr>
@@ -54,43 +59,19 @@ export const DataTable = <T extends Record<string, any>>({
         </thead>
         <tbody className="mt-3">
           {table.getRowModel().rows.map((row) => (
-            <tr
-              key={row.id}
-              onClick={() => onRowClick && onRowClick(row.original)}
-            >
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>{cell.getValue() as ReactNode}</td>
+            <tr key={row.id} className="bg-primary-100 odd:bg-white">
+              {row.getVisibleCells().map((cell, index) => (
+                <td
+                  key={cell.id}
+                  className="py-3 px-5 first:rounded-l-lg last:rounded-r-lg"
+                >
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
               ))}
             </tr>
           ))}
         </tbody>
       </table>
-      <div>
-        <button
-          onClick={() => table.setPageIndex(0)}
-          disabled={!table.getCanPreviousPage()}
-        >
-          {'<<'}
-        </button>
-        <button
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          {'<'}
-        </button>
-        <button
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          {'>'}
-        </button>
-        <button
-          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-          disabled={!table.getCanNextPage()}
-        >
-          {'>>'}
-        </button>
-      </div>
     </div>
   );
 };

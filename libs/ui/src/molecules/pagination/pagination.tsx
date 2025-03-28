@@ -12,12 +12,8 @@ export const Pagination: FC<PaginationProps> = ({
   totalPages,
   onPageChange,
 }): ReactElement => {
-  // Generate page numbers to display
   const getPageNumbers = () => {
     const pages = [];
-    // const maxPagesToShow = 5;
-
-    // Always show first page
     if (currentPage > 3) {
       pages.push(1);
       if (currentPage > 4) {
@@ -25,7 +21,6 @@ export const Pagination: FC<PaginationProps> = ({
       }
     }
 
-    // Calculate range of pages to show around current page
     const startPage = Math.max(1, currentPage - 1);
     const endPage = Math.min(totalPages, currentPage + 1);
 
@@ -33,7 +28,6 @@ export const Pagination: FC<PaginationProps> = ({
       pages.push(i);
     }
 
-    // Always show last page
     if (currentPage < totalPages - 2) {
       if (currentPage < totalPages - 3) {
         pages.push('...');

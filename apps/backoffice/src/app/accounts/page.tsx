@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { FC, ReactElement, useState } from 'react';
+import { FC, ReactElement } from 'react';
 import {
   FilterOutlined,
   SearchOutlined,
@@ -9,7 +9,6 @@ import {
   ArrowLeftOutlined,
 } from '@ant-design/icons';
 import { Button, Input } from '@imphnen-frontend-service/ui/atoms';
-import { Pagination } from '@imphnen-frontend-service/ui/molecules';
 import { DataTable } from '@imphnen-frontend-service/ui/organisms';
 
 import {
@@ -130,75 +129,7 @@ export const Components: FC = (): ReactElement => {
         </div>
 
         {/* Table */}
-        <div className="w-full overflow-x-auto">
-          <table className="w-full min-w-full text-base">
-            <thead className="bg-primary-50 mb-3 text-left">
-              {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <th
-                      key={header.id}
-                      className="py-3 px-5 font-normal first:rounded-l-lg last:rounded-r-lg"
-                    >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
-            <tbody className="mt-3">
-              {table.getRowModel().rows.map((row) => (
-                <tr key={row.id} className="bg-primary-100 odd:bg-white">
-                  {row.getVisibleCells().map((cell, index) => (
-                    <td
-                      key={index}
-                      className="py-3 px-5 first:rounded-l-lg last:rounded-r-lg"
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        {/* <DataTable
-          data={currentItems}
-          headers={[
-            {
-              label: 'No.',
-              render: (_, index) => index + 1 + indexOfFirstItem,
-            },
-            { label: 'Nama Lengkap', key: 'name' },
-            { label: 'Email', key: 'email' },
-            { label: 'Nomor Telp', key: 'phone' },
-            { label: 'Alamat Pengiriman', key: 'address' },
-            {
-              label: 'Action',
-              render: (item: Account) => (
-                <Button
-                  variant="primary"
-                  size="sm"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleEdit(item.id);
-                  }}
-                  className="flex items-center gap-2"
-                >
-                  <EditOutlined /> Edit
-                </Button>
-              ),
-            },
-          ]}
-        /> */}
+        <DataTable data={mockData} columns={columns} />
 
         {/* Pagination */}
         {/* <Pagination
