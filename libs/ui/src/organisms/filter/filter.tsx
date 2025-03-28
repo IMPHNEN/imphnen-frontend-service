@@ -20,7 +20,7 @@ const Radio = ({
   value,
   onChange,
 }: RadioProps) => (
-  <div className="flex gap-2 items-start">
+  <div className="flex gap-2 items-center">
     <div className="relative grid place-items-center mt-1">
       <input
         type="radio"
@@ -40,7 +40,11 @@ const Radio = ({
   </div>
 );
 
-export const Filter = () => {
+interface FilterProps {
+  onClose?: () => void;
+}
+
+export const Filter = ({ onClose }: FilterProps) => {
   const [selectedStatus, setSelectedStatus] = useState('delivered');
 
   const handleStatusChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,13 +52,11 @@ export const Filter = () => {
   };
 
   return (
-    <div className="inline-flex flex-col p-[20px] bg-white rounded-lg gap-4 w-[122px]">
+    <div className="inline-flex flex-col p-[20px] bg-white rounded-lg gap-4 w-[122px] shadow">
       <div className="flex justify-between items-baseline">
         <span className="font-semibold text-p3 text-primary-500">Filters</span>
         <button
-          onClick={() => {
-            console.log('clicked');
-          }}
+          onClick={onClose}
           className="cursor-pointer text-neutral-400 hover:text-neutral-600"
         >
           <CloseOutlined className="text-[12px]" />

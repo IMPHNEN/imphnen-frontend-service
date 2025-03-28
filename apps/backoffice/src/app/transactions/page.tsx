@@ -1,13 +1,12 @@
 import * as React from 'react';
-
-import { FC, ReactElement } from 'react';
+import { FC, ReactElement, useState } from 'react';
 import {
   FilterOutlined,
   SearchOutlined,
   AuditOutlined,
 } from '@ant-design/icons';
 import { Button, Input } from '@imphnen-frontend-service/ui/atoms';
-import { DataTable } from '@imphnen-frontend-service/ui/organisms';
+import { DataTable, Filter } from '@imphnen-frontend-service/ui/organisms';
 
 import {
   ColumnDef,
@@ -120,6 +119,7 @@ export const Components: FC = (): ReactElement => {
   });
 
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
+  const [showFilter, setShowFilter] = useState(false);
 
   const table = useReactTable({
     data: mockTransactions,
@@ -158,14 +158,22 @@ export const Components: FC = (): ReactElement => {
             </div>
           </div>
 
-          <Button
-            variant="primary"
-            size="md"
-            className="flex items-center gap-3"
-          >
-            <FilterOutlined />
-            Filters
-          </Button>
+          <div className="relative">
+            <Button
+              variant="primary"
+              size="md"
+              className="flex items-center gap-3"
+              onClick={() => setShowFilter(!showFilter)}
+            >
+              <FilterOutlined />
+              Filters
+            </Button>
+            {showFilter && (
+              <div className="absolute right-0 top-[calc(100%+12px)] z-10 shadow-lg">
+                <Filter onClose={() => setShowFilter(false)} />
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Table */}
