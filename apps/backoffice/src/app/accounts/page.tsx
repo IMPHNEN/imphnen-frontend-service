@@ -32,7 +32,7 @@ const mockData: Account[] = Array.from({ length: 90 }, (_, i) => ({
   name: i === 0 ? 'Ahmad Wijuana' : 'Nama Lengkap',
   email: 'fullname23@gmail.com',
   phone: '081904423804',
-  address: 'Jl. Pantai Cibaduyut Indonesia',
+  address: 'Jl. Pantai Cibaduyut Indah',
 }));
 
 const columns: ColumnDef<Account>[] = [

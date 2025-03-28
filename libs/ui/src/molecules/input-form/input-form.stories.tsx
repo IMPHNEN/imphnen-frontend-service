@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { InputForm } from './input-form';
 
 const meta = {
-  title: 'Molecules/InputForm',
+  title: 'Molecules/Input Form',
   component: InputForm,
   parameters: {
     layout: 'centered',

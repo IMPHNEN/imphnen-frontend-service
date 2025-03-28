@@ -48,7 +48,7 @@ const mockData: Prize[] = Array.from({ length: 90 }, (_, i) => ({
     ? 'unchecked'
     : 'valid') as Status,
   items: items[i % items.length],
-  address: 'Jl. Pantai Cibaduyut Indonesia',
+  address: 'Jl. Pantai Cibaduyut Indah',
   status: (i % 3 === 0
     ? 'unchecked'
     : i % 5 === 0
