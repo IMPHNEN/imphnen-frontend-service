@@ -5,6 +5,8 @@ import {
   FilterOutlined,
   SearchOutlined,
   EditOutlined,
+  ArrowRightOutlined,
+  ArrowLeftOutlined,
 } from '@ant-design/icons';
 import { Button, Input } from '@imphnen-frontend-service/ui/atoms';
 import { Pagination } from '@imphnen-frontend-service/ui/molecules';
@@ -14,6 +16,8 @@ import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
+  getPaginationRowModel,
+  PaginationState,
   useReactTable,
 } from '@tanstack/react-table';
 
@@ -97,8 +101,6 @@ const columns: ColumnDef<any>[] = [
 
 export const Components: FC = (): ReactElement => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 9;
 
   // Filter data based on search query
   const filteredData = mockData.filter(
@@ -107,31 +109,31 @@ export const Components: FC = (): ReactElement => {
       item.email.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Paginate data
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
-
   // const handleEdit = (id: number) => {
   //   console.log(`Edit item with id: ${id}`);
   //   // Implement edit functionality
   // };
 
-  const handlePageChange = (pageNumber: number) => {
-    setCurrentPage(pageNumber);
-  };
-
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
-    setCurrentPage(1); // Reset to first page when searching
+    // setCurrentPage(1); // Reset to first page when searching
   };
 
   // const [data, _setData] = React.useState(() => [...mockData]);
+  const [pagination, setPagination] = React.useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 9,
+  });
 
   const table = useReactTable({
     data: mockData,
     columns,
+    state: {
+      pagination,
+    },
     getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    onPaginationChange: setPagination,
   });
 
   return (
@@ -240,11 +242,132 @@ export const Components: FC = (): ReactElement => {
         /> */}
 
         {/* Pagination */}
-        <Pagination
+        {/* <Pagination
           currentPage={currentPage}
           totalPages={Math.ceil(filteredData.length / itemsPerPage)}
           onPageChange={handlePageChange}
-        />
+        /> */}
+        <div className="flex items-center justify-center gap-[40px]">
+          <button
+            className="disabled:opacity-50 cursor-pointer"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+            aria-label="Previous page"
+          >
+            <ArrowLeftOutlined className="text-[16px] text-neutral-800" />
+          </button>
+
+          <button
+            className={`size-[30px] py-[8px] flex items-center justify-center rounded-md cursor-pointer bg-primary-500 text-white`}
+          >
+            {table.getState().pagination.pageIndex + 1}
+          </button>
+          {/* {table.getPageCount().map((page, index) => (
+            <button
+              key={index}
+              className={`size-[30px] py-[8px] flex items-center justify-center rounded-md cursor-pointer bg-primary-500 text-white ${
+                table.getState().pagination.pageIndex === page
+                  ? 'bg-primary-500 text-white'
+                  : 'bg-primary-100 hover:bg-primary-200'
+              }`}
+            >
+              {table.getState().pagination.pageIndex + 1}
+            </button>
+          ))} */}
+          {/* <div className="flex gap-4 items-baseline">
+            {getPageNumbers().map((page, index) =>
+              typeof page === 'number' ? (
+                <button
+                  key={index}
+                  onClick={() => onPageChange(page)}
+                  className={`size-[30px] py-[8px] flex items-center justify-center rounded-md cursor-pointer ${
+                    currentPage === page
+                      ? 'bg-primary-500 text-white'
+                      : 'bg-primary-100 hover:bg-primary-200'
+                  }`}
+                >
+                  {page}
+                </button>
+              ) : (
+                <span key={index} className="px-1">
+                  {page}
+                </span>
+              )
+            )}
+          </div> */}
+
+          <button
+            className="disabled:opacity-50 cursor-pointer"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+            aria-label="Next page"
+          >
+            <ArrowRightOutlined className="text-[16px] text-neutral-800" />
+          </button>
+        </div>
+        <div className="flex items-center gap-2">
+          {/* <button
+            className="border rounded p-1"
+            onClick={() => table.firstPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            {'<<'}
+          </button>
+          <button
+            className="border rounded p-1"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            {'<'}
+          </button>
+          <button
+            className="border rounded p-1"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            {'>'}
+          </button>
+          <button
+            className="border rounded p-1"
+            onClick={() => table.lastPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            {'>>'}
+          </button> */}
+          <span className="flex items-center gap-1">
+            <div>Page</div>
+            <strong>
+              {table.getState().pagination.pageIndex + 1} of{' '}
+              {table.getPageCount().toLocaleString()}
+            </strong>
+          </span>
+          <span className="flex items-center gap-1">
+            | Go to page:
+            <input
+              type="number"
+              min="1"
+              max={table.getPageCount()}
+              defaultValue={table.getState().pagination.pageIndex + 1}
+              onChange={(e) => {
+                const page = e.target.value ? Number(e.target.value) - 1 : 0;
+                table.setPageIndex(page);
+              }}
+              className="border p-1 rounded w-16"
+            />
+          </span>
+          <select
+            value={table.getState().pagination.pageSize}
+            onChange={(e) => {
+              table.setPageSize(Number(e.target.value));
+            }}
+          >
+            {[10, 20, 30, 40, 50].map((pageSize) => (
+              <option key={pageSize} value={pageSize}>
+                Show {pageSize}
+              </option>
+            ))}
+          </select>
+        </div>
       </section>
     </main>
   );
