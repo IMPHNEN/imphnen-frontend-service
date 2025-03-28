@@ -49,7 +49,7 @@ export const DataTable = <T,>({
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    className="py-3 px-5 font-normal first:rounded-l-lg last:rounded-r-lg"
+                    className="py-4 px-5 font-normal first:rounded-l-lg last:rounded-r-lg"
                   >
                     {header.isPlaceholder
                       ? null
@@ -62,7 +62,7 @@ export const DataTable = <T,>({
               </tr>
             ))}
           </thead>
-          <tbody className="mt-3">
+          <tbody>
             {table.getRowModel().rows.map((row) => (
               <tr key={row.id} className="bg-primary-100 odd:bg-white">
                 {row.getVisibleCells().map((cell, index) => (

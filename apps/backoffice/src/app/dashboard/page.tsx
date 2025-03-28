@@ -12,7 +12,7 @@ export const Components: FC = (): ReactElement => {
   return (
     <main className="w-full px-[48px] py-[40px] flex flex-col gap-8">
       {/* Dashboard Header */}
-      <header className="bg-white py-4 px-8 rounded-md shadow p-4">
+      <header className="bg-white py-4 px-8 rounded-lg shadow p-4">
         <h1 className="text-p2 font-semibold">Dashboard</h1>
       </header>
 

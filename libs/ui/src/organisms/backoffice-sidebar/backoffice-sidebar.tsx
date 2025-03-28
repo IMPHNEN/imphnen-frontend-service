@@ -1,6 +1,7 @@
 import {
   AppstoreOutlined,
   AuditOutlined,
+  InboxOutlined,
   LogoutOutlined,
   UserOutlined,
 } from '@ant-design/icons';
@@ -55,6 +56,18 @@ export const BackofficeSidebar: FC = (): ReactElement => {
           >
             <AuditOutlined className="text-[20px]" />
             <span className="text-p3 font-medium">Validasi Transaksi</span>
+          </Link>
+
+          <Link
+            to="/prizes"
+            className={`flex items-center justify-items-start gap-3 px-[8px] py-[10px] ${
+              isActive('/prizes')
+                ? 'bg-primary-500 text-white rounded-md'
+                : 'text-gray-700 hover:bg-gray-100'
+            }`}
+          >
+            <InboxOutlined className="text-[20px]" />
+            <span className="text-p3 font-medium">Data Pengiriman Hadiah</span>
           </Link>
         </nav>
       </div>

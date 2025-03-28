@@ -18,28 +18,45 @@ import {
   RowSelectionState,
 } from '@tanstack/react-table';
 
-type TransactionStatus = 'valid' | 'invalid' | 'unchecked';
+type Status = 'valid' | 'invalid' | 'unchecked';
 
-interface Transaction {
+interface Prize {
   id: number;
   name: string;
-  transactionNumber: string;
-  status: TransactionStatus;
+  orderValid: Status;
+  items: string;
+  address: string;
+  status: Status;
 }
 
+const items = [
+  'Sertifikat + Laminating',
+  'Lanyard + ID Card',
+  'Pin',
+  'Sticker Isi 3',
+  'Sticker Isi 5',
+  'Gelang Karet',
+];
+
 // Mock data for transactions
-const mockTransactions: Transaction[] = Array.from({ length: 20 }, (_, i) => ({
+const mockData: Prize[] = Array.from({ length: 90 }, (_, i) => ({
   id: i + 1,
-  name: i === 0 ? 'Ahmad Wijuana' : 'Nama Lengkap',
-  transactionNumber: '25D2133Y9AFYBD',
-  status: (i % 3 === 0
+  name: 'Nama Lengkap',
+  orderValid: (i % 3 === 0
     ? 'invalid'
     : i % 5 === 0
     ? 'unchecked'
-    : 'valid') as TransactionStatus,
+    : 'valid') as Status,
+  items: items[i % items.length],
+  address: 'Jl. Pantai Cibaduyut Indonesia',
+  status: (i % 3 === 0
+    ? 'unchecked'
+    : i % 5 === 0
+    ? 'invalid'
+    : 'valid') as Status,
 }));
 
-const columns: ColumnDef<Transaction>[] = [
+const columns: ColumnDef<Prize>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -68,20 +85,48 @@ const columns: ColumnDef<Transaction>[] = [
     accessorKey: 'name',
   },
   {
-    header: 'Nomor Transaksi',
-    accessorKey: 'transactionNumber',
-  },
-  {
     header: 'Order Valid?',
-    accessorKey: 'status',
+    accessorKey: 'orderValid',
     cell: ({ row }) => {
-      const status = row.original.status;
-      const statusColors: Record<TransactionStatus, string> = {
+      const status = row.original.orderValid;
+      const statusColors: Record<Status, string> = {
         valid: 'bg-success-200 text-success-500',
         invalid: 'bg-danger-200 text-danger-500',
         unchecked: 'bg-warning-200 text-warning-900',
       };
-      const statusText: Record<TransactionStatus, string> = {
+      const statusText: Record<Status, string> = {
+        valid: 'Valid',
+        invalid: 'Invalid',
+        unchecked: 'Unchecked',
+      };
+      return (
+        <div
+          className={`py-2 px-4 rounded-md text-center ${statusColors[status]}`}
+        >
+          {statusText[status]}
+        </div>
+      );
+    },
+  },
+  {
+    header: 'Items',
+    accessorKey: 'items',
+  },
+  {
+    header: 'Alamat Pengiriman',
+    accessorKey: 'address',
+  },
+  {
+    header: 'Status',
+    accessorKey: 'status',
+    cell: ({ row }) => {
+      const status = row.original.status;
+      const statusColors: Record<Status, string> = {
+        valid: 'bg-success-200 text-success-500',
+        invalid: 'bg-danger-200 text-danger-500',
+        unchecked: 'bg-warning-200 text-warning-900',
+      };
+      const statusText: Record<Status, string> = {
         valid: 'Valid',
         invalid: 'Invalid',
         unchecked: 'Unchecked',
@@ -107,7 +152,7 @@ const columns: ColumnDef<Transaction>[] = [
         }}
         className="flex items-center gap-2 w-full"
       >
-        <AuditOutlined className="text-[16px]" /> Update
+        <AuditOutlined className="text-[16px]" /> Process
       </Button>
     ),
   },
@@ -122,7 +167,7 @@ export const Components: FC = (): ReactElement => {
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
 
   const table = useReactTable({
-    data: mockTransactions,
+    data: mockData,
     columns,
     state: {
       pagination,
@@ -133,7 +178,7 @@ export const Components: FC = (): ReactElement => {
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
-    pageCount: Math.ceil(mockTransactions.length / pagination.pageSize),
+    pageCount: Math.ceil(mockData.length / pagination.pageSize),
     manualPagination: false,
   });
 
@@ -141,7 +186,7 @@ export const Components: FC = (): ReactElement => {
     <main className="w-full px-[48px] py-[40px] flex flex-col gap-8">
       {/* Header */}
       <header className="bg-white py-4 px-8 rounded-lg shadow p-4">
-        <h1 className="text-p2 font-semibold">Validasi Transaksi</h1>
+        <h1 className="text-p2 font-semibold">Data Pengiriman Hadiah</h1>
       </header>
 
       {/* Account Table Section */}
@@ -169,7 +214,7 @@ export const Components: FC = (): ReactElement => {
         </div>
 
         {/* Table */}
-        <DataTable data={mockTransactions} columns={columns} table={table} />
+        <DataTable data={mockData} columns={columns} table={table} />
       </section>
     </main>
   );
