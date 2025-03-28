@@ -1,18 +1,25 @@
-import { FC, ReactElement, useState } from 'react';
+import * as React from 'react';
+
+import { FC, ReactElement } from 'react';
 import {
   FilterOutlined,
   SearchOutlined,
-  FileTextOutlined,
   AuditOutlined,
 } from '@ant-design/icons';
 import { Button, Input } from '@imphnen-frontend-service/ui/atoms';
-import { Pagination } from '@imphnen-frontend-service/ui/molecules';
 import { DataTable } from '@imphnen-frontend-service/ui/organisms';
 
-// Define status type for better type safety
+import {
+  ColumnDef,
+  getCoreRowModel,
+  getPaginationRowModel,
+  PaginationState,
+  useReactTable,
+  RowSelectionState,
+} from '@tanstack/react-table';
+
 type TransactionStatus = 'valid' | 'invalid' | 'unchecked';
 
-// Define transaction interface
 interface Transaction {
   id: number;
   name: string;
@@ -32,36 +39,103 @@ const mockTransactions: Transaction[] = Array.from({ length: 20 }, (_, i) => ({
     : 'valid') as TransactionStatus,
 }));
 
+const columns: ColumnDef<Account>[] = [
+  {
+    id: 'select',
+    header: ({ table }) => (
+      <input
+        type="checkbox"
+        className="rounded"
+        checked={table.getIsAllRowsSelected()}
+        onChange={table.getToggleAllRowsSelectedHandler()}
+      />
+    ),
+    cell: ({ row }) => (
+      <input
+        type="checkbox"
+        className="rounded"
+        checked={row.getIsSelected()}
+        onChange={row.getToggleSelectedHandler()}
+      />
+    ),
+  },
+  {
+    header: 'No',
+    accessorKey: 'id',
+  },
+  {
+    header: 'Nama Lengkap',
+    accessorKey: 'name',
+  },
+  {
+    header: 'Nomor Transaksi',
+    accessorKey: 'transactionNumber',
+  },
+  {
+    header: 'Order Valid?',
+    accessorKey: 'status',
+    cell: ({ row }) => {
+      const status = row.original.status;
+      const statusColors: Record<TransactionStatus, string> = {
+        valid: 'bg-success-500 text-white',
+        invalid: 'bg-danger-500 text-white',
+        unchecked: 'bg-yellow-400 text-black',
+      };
+      const statusText: Record<TransactionStatus, string> = {
+        valid: 'Valid',
+        invalid: 'Invalid',
+        unchecked: 'Unchecked',
+      };
+      return (
+        <div
+          className={`py-1 px-3 rounded-md text-center ${statusColors[status]}`}
+        >
+          {statusText[status]}
+        </div>
+      );
+    },
+  },
+  {
+    header: 'Action',
+    cell: ({ row }) => (
+      <Button
+        variant="primary"
+        size="sm"
+        onClick={(e) => {
+          e.stopPropagation();
+          // handleUpdate(row.id);
+        }}
+        className="flex items-center gap-2 w-full"
+      >
+        <AuditOutlined className="text-[16px]" /> Update
+      </Button>
+    ),
+  },
+];
+
 export const Components: FC = (): ReactElement => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 9;
+  const [pagination, setPagination] = React.useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 9,
+  });
 
-  // Filter data based on search query
-  const filteredData = mockTransactions.filter(
-    (item) =>
-      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.transactionNumber.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
 
-  // Paginate data
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
-
-  const handleValidate = (id: number) => {
-    console.log(`Validate transaction with id: ${id}`);
-    // Implement validation functionality
-  };
-
-  const handlePageChange = (pageNumber: number) => {
-    setCurrentPage(pageNumber);
-  };
-
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-    setCurrentPage(1); // Reset to first page when searching
-  };
+  const table = useReactTable({
+    data: mockTransactions,
+    columns,
+    state: {
+      pagination,
+      rowSelection,
+    },
+    enableRowSelection: true,
+    onRowSelectionChange: setRowSelection,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    onPaginationChange: setPagination,
+    pageCount: Math.ceil(mockTransactions.length / pagination.pageSize),
+    manualPagination: false,
+  });
 
   return (
     <main className="w-full px-[48px] py-[40px] flex flex-col gap-8">
@@ -77,8 +151,6 @@ export const Components: FC = (): ReactElement => {
           <div className="relative w-full">
             <Input
               placeholder="Cari berdasarkan nama lengkap, nomor order Shopee"
-              value={searchQuery}
-              onChange={handleSearch}
               className="pl-12 w-full max-h-full"
             />
             <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[16px]">
@@ -97,64 +169,7 @@ export const Components: FC = (): ReactElement => {
         </div>
 
         {/* Table */}
-        <DataTable
-          data={currentItems}
-          headers={[
-            {
-              label: 'No.',
-              render: (_, index) => index + 1 + indexOfFirstItem,
-            },
-            { label: 'Nama Lengkap', key: 'name' },
-            { label: 'Nomor Transaksi', key: 'transactionNumber' },
-            {
-              label: 'Order Valid?',
-              render: (item: Transaction) => {
-                const statusColors: Record<TransactionStatus, string> = {
-                  valid: 'bg-success-500 text-white',
-                  invalid: 'bg-danger-500 text-white',
-                  unchecked: 'bg-yellow-400 text-black',
-                };
-                const statusText: Record<TransactionStatus, string> = {
-                  valid: 'Valid',
-                  invalid: 'Invalid',
-                  unchecked: 'Unchecked',
-                };
-                return (
-                  <div
-                    className={`py-1 px-3 rounded-md text-center ${
-                      statusColors[item.status]
-                    }`}
-                  >
-                    {statusText[item.status]}
-                  </div>
-                );
-              },
-            },
-            {
-              label: 'Action',
-              render: (item: Transaction) => (
-                <Button
-                  variant="primary"
-                  size="sm"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleValidate(item.id);
-                  }}
-                  className="flex items-center gap-2 w-full"
-                >
-                  <AuditOutlined className="text-[16px]" /> Validate
-                </Button>
-              ),
-            },
-          ]}
-        />
-
-        {/* Pagination */}
-        <Pagination
-          currentPage={currentPage}
-          totalPages={Math.ceil(filteredData.length / itemsPerPage)}
-          onPageChange={handlePageChange}
-        />
+        <DataTable data={mockTransactions} columns={columns} table={table} />
       </section>
     </main>
   );
