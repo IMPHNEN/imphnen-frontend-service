@@ -80,46 +80,7 @@ const columns: ColumnDef<any>[] = [
   },
 ];
 
-// const columnHelper = createColumnHelper<Account>();
-// const columns = [
-//   columnHelper.accessor('id', {
-//     cell: (info) => info.column.id,
-//   }),
-//   columnHelper.accessor('name', {
-//     header: 'Nama Lengkap',
-//     cell: (info) => info.getValue(),
-//   }),
-//   columnHelper.accessor('name', {
-//     header: 'Nama Lengkap',
-//     cell: (info) => info.getValue(),
-//   }),
-//   columnHelper.accessor('name', {
-//     header: 'Nama Lengkap',
-//     cell: (info) => info.getValue(),
-//   }),
-// ];
-
 export const Components: FC = (): ReactElement => {
-  const [searchQuery, setSearchQuery] = useState('');
-
-  // Filter data based on search query
-  const filteredData = mockData.filter(
-    (item) =>
-      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.email.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  // const handleEdit = (id: number) => {
-  //   console.log(`Edit item with id: ${id}`);
-  //   // Implement edit functionality
-  // };
-
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-    // setCurrentPage(1); // Reset to first page when searching
-  };
-
-  // const [data, _setData] = React.useState(() => [...mockData]);
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
     pageSize: 9,
@@ -150,8 +111,6 @@ export const Components: FC = (): ReactElement => {
           <div className="relative w-full">
             <Input
               placeholder="Cari berdasarkan nama lengkap, email"
-              value={searchQuery}
-              onChange={handleSearch}
               className="pl-12 w-full max-h-full"
             />
             <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[16px]">
@@ -257,44 +216,69 @@ export const Components: FC = (): ReactElement => {
             <ArrowLeftOutlined className="text-[16px] text-neutral-800" />
           </button>
 
-          <button
-            className={`size-[30px] py-[8px] flex items-center justify-center rounded-md cursor-pointer bg-primary-500 text-white`}
-          >
-            {table.getState().pagination.pageIndex + 1}
-          </button>
-          {/* {table.getPageCount().map((page, index) => (
-            <button
-              key={index}
-              className={`size-[30px] py-[8px] flex items-center justify-center rounded-md cursor-pointer bg-primary-500 text-white ${
-                table.getState().pagination.pageIndex === page
-                  ? 'bg-primary-500 text-white'
-                  : 'bg-primary-100 hover:bg-primary-200'
-              }`}
-            >
-              {table.getState().pagination.pageIndex + 1}
-            </button>
-          ))} */}
-          {/* <div className="flex gap-4 items-baseline">
-            {getPageNumbers().map((page, index) =>
-              typeof page === 'number' ? (
+          <div className="flex gap-4 items-baseline">
+            {table.getPageCount() <= 8 ? (
+              Array.from({ length: table.getPageCount() }, (_, index) => (
                 <button
-                  key={index}
-                  onClick={() => onPageChange(page)}
+                  className={`size-[30px] py-[8px] flex items-center justify-center rounded-md cursor-pointer  ${
+                    table.getState().pagination.pageIndex === index
+                      ? 'bg-primary-500 text-white'
+                      : 'bg-primary-100 hover:bg-primary-200'
+                  }`}
+                  onClick={() => table.setPageIndex(index)}
+                >
+                  {index + 1}
+                </button>
+              ))
+            ) : (
+              // Render ellipsis jika total halaman lebih dari 8
+              <>
+                <button
+                  onClick={() => table.setPageIndex(0)}
                   className={`size-[30px] py-[8px] flex items-center justify-center rounded-md cursor-pointer ${
-                    currentPage === page
+                    table.getState().pagination.pageIndex === 0
                       ? 'bg-primary-500 text-white'
                       : 'bg-primary-100 hover:bg-primary-200'
                   }`}
                 >
-                  {page}
+                  1
                 </button>
-              ) : (
-                <span key={index} className="px-1">
-                  {page}
-                </span>
-              )
+                {table.getState().pagination.pageIndex > 3 && <span>...</span>}
+                {Array.from(
+                  { length: 5 },
+                  (_, index) =>
+                    table.getState().pagination.pageIndex - 2 + index
+                )
+                  .filter((page) => page > 0 && page < table.getPageCount() - 1)
+                  .map((page) => (
+                    <button
+                      key={page}
+                      onClick={() => table.setPageIndex(page)}
+                      className={`size-[30px] py-[8px] flex items-center justify-center rounded-md cursor-pointer ${
+                        table.getState().pagination.pageIndex === page
+                          ? 'bg-primary-500 text-white'
+                          : 'bg-primary-100 hover:bg-primary-200'
+                      }`}
+                    >
+                      {page + 1}
+                    </button>
+                  ))}
+                {table.getState().pagination.pageIndex <
+                  table.getPageCount() - 4 && <span>...</span>}
+                <button
+                  onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+                  className={`size-[30px] py-[8px] flex items-center justify-center rounded-md cursor-pointer ${
+                    table.getState().pagination.pageIndex ===
+                    table.getPageCount() - 1
+                      ? 'bg-primary-500 text-white'
+                      : 'bg-primary-100 hover:bg-primary-200'
+                  }`}
+                >
+                  {table.getPageCount()}
+                </button>
+              </>
             )}
-          </div> */}
+          </div>
 
           <button
             className="disabled:opacity-50 cursor-pointer"
@@ -304,69 +288,6 @@ export const Components: FC = (): ReactElement => {
           >
             <ArrowRightOutlined className="text-[16px] text-neutral-800" />
           </button>
-        </div>
-        <div className="flex items-center gap-2">
-          {/* <button
-            className="border rounded p-1"
-            onClick={() => table.firstPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            {'<<'}
-          </button>
-          <button
-            className="border rounded p-1"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            {'<'}
-          </button>
-          <button
-            className="border rounded p-1"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            {'>'}
-          </button>
-          <button
-            className="border rounded p-1"
-            onClick={() => table.lastPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            {'>>'}
-          </button> */}
-          <span className="flex items-center gap-1">
-            <div>Page</div>
-            <strong>
-              {table.getState().pagination.pageIndex + 1} of{' '}
-              {table.getPageCount().toLocaleString()}
-            </strong>
-          </span>
-          <span className="flex items-center gap-1">
-            | Go to page:
-            <input
-              type="number"
-              min="1"
-              max={table.getPageCount()}
-              defaultValue={table.getState().pagination.pageIndex + 1}
-              onChange={(e) => {
-                const page = e.target.value ? Number(e.target.value) - 1 : 0;
-                table.setPageIndex(page);
-              }}
-              className="border p-1 rounded w-16"
-            />
-          </span>
-          <select
-            value={table.getState().pagination.pageSize}
-            onChange={(e) => {
-              table.setPageSize(Number(e.target.value));
-            }}
-          >
-            {[10, 20, 30, 40, 50].map((pageSize) => (
-              <option key={pageSize} value={pageSize}>
-                Show {pageSize}
-              </option>
-            ))}
-          </select>
         </div>
       </section>
     </main>
