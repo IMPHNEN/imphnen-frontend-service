@@ -6,7 +6,7 @@ import {
 } from 'react';
 import { cn } from '@imphnen-frontend-service/utils';
 
-type TInputType = 'text' | 'email';
+type TInputType = 'text' | 'email' | 'password';
 type TInputSize = 'sm' | 'md' | 'lg';
 
 type TInputProps = Omit<

@@ -34,7 +34,7 @@ export const Components: FC = (): ReactElement => {
             </div>
             <Button className='w-full my-3 text-gray-500 gap-2' variant='secondary'>
               <p>Log In With Google</p>
-              <img src="/image/33978ce5bed2da9bf9d73acad802182a.png" alt="Google Icon" width={24}/>
+              <img src="/image/33978ce5bed2da9bf9d73acad802182a.webp" alt="Google Icon" width={24}/>
             </Button>
           </div> 
         </div>
