@@ -1,13 +1,12 @@
 import * as React from 'react';
-
-import { FC, ReactElement } from 'react';
+import { FC, ReactElement, useState } from 'react';
 import {
   FilterOutlined,
   SearchOutlined,
   AuditOutlined,
 } from '@ant-design/icons';
 import { Button, Input } from '@imphnen-frontend-service/ui/atoms';
-import { DataTable } from '@imphnen-frontend-service/ui/organisms';
+import { DataTable, Filter } from '@imphnen-frontend-service/ui/organisms';
 
 import {
   ColumnDef,
@@ -39,7 +38,7 @@ const mockTransactions: Transaction[] = Array.from({ length: 20 }, (_, i) => ({
     : 'valid') as TransactionStatus,
 }));
 
-const columns: ColumnDef<Account>[] = [
+const columns: ColumnDef<Transaction>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -77,9 +76,9 @@ const columns: ColumnDef<Account>[] = [
     cell: ({ row }) => {
       const status = row.original.status;
       const statusColors: Record<TransactionStatus, string> = {
-        valid: 'bg-success-500 text-white',
-        invalid: 'bg-danger-500 text-white',
-        unchecked: 'bg-yellow-400 text-black',
+        valid: 'bg-success-200 text-success-500',
+        invalid: 'bg-danger-200 text-danger-500',
+        unchecked: 'bg-warning-200 text-warning-900',
       };
       const statusText: Record<TransactionStatus, string> = {
         valid: 'Valid',
@@ -88,7 +87,7 @@ const columns: ColumnDef<Account>[] = [
       };
       return (
         <div
-          className={`py-1 px-3 rounded-md text-center ${statusColors[status]}`}
+          className={`py-2 px-4 rounded-md text-center ${statusColors[status]}`}
         >
           {statusText[status]}
         </div>
@@ -120,6 +119,7 @@ export const Components: FC = (): ReactElement => {
   });
 
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
+  const [showFilter, setShowFilter] = useState(false);
 
   const table = useReactTable({
     data: mockTransactions,
@@ -140,7 +140,7 @@ export const Components: FC = (): ReactElement => {
   return (
     <main className="w-full px-[48px] py-[40px] flex flex-col gap-8">
       {/* Header */}
-      <header className="bg-white py-4 px-8 rounded-md shadow p-4">
+      <header className="bg-white py-4 px-8 rounded-lg shadow p-4">
         <h1 className="text-p2 font-semibold">Validasi Transaksi</h1>
       </header>
 
@@ -158,14 +158,22 @@ export const Components: FC = (): ReactElement => {
             </div>
           </div>
 
-          <Button
-            variant="primary"
-            size="md"
-            className="flex items-center gap-3"
-          >
-            <FilterOutlined />
-            Filters
-          </Button>
+          <div className="relative">
+            <Button
+              variant="primary"
+              size="md"
+              className="flex items-center gap-3"
+              onClick={() => setShowFilter(!showFilter)}
+            >
+              <FilterOutlined />
+              Filters
+            </Button>
+            {showFilter && (
+              <div className="absolute right-0 top-[calc(100%+12px)] z-10 shadow-lg">
+                <Filter onClose={() => setShowFilter(false)} />
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Table */}
