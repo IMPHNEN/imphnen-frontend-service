@@ -51,7 +51,7 @@ export const Button: FC<TButtonProps> = ({
   ...rest
 }): ReactElement => {
   const mergedClassName = cn(
-    'inline-flex items-center justify-center font-[600] rounded-lg px-[16px] py-[10px]',
+    'inline-flex items-center justify-center font-[600] rounded-md px-[16px] py-[10px]',
     'transition-colors duration-200 cursor-pointer',
     sizeClasses[size],
     variantClasses[variant],

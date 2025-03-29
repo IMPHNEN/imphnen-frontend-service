@@ -4,7 +4,7 @@ import { FC, ReactElement, useState } from 'react';
 import {
   FilterOutlined,
   SearchOutlined,
-  EditOutlined,
+  AuditOutlined,
 } from '@ant-design/icons';
 import { Button, Input } from '@imphnen-frontend-service/ui/atoms';
 import { DataTable, Filter } from '@imphnen-frontend-service/ui/organisms';
@@ -18,24 +18,45 @@ import {
   RowSelectionState,
 } from '@tanstack/react-table';
 
-interface Account {
+type Status = 'valid' | 'invalid' | 'unchecked';
+
+interface Prize {
   id: number;
   name: string;
-  email: string;
-  phone: string;
+  orderValid: Status;
+  items: string;
   address: string;
+  status: Status;
 }
 
-// Mock data for demonstration
-const mockData: Account[] = Array.from({ length: 90 }, (_, i) => ({
+const items = [
+  'Sertifikat + Laminating',
+  'Lanyard + ID Card',
+  'Pin',
+  'Sticker Isi 3',
+  'Sticker Isi 5',
+  'Gelang Karet',
+];
+
+// Mock data for transactions
+const mockData: Prize[] = Array.from({ length: 90 }, (_, i) => ({
   id: i + 1,
-  name: i === 0 ? 'Ahmad Wijuana' : 'Nama Lengkap',
-  email: 'fullname23@gmail.com',
-  phone: '081904423804',
+  name: 'Nama Lengkap',
+  orderValid: (i % 3 === 0
+    ? 'invalid'
+    : i % 5 === 0
+    ? 'unchecked'
+    : 'valid') as Status,
+  items: items[i % items.length],
   address: 'Jl. Pantai Cibaduyut Indah',
+  status: (i % 3 === 0
+    ? 'unchecked'
+    : i % 5 === 0
+    ? 'invalid'
+    : 'valid') as Status,
 }));
 
-const columns: ColumnDef<Account>[] = [
+const columns: ColumnDef<Prize>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -64,16 +85,60 @@ const columns: ColumnDef<Account>[] = [
     accessorKey: 'name',
   },
   {
-    header: 'Email',
-    accessorKey: 'email',
+    header: 'Order Valid?',
+    accessorKey: 'orderValid',
+    cell: ({ row }) => {
+      const status = row.original.orderValid;
+      const statusColors: Record<Status, string> = {
+        valid: 'bg-success-200 text-success-500',
+        invalid: 'bg-danger-200 text-danger-500',
+        unchecked: 'bg-warning-200 text-warning-900',
+      };
+      const statusText: Record<Status, string> = {
+        valid: 'Valid',
+        invalid: 'Invalid',
+        unchecked: 'Unchecked',
+      };
+      return (
+        <div
+          className={`py-2 px-4 rounded-md text-center ${statusColors[status]}`}
+        >
+          {statusText[status]}
+        </div>
+      );
+    },
   },
   {
-    header: 'Nomor Telp',
-    accessorKey: 'phone',
+    header: 'Items',
+    accessorKey: 'items',
   },
   {
     header: 'Alamat Pengiriman',
     accessorKey: 'address',
+  },
+  {
+    header: 'Status',
+    accessorKey: 'status',
+    cell: ({ row }) => {
+      const status = row.original.status;
+      const statusColors: Record<Status, string> = {
+        valid: 'bg-success-200 text-success-500',
+        invalid: 'bg-danger-200 text-danger-500',
+        unchecked: 'bg-warning-200 text-warning-900',
+      };
+      const statusText: Record<Status, string> = {
+        valid: 'Valid',
+        invalid: 'Invalid',
+        unchecked: 'Unchecked',
+      };
+      return (
+        <div
+          className={`py-2 px-4 rounded-md text-center ${statusColors[status]}`}
+        >
+          {statusText[status]}
+        </div>
+      );
+    },
   },
   {
     header: 'Action',
@@ -83,11 +148,11 @@ const columns: ColumnDef<Account>[] = [
         size="sm"
         onClick={(e) => {
           e.stopPropagation();
-          // handleEdit(row.id);
+          // handleUpdate(row.id);
         }}
-        className="flex items-center gap-2"
+        className="flex items-center gap-2 w-full"
       >
-        <EditOutlined /> Edit
+        <AuditOutlined className="text-[16px]" /> Process
       </Button>
     ),
   },
@@ -122,7 +187,7 @@ export const Components: FC = (): ReactElement => {
     <main className="w-full px-[48px] py-[40px] flex flex-col gap-8">
       {/* Header */}
       <header className="bg-white py-4 px-8 rounded-lg shadow p-4">
-        <h1 className="text-p2 font-semibold">Data Akun</h1>
+        <h1 className="text-p2 font-semibold">Data Pengiriman Hadiah</h1>
       </header>
 
       {/* Account Table Section */}
@@ -131,7 +196,7 @@ export const Components: FC = (): ReactElement => {
         <div className="flex justify-between items-center gap-8 mb-2">
           <div className="relative w-full">
             <Input
-              placeholder="Cari berdasarkan nama lengkap, email"
+              placeholder="Cari berdasarkan nama lengkap, nomor order Shopee"
               className="pl-12 w-full max-h-full"
             />
             <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[16px]">
@@ -144,7 +209,6 @@ export const Components: FC = (): ReactElement => {
               variant="primary"
               size="md"
               className="flex items-center gap-3"
-              disabled
               onClick={() => setShowFilter(!showFilter)}
             >
               <FilterOutlined />

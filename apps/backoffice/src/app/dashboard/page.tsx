@@ -1,4 +1,10 @@
-import { ArrowDownOutlined, PlusOutlined } from '@ant-design/icons';
+import {
+  PlusOutlined,
+  ReloadOutlined,
+  UsergroupAddOutlined,
+  UsergroupDeleteOutlined,
+  UserSwitchOutlined,
+} from '@ant-design/icons';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { FC, ReactElement } from 'react';
 
@@ -6,7 +12,7 @@ export const Components: FC = (): ReactElement => {
   return (
     <main className="w-full px-[48px] py-[40px] flex flex-col gap-8">
       {/* Dashboard Header */}
-      <header className="bg-white py-4 px-8 rounded-md shadow p-4">
+      <header className="bg-white py-4 px-8 rounded-lg shadow p-4">
         <h1 className="text-p2 font-semibold">Dashboard</h1>
       </header>
 
@@ -18,23 +24,51 @@ export const Components: FC = (): ReactElement => {
               Summary
             </h2>
             <div className="grid grid-cols-2 gap-4">
-              {/* Summary Cards */}
-              {[1, 2, 3, 4].map((item) => (
-                <div
-                  key={item}
-                  className="bg-white rounded-lg shadow-sm py-4 px-6 flex items-center border border-neutral-100"
-                >
-                  <div className="mr-4 text-primary-500 bg-primary-100 p-[8px] rounded-md">
-                    <ArrowDownOutlined className="text-[20px]" />
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <h3 className="text-p1 font-semibold">1000</h3>
-                    <p className="text-label1 text-neutral-500">
-                      Total Participants
-                    </p>
-                  </div>
+              {/* Participants */}
+              <div className="bg-white rounded-lg shadow-sm py-4 px-6 flex items-center border border-neutral-100">
+                <div className="mr-4 text-primary-500 bg-primary-100 p-[8px] rounded-md">
+                  <UsergroupAddOutlined className="text-[20px]" />
                 </div>
-              ))}
+                <div className="flex flex-col gap-1">
+                  <h3 className="text-p1 font-semibold">1000</h3>
+                  <p className="text-label1 text-neutral-500">Participants</p>
+                </div>
+              </div>
+
+              {/* Roll and Reroll */}
+              <div className="bg-white rounded-lg shadow-sm py-4 px-6 flex items-center border border-neutral-100">
+                <div className="mr-4 text-primary-500 bg-primary-100 p-[8px] rounded-md">
+                  <ReloadOutlined className="text-[20px]" />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <h3 className="text-p1 font-semibold">1000</h3>
+                  <p className="text-label1 text-neutral-500">
+                    Roll and Reroll
+                  </p>
+                </div>
+              </div>
+
+              {/* Redeem */}
+              <div className="bg-white rounded-lg shadow-sm py-4 px-6 flex items-center border border-neutral-100">
+                <div className="mr-4 text-primary-500 bg-primary-100 p-[8px] rounded-md">
+                  <UserSwitchOutlined className="text-[20px]" />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <h3 className="text-p1 font-semibold">1000</h3>
+                  <p className="text-label1 text-neutral-500">Redeem</p>
+                </div>
+              </div>
+
+              {/* Inactive Users */}
+              <div className="bg-white rounded-lg shadow-sm py-4 px-6 flex items-center border border-neutral-100">
+                <div className="mr-4 text-primary-500 bg-primary-100 p-[8px] rounded-md">
+                  <UsergroupDeleteOutlined className="text-[20px]" />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <h3 className="text-p1 font-semibold">1000</h3>
+                  <p className="text-label1 text-neutral-500">Inactive Users</p>
+                </div>
+              </div>
             </div>
           </section>
 
@@ -78,7 +112,7 @@ export const Components: FC = (): ReactElement => {
                       <Button
                         variant="text"
                         size="sm"
-                        className="text-[10px] text-neutral-500 p-0 font-normal hover:bg-transparent hover:text-red-500"
+                        className="text-[10px] text-red-500 p-0 font-normal hover:bg-transparent hover:text-red-700"
                       >
                         Delete
                       </Button>
@@ -87,7 +121,7 @@ export const Components: FC = (): ReactElement => {
 
                   {/* Lebih baik gunakan gambar yang sudah di-clip dengan size height: 78px daripada hard-code object-position dan margin */}
                   <img
-                    src="gacha-clip.png"
+                    src="gacha-clip.webp"
                     alt="Lanyard IMPHNEN"
                     className="h-full"
                   />
@@ -99,7 +133,7 @@ export const Components: FC = (): ReactElement => {
 
         {/* Right-side illustration */}
         <img
-          src="gacha.png"
+          src="gacha.webp"
           alt=""
           className="rounded-lg hidden xl:block xl:min-w-[436px] h-auto object-cover"
         />

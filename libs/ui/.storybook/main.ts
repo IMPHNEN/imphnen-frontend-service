@@ -11,6 +11,10 @@ const config: StorybookConfig = {
       },
     },
   },
+  staticDirs: [
+    '../../../apps/backoffice/public',
+    '../../../apps/gacha/public',
+    '../../../apps/dimentorin/public', ],
 };
 
 export default config;
