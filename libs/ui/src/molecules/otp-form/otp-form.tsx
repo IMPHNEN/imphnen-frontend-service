@@ -53,6 +53,7 @@ export const OtpForm: FC<TForgotStepProps> = ({
               onKeyDown={(e) => handleKeyDown(i, e)}
               size="lg"
               value={cell[i]}
+              className="sm:min-w-[10px]"
             />
           ))}
         </div>

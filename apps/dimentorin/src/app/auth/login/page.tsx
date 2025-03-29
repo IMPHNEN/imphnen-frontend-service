@@ -1,7 +1,8 @@
 import { FC, ReactElement } from 'react';
 import { LoginBanner } from "@imphnen-frontend-service/ui/organisms"
-import { Button, Input, PasswordInput } from '@imphnen-frontend-service/ui/atoms';
+import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { useSearchParams } from 'react-router-dom';
+import { InputForm } from '@imphnen-frontend-service/ui/molecules';
 
 export const Components: FC = (): ReactElement => {
   const [searchParams] = useSearchParams();
@@ -15,10 +16,8 @@ export const Components: FC = (): ReactElement => {
           <div className='w-[404px]'>
             <h2 className='text-4xl font-semibold text-primary-500 text-center mb-2'>Hallo Minna-san</h2>
             <h5 className='text-xl font-medium text-primary-500 text-center'>Welcome to Dimentorin by IMPHNEN</h5>
-            <h6 className='text-gray-600 mt-10 font-medium'>Email</h6>
-            <Input error={error ? error : undefined} size='lg' className='w-full' placeholder='Masukkan email-mu, Senpai~! ✨ (Pastikan tidak typo, ya~ 😆)' />
-            <h6 className='text-gray-600 mt-3 font-medium'>Password</h6>
-            <PasswordInput error={error ? error : undefined} className='w-full' size='lg' type='password' placeholder='Masukkan password rahasiamu!' />
+            <InputForm label='Email' error={error ? error : undefined} size='lg' className='w-full' placeholder='Masukkan email-mu, Senpai~! ✨ (Pastikan tidak typo, ya~ 😆)' />
+            <InputForm label="password" error={error ? error : undefined} className='w-full' size='lg' type='password' placeholder='Masukkan password rahasiamu!' />
             <div className='flex justify-end my-5'>
               <a href="/auth/forgot" className='text-primary-500 font-medium'>Lupa Password ?</a>
             </div>

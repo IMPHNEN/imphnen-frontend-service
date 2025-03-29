@@ -1,7 +1,7 @@
 import { FC, ReactElement } from 'react';
 import { RegisterResetBanner } from "@imphnen-frontend-service/ui/organisms";
 import { ForgotStep, OtpForm } from "@imphnen-frontend-service/ui/molecules";
-import { Button, Input } from '@imphnen-frontend-service/ui/atoms';
+import { Button } from '@imphnen-frontend-service/ui/atoms';
 
 export const Components: FC = (): ReactElement => {
   return (
