@@ -1,9 +1,9 @@
 import { ArrowDownOutlined } from '@ant-design/icons';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
-import { ModalsGacha } from '@imphnen-frontend-service/ui/organisms';
+import { InputForm, Modal } from '@imphnen-frontend-service/ui/molecules';
 import { cn } from '@imphnen-frontend-service/utils';
 import { FC, Fragment, ReactElement, useEffect, useState } from 'react';
-import { createPortal } from 'react-dom';
+import { Link } from 'react-router';
 
 interface GachaItemProps {
   src: string;
@@ -14,7 +14,6 @@ interface GachaItemProps {
 export const Components: FC = (): ReactElement => {
   // Pinjem
   const [showModal, setShowModal] = useState(false);
-  //
 
   const scrollToRoulette = () => {
     const rouletteSection = document.getElementById('roulette');
@@ -222,16 +221,58 @@ export const Components: FC = (): ReactElement => {
       <div className="sticky bottom-0 h-[86px] md:h-[200px] bg-gradient-to-b from-primary-500/0 to-primary-500/50 to-80%"></div>
 
       {/**Izin pake untuk debug modals gacha */}
-      <div>
-        <p>Debug : Test Modals Gacha</p>
-        <Button onClick={
-          () => setShowModal(true)
-        }>Tekan</Button>
-      </div>
-      {showModal && createPortal(
-        <ModalsGacha></ModalsGacha>,
-        document.body
-      )}
+      <button onClick={() => setShowModal(true)}>Open Modal</button>
+      <Modal
+        className="py-[45px] min-w-[400px] lg:min-w-[455px] px-7"
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+      >
+        <Modal.Header className="space-y-4">
+          <img src="/logos/logo.svg" alt="" className="h-[70px] w-auto" />
+          <h1 className="text-primary-500 text-p1 text-center font-semibold">
+            Login
+          </h1>
+        </Modal.Header>
+        <Modal.Content className="space-y-4">
+          <InputForm
+            label="Email"
+            placeholder="Masukkan Email"
+            type="email"
+            size="lg"
+            className="w-full"
+          />
+          <InputForm
+            label="Password"
+            placeholder="Masukkan password"
+            type="password"
+            size="lg"
+            className="w-full"
+          />
+          <Link to="/forgot-password">
+            <h1 className="text-end text-primary-500 text-xl font-medium">
+              Lupa Password?
+            </h1>
+          </Link>
+        </Modal.Content>
+        <Modal.Footer className="flex flex-col md:flex-col pt-4">
+          <Button
+            size="md"
+            className="w-full"
+            onClick={() => console.log('Login')}
+          >
+            Login
+          </Button>
+          <div className="flex justify-center gap-2 pt-2.5 font-medium">
+            <p className="text-neutral-500">Belum punya akun?</p>
+            <Link
+              className="text-primary-500 hover:text-primary-600"
+              to="/register"
+            >
+              Daftar disini
+            </Link>
+          </div>
+        </Modal.Footer>
+      </Modal>
       {/**Izin pake untuk debug modals gacha */}
     </Fragment>
   );
