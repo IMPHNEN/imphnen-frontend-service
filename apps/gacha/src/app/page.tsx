@@ -224,14 +224,9 @@ export const Components: FC = (): ReactElement => {
       {/**Izin pake untuk debug modals gacha */}
       <div>
         <p>Debug : Test Modals Gacha</p>
-        <Button onClick={
-          () => setShowModal(true)
-        }>Tekan</Button>
+        <Button onClick={() => setShowModal(true)}>Tekan</Button>
       </div>
-      {showModal && createPortal(
-        <ModalsGacha></ModalsGacha>,
-        document.body
-      )}
+      {showModal && createPortal(<ModalsGacha></ModalsGacha>, document.body)}
       {/**Izin pake untuk debug modals gacha */}
     </Fragment>
   );
