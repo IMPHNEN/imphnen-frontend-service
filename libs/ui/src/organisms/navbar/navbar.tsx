@@ -40,6 +40,14 @@ export const Navbar: FC = (): ReactElement => {
                   <Link to="#">Merch Gacha</Link>
                 </Button>
               </li>
+              <li>
+                <Button
+                  size="md"
+                  className="lg:text-[19px] lg:max-h-[44px] text-neutral-50 hover:text-neutral-200 transition-colors"
+                >
+                  <Link to="/login">Login</Link>
+                </Button>
+              </li>
             </ul>
             <button
               className={`md:hidden duration-200 ${
@@ -67,6 +75,14 @@ export const Navbar: FC = (): ReactElement => {
                         className="block text-gray-600 transition-colors px-4 py-2 text-center font-semibold"
                       >
                         Merch Gacha
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="#"
+                        className="block text-gray-600 transition-colors px-4 py-2 text-center font-semibold"
+                      >
+                        Login
                       </Link>
                     </li>
                   </ul>
