@@ -1,3 +1,3 @@
 export * from './input-form';
 export * from './pagination';
-export * from './modal';
+export * from './modal/modal';
