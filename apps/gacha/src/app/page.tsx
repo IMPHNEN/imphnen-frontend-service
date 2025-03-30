@@ -234,7 +234,7 @@ export const Components: FC = (): ReactElement => {
             Spin Now
           </Button>
         </div>
-        {/* TODO:  */}
+        {/* TODO: Change using real button trigger */}
         <div className="flex gap-4 col-span-4 md:col-span-8 lg:col-span-6 justify-center items-center">
           <Button onClick={() => setShowModalLogin(true)}>
             Open Modal Login
