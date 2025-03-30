@@ -83,6 +83,7 @@ interface IStepTwoProps {
 
 const StepTwo = ({ nextStep, prevStep }: IStepTwoProps) => (
   <>
+    {/* TODO: Change component using OTP Input */}
     <InputForm
       label="Kode OTP"
       placeholder="Masukkan Kode OTP"
