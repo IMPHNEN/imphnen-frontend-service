@@ -7,9 +7,13 @@ import {
 } from '@ant-design/icons';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { FC, Fragment, ReactElement, useState } from 'react';
+import ModalAddItem from './_components/modal-add-item';
+import ModalEditItem from './_components/modal-edit-item';
 import ModalDeleteItem from './_components/modal-delete-item';
 
 export const Components: FC = (): ReactElement => {
+  const [showModalAddItem, setShowModalAddItem] = useState(false);
+  const [showModalEditItem, setShowModalEditItem] = useState(false);
   const [showModalDeleteItem, setShowModalDeleteItem] = useState(false);
 
   return (
@@ -84,7 +88,12 @@ export const Components: FC = (): ReactElement => {
                 <h2 className="text-p2 font-medium text-primary-500">
                   Gacha Items
                 </h2>
-                <Button variant="primary" size="sm" className="items-end gap-3">
+                <Button
+                  variant="primary"
+                  size="sm"
+                  className="items-end gap-3"
+                  onClick={() => setShowModalAddItem(true)}
+                >
                   <span>Tambah Item</span>
                   <PlusOutlined className="text-[16px]" />
                 </Button>
@@ -112,6 +121,7 @@ export const Components: FC = (): ReactElement => {
                           variant="text"
                           size="sm"
                           className="text-[10px] text-neutral-500 p-0 font-normal hover:bg-transparent hover:text-primary-500"
+                          onClick={() => setShowModalEditItem(true)}
                         >
                           Edit
                         </Button>
@@ -146,6 +156,24 @@ export const Components: FC = (): ReactElement => {
           />
         </div>
       </main>
+
+      {/* Modal Add Item */}
+      <ModalAddItem
+        isOpen={showModalAddItem}
+        onClose={() => setShowModalAddItem(false)}
+        onAddItem={() => {
+          console.log('Item added');
+        }}
+      />
+
+      {/* Modal Add Item */}
+      <ModalEditItem
+        isOpen={showModalEditItem}
+        onClose={() => setShowModalEditItem(false)}
+        onEditItem={() => {
+          console.log('Item edited');
+        }}
+      />
 
       {/* Modal Delete Item */}
       <ModalDeleteItem

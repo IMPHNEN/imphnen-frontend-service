@@ -40,7 +40,7 @@ const ModalDeleteItem = ({
           variant="secondary"
           size="lg"
           className="w-full"
-          onClick={() => onClose()}
+          onClick={onClose}
         >
           Batal Hapus
         </Button>
