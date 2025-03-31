@@ -7,36 +7,36 @@ interface IModalEditAccount {
   onClose: () => void;
   handleEditAccount?: () => void;
   currentStep?: number;
+  nextStep: () => void;
+  prevStep: () => void;
+  resetStep: () => void;
 }
 
 const ModalEditAccount = ({
   isOpen,
   onClose,
+  currentStep,
+  nextStep,
+  prevStep,
+  resetStep,
   handleEditAccount,
-  currentStep = 1,
 }: IModalEditAccount) => {
   return (
     <Modal
       className="min-w-[400px] bg-primary-50 rounded-lg p-[40px] flex flex-col gap-8 text-center"
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={() => {
+        onClose();
+        resetStep();
+      }}
       disableEscapeKeyDown={true}
     >
-      {currentStep === 1 && (
-        <StepOne
-          nextStep={() => {
-            console.log('Next step');
-          }}
-          onClose={onClose}
-        />
-      )}
+      {currentStep === 1 && <StepOne nextStep={nextStep} onClose={onClose} />}
       {currentStep === 2 && (
         <StepTwo
           onClose={onClose}
           handleEditAccount={handleEditAccount}
-          resetStep={() => {
-            console.log('Reset step');
-          }}
+          resetStep={resetStep}
         />
       )}
     </Modal>
@@ -48,7 +48,7 @@ interface IStepOneProps {
   onClose: () => void;
 }
 
-const StepOne = ({ nextStep, onClose }: IStepOneProps) => {
+const StepOne = ({ nextStep }: IStepOneProps) => {
   const [fullName, setFullName] = useState('Ahmad Wiyana');
   const [email, setEmail] = useState('fullname23@gmail.com');
   const [phoneNumber, setPhoneNumber] = useState('081904423804');
@@ -136,7 +136,10 @@ const StepTwo = ({ onClose, handleEditAccount, resetStep }: IStepTwoProps) => (
         variant="bordered"
         size="lg"
         className="w-full"
-        onClick={resetStep}
+        onClick={() => {
+          onClose();
+          resetStep();
+        }}
       >
         Batal
       </Button>
@@ -146,6 +149,8 @@ const StepTwo = ({ onClose, handleEditAccount, resetStep }: IStepTwoProps) => (
         className="w-full"
         onClick={() => {
           handleEditAccount && handleEditAccount();
+          onClose();
+          resetStep();
         }}
       >
         Update

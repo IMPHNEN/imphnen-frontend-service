@@ -10,11 +10,23 @@ import { FC, Fragment, ReactElement, useState } from 'react';
 import ModalAddItem from './_components/modal-add-item';
 import ModalEditItem from './_components/modal-edit-item';
 import ModalDeleteItem from './_components/modal-delete-item';
+import { useQueryState } from '../../hook/use-query-state';
 
 export const Components: FC = (): ReactElement => {
   const [showModalAddItem, setShowModalAddItem] = useState(false);
   const [showModalEditItem, setShowModalEditItem] = useState(false);
   const [showModalDeleteItem, setShowModalDeleteItem] = useState(false);
+
+  const {
+    step: currentStep,
+    nextStep,
+    prevStep,
+    resetStep,
+  } = useQueryState('step', {
+    defaultValue: 1,
+    maxValue: 2,
+    minValue: 1,
+  });
 
   return (
     <Fragment>
@@ -159,20 +171,28 @@ export const Components: FC = (): ReactElement => {
 
       {/* Modal Add Item */}
       <ModalAddItem
+        currentStep={currentStep}
         isOpen={showModalAddItem}
         onClose={() => setShowModalAddItem(false)}
         handleAddItem={() => {
           console.log('Item added');
         }}
+        nextStep={nextStep}
+        prevStep={prevStep}
+        resetStep={resetStep}
       />
 
       {/* Modal Edit Item */}
       <ModalEditItem
+        currentStep={currentStep}
         isOpen={showModalEditItem}
         onClose={() => setShowModalEditItem(false)}
         handleEditItem={() => {
           console.log('Item edited');
         }}
+        nextStep={nextStep}
+        prevStep={prevStep}
+        resetStep={resetStep}
       />
 
       {/* Modal Delete Item */}

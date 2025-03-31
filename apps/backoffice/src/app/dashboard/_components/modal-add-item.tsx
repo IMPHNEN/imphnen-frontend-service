@@ -6,49 +6,47 @@ interface IModalAddItem {
   onClose: () => void;
   handleAddItem: () => void;
   currentStep?: number;
+  nextStep: () => void;
+  prevStep: () => void;
+  resetStep: () => void;
 }
 
 const ModalAddItem = ({
   isOpen,
   onClose,
+  currentStep,
+  nextStep,
+  resetStep,
   handleAddItem,
-  currentStep = 1,
 }: IModalAddItem) => {
   return (
     <Modal
       className="min-w-[400px] bg-primary-50 rounded-lg p-[40px] flex flex-col gap-8 text-center"
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={() => {
+        onClose();
+        resetStep();
+      }}
       disableEscapeKeyDown={true}
     >
-      {currentStep === 1 && (
-        <StepOne
-          nextStep={() => {
-            console.log('Next step');
-          }}
-          onClose={onClose}
-        />
-      )}
+      {currentStep === 1 && <StepOne nextStep={nextStep} onClose={onClose} />}
       {currentStep === 2 && (
         <StepTwo
           onClose={onClose}
           handleAddItem={handleAddItem}
-          resetStep={() => {
-            console.log('Reset step');
-          }}
+          resetStep={resetStep}
         />
       )}
     </Modal>
   );
 };
 
-// TODO: Functional stepper
 interface IStepOneProps {
   nextStep: () => void;
   onClose: () => void;
 }
 
-const StepOne = ({ nextStep, onClose }: IStepOneProps) => (
+const StepOne = ({ nextStep }: IStepOneProps) => (
   <>
     <Modal.Header>
       <h2 className="text-p1 font-semibold text-primary-500 mb-3">
@@ -83,7 +81,7 @@ const StepOne = ({ nextStep, onClose }: IStepOneProps) => (
         />
       </div>
 
-      <Button variant="primary" size="lg" className="w-full">
+      <Button variant="primary" size="lg" className="w-full" onClick={nextStep}>
         Tambahkan Item
       </Button>
     </Modal.Content>
@@ -92,8 +90,8 @@ const StepOne = ({ nextStep, onClose }: IStepOneProps) => (
 
 interface IStepTwoProps {
   onClose: () => void;
-  resetStep: () => void;
   handleAddItem?: () => void;
+  resetStep: () => void;
 }
 
 const StepTwo = ({ onClose, handleAddItem, resetStep }: IStepTwoProps) => (
@@ -112,7 +110,10 @@ const StepTwo = ({ onClose, handleAddItem, resetStep }: IStepTwoProps) => (
         variant="bordered"
         size="lg"
         className="w-full"
-        onClick={resetStep}
+        onClick={() => {
+          onClose();
+          resetStep();
+        }}
       >
         Batal
       </Button>
@@ -122,6 +123,8 @@ const StepTwo = ({ onClose, handleAddItem, resetStep }: IStepTwoProps) => (
         className="w-full"
         onClick={() => {
           handleAddItem && handleAddItem();
+          onClose();
+          resetStep();
         }}
       >
         Tambahkan

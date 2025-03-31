@@ -6,35 +6,35 @@ interface IModalEditItem {
   onClose: () => void;
   handleEditItem?: () => void;
   currentStep?: number;
+  nextStep: () => void;
+  prevStep: () => void;
+  resetStep: () => void;
 }
 
 const ModalEditItem = ({
   isOpen,
   onClose,
+  currentStep,
+  nextStep,
+  resetStep,
   handleEditItem,
-  currentStep = 1,
 }: IModalEditItem) => {
   return (
     <Modal
       className="min-w-[400px] bg-primary-50 rounded-lg p-[40px] flex flex-col gap-8 text-center"
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={() => {
+        onClose();
+        resetStep();
+      }}
       disableEscapeKeyDown={true}
     >
-      {currentStep === 1 && (
-        <StepOne
-          nextStep={() => {
-            console.log('Next step');
-          }}
-          onClose={onClose}
-        />
-      )}
+      {currentStep === 1 && <StepOne nextStep={nextStep} onClose={onClose} />}
       {currentStep === 2 && (
         <StepTwo
           onClose={onClose}
-          resetStep={() => {
-            console.log('Reset step');
-          }}
+          handleEditItem={handleEditItem}
+          resetStep={resetStep}
         />
       )}
     </Modal>
@@ -46,7 +46,7 @@ interface IStepOneProps {
   onClose: () => void;
 }
 
-const StepOne = ({ nextStep, onClose }: IStepOneProps) => (
+const StepOne = ({ nextStep }: IStepOneProps) => (
   <>
     <Modal.Header>
       <h2 className="text-p1 font-semibold text-primary-500 mb-3">
@@ -110,7 +110,10 @@ const StepTwo = ({ onClose, handleEditItem, resetStep }: IStepTwoProps) => (
         variant="bordered"
         size="lg"
         className="w-full"
-        onClick={resetStep}
+        onClick={() => {
+          onClose();
+          resetStep();
+        }}
       >
         Batal
       </Button>
@@ -120,6 +123,8 @@ const StepTwo = ({ onClose, handleEditItem, resetStep }: IStepTwoProps) => (
         className="w-full"
         onClick={() => {
           handleEditItem && handleEditItem();
+          onClose();
+          resetStep();
         }}
       >
         Update

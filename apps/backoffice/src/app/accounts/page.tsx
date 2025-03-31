@@ -18,6 +18,7 @@ import {
   RowSelectionState,
 } from '@tanstack/react-table';
 import ModalEditAccount from './_components/modal-edit-account';
+import { useQueryState } from '../../hook/use-query-state';
 
 interface Account {
   id: number;
@@ -38,6 +39,17 @@ const mockData: Account[] = Array.from({ length: 90 }, (_, i) => ({
 
 export const Components: FC = (): ReactElement => {
   const [showModalEditAccount, setShowModalEditAccount] = useState(false);
+
+  const {
+    step: currentStep,
+    nextStep,
+    prevStep,
+    resetStep,
+  } = useQueryState('step', {
+    defaultValue: 1,
+    maxValue: 2,
+    minValue: 1,
+  });
 
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
@@ -166,11 +178,15 @@ export const Components: FC = (): ReactElement => {
 
       {/* Modal Edit Account */}
       <ModalEditAccount
+        currentStep={currentStep}
         isOpen={showModalEditAccount}
         onClose={() => setShowModalEditAccount(false)}
         handleEditAccount={() => {
           console.log('Account updated');
         }}
+        nextStep={nextStep}
+        prevStep={prevStep}
+        resetStep={resetStep}
       />
     </Fragment>
   );
