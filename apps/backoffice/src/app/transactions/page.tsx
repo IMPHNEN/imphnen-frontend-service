@@ -50,6 +50,12 @@ export const Components: FC = (): ReactElement => {
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
   const [showFilter, setShowFilter] = useState(false);
 
+  const validationOptions = [
+    { id: 'option1', value: 'unchecked', label: 'Unchecked' },
+    { id: 'option2', value: 'valid', label: 'Valid' },
+    { id: 'option3', value: 'invalid', label: 'Invalid' },
+  ];
+
   const columns: ColumnDef<Transaction>[] = [
     {
       id: 'select',
@@ -174,7 +180,14 @@ export const Components: FC = (): ReactElement => {
               </Button>
               {showFilter && (
                 <div className="absolute right-0 top-[calc(100%+12px)] z-10 shadow-lg">
-                  <Filter onClose={() => setShowFilter(false)} />
+                  <Filter
+                    options={validationOptions}
+                    onClose={() => setShowFilter(false)}
+                    onFilterChange={(value) => {
+                      console.log('Selected filter:', value);
+                      // Filter logic di sini
+                    }}
+                  />
                 </div>
               )}
             </div>

@@ -66,6 +66,11 @@ export const Components: FC = (): ReactElement => {
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
   const [showFilter, setShowFilter] = useState(false);
 
+  const deliveryOptions = [
+    { id: 'option1', value: 'undelivered', label: 'Undelivered' },
+    { id: 'option1', value: 'delivered', label: 'Delivered' },
+  ];
+
   const columns: ColumnDef<Prize>[] = [
     {
       id: 'select',
@@ -214,7 +219,14 @@ export const Components: FC = (): ReactElement => {
               </Button>
               {showFilter && (
                 <div className="absolute right-0 top-[calc(100%+12px)] z-10 shadow-lg">
-                  <Filter onClose={() => setShowFilter(false)} />
+                  <Filter
+                    options={deliveryOptions}
+                    onClose={() => setShowFilter(false)}
+                    onFilterChange={(value) => {
+                      console.log('Selected filter:', value);
+                      // Filter logic di sini
+                    }}
+                  />
                 </div>
               )}
             </div>
