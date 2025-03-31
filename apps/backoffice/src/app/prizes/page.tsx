@@ -155,6 +155,7 @@ export const Components: FC = (): ReactElement => {
           variant="primary"
           size="sm"
           onClick={(e) => {
+            e.stopPropagation();
             setShowModalProcessDelivery(true);
           }}
           className="flex items-center gap-2 w-full"
@@ -227,8 +228,8 @@ export const Components: FC = (): ReactElement => {
       <ModalProcessDelivery
         isOpen={showModalProcessDelivery}
         onClose={() => setShowModalProcessDelivery(false)}
-        onProcessDelivery={() => {
-          console.log('Item added');
+        handleProcessDelivery={() => {
+          console.log('Action ketika user menekan tombol Proses Pengiriman');
         }}
       />
     </Fragment>

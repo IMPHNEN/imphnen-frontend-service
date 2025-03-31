@@ -161,16 +161,16 @@ export const Components: FC = (): ReactElement => {
       <ModalAddItem
         isOpen={showModalAddItem}
         onClose={() => setShowModalAddItem(false)}
-        onAddItem={() => {
+        handleAddItem={() => {
           console.log('Item added');
         }}
       />
 
-      {/* Modal Add Item */}
+      {/* Modal Edit Item */}
       <ModalEditItem
         isOpen={showModalEditItem}
         onClose={() => setShowModalEditItem(false)}
-        onEditItem={() => {
+        handleEditItem={() => {
           console.log('Item edited');
         }}
       />
@@ -179,7 +179,7 @@ export const Components: FC = (): ReactElement => {
       <ModalDeleteItem
         isOpen={showModalDeleteItem}
         onClose={() => setShowModalDeleteItem(false)}
-        onDeleteItem={() => {
+        handleDeleteItem={() => {
           console.log('Item deleted');
         }}
       />

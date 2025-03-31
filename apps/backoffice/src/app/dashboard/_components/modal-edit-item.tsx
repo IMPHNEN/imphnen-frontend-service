@@ -4,14 +4,14 @@ import { InputForm, Modal } from '@imphnen-frontend-service/ui/molecules';
 interface IModalEditItem {
   isOpen: boolean;
   onClose: () => void;
-  onEditItem: () => void;
+  handleEditItem?: () => void;
   currentStep?: number;
 }
 
 const ModalEditItem = ({
   isOpen,
   onClose,
-  onEditItem,
+  handleEditItem,
   currentStep = 1,
 }: IModalEditItem) => {
   return (
@@ -81,7 +81,7 @@ const StepOne = ({ nextStep, onClose }: IStepOneProps) => (
         />
       </div>
 
-      <Button variant="primary" size="lg" className="w-full">
+      <Button variant="primary" size="lg" className="w-full" onClick={nextStep}>
         Perbarui Item
       </Button>
     </Modal.Content>
@@ -90,10 +90,11 @@ const StepOne = ({ nextStep, onClose }: IStepOneProps) => (
 
 interface IStepTwoProps {
   onClose: () => void;
+  handleEditItem?: () => void;
   resetStep: () => void;
 }
 
-const StepTwo = ({ onClose, resetStep }: IStepTwoProps) => (
+const StepTwo = ({ onClose, handleEditItem, resetStep }: IStepTwoProps) => (
   <>
     <Modal.Header className="mb-0 text-center items-center">
       <h2 className="text-p1 font-semibold text-primary-500 mb-3">
@@ -105,10 +106,22 @@ const StepTwo = ({ onClose, resetStep }: IStepTwoProps) => (
       </p>
     </Modal.Header>
     <Modal.Content className="flex gap-4">
-      <Button variant="bordered" size="lg" className="w-full" onClick={onClose}>
+      <Button
+        variant="bordered"
+        size="lg"
+        className="w-full"
+        onClick={resetStep}
+      >
         Batal
       </Button>
-      <Button variant="primary" size="lg" className="w-full">
+      <Button
+        variant="primary"
+        size="lg"
+        className="w-full"
+        onClick={() => {
+          handleEditItem && handleEditItem();
+        }}
+      >
         Update
       </Button>
     </Modal.Content>

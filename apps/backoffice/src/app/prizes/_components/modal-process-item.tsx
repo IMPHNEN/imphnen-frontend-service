@@ -4,10 +4,14 @@ import { InputForm, Modal } from '@imphnen-frontend-service/ui/molecules';
 interface IModalProcessDelivery {
   isOpen: boolean;
   onClose: () => void;
-  onProcessDelivery?: () => void;
+  handleProcessDelivery?: () => void;
 }
 
-const ModalProcessDelivery = ({ isOpen, onClose }: IModalProcessDelivery) => {
+const ModalProcessDelivery = ({
+  isOpen,
+  onClose,
+  handleProcessDelivery,
+}: IModalProcessDelivery) => {
   return (
     <Modal
       className="min-w-[400px] bg-primary-50 rounded-lg p-[40px] flex flex-col gap-8 text-center"
@@ -33,6 +37,7 @@ const ModalProcessDelivery = ({ isOpen, onClose }: IModalProcessDelivery) => {
             value="Ahmad Wiyana"
             size="lg"
             className="w-full"
+            readOnly
           />
           <InputForm
             label="Item yang didapatkan"
@@ -41,6 +46,7 @@ const ModalProcessDelivery = ({ isOpen, onClose }: IModalProcessDelivery) => {
             value="Lanyard + ID Card"
             size="lg"
             className="w-full"
+            readOnly
           />
           <InputForm
             label="Alamat Pengiriman"
@@ -49,6 +55,7 @@ const ModalProcessDelivery = ({ isOpen, onClose }: IModalProcessDelivery) => {
             value="Jl. Pantai Cibaduyut Indah"
             size="lg"
             className="w-full"
+            readOnly
           />
           <InputForm
             label="Status"
@@ -57,10 +64,16 @@ const ModalProcessDelivery = ({ isOpen, onClose }: IModalProcessDelivery) => {
             value="Lanyard + ID Card"
             size="lg"
             className="w-full"
+            readOnly
           />
         </div>
 
-        <Button variant="primary" size="lg" className="w-full">
+        <Button
+          variant="primary"
+          size="lg"
+          className="w-full"
+          onClick={() => handleProcessDelivery && handleProcessDelivery()}
+        >
           Proses Pengiriman
         </Button>
       </Modal.Content>
