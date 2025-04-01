@@ -2,9 +2,9 @@ import { ArrowDownOutlined } from '@ant-design/icons';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { cn } from '@imphnen-frontend-service/utils';
 import { FC, Fragment, ReactElement, useEffect, useState } from 'react';
-import { useQueryState } from '../hooks/use-query-state';
 import ModalFormForgotPassword from './_components/form/modal-form-forgot-password';
 import ModalFormLogin from './_components/form/modal-form-login';
+import ModalFormRegister from './_components/form/modal-form-register';
 
 interface GachaItemProps {
   src: string;
@@ -15,17 +15,7 @@ interface GachaItemProps {
 export const Components: FC = (): ReactElement => {
   const [showModalForgotPassword, setShowModalForgotPassword] = useState(false);
   const [showModalLogin, setShowModalLogin] = useState(false);
-
-  const {
-    step: currentStep,
-    nextStep,
-    prevStep,
-    resetStep,
-  } = useQueryState('step', {
-    defaultValue: 1,
-    maxValue: 3,
-    minValue: 1,
-  });
+  const [showModalRegister, setShowModalRegister] = useState(false);
 
   const scrollToRoulette = () => {
     const rouletteSection = document.getElementById('roulette');
@@ -80,7 +70,6 @@ export const Components: FC = (): ReactElement => {
   const handleForgotPasswordClick = () => {
     setShowModalLogin(false);
     setShowModalForgotPassword(true);
-    resetStep();
   };
 
   return (
@@ -242,6 +231,9 @@ export const Components: FC = (): ReactElement => {
           <Button onClick={() => setShowModalForgotPassword(true)}>
             Open Modal Forgot Password
           </Button>
+          <Button onClick={() => setShowModalRegister(true)}>
+            Open Modal Register
+          </Button>
         </div>
       </section>
       {/* Diffuser & Cloud */}
@@ -252,21 +244,26 @@ export const Components: FC = (): ReactElement => {
         isOpen={showModalLogin}
         onClose={() => setShowModalLogin(false)}
         onForgotPassword={handleForgotPasswordClick}
-        key={currentStep}
+        key="login"
+      />
+
+      {/* Register Modal */}
+      <ModalFormRegister
+        isOpen={showModalRegister}
+        onClose={() => {
+          setShowModalRegister(false);
+        }}
+        key="register"
       />
 
       {/* Forgot Password Modal */}
       <ModalFormForgotPassword
-        currentStep={currentStep}
         isOpen={showModalForgotPassword}
         onClose={() => {
           setShowModalForgotPassword(false);
           setShowModalLogin(true);
         }}
-        nextStep={nextStep}
-        prevStep={prevStep}
-        resetStep={resetStep}
-        key={currentStep}
+        key="forgot-password"
       />
     </Fragment>
   );
