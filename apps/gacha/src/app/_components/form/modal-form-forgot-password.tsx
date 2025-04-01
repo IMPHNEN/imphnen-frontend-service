@@ -4,24 +4,28 @@ import {
   Modal,
   Stepper,
 } from '@imphnen-frontend-service/ui/molecules';
+import { useQueryState } from '../../../hooks/use-query-state';
 
 interface IModalFormForgotPasswordProps {
   isOpen: boolean;
   onClose: () => void;
-  currentStep: number;
-  nextStep: () => void;
-  prevStep: () => void;
-  resetStep: () => void;
 }
 
 const ModalFormForgotPassword = ({
   isOpen,
   onClose,
-  currentStep,
-  nextStep,
-  prevStep,
-  resetStep,
 }: IModalFormForgotPasswordProps) => {
+  const {
+    step: currentStep,
+    nextStep,
+    prevStep,
+    resetStep,
+  } = useQueryState('step', {
+    defaultValue: 1,
+    maxValue: 3,
+    minValue: 1,
+  });
+
   return (
     <Modal
       className="py-[45px] min-w-[400px] lg:min-w-[455px] px-7"
