@@ -1,0 +1,136 @@
+import { Button } from '@imphnen-frontend-service/ui/atoms';
+import { InputForm, Modal } from '@imphnen-frontend-service/ui/molecules';
+
+interface IModalEditItem {
+  isOpen: boolean;
+  onClose: () => void;
+  handleEditItem?: () => void;
+  currentStep?: number;
+  nextStep: () => void;
+  prevStep: () => void;
+  resetStep: () => void;
+}
+
+const ModalEditItem = ({
+  isOpen,
+  onClose,
+  currentStep,
+  nextStep,
+  resetStep,
+  handleEditItem,
+}: IModalEditItem) => {
+  return (
+    <Modal
+      className="min-w-[400px] bg-primary-50 rounded-lg p-[40px] flex flex-col gap-8 text-center"
+      isOpen={isOpen}
+      onClose={() => {
+        onClose();
+        resetStep();
+      }}
+      disableEscapeKeyDown={true}
+    >
+      {currentStep === 1 && <StepOne nextStep={nextStep} onClose={onClose} />}
+      {currentStep === 2 && (
+        <StepTwo
+          onClose={onClose}
+          handleEditItem={handleEditItem}
+          resetStep={resetStep}
+        />
+      )}
+    </Modal>
+  );
+};
+
+interface IStepOneProps {
+  nextStep: () => void;
+  onClose: () => void;
+}
+
+const StepOne = ({ nextStep }: IStepOneProps) => (
+  <>
+    <Modal.Header>
+      <h2 className="text-p1 font-semibold text-primary-500 mb-3">
+        Edit Item Gacha
+      </h2>
+      <p className="text-p3 text-neutral-400">
+        Silakan mengubah detail dari item yang diperlukan
+      </p>
+    </Modal.Header>
+    <Modal.Content className="flex flex-col gap-8">
+      <div className="flex flex-col gap-4">
+        <InputForm
+          label="Nama Hadiah"
+          type="text"
+          placeholder="Masukkan Nama Hadiah"
+          size="lg"
+          className="w-full"
+        />
+        <InputForm
+          label="Chance Rate"
+          type="text"
+          placeholder="Masukkan Chance Rate"
+          size="lg"
+          className="w-full"
+        />
+        <InputForm
+          label="Foto Barang"
+          type="file"
+          placeholder=".jpg, .jpeg, atau .png"
+          size="lg"
+          className="w-full"
+        />
+      </div>
+
+      <Button variant="primary" size="lg" className="w-full" onClick={nextStep}>
+        Perbarui Item
+      </Button>
+    </Modal.Content>
+  </>
+);
+
+interface IStepTwoProps {
+  onClose: () => void;
+  handleEditItem?: () => void;
+  resetStep: () => void;
+}
+
+const StepTwo = ({ onClose, handleEditItem, resetStep }: IStepTwoProps) => (
+  <>
+    <Modal.Header className="mb-0 text-center items-center">
+      <h2 className="text-p1 font-semibold text-primary-500 mb-3">
+        Update Item
+      </h2>
+      <p className="text-p3 text-neutral-400">
+        Apakah kamu yakin dengan
+        <br /> perubahan yang dilakukan?
+      </p>
+    </Modal.Header>
+    <Modal.Content className="flex gap-4">
+      <Button
+        variant="bordered"
+        size="lg"
+        className="w-full"
+        onClick={() => {
+          onClose();
+          resetStep();
+        }}
+      >
+        Batal
+      </Button>
+      <Button
+        variant="primary"
+        size="lg"
+        className="w-full"
+        onClick={() => {
+          handleEditItem && handleEditItem();
+          onClose();
+          resetStep();
+        }}
+      >
+        Update
+      </Button>
+    </Modal.Content>
+  </>
+);
+
+export default ModalEditItem;

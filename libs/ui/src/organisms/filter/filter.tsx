@@ -42,13 +42,31 @@ const Radio = ({
 
 interface FilterProps {
   onClose?: () => void;
+  options: Array<{
+    id: string;
+    value: string;
+    label: string;
+  }>;
+  selectedValue?: string;
+  onFilterChange?: (value: string) => void;
+  title?: string;
 }
 
-export const Filter = ({ onClose }: FilterProps) => {
-  const [selectedStatus, setSelectedStatus] = useState('delivered');
+export const Filter = ({
+  onClose,
+  options,
+  selectedValue,
+  onFilterChange,
+  title = 'Status',
+}: FilterProps) => {
+  const [selectedStatus, setSelectedStatus] = useState(
+    selectedValue || options[0]?.value || ''
+  );
 
   const handleStatusChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedStatus(e.target.value);
+    const newValue = e.target.value;
+    setSelectedStatus(newValue);
+    onFilterChange?.(newValue);
   };
 
   return (
@@ -63,24 +81,19 @@ export const Filter = ({ onClose }: FilterProps) => {
         </button>
       </div>
       <hr className="border-primary-200" />
-      <span className="font-semibold text-primary-500">Status</span>
+      <span className="font-semibold text-primary-500">{title}</span>
       <div className="flex flex-col gap-[10px]">
-        <Radio
-          id="option1"
-          name="status"
-          value="undelivered"
-          label="Undelivered"
-          checked={selectedStatus === 'undelivered'}
-          onChange={handleStatusChange}
-        />
-        <Radio
-          id="option2"
-          name="status"
-          value="delivered"
-          label="Delivered"
-          checked={selectedStatus === 'delivered'}
-          onChange={handleStatusChange}
-        />
+        {options.map((option) => (
+          <Radio
+            key={option.id}
+            id={option.id}
+            name="status"
+            value={option.value}
+            label={option.label}
+            checked={selectedStatus === option.value}
+            onChange={handleStatusChange}
+          />
+        ))}
       </div>
     </div>
   );

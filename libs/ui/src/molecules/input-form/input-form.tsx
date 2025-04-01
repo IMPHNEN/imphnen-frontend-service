@@ -7,7 +7,7 @@ import {
 import { Input } from '../../atoms';
 import { cn } from '@imphnen-frontend-service/utils';
 
-type TInputType = 'text' | 'email' | 'password';
+type TInputType = 'text' | 'email' | 'password' | 'file';
 type TInputSize = 'sm' | 'md' | 'lg';
 
 type TInputFormProps = Omit<

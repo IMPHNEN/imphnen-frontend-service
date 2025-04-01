@@ -8,7 +8,7 @@
     "gacha:prod": "serve ./dist/apps/gacha",
     "backoffice:dev": "nx serve backoffice",
     "backoffice:build": "nx build backoffice",
-    "backoffice:prod": "serve ./dist/apps/gacha",
+    "backoffice:prod": "serve ./dist/apps/backoffice",
     "dimentorin:dev": "nx serve dimentorin",
     "dimentorin:build": "nx build dimentorin",
     "dimentorin:prod": "serve ./dist/apps/dimentorin",

@@ -9,7 +9,7 @@ import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons'; // Import
 import { cn } from '@imphnen-frontend-service/utils';
 import { Button } from '../button';
 
-type TInputType = 'text' | 'email' | 'password';
+type TInputType = 'text' | 'email' | 'password' | 'file';
 type TInputSize = 'sm' | 'md' | 'lg';
 
 type TInputProps = Omit<
