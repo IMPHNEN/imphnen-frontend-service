@@ -16,6 +16,10 @@ export const Components: FC = (): ReactElement => {
       console.log(payload); // for debugging
       const response = await postLogin(payload);
 
+      const { access_token, refresh_token } = response.data.token;
+      sessionStorage.setItem('access_token', access_token);
+      localStorage.setItem('refresh_token', refresh_token);
+
       console.log('Login successful:', response); // for debugging
       navigate('/dashboard');
     } catch (error) {
@@ -39,6 +43,7 @@ export const Components: FC = (): ReactElement => {
             className="w-full"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            autoFocus
           />
           <InputForm
             label="Password"

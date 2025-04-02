@@ -10,9 +10,27 @@ export type TLoginResponse = {
       refresh_token: string;
     };
     user: {
+      role: {
+        id: string;
+        name: string;
+        permission: [
+          {
+            id: string;
+            name: string;
+            created_at: string;
+            updated_at: string;
+          }
+        ]
+        created_at: string;
+        updated_at: string;
+      };
       fullname: string;
       email: string;
+      avatar: string;
+      phone_number: string;
       is_active: boolean;
+      gender: string;
+      birthdate: string;
     };
   };
 };

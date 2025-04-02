@@ -14,6 +14,13 @@ export const BackofficeSidebar: FC = (): ReactElement => {
   const navigate = useNavigate();
   const isActive = (path: string) => location.pathname.includes(path);
 
+  const handleLogout = () => {
+    sessionStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+
+    navigate('/');
+  };
+
   return (
     <aside className="sticky top-0 left-0 w-[280px] bg-white min-h-screen py-[60px] px-[28px] shadow-xl flex flex-col justify-between">
       <div className="flex flex-col gap-20 justify-between items-center">
@@ -77,9 +84,7 @@ export const BackofficeSidebar: FC = (): ReactElement => {
         <hr className="mb-5 border-primary-200" />
 
         <Button
-          onClick={() => {
-            navigate('/');
-          }}
+          onClick={handleLogout}
           variant="text"
           className="items-start justify-start gap-3 px-[8px] py-[10px] text-gray-700 hover:text-red-500 transition-colors w-full"
         >

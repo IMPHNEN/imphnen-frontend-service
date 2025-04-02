@@ -40,7 +40,8 @@ export const Input: FC<TInputProps> = ({
 }): ReactElement => {
   const [showPassword, setShowPassword] = useState(false); // State for password visibility
 
-  const togglePasswordVisibility = () => {
+  const togglePasswordVisibility = (e: React.FormEvent) => {
+    e.preventDefault();
     if (!disabled) setShowPassword((prev) => !prev);
   };
 
@@ -63,6 +64,7 @@ export const Input: FC<TInputProps> = ({
       {type === 'password' && (
         <div className="absolute end-0 px-[12px] h-full flex items-center">
           <Button
+            type="button"
             variant="text"
             size={size}
             onClick={togglePasswordVisibility}
