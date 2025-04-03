@@ -1,16 +1,18 @@
 import { MenuOutlined } from '@ant-design/icons';
-import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { FC, ReactElement, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Button } from '../../atoms/button';
+import { useSession } from '@imphnen-frontend-service/utils';
 
 export const Navbar: FC = (): ReactElement => {
-  const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const { session, signOut, isAuthenticated } = useSession();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   return (
     <div className="bg-primary-50 w-full px-[32px] pt-[32px] md:px-[60px] md:pt-[60px] lg:px-[80px] sticky top-0 z-50">
       <header
         className="bg-white shadow-lg rounded-lg min-h-[47px] max-h-[47px] md:min-h-[60px] md:max-h-[60px] lg:min-h-[71px] lg:max-h-[71px] flex justify-between w-full max-w-[1280px] xl:mx-auto"
-        role="navigation"
+        role="nav"
       >
         <div className="flex w-full items-center justify-between p-4 md:px-[32px] md:py-[10px]">
           <div className="flex items-center">
@@ -40,20 +42,27 @@ export const Navbar: FC = (): ReactElement => {
                   <Link to="#">Merch Gacha</Link>
                 </Button>
               </li>
-              <li>
-                <Button
-                  size="md"
-                  className="lg:text-[19px] lg:max-h-[44px] text-neutral-50 hover:text-neutral-200 transition-colors"
-                >
-                  <Link to="/login">Login</Link>
-                </Button>
-              </li>
+              {!isAuthenticated ? (
+                <li>
+                  <Button>Login</Button>
+                </li>
+              ) : (
+                <li className="flex gap-x-4">
+                  <span className="text-lg">{session.user?.fullname}</span>
+                  <div
+                    onClick={signOut}
+                    className="text-lg text-red-500 font-bold"
+                  >
+                    Logout
+                  </div>
+                </li>
+              )}
             </ul>
             <button
               className={`md:hidden duration-200 ${
                 isDropdownOpen ? 'transform rotate-90' : ''
               }`}
-              onClick={() => setDropdownOpen(!isDropdownOpen)}
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             >
               <MenuOutlined style={{ color: '#1a8ce6' }} />
             </button>
@@ -77,14 +86,18 @@ export const Navbar: FC = (): ReactElement => {
                         Merch Gacha
                       </Link>
                     </li>
-                    <li>
-                      <Link
-                        to="#"
-                        className="block text-gray-600 transition-colors px-4 py-2 text-center font-semibold"
-                      >
-                        Login
-                      </Link>
-                    </li>
+                    {!isAuthenticated ? (
+                      <li>
+                        <Link
+                          to="#"
+                          className="block text-gray-600 transition-colors px-4 py-2 text-center font-semibold"
+                        >
+                          Login
+                        </Link>
+                      </li>
+                    ) : (
+                      <li>{session.user?.fullname}</li>
+                    )}
                   </ul>
                 </div>
               )}

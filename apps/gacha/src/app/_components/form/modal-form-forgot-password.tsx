@@ -1,11 +1,11 @@
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import {
-  InputForm,
+  InputField,
   Modal,
   Stepper,
 } from '@imphnen-frontend-service/ui/molecules';
-import { useQueryState } from '../../../hooks/use-query-state';
-
+import { useQueryState } from '@imphnen-frontend-service/utils';
+import { Fragment } from 'react/jsx-runtime';
 interface IModalFormForgotPasswordProps {
   isOpen: boolean;
   onClose: () => void;
@@ -62,7 +62,7 @@ interface IStepOneProps {
 
 const StepOne = ({ nextStep, onClose }: IStepOneProps) => (
   <>
-    <InputForm
+    <InputField
       label="Email"
       placeholder="Masukkan Email yang Terdaftar"
       type="email"
@@ -86,9 +86,8 @@ interface IStepTwoProps {
 }
 
 const StepTwo = ({ nextStep, prevStep }: IStepTwoProps) => (
-  <>
-    {/* TODO: Change component using OTP Input */}
-    <InputForm
+  <Fragment>
+    <InputField
       label="Kode OTP"
       placeholder="Masukkan Kode OTP"
       type="text"
@@ -108,7 +107,7 @@ const StepTwo = ({ nextStep, prevStep }: IStepTwoProps) => (
         Reset Password
       </Button>
     </div>
-  </>
+  </Fragment>
 );
 
 interface IStepThreeProps {
@@ -118,14 +117,14 @@ interface IStepThreeProps {
 
 const StepThree = ({ onClose, resetStep }: IStepThreeProps) => (
   <>
-    <InputForm
+    <InputField
       label="Password Baru"
       placeholder="Masukkan Password Baru"
       type="password"
       size="lg"
       className="w-full"
     />
-    <InputForm
+    <InputField
       label="Ulang Password"
       placeholder="Masukkan Ulang Password"
       type="password"

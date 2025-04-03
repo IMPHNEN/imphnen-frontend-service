@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { InputForm } from './input-form';
+import { InputField } from './input-field';
 
 const meta = {
   title: 'Molecules/Input Form',
-  component: InputForm,
+  component: InputField,
   parameters: {
     layout: 'centered',
     docs: {
@@ -27,7 +27,7 @@ Cek dan inspect element pada story With HtmlFor untuk melihat hasilnya.
     },
   },
   tags: ['autodocs'],
-} satisfies Meta<typeof InputForm>;
+} satisfies Meta<typeof InputField>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
