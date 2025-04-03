@@ -1,5 +1,5 @@
 import { Button } from '@imphnen-frontend-service/ui/atoms';
-import { InputForm, Modal } from '@imphnen-frontend-service/ui/molecules';
+import { InputField, Modal } from '@imphnen-frontend-service/ui/molecules';
 
 interface IModalAddItem {
   isOpen: boolean;
@@ -58,21 +58,21 @@ const StepOne = ({ nextStep }: IStepOneProps) => (
     </Modal.Header>
     <Modal.Content className="flex flex-col gap-8">
       <div className="flex flex-col gap-4">
-        <InputForm
+        <InputField
           label="Nama Hadiah"
           type="text"
           placeholder="Masukkan Nama Hadiah"
           size="lg"
           className="w-full"
         />
-        <InputForm
+        <InputField
           label="Chance Rate"
           type="text"
           placeholder="Masukkan Chance Rate"
           size="lg"
           className="w-full"
         />
-        <InputForm
+        <InputField
           label="Foto Barang"
           type="file"
           placeholder=".jpg, .jpeg, atau .png"

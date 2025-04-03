@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { InputField } from './input-field';
 
-describe('InputForm Component', () => {
+describe('InputField Component', () => {
   it('renders correctly with disabled prop', () => {
     render(<InputField label="Test Label" disabled={true} />);
 

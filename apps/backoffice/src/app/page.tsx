@@ -1,8 +1,7 @@
 import { FC, ReactElement, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
-import { InputForm } from '@imphnen-frontend-service/ui/molecules';
-import { postLogin } from '@imphnen-frontend-service/service';
+import { InputField } from '@imphnen-frontend-service/ui/molecules';
 
 export const Components: FC = (): ReactElement => {
   const navigate = useNavigate();
@@ -34,28 +33,21 @@ export const Components: FC = (): ReactElement => {
         <h1 className="text-primary-500 text-p1 font-semibold">
           Welcome to IMPHNEN Backoffice
         </h1>
-        <form onSubmit={handleLogin} className="flex flex-col gap-8">
-          <InputForm
-            label="Email"
-            placeholder="Masukkan Email"
-            type="email"
-            size="lg"
-            className="w-full"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            autoFocus
-          />
-          <InputForm
-            label="Password"
-            placeholder="Masukkan password"
-            type="password"
-            size="lg"
-            className="w-full"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <Button type="submit">Login</Button>
-        </form>
+        <InputField
+          label="Email"
+          placeholder="Masukkan Email"
+          type="email"
+          size="lg"
+          className="w-full"
+        />
+        <InputField
+          label="Password"
+          placeholder="Masukkan password"
+          type="password"
+          size="lg"
+          className="w-full"
+        />
+        <Button onClick={() => navigate('/dashboard')}>Login</Button>
       </div>
     </div>
   );
