@@ -1,101 +1,117 @@
-# ImphnenFrontendService
+# IMPHNEN Frontend Service
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+<p align="center">
+  <img src="docs/logo.svg" alt="IMPHNEN">
+</p>
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
+This repository is a **monorepo** for all frontend services of IMPHNEN. The monorepo includes three main applications:
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/tutorials/react-monorepo-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+1. **Gacha** - Application for <a href="https://gacha.imphnen.dev/" target="_blank">gacha website</a>.
+2. **Backoffice** - Application for internal management.
+3. **Dimentorin** - Application for mentoring services.
 
-## Run tasks
+## How to install
 
-To run the dev server for your app, use:
+1. Clone this repository:
+   ```sh
+   git clone https://github.com/IMPHNEN/imphnen-frontend-service.git
+   cd imphnen-frontend-service
+   ```
+2. Install all dependencies:
+   ```sh
+   npm install
+   ```
 
-```sh
-npx nx serve dimentorin
-```
+## How to run
 
-To create a production bundle:
+### Development
 
-```sh
-npx nx build dimentorin
-```
+Use the following commands to run in development mode:
 
-To see all available targets to run for a project, run:
+- **Gacha**:
+  ```sh
+  npm run gacha:dev
+  ```
+- **Backoffice**:
+  ```sh
+  npm run backoffice:dev
+  ```
+- **Dimentorin**:
+  ```sh
+  npm run dimentorin:dev
+  ```
 
-```sh
-npx nx show project dimentorin
-```
+### Build
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
+Use the following commands to build the applications:
 
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+- **Gacha**:
+  ```sh
+  npm run gacha:build
+  ```
+- **Backoffice**:
+  ```sh
+  npm run backoffice:build
+  ```
+- **Dimentorin**:
+  ```sh
+  npm run dimentorin:build
+  ```
 
-## Add new projects
+### Production
 
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
+Use the following commands to run the applications in production mode:
 
-Use the plugin's generator to create new projects.
+- **Gacha**:
+  ```sh
+  npm run gacha:prod
+  ```
+- **Backoffice**:
+  ```sh
+  npm run backoffice:prod
+  ```
+- **Dimentorin**:
+  ```sh
+  npm run dimentorin:prod
+  ```
 
-To generate a new application, use:
+### Storybook
 
-```sh
-npx nx g @nx/react:app demo
-```
+This repository uses Storybook to develop, test, and document UI components in an isolated and interactive environment. Below are the commands to work with Storybook:
 
-To generate a new library, use:
+- **Run Storybook**
+  
+  This command starts Storybook in development mode, allowing you to view and test UI components interactively.
 
-```sh
-npx nx g @nx/react:lib mylib
-```
+  ```sh
+  npm run ui:storybook
+  ```
+  
 
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
+- **Run Unit Test**
 
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+  This command runs unit tests for the UI components to ensure they function as expected.
 
-## Set up CI!
+  ```sh
+  npm run ui:test
+  ```
 
-### Step 1
+- **Build Components**
 
-To connect to Nx Cloud, run the following command:
+  This command generates a static build of Storybook, which can be deployed for sharing and documentation purposes.
 
-```sh
-npx nx connect
-```
+  ```sh
+  npm run ui:build
+  ```
 
-Connecting to Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
+## How to contribute
 
-- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+1. Fork the repository and clone it locally.
+2. Create a new branch for a new feature or fix:
+   ```sh
+   git checkout -b feat/feature-name
+   ```
+3. Make changes, commit, and push to your forked repository.
+4. Create a pull request to this repository `develop` branch.
 
-### Step 2
-
-Use the following command to configure a CI workflow for your workspace:
-
-```sh
-npx nx g ci-workflow
-```
-
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Install Nx Console
-
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
-
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Useful links
-
-Learn more:
-
-- [Learn more about this workspace setup](https://nx.dev/getting-started/tutorials/react-monorepo-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+If you encounter any issues or problems, feel free to create a new Issue.
