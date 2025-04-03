@@ -5,10 +5,11 @@ import ModalFormForgotPassword from './_components/form/modal-form-forgot-passwo
 import ModalFormLogin from './_components/form/modal-form-login';
 import ModalFormRegister from './_components/form/modal-form-register';
 import { GachaItem } from './_components/item/gacha-item';
+import { useModalLogin } from '@imphnen-frontend-service/utils';
 
 export const Components: FC = (): ReactElement => {
+  const { showModalLogin, setShowModalLogin } = useModalLogin();
   const [showModalForgotPassword, setShowModalForgotPassword] = useState(false);
-  const [showModalLogin, setShowModalLogin] = useState(false);
   const [showModalRegister, setShowModalRegister] = useState(false);
 
   const scrollToRoulette = () => {
@@ -176,18 +177,6 @@ export const Components: FC = (): ReactElement => {
             Spin Now
           </Button>
         </div>
-
-        <div className="flex gap-4 col-span-4 md:col-span-8 lg:col-span-6 justify-center items-center">
-          <Button onClick={() => setShowModalLogin(true)}>
-            Open Modal Login
-          </Button>
-          <Button onClick={() => setShowModalForgotPassword(true)}>
-            Open Modal Forgot Password
-          </Button>
-          <Button onClick={() => setShowModalRegister(true)}>
-            Open Modal Register
-          </Button>
-        </div>
       </section>
       <div className="sticky bottom-0 h-[86px] md:h-[200px] bg-gradient-to-b from-primary-500/0 to-primary-500/50 to-80%"></div>
 
@@ -195,6 +184,7 @@ export const Components: FC = (): ReactElement => {
         isOpen={showModalLogin}
         onClose={() => setShowModalLogin(false)}
         onForgotPassword={handleForgotPasswordClick}
+        setIsOpenRegisterModal={setShowModalRegister}
         key="login"
       />
 

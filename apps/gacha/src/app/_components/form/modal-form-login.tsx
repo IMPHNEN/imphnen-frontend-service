@@ -1,19 +1,20 @@
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { Modal } from '@imphnen-frontend-service/ui/molecules';
 import { ControlledInputField } from '@imphnen-frontend-service/ui/organisms';
-import { Link } from 'react-router-dom';
 import { useLogin } from '../../_hooks/use-login';
 
 interface IModalFormLogin {
   isOpen: boolean;
   onClose: () => void;
   onForgotPassword: () => void;
+  setIsOpenRegisterModal: (value: boolean) => void;
 }
 
 const ModalFormLogin = ({
   isOpen,
   onClose,
   onForgotPassword,
+  setIsOpenRegisterModal,
 }: IModalFormLogin) => {
   const { form, onSubmit } = useLogin();
 
@@ -59,12 +60,13 @@ const ModalFormLogin = ({
           </Button>
           <div className="flex justify-center gap-2 pt-2.5 font-medium">
             <p className="text-neutral-500">Belum punya akun?</p>
-            <Link
-              className="text-primary-500 hover:text-primary-600"
-              to="/register"
+            <Button
+              variant="text"
+              className="text-primary-500 hover:text-primary-600 m-0 p-0"
+              onClick={() => setIsOpenRegisterModal(true)}
             >
               Daftar
-            </Link>
+            </Button>
           </div>
         </form>
       </Modal.Content>

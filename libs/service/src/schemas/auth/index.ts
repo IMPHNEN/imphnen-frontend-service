@@ -2,8 +2,16 @@ import { z } from 'zod';
 
 export const authLoginSchema = z.object({
   email: z
-    .string()
-    .min(1, 'Email cannot be empty')
-    .email('Email must be valid'),
-  password: z.string().min(1, 'Password cannot be empty'),
+    .string({
+      required_error: 'Email tidak boleh kosong',
+      invalid_type_error: 'Email harus berupa string',
+    })
+    .min(1, 'Email tidak boleh kosong')
+    .email('Email harus valid'),
+  password: z
+    .string({
+      required_error: 'Password tidak boleh kosong',
+      invalid_type_error: 'Password harus berupa string',
+    })
+    .min(1, 'Password tidak boleh kosong'),
 });
