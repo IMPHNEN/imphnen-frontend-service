@@ -2,11 +2,11 @@
 
 <p align="center">
   <img src="docs/logo.svg" alt="IMPHNEN">
-</P>
+</p>
 
 This repository is a **monorepo** for all frontend services of IMPHNEN. The monorepo includes three main applications:
 
-1. **Gacha** - Gacha feature https://gacha.imphnen.dev/
+1. **Gacha** - Gacha feature <a href="https://gacha.imphnen.dev/" target="_blank">https://gacha.imphnen.dev/</a>
 2. **Backoffice** - Application for internal management.
 3. **Dimentorin** - Application for mentoring services.
 
@@ -98,7 +98,7 @@ This repository uses Storybook to develop, test, and document UI components in a
 
 - **Build Components**
 
-  This command generates a static build of Storybook, which can be deployment for sharing and documentation purposes.
+  This command generates a static build of Storybook, which can be deployed for sharing and documentation purposes.
 
   ```sh
   npm run ui:build
@@ -107,7 +107,7 @@ This repository uses Storybook to develop, test, and document UI components in a
 ## How to contribute
 
 1. Fork the repository and clone it locally.
-2. Create a new branch for new feature or fix:
+2. Create a new branch for a new feature or fix:
    ```sh
    git checkout -b feat/nama-fitur
    ```
