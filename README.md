@@ -6,7 +6,7 @@
 
 This repository is a **monorepo** for all frontend services of IMPHNEN. The monorepo includes three main applications:
 
-1. **Gacha** - Gacha feature <a href="https://gacha.imphnen.dev/" target="_blank">https://gacha.imphnen.dev/</a>
+1. **Gacha** - Application for <a href="https://gacha.imphnen.dev/" target="_blank">gacha website</a>.
 2. **Backoffice** - Application for internal management.
 3. **Dimentorin** - Application for mentoring services.
 
@@ -109,7 +109,7 @@ This repository uses Storybook to develop, test, and document UI components in a
 1. Fork the repository and clone it locally.
 2. Create a new branch for a new feature or fix:
    ```sh
-   git checkout -b feat/nama-fitur
+   git checkout -b feat/feature-name
    ```
 3. Make changes, commit, and push to your forked repository.
 4. Create a pull request to this repository `develop` branch.
