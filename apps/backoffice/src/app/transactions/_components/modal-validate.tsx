@@ -1,5 +1,5 @@
 import { Button } from '@imphnen-frontend-service/ui/atoms';
-import { InputForm, Modal } from '@imphnen-frontend-service/ui/molecules';
+import { InputField, Modal } from '@imphnen-frontend-service/ui/molecules';
 
 interface IModalValidate {
   isOpen: boolean;
@@ -27,7 +27,7 @@ const ModalValidate = ({
         </h2>
       </Modal.Header>
       <Modal.Content className="flex flex-col gap-8">
-        <InputForm
+        <InputField
           label="Nomor Transaksi"
           type="text"
           placeholder="Masukkan Nomor Transaksi"

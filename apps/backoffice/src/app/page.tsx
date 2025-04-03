@@ -1,7 +1,7 @@
 import { FC, ReactElement } from 'react';
 import { useNavigate } from 'react-router';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
-import { InputForm } from '@imphnen-frontend-service/ui/molecules';
+import { InputField } from '@imphnen-frontend-service/ui/molecules';
 
 export const Components: FC = (): ReactElement => {
   const navigate = useNavigate();
@@ -13,14 +13,14 @@ export const Components: FC = (): ReactElement => {
         <h1 className="text-primary-500 text-p1 font-semibold">
           Welcome to IMPHNEN Backoffice
         </h1>
-        <InputForm
+        <InputField
           label="Email"
           placeholder="Masukkan Email"
           type="email"
           size="lg"
           className="w-full"
         />
-        <InputForm
+        <InputField
           label="Password"
           placeholder="Masukkan password"
           type="password"

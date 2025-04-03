@@ -1,5 +1,5 @@
 import { Button } from '@imphnen-frontend-service/ui/atoms';
-import { InputForm, Modal } from '@imphnen-frontend-service/ui/molecules';
+import { InputField, Modal } from '@imphnen-frontend-service/ui/molecules';
 import { useState } from 'react';
 
 interface IModalEditAccount {
@@ -63,7 +63,7 @@ const StepOne = ({ nextStep }: IStepOneProps) => {
       </Modal.Header>
       <Modal.Content className="flex flex-col gap-8">
         <div className="flex flex-col gap-4">
-          <InputForm
+          <InputField
             label="Nama Lengkap"
             type="text"
             placeholder="Masukkan Nama Lengkap"
@@ -72,7 +72,7 @@ const StepOne = ({ nextStep }: IStepOneProps) => {
             size="lg"
             className="w-full"
           />
-          <InputForm
+          <InputField
             label="Email"
             type="text"
             placeholder="Masukkan Email"
@@ -81,7 +81,7 @@ const StepOne = ({ nextStep }: IStepOneProps) => {
             size="lg"
             className="w-full"
           />
-          <InputForm
+          <InputField
             label="Nomor Telepon"
             type="text"
             placeholder="Masukkan Nomor Telepon"
@@ -90,7 +90,7 @@ const StepOne = ({ nextStep }: IStepOneProps) => {
             size="lg"
             className="w-full"
           />
-          <InputForm
+          <InputField
             label="Alamat"
             type="text"
             placeholder="Masukkan Alamat"
