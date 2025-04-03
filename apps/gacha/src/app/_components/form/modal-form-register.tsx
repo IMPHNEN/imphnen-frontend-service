@@ -1,5 +1,5 @@
 import { Button } from '@imphnen-frontend-service/ui/atoms';
-import { InputField, Modal } from '@imphnen-frontend-service/ui/molecules';
+import { Modal } from '@imphnen-frontend-service/ui/molecules';
 import { useQueryState } from '@imphnen-frontend-service/utils';
 import { useRegister } from '../../_hooks/use-register';
 import { ControlledInputField } from '@imphnen-frontend-service/ui/organisms';
