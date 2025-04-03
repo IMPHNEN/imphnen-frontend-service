@@ -1,30 +1,10 @@
-import { FC, ReactElement, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { FC, ReactElement } from 'react';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
-import { InputField } from '@imphnen-frontend-service/ui/molecules';
+import { useLogin } from './_hooks/use-login';
+import { ControlledInputField } from '@imphnen-frontend-service/ui/organisms';
 
 export const Components: FC = (): ReactElement => {
-  const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const payload = { email, password };
-      console.log(payload); // for debugging
-      const response = await postLogin(payload);
-
-      const { access_token, refresh_token } = response.data.token;
-      sessionStorage.setItem('access_token', access_token);
-      localStorage.setItem('refresh_token', refresh_token);
-
-      console.log('Login successful:', response); // for debugging
-      navigate('/dashboard');
-    } catch (error) {
-      console.log('Login error:', error); // for debugging
-    }
-  };
+  const { form, onSubmit } = useLogin();
 
   return (
     <div className="flex justify-center items-center min-h-screen">
@@ -33,21 +13,29 @@ export const Components: FC = (): ReactElement => {
         <h1 className="text-primary-500 text-p1 font-semibold">
           Welcome to IMPHNEN Backoffice
         </h1>
-        <InputField
-          label="Email"
-          placeholder="Masukkan Email"
-          type="email"
-          size="lg"
-          className="w-full"
-        />
-        <InputField
-          label="Password"
-          placeholder="Masukkan password"
-          type="password"
-          size="lg"
-          className="w-full"
-        />
-        <Button onClick={() => navigate('/dashboard')}>Login</Button>
+        <form onSubmit={onSubmit} className="flex flex-col gap-8">
+          <ControlledInputField
+            control={form.control}
+            label="Email"
+            placeholder="Masukkan Email"
+            type="email"
+            name="email"
+            size="lg"
+            className="w-full"
+          />
+          <ControlledInputField
+            control={form.control}
+            label="Password"
+            placeholder="Masukkan Password"
+            type="password"
+            name="password"
+            size="lg"
+            className="w-full"
+          />
+          <Button type="submit" size="md" className="w-full">
+            Login
+          </Button>
+        </form>
       </div>
     </div>
   );
