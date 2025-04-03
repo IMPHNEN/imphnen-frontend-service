@@ -3,6 +3,8 @@ import { InputField, Modal } from '@imphnen-frontend-service/ui/molecules';
 import { useQueryState } from '@imphnen-frontend-service/utils';
 import { useRegister } from '../../_hooks/use-register';
 import { ControlledInputField } from '@imphnen-frontend-service/ui/organisms';
+import { UseFormReturn } from 'react-hook-form';
+import { TRegisterRequest } from '@imphnen-frontend-service/service';
 
 interface IModalFormRegisterProps {
   isOpen: boolean;
@@ -46,9 +48,7 @@ const ModalFormRegister = ({ isOpen, onClose }: IModalFormRegisterProps) => {
           {currentStep === 1 && (
             <StepOne form={form} nextStep={nextStep} onClose={onClose} />
           )}
-          {currentStep === 2 && (
-            <StepTwo form={form} nextStep={nextStep} prevStep={prevStep} />
-          )}
+          {currentStep === 2 && <StepTwo form={form} prevStep={prevStep} />}
         </form>
       </Modal.Content>
     </Modal>
@@ -56,7 +56,7 @@ const ModalFormRegister = ({ isOpen, onClose }: IModalFormRegisterProps) => {
 };
 
 interface IStepOneProps {
-  form: any;
+  form: UseFormReturn<TRegisterRequest, any, TRegisterRequest>;
   nextStep: () => void;
   onClose: () => void;
 }
@@ -106,12 +106,11 @@ const StepOne = ({ form, nextStep, onClose }: IStepOneProps) => (
 );
 
 interface IStepTwoProps {
-  form: any;
-  nextStep: () => void;
+  form: UseFormReturn<TRegisterRequest, any, TRegisterRequest>;
   prevStep: () => void;
 }
 
-const StepTwo = ({ form, nextStep, prevStep }: IStepTwoProps) => (
+const StepTwo = ({ form, prevStep }: IStepTwoProps) => (
   <>
     <ControlledInputField
       control={form.control}
@@ -153,7 +152,7 @@ const StepTwo = ({ form, nextStep, prevStep }: IStepTwoProps) => (
       <Button size="md" variant="text" className="w-[40%]" onClick={prevStep}>
         Kembali
       </Button>
-      <Button size="md" className="w-full" type='submit'>
+      <Button size="md" className="w-full" type="submit">
         Gacha Sekarang
       </Button>
     </div>
