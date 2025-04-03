@@ -2,11 +2,12 @@ import { MenuOutlined } from '@ant-design/icons';
 import { FC, ReactElement, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../../atoms/button';
-import { useSession } from '@imphnen-frontend-service/utils';
+import { useModalLogin, useSession } from '@imphnen-frontend-service/utils';
 
 export const Navbar: FC = (): ReactElement => {
   const { session, signOut, isAuthenticated } = useSession();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { setShowModalLogin } = useModalLogin();
 
   return (
     <div className="bg-primary-50 w-full px-[32px] pt-[32px] md:px-[60px] md:pt-[60px] lg:px-[80px] sticky top-0 z-50">
@@ -44,7 +45,7 @@ export const Navbar: FC = (): ReactElement => {
               </li>
               {!isAuthenticated ? (
                 <li>
-                  <Button>Login</Button>
+                  <Button onClick={() => setShowModalLogin(true)}>Login</Button>
                 </li>
               ) : (
                 <li className="flex gap-x-4">
@@ -88,12 +89,12 @@ export const Navbar: FC = (): ReactElement => {
                     </li>
                     {!isAuthenticated ? (
                       <li>
-                        <Link
-                          to="#"
-                          className="block text-gray-600 transition-colors px-4 py-2 text-center font-semibold"
+                        <Button
+                          onClick={() => setShowModalLogin(true)}
+                          className="block w-full text-gray-100 transition-colors px-4 py-2 text-center font-semibold"
                         >
                           Login
-                        </Link>
+                        </Button>
                       </li>
                     ) : (
                       <li>{session.user?.fullname}</li>
