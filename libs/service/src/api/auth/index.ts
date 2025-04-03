@@ -12,7 +12,7 @@ export const postLogin = async (
 ): Promise<TLoginResponse> => {
   const { data } = await api({
     method: 'POST',
-    url: '/v1/auth/login',
+    url: '/auth/login',
     data: payload,
   });
   return data;
