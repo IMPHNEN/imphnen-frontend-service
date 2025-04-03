@@ -1,4 +1,4 @@
-import { api } from '@imphnen-frontend-service/utils';
+import { api } from '../';
 import {
   TLoginRequest,
   TLoginResponse,

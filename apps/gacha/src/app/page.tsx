@@ -1,16 +1,10 @@
 import { ArrowDownOutlined } from '@ant-design/icons';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
-import { cn } from '@imphnen-frontend-service/utils';
-import { FC, Fragment, ReactElement, useEffect, useState } from 'react';
+import { FC, Fragment, ReactElement, useState } from 'react';
 import ModalFormForgotPassword from './_components/form/modal-form-forgot-password';
 import ModalFormLogin from './_components/form/modal-form-login';
 import ModalFormRegister from './_components/form/modal-form-register';
-
-interface GachaItemProps {
-  src: string;
-  label: string;
-  className?: string;
-}
+import { GachaItem } from './_components/item/gacha-item';
 
 export const Components: FC = (): ReactElement => {
   const [showModalForgotPassword, setShowModalForgotPassword] = useState(false);
@@ -24,49 +18,6 @@ export const Components: FC = (): ReactElement => {
     }
   };
 
-  useEffect(() => {
-    const gachaPlaySection = document.getElementById('gacha-play');
-    if (gachaPlaySection) {
-      let currentIndex = 0;
-      const items = gachaPlaySection.children;
-      const totalItems = items.length;
-
-      const scrollItems = () => {
-        if (currentIndex >= totalItems) {
-          currentIndex = 0;
-        }
-        items[currentIndex].scrollIntoView({
-          behavior: 'smooth',
-          inline: 'center',
-        });
-        currentIndex++;
-      };
-
-      const intervalId = setInterval(scrollItems, 2800);
-
-      return () => clearInterval(intervalId);
-    }
-  }, []);
-
-  const GachaItem: FC<GachaItemProps> = ({
-    src,
-    label,
-    className,
-  }): ReactElement => {
-    return (
-      <div className="snap-center flex-auto justify-center items-center flex flex-col min-w-full">
-        <div className="max-h-[180px] md:max-h-[270px] md:max-w-[500px] mb-2 md:mb-5 flex flex-1 justify-center items-center">
-          <img
-            src={src}
-            alt=""
-            className={cn('h-[150px] md:h-[255px] object-contain', className)}
-          />
-        </div>
-        <p className="font-semibold text-center md:text-p2">{label}</p>
-      </div>
-    );
-  };
-
   const handleForgotPasswordClick = () => {
     setShowModalLogin(false);
     setShowModalForgotPassword(true);
@@ -74,7 +25,6 @@ export const Components: FC = (): ReactElement => {
 
   return (
     <Fragment>
-      {/* Landing Page */}
       <section
         id="landing-page"
         className="my-12 md:my-24 grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 justify-items-center max-w-[1280px] items-center justify-center mx-[32px] md:mx-[60px] lg:mx-[80px] xl:mx-auto"
@@ -137,22 +87,28 @@ export const Components: FC = (): ReactElement => {
             ~ 175k ~
           </div>
         </div>
-        <div className="order-2 flex flex-col col-span-4 justify-center items-center mb-8 relative">
+        <div className="order-2 flex flex-col col-span-4 justify-center items-center mb-8 relative overflow-hidden">
           <div className="relative h-[130px] md:h-[230px]">
             <img
+              width={400}
+              height={400}
               src="/merch/2.png"
               alt="Merch 2"
               className="relative top-[5px] md:top-[8px] left-0 md:left-[5px] z-10 w-[165px] md:w-[277px]"
             />
             <img
+              width={400}
+              height={400}
               className="absolute top-0 -left-[5px] md:-left-[8px] z-0 min-w-[174px] md:min-w-[302px]"
               src="/merch/Vector-2.svg"
-              alt=""
+              alt="Merch 3"
             />
             <img
+              width={400}
+              height={400}
               className="absolute hidden lg:block -bottom-[100px] -left-[55px]"
               src="/landing-arrow-2.svg"
-              alt=""
+              alt="Merch 1"
             />
           </div>
           <div className="px-3 py-1 text-primary-500 font-semibold text-base md:text-p2 bg-white shadow-md rounded">
@@ -163,7 +119,7 @@ export const Components: FC = (): ReactElement => {
           </div>
         </div>
       </section>
-      {/* Roulette Page */}
+
       <section
         id="roulette"
         className="mt-20 pb-50 lg:py-90 mx-[32px] md:mx-[60px] lg:mx-[80px] xl:mx-auto lg:max-w-[1280px] grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 justify-items-center gap-y-16 md:gap-y-28"
@@ -191,10 +147,7 @@ export const Components: FC = (): ReactElement => {
           </ol>
         </div>
 
-        <div
-          id="roulette-spin"
-          className="col-span-4 md:col-span-8 lg:col-span-6 flex flex-col items-center gap-4 md:gap-8 overflow-x-hidden"
-        >
+        <div className="col-span-4 md:col-span-8 lg:col-span-6 flex flex-col items-center gap-4 md:gap-8 overflow-x-hidden">
           <div className="bg-white text-primary-500 font-medium text-p3 md:text-h3 shadow py-2 px-4 md:py-4 md:px-8 max-w-fit rounded-md md:rounded-lg">
             Here Take Your Prize
           </div>
@@ -223,7 +176,7 @@ export const Components: FC = (): ReactElement => {
             Spin Now
           </Button>
         </div>
-        {/* TODO: Change using real button trigger */}
+
         <div className="flex gap-4 col-span-4 md:col-span-8 lg:col-span-6 justify-center items-center">
           <Button onClick={() => setShowModalLogin(true)}>
             Open Modal Login
@@ -236,10 +189,8 @@ export const Components: FC = (): ReactElement => {
           </Button>
         </div>
       </section>
-      {/* Diffuser & Cloud */}
       <div className="sticky bottom-0 h-[86px] md:h-[200px] bg-gradient-to-b from-primary-500/0 to-primary-500/50 to-80%"></div>
 
-      {/* Login Modal */}
       <ModalFormLogin
         isOpen={showModalLogin}
         onClose={() => setShowModalLogin(false)}
@@ -247,7 +198,6 @@ export const Components: FC = (): ReactElement => {
         key="login"
       />
 
-      {/* Register Modal */}
       <ModalFormRegister
         isOpen={showModalRegister}
         onClose={() => {
@@ -256,7 +206,6 @@ export const Components: FC = (): ReactElement => {
         key="register"
       />
 
-      {/* Forgot Password Modal */}
       <ModalFormForgotPassword
         isOpen={showModalForgotPassword}
         onClose={() => {

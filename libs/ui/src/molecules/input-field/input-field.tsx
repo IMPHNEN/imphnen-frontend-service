@@ -7,10 +7,9 @@ import {
 import { Input } from '../../atoms';
 import { cn } from '@imphnen-frontend-service/utils';
 
-type TInputType = 'text' | 'email' | 'password' | 'file';
-type TInputSize = 'sm' | 'md' | 'lg';
-
-type TInputFormProps = Omit<
+export type TInputType = 'text' | 'email' | 'password' | 'file';
+export type TInputSize = 'sm' | 'md' | 'lg';
+export type TInputFieldProps = Omit<
   DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>,
   'size' | 'type'
 > & {
@@ -19,7 +18,6 @@ type TInputFormProps = Omit<
   size?: TInputSize;
   error?: string;
   disabled?: boolean;
-
   helperText?: string;
   htmlFor?: string;
 };
@@ -39,7 +37,7 @@ const sizeClasses: Record<TInputSize, { label: string; helperText: string }> = {
   },
 };
 
-export const InputForm: FC<TInputFormProps> = ({
+export const InputField: FC<TInputFieldProps> = ({
   label,
   placeholder,
   type = 'text',
@@ -88,5 +86,3 @@ export const InputForm: FC<TInputFormProps> = ({
     </div>
   );
 };
-
-export default InputForm;

@@ -163,7 +163,7 @@ describe('Navbar', () => {
     }
   });
 
-  it('has correct ARIA role for navigation', () => {
+  it('has correct ARIA role for nav', () => {
     const { container }: RenderResult = render(
       <BrowserRouter>
         <Navbar />
@@ -171,6 +171,6 @@ describe('Navbar', () => {
     );
 
     const header: HTMLElement | null = container.querySelector('header');
-    expect(header).toHaveAttribute('role', 'navigation');
+    expect(header).toHaveAttribute('role', 'nav');
   });
 });

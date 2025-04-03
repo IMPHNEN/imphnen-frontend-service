@@ -1,6 +1,6 @@
 import { Button } from '@imphnen-frontend-service/ui/atoms';
-import { InputForm, Modal } from '@imphnen-frontend-service/ui/molecules';
-import { useQueryState } from '../../../hooks/use-query-state';
+import { InputField, Modal } from '@imphnen-frontend-service/ui/molecules';
+import { useQueryState } from '@imphnen-frontend-service/utils';
 
 interface IModalFormRegisterProps {
   isOpen: boolean;
@@ -54,28 +54,28 @@ interface IStepOneProps {
 
 const StepOne = ({ nextStep, onClose }: IStepOneProps) => (
   <>
-    <InputForm
+    <InputField
       label="Nama Lengkap"
       placeholder="Masukkan Nama Lengkap"
       type="text"
       size="lg"
       className="w-full"
     />
-    <InputForm
+    <InputField
       label="Email"
       placeholder="Masukkan Email Anda"
       type="email"
       size="lg"
       className="w-full"
     />
-    <InputForm
+    <InputField
       label="Password"
       placeholder="Masukkan Password"
       type="password"
       size="lg"
       className="w-full"
     />
-    <InputForm
+    <InputField
       label="Ulangi Password"
       placeholder="Masukkan Ulang Password"
       type="password"
@@ -95,14 +95,14 @@ interface IStepTwoProps {
 
 const StepTwo = ({ nextStep, prevStep }: IStepTwoProps) => (
   <>
-    <InputForm
+    <InputField
       label="Nomor Telepon"
       placeholder="Masukkan Nomor Telepon Aktif"
       type="text"
       size="lg"
       className="w-full"
     />
-    <InputForm
+    <InputField
       label="Alamat Pengiriman"
       placeholder="Masukkan Alamat Pengiriman"
       type="text"

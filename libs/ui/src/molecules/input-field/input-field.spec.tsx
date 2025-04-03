@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react';
-import InputForm from './input-form';
+import { InputField } from './input-field';
 
 describe('InputForm Component', () => {
   it('renders correctly with disabled prop', () => {
-    render(<InputForm label="Test Label" disabled={true} />);
+    render(<InputField label="Test Label" disabled={true} />);
 
     const input = screen.getByLabelText('Test Label');
     expect(input).toBeDisabled();
@@ -11,7 +11,7 @@ describe('InputForm Component', () => {
   });
 
   it('renders correctly without disabled prop', () => {
-    render(<InputForm label="Test Label" disabled={false} />);
+    render(<InputField label="Test Label" disabled={false} />);
 
     const input = screen.getByLabelText('Test Label');
     expect(input).not.toBeDisabled();
