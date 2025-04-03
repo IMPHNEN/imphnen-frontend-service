@@ -1,6 +1,6 @@
 # IMPHNEN Frontend Service
 
-<p style="text-align:center;">
+<p align="center">
   <img src="docs/logo.svg" alt="IMPHNEN">
 </P>
 
