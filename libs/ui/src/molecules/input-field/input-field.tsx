@@ -75,10 +75,15 @@ export const InputField: FC<TInputFieldProps> = ({
         {...rest}
       />
       {error ? (
-        <p className="text-danger-500 text-xl mt-1">{error}</p>
+        <p className="text-danger-500 text-label2 text-left">{error}</p>
       ) : (
         helperText && (
-          <p className={cn('text-cs mt-1', sizeClasses[size].helperText)}>
+          <p
+            className={cn(
+              'text-label2 text-left',
+              sizeClasses[size].helperText
+            )}
+          >
             {helperText}
           </p>
         )
