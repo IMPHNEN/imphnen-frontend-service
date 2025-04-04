@@ -12,7 +12,7 @@ interface IModalFormRegisterProps {
 }
 
 const ModalFormRegister = ({ isOpen, onClose }: IModalFormRegisterProps) => {
-  const { form, onSubmit } = useRegister();
+  const { form, onSubmit, isStepOneValid } = useRegister();
 
   const {
     step: currentStep,
@@ -46,7 +46,11 @@ const ModalFormRegister = ({ isOpen, onClose }: IModalFormRegisterProps) => {
       <Modal.Content>
         <form onSubmit={onSubmit} className="space-y-6">
           {currentStep === 1 && (
-            <StepOne form={form} nextStep={nextStep} onClose={onClose} />
+            <StepOne
+              form={form}
+              nextStep={nextStep}
+              isStepOneValid={isStepOneValid}
+            />
           )}
           {currentStep === 2 && <StepTwo form={form} prevStep={prevStep} />}
         </form>
@@ -58,52 +62,59 @@ const ModalFormRegister = ({ isOpen, onClose }: IModalFormRegisterProps) => {
 interface IStepOneProps {
   form: UseFormReturn<TRegisterRequest, any, TRegisterRequest>;
   nextStep: () => void;
-  onClose: () => void;
+  isStepOneValid: boolean;
 }
 
-const StepOne = ({ form, nextStep, onClose }: IStepOneProps) => (
-  <>
-    <ControlledInputField
-      control={form.control}
-      name="fullname"
-      label="Nama Lengkap"
-      placeholder="Masukkan Nama Lengkap"
-      type="text"
-      size="lg"
-      className="w-full"
-    />
-    <ControlledInputField
-      control={form.control}
-      label="Email"
-      placeholder="Masukkan Email Anda"
-      type="email"
-      name="email"
-      size="lg"
-      className="w-full"
-    />
-    <ControlledInputField
-      control={form.control}
-      name="password"
-      label="Password"
-      placeholder="Masukkan Password"
-      type="password"
-      size="lg"
-      className="w-full"
-    />
-    <ControlledInputField
-      control={form.control}
-      name="confirm_password"
-      label="Ulangi Password"
-      placeholder="Masukkan Ulang Password"
-      type="password"
-      size="lg"
-      className="w-full"
-    />
-    <Button size="md" className="w-full" onClick={nextStep}>
-      Selanjutnya
-    </Button>
-  </>
-);
+const StepOne = ({ form, nextStep, isStepOneValid }: IStepOneProps) => {
+  return (
+    <>
+      <ControlledInputField
+        control={form.control}
+        name="fullname"
+        label="Nama Lengkap"
+        placeholder="Masukkan Nama Lengkap"
+        type="text"
+        size="lg"
+        className="w-full"
+      />
+      <ControlledInputField
+        control={form.control}
+        label="Email"
+        placeholder="Masukkan Email Anda"
+        type="email"
+        name="email"
+        size="lg"
+        className="w-full"
+      />
+      <ControlledInputField
+        control={form.control}
+        name="password"
+        label="Password"
+        placeholder="Masukkan Password"
+        type="password"
+        size="lg"
+        className="w-full"
+      />
+      <ControlledInputField
+        control={form.control}
+        name="confirm_password"
+        label="Ulangi Password"
+        placeholder="Masukkan Ulang Password"
+        type="password"
+        size="lg"
+        className="w-full"
+      />
+      <Button
+        size="md"
+        className="w-full"
+        onClick={nextStep}
+        disabled={!isStepOneValid}
+      >
+        Selanjutnya
+      </Button>
+    </>
+  );
+};
 
 interface IStepTwoProps {
   form: UseFormReturn<TRegisterRequest, any, TRegisterRequest>;
