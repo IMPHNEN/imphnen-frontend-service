@@ -3,6 +3,7 @@ import {
   AuditOutlined,
   InboxOutlined,
   LogoutOutlined,
+  ReloadOutlined,
   UserOutlined,
 } from '@ant-design/icons';
 import { Button } from '../../atoms';
@@ -31,6 +32,18 @@ export const BackofficeSidebar: FC = (): ReactElement => {
           >
             <AppstoreOutlined className="text-[20px]" />
             <span className="text-p3 font-medium">Dashboard & Set Gacha</span>
+          </Link>
+
+          <Link
+            to="/gacha-roll"
+            className={`flex items-center justify-items-start gap-3 px-[8px] py-[10px] ${
+              isActive('/gacha-roll')
+                ? 'bg-primary-500 text-white rounded-md'
+                : 'text-gray-700 hover:bg-gray-100'
+            }`}
+          >
+            <ReloadOutlined className="text-[20px]" />
+            <span className="text-p3 font-medium">Gacha Roll</span>
           </Link>
 
           <Link
