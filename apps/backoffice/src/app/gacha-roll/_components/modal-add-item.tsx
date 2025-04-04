@@ -1,6 +1,7 @@
 import { Button } from '@imphnen-frontend-service/ui/atoms';
-import { InputField, Modal } from '@imphnen-frontend-service/ui/molecules';
-import { useState } from 'react';
+import { Modal } from '@imphnen-frontend-service/ui/molecules';
+import { ControlledInputField } from '@imphnen-frontend-service/ui/organisms';
+import { useAddItem, useConfirmAddItem } from '../_hook/use-add-item';
 
 interface IModalAddItem {
   isOpen: boolean;
@@ -49,9 +50,7 @@ interface IStepOneProps {
 }
 
 const StepOne = ({ nextStep }: IStepOneProps) => {
-  const [itemName, setItemName] = useState('');
-  const [quantity, setQuantity] = useState('');
-  const [chanceRate, setChanceRate] = useState('');
+  const { form, onSubmit } = useAddItem(nextStep);
 
   return (
     <>
@@ -63,45 +62,42 @@ const StepOne = ({ nextStep }: IStepOneProps) => {
           Lengkapi detal di bawah ini, untuk menambahkan item gacha
         </p>
       </Modal.Header>
-      <Modal.Content className="flex flex-col gap-8">
-        <div className="flex flex-col gap-4">
-          <InputField
-            label="Pilih Item"
-            type="text"
-            placeholder="Pilih item yang dimasukkan ke roll"
-            value={itemName}
-            onChange={(e) => setItemName(e.target.value)}
-            size="lg"
-            className="w-full"
-          />
-          <InputField
-            label="Quantity"
-            type="text"
-            placeholder="Masukkan Kuantitas Item"
-            value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
-            size="lg"
-            className="w-full"
-          />
-          <InputField
-            label="Chance Rate"
-            type="text"
-            placeholder="Masukkan Chance Rate (0.1 - 1)"
-            value={chanceRate}
-            onChange={(e) => setChanceRate(e.target.value)}
-            size="lg"
-            className="w-full"
-          />
-        </div>
+      <Modal.Content>
+        <form onSubmit={onSubmit} className="flex flex-col gap-8">
+          <div className="flex flex-col gap-4">
+            <ControlledInputField
+              control={form.control}
+              label="Pilih Item"
+              name="itemName"
+              type="text"
+              placeholder="Pilih item yang dimasukkan ke roll"
+              size="lg"
+              className="w-full"
+            />
+            <ControlledInputField
+              control={form.control}
+              label="Quantity"
+              name="quantity"
+              type="text"
+              placeholder="Masukkan Kuantitas Item"
+              size="lg"
+              className="w-full"
+            />
+            <ControlledInputField
+              control={form.control}
+              label="Chance Rate"
+              name="chanceRate"
+              type="text"
+              placeholder="Masukkan Chance Rate (0.1 - 1)"
+              size="lg"
+              className="w-full"
+            />
+          </div>
 
-        <Button
-          variant="primary"
-          size="lg"
-          className="w-full"
-          onClick={nextStep}
-        >
-          Tambahkan Item
-        </Button>
+          <Button variant="primary" size="lg" className="w-full" type="submit">
+            Tambahkan Item
+          </Button>
+        </form>
       </Modal.Content>
     </>
   );
@@ -113,43 +109,40 @@ interface IStepTwoProps {
   resetStep: () => void;
 }
 
-const StepTwo = ({ onClose, handleAddItem, resetStep }: IStepTwoProps) => (
-  <>
-    <Modal.Header className="mb-0 text-center items-center">
-      <h2 className="text-p1 font-semibold text-primary-500 mb-3">
-        Tambah ke Roll Gacha
-      </h2>
-      <p className="text-p3 text-neutral-400">
-        Apakah kamu yakin ingin
-        <br /> menambahkan item ini ke roll gacha?
-      </p>
-    </Modal.Header>
-    <Modal.Content className="flex gap-4">
-      <Button
-        variant="bordered"
-        size="lg"
-        className="w-full"
-        onClick={() => {
-          onClose();
-          resetStep();
-        }}
-      >
-        Batal
-      </Button>
-      <Button
-        variant="primary"
-        size="lg"
-        className="w-full"
-        onClick={() => {
-          handleAddItem && handleAddItem();
-          onClose();
-          resetStep();
-        }}
-      >
-        Tambahkan
-      </Button>
-    </Modal.Content>
-  </>
-);
+const StepTwo = ({ onClose, handleAddItem, resetStep }: IStepTwoProps) => {
+  const { onConfirm, onCancel } = useConfirmAddItem(onClose, resetStep);
+
+  return (
+    <>
+      <Modal.Header className="mb-0 text-center items-center">
+        <h2 className="text-p1 font-semibold text-primary-500 mb-3">
+          Tambah ke Roll Gacha
+        </h2>
+        <p className="text-p3 text-neutral-400">
+          Apakah kamu yakin ingin
+          <br /> menambahkan item ini ke roll gacha?
+        </p>
+      </Modal.Header>
+      <Modal.Content className="flex gap-4">
+        <Button
+          variant="bordered"
+          size="lg"
+          className="w-full"
+          onClick={onCancel}
+        >
+          Batal
+        </Button>
+        <Button
+          variant="primary"
+          size="lg"
+          className="w-full"
+          onClick={onConfirm}
+        >
+          Tambahkan
+        </Button>
+      </Modal.Content>
+    </>
+  );
+};
 
 export default ModalAddItem;
