@@ -5,6 +5,7 @@ import { useRegister } from '../../_hooks/use-register';
 import { ControlledInputField } from '@imphnen-frontend-service/ui/organisms';
 import { UseFormReturn } from 'react-hook-form';
 import { TRegisterRequest } from '@imphnen-frontend-service/service';
+import { useEffect } from 'react';
 
 interface IModalFormRegisterProps {
   isOpen: boolean;
@@ -24,6 +25,12 @@ const ModalFormRegister = ({ isOpen, onClose }: IModalFormRegisterProps) => {
     maxValue: 2,
     minValue: 1,
   });
+
+  useEffect(() => {
+    if (!isStepOneValid && currentStep === 2) {
+      prevStep();
+    }
+  }, [isStepOneValid, currentStep, prevStep]);
 
   return (
     <Modal
