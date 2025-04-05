@@ -184,9 +184,6 @@ export const Components: FC = (): ReactElement => {
         currentStep={currentStep}
         isOpen={showModalAddItem}
         onClose={() => setShowModalAddItem(false)}
-        handleAddItem={() => {
-          console.log('Item added');
-        }}
         nextStep={nextStep}
         prevStep={prevStep}
         resetStep={resetStep}
@@ -195,9 +192,6 @@ export const Components: FC = (): ReactElement => {
         currentStep={currentStep}
         isOpen={showModalUpdateItem}
         onClose={() => setShowModalUpdateItem(false)}
-        handleUpdateItem={() => {
-          console.log('Item updated');
-        }}
         nextStep={nextStep}
         prevStep={prevStep}
         resetStep={resetStep}
