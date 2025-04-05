@@ -78,7 +78,8 @@ const StepOne = ({ nextStep }: IStepOneProps) => {
               control={form.control}
               label="Quantity"
               name="quantity"
-              type="text"
+              type="number"
+              min={1}
               placeholder="Masukkan Kuantitas Item"
               size="lg"
               className="w-full"
@@ -87,8 +88,12 @@ const StepOne = ({ nextStep }: IStepOneProps) => {
               control={form.control}
               label="Chance Rate"
               name="chanceRate"
-              type="text"
-              placeholder="Masukkan Chance Rate (0.1 - 1)"
+              type="number"
+              value={0.1}
+              min={0.1}
+              step={0.1}
+              max={1}
+              placeholder="Masukkan Chance Rate (0,1 - 1)"
               size="lg"
               className="w-full"
             />

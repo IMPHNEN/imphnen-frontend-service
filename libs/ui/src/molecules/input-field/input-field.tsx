@@ -7,7 +7,7 @@ import {
 import { Input } from '../../atoms';
 import { cn } from '@imphnen-frontend-service/utils';
 
-export type TInputType = 'text' | 'email' | 'password' | 'file';
+export type TInputType = 'text' | 'email' | 'number' | 'password' | 'file';
 export type TInputSize = 'sm' | 'md' | 'lg';
 export type TInputFieldProps = Omit<
   DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>,

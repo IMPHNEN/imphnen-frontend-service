@@ -1,27 +1,13 @@
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-
-const addItemSchema = z.object({
-  itemName: z.string().min(1, 'Item name is required'),
-  quantity: z.string().min(1, 'Quantity is required'),
-  chanceRate: z
-    .string()
-    .min(1, 'Chance rate is required')
-    .refine(
-      (val) => {
-        const num = parseFloat(val);
-        return num >= 0.1 && num <= 1;
-      },
-      { message: 'Chance rate must be between 0.1 and 1' }
-    ),
-});
-
-type TAddItemForm = z.infer<typeof addItemSchema>;
+import {
+  gachaRollItemSchema,
+  TGachaRollItem
+} from '@imphnen-frontend-service/service';
 
 export const useAddItem = (nextStep: () => void) => {
-  const form = useForm<TAddItemForm>({
-    resolver: zodResolver(addItemSchema),
+  const form = useForm<TGachaRollItem>({
+    resolver: zodResolver(gachaRollItemSchema),
     mode: 'all',
   });
 
