@@ -4,6 +4,7 @@ import {
   gachaRollItemSchema,
   TGachaRollItem
 } from '@imphnen-frontend-service/service';
+import { toast } from 'sonner';
 
 export const useItem = (
   nextStep: () => void,
@@ -29,12 +30,23 @@ export const useItem = (
 export const useConfirmItem = (
   onClose: () => void,
   resetStep: () => void,
-  actionFunction?: () => void,
+  actionFunction?: () => Promise<boolean>,
+  messages?: {
+    success?: string;
+    error?: string;
+  }
 ) => {
-  const onConfirm = () => {
-    actionFunction?.();
-    onClose();
-    resetStep();
+  const onConfirm = async () => {
+    try {
+      // const result = await actionFunction?.();
+      // result ? toast.success(messages?.success) : toast.error(messages?.error);
+      toast.success(messages?.success);
+      onClose();
+      resetStep();
+    } catch (error) {
+      console.log(error);
+      toast.error(messages?.error);
+    }
   };
 
   const onCancel = () => {

@@ -6,7 +6,7 @@ import { ControlledInputField } from '@imphnen-frontend-service/ui/organisms';
 interface IModalUpdateItem {
   isOpen: boolean;
   onClose: () => void;
-  handleUpdateItem?: () => void;
+  handleUpdateItem?: () => Promise<boolean>;
   currentStep?: number;
   nextStep: () => void;
   prevStep: () => void;
@@ -117,7 +117,7 @@ const StepOne = ({ nextStep }: IStepOneProps) => {
 
 interface IStepTwoProps {
   onClose: () => void;
-  handleUpdateItem?: () => void;
+  handleUpdateItem?: () => Promise<boolean>;
   resetStep: () => void;
 }
 
@@ -125,7 +125,11 @@ const StepTwo = ({ onClose, handleUpdateItem, resetStep }: IStepTwoProps) => {
   const { onConfirm, onCancel } = useConfirmItem(
     onClose,
     resetStep,
-    handleUpdateItem
+    handleUpdateItem,
+    {
+      success: 'Item ditambahkan ke gacha item',
+      error: 'Item gagal ditambahkan ke gacha item',
+    }
   );
 
   return (

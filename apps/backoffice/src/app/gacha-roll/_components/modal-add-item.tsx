@@ -6,7 +6,7 @@ import { useItem, useConfirmItem } from '../_hook/use-item';
 interface IModalAddItem {
   isOpen: boolean;
   onClose: () => void;
-  handleAddItem?: () => void;
+  handleAddItem?: () => Promise<boolean>;
   currentStep?: number;
   nextStep: () => void;
   prevStep: () => void;
@@ -109,7 +109,7 @@ const StepOne = ({ nextStep }: IStepOneProps) => {
 
 interface IStepTwoProps {
   onClose: () => void;
-  handleAddItem?: () => void;
+  handleAddItem?: () => Promise<boolean>;
   resetStep: () => void;
 }
 
@@ -117,7 +117,11 @@ const StepTwo = ({ onClose, handleAddItem, resetStep }: IStepTwoProps) => {
   const { onConfirm, onCancel } = useConfirmItem(
     onClose,
     resetStep,
-    handleAddItem
+    handleAddItem,
+    {
+      success: 'Item ditambahkan ke gacha item',
+      error: 'Item gagal ditambahkan ke gacha item',
+    }
   );
 
   return (
