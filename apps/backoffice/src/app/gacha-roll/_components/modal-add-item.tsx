@@ -119,8 +119,8 @@ const StepTwo = ({ onClose, handleAddItem, resetStep }: IStepTwoProps) => {
     resetStep,
     handleAddItem,
     {
-      success: 'Item ditambahkan ke gacha item',
-      error: 'Item gagal ditambahkan ke gacha item',
+      success: 'Item ditambahkan ke roll gacha',
+      error: 'Item gagal ditambahkan ke roll gacha',
     }
   );
 

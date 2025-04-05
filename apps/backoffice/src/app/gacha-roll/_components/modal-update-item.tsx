@@ -127,8 +127,8 @@ const StepTwo = ({ onClose, handleUpdateItem, resetStep }: IStepTwoProps) => {
     resetStep,
     handleUpdateItem,
     {
-      success: 'Item ditambahkan ke gacha item',
-      error: 'Item gagal ditambahkan ke gacha item',
+      success: 'Perubahan item roll berhasil dilakukan',
+      error: 'Perubahan item roll gagal dilakukan',
     }
   );
 
