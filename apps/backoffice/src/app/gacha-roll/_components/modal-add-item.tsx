@@ -1,26 +1,26 @@
 import { Button } from '@imphnen-frontend-service/ui/atoms';
-import { InputField, Modal } from '@imphnen-frontend-service/ui/molecules';
-import { useConfirmItem, useItem } from '../_hook/use-item';
+import { Modal } from '@imphnen-frontend-service/ui/molecules';
 import { ControlledInputField } from '@imphnen-frontend-service/ui/organisms';
+import { useItem, useConfirmItem } from '../_hook/use-item';
 
-interface IModalEditItem {
+interface IModalAddItem {
   isOpen: boolean;
   onClose: () => void;
-  handleEditItem?: () => Promise<boolean>;
+  handleAddItem?: () => Promise<boolean>;
   currentStep?: number;
   nextStep: () => void;
   prevStep: () => void;
   resetStep: () => void;
 }
 
-const ModalEditItem = ({
+const ModalAddItem = ({
   isOpen,
   onClose,
   currentStep,
   nextStep,
   resetStep,
-  handleEditItem,
-}: IModalEditItem) => {
+  handleAddItem,
+}: IModalAddItem) => {
   return (
     <Modal
       className="min-w-[400px] bg-primary-50 rounded-lg p-[40px] flex flex-col gap-8 text-center"
@@ -35,7 +35,7 @@ const ModalEditItem = ({
       {currentStep === 2 && (
         <StepTwo
           onClose={onClose}
-          handleEditItem={handleEditItem}
+          handleAddItem={handleAddItem}
           resetStep={resetStep}
         />
       )}
@@ -49,62 +49,57 @@ interface IStepOneProps {
 }
 
 const StepOne = ({ nextStep }: IStepOneProps) => {
-  const initialValues = {
-    itemName: 'Hoodie IMPHNEN Official 2025',
-    quantity: 10,
-  };
-
-  const { form, onSubmit } = useItem(nextStep, initialValues);
+  const { form, onSubmit } = useItem(nextStep);
 
   return (
     <>
       <Modal.Header>
         <h2 className="text-p1 font-semibold text-primary-500 mb-3">
-          Edit Item Gacha
+          Tambah Item Roll Gacha
         </h2>
         <p className="text-p3 text-neutral-400">
-          Silakan mengubah detail dari item yang diperlukan
+          Lengkapi detal di bawah ini, untuk menambahkan item gacha
         </p>
       </Modal.Header>
-      <Modal.Content className="flex flex-col gap-8">
+      <Modal.Content>
         <form onSubmit={onSubmit} className="flex flex-col gap-8">
           <div className="flex flex-col gap-4">
             <ControlledInputField
               control={form.control}
-              label="Nama Hadiah"
-              type="text"
+              label="Pilih Item"
               name="itemName"
-              placeholder="Masukkan Nama Hadiah"
+              type="text"
+              placeholder="Pilih item yang dimasukkan ke roll"
               size="lg"
               className="w-full"
             />
             <ControlledInputField
               control={form.control}
               label="Quantity"
-              type="number"
               name="quantity"
+              type="number"
+              min={1}
               placeholder="Masukkan Kuantitas Item"
               size="lg"
               className="w-full"
             />
             <ControlledInputField
               control={form.control}
-              label="Foto Barang"
-              type="file"
-              name="foto"
-              placeholder=".jpg, .jpeg, atau .png"
+              label="Chance Rate"
+              name="chanceRate"
+              type="number"
+              value={0.1}
+              min={0.1}
+              step={0.1}
+              max={1}
+              placeholder="Masukkan Chance Rate (0,1 - 1)"
               size="lg"
               className="w-full"
             />
           </div>
 
-          <Button
-            variant="primary"
-            size="lg"
-            className="w-full"
-            onClick={nextStep}
-          >
-            Perbarui Item
+          <Button variant="primary" size="lg" className="w-full" type="submit">
+            Tambahkan Item
           </Button>
         </form>
       </Modal.Content>
@@ -114,29 +109,30 @@ const StepOne = ({ nextStep }: IStepOneProps) => {
 
 interface IStepTwoProps {
   onClose: () => void;
-  handleEditItem?: () => Promise<boolean>;
+  handleAddItem?: () => Promise<boolean>;
   resetStep: () => void;
 }
 
-const StepTwo = ({ onClose, handleEditItem, resetStep }: IStepTwoProps) => {
+const StepTwo = ({ onClose, handleAddItem, resetStep }: IStepTwoProps) => {
   const { onConfirm, onCancel } = useConfirmItem(
     onClose,
     resetStep,
-    handleEditItem,
+    handleAddItem,
     {
-      success: 'Perubahan item berhasil dilakukan',
-      error: 'Perubahan item gagal dilakukan',
+      success: 'Item ditambahkan ke roll gacha',
+      error: 'Item gagal ditambahkan ke roll gacha',
     }
   );
+
   return (
     <>
       <Modal.Header className="mb-0 text-center items-center">
         <h2 className="text-p1 font-semibold text-primary-500 mb-3">
-          Update Item
+          Tambah ke Roll Gacha
         </h2>
         <p className="text-p3 text-neutral-400">
-          Apakah kamu yakin dengan
-          <br /> perubahan yang dilakukan?
+          Apakah kamu yakin ingin
+          <br /> menambahkan item ini ke roll gacha?
         </p>
       </Modal.Header>
       <Modal.Content className="flex gap-4">
@@ -154,11 +150,11 @@ const StepTwo = ({ onClose, handleEditItem, resetStep }: IStepTwoProps) => {
           className="w-full"
           onClick={onConfirm}
         >
-          Update
+          Tambahkan
         </Button>
       </Modal.Content>
     </>
   );
 };
 
-export default ModalEditItem;
+export default ModalAddItem;

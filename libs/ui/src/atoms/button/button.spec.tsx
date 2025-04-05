@@ -24,9 +24,9 @@ describe('Test Button Component', () => {
 
     const button = screen.getByText('Delete');
 
-    expect(button).toHaveClass('bg-danger-500');
-    expect(button).toHaveClass('hover:bg-danger-600');
-    expect(button).toHaveClass('text-white');
+    expect(button).toHaveClass('bg-danger-100');
+    expect(button).toHaveClass('hover:bg-danger-200');
+    expect(button).toHaveClass('text-danger-500');
   });
 
   it("disables the button when 'disabled' prop is set", async () => {

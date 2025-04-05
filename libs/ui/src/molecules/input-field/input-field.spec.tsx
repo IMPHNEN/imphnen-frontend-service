@@ -3,7 +3,7 @@ import { InputField } from './input-field';
 
 describe('InputField Component', () => {
   it('renders correctly with disabled prop', () => {
-    render(<InputField label="Test Label" disabled={true} />);
+    render(<InputField htmlFor="test" label="Test Label" disabled={true} />);
 
     const input = screen.getByLabelText('Test Label');
     expect(input).toBeDisabled();
@@ -11,7 +11,7 @@ describe('InputField Component', () => {
   });
 
   it('renders correctly without disabled prop', () => {
-    render(<InputField label="Test Label" disabled={false} />);
+    render(<InputField htmlFor="test" label="Test Label" disabled={false} />);
 
     const input = screen.getByLabelText('Test Label');
     expect(input).not.toBeDisabled();
