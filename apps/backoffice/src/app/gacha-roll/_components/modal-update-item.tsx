@@ -1,6 +1,7 @@
 import { Button } from '@imphnen-frontend-service/ui/atoms';
-import { InputField, Modal } from '@imphnen-frontend-service/ui/molecules';
-import { useState } from 'react';
+import { Modal } from '@imphnen-frontend-service/ui/molecules';
+import { useConfirmItem, useItem } from '../_hook/use-item';
+import { ControlledInputField } from '@imphnen-frontend-service/ui/organisms';
 
 interface IModalUpdateItem {
   isOpen: boolean;
@@ -17,7 +18,6 @@ const ModalUpdateItem = ({
   onClose,
   currentStep,
   nextStep,
-  prevStep,
   resetStep,
   handleUpdateItem,
 }: IModalUpdateItem) => {
@@ -49,9 +49,13 @@ interface IStepOneProps {
 }
 
 const StepOne = ({ nextStep }: IStepOneProps) => {
-  const [itemName, setItemName] = useState('Hoodie IMPHNEN Official 2025');
-  const [quantity, setQuantity] = useState('10');
-  const [chanceRate, setChanceRate] = useState('0.1');
+  const initialValues = {
+    itemName: 'Hoodie IMPHNEN Official 2025',
+    quantity: 10,
+    chanceRate: 0.1,
+  };
+
+  const { form, onSubmit } = useItem(nextStep, initialValues);
 
   return (
     <>
@@ -60,45 +64,52 @@ const StepOne = ({ nextStep }: IStepOneProps) => {
           Update Item Roll Gacha
         </h2>
       </Modal.Header>
-      <Modal.Content className="flex flex-col gap-8">
-        <div className="flex flex-col gap-4">
-          <InputField
-            label="Pilih Item"
-            type="text"
-            placeholder="Pilih item yang dimasukkan ke roll"
-            value={itemName}
-            onChange={(e) => setItemName(e.target.value)}
-            size="lg"
-            className="w-full"
-          />
-          <InputField
-            label="Quantity"
-            type="text"
-            placeholder="Masukkan Kuantitas Item"
-            value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
-            size="lg"
-            className="w-full"
-          />
-          <InputField
-            label="Chance Rate"
-            type="text"
-            placeholder="Masukkan Chance Rate (0.1 - 1)"
-            value={chanceRate}
-            onChange={(e) => setChanceRate(e.target.value)}
-            size="lg"
-            className="w-full"
-          />
-        </div>
+      <Modal.Content>
+        <form onSubmit={onSubmit} className="flex flex-col gap-8">
+          <div className="flex flex-col gap-4">
+            <ControlledInputField
+              control={form.control}
+              label="Pilih Item"
+              name="itemName"
+              type="text"
+              placeholder="Pilih item yang dimasukkan ke roll"
+              size="lg"
+              className="w-full"
+            />
+            <ControlledInputField
+              control={form.control}
+              label="Quantity"
+              name="quantity"
+              type="number"
+              min={1}
+              placeholder="Masukkan Kuantitas Item"
+              size="lg"
+              className="w-full"
+            />
+            <ControlledInputField
+              control={form.control}
+              label="Chance Rate"
+              name="chanceRate"
+              type="number"
+              value={0.1}
+              min={0.1}
+              step={0.1}
+              max={1}
+              placeholder="Masukkan Chance Rate (0,1 - 1)"
+              size="lg"
+              className="w-full"
+            />
+          </div>
 
-        <Button
-          variant="primary"
-          size="lg"
-          className="w-full"
-          onClick={nextStep}
-        >
-          Perbarui Item
-        </Button>
+          <Button
+            variant="primary"
+            size="lg"
+            className="w-full"
+            onClick={nextStep}
+          >
+            Perbarui Item
+          </Button>
+        </form>
       </Modal.Content>
     </>
   );
@@ -110,43 +121,44 @@ interface IStepTwoProps {
   resetStep: () => void;
 }
 
-const StepTwo = ({ onClose, handleUpdateItem, resetStep }: IStepTwoProps) => (
-  <>
-    <Modal.Header className="mb-0 text-center items-center">
-      <h2 className="text-p1 font-semibold text-primary-500 mb-3">
-        Update Item
-      </h2>
-      <p className="text-p3 text-neutral-400">
-        Apakah kamu yakin dengan
-        <br /> perubahan yang dilakukan?
-      </p>
-    </Modal.Header>
-    <Modal.Content className="flex gap-4">
-      <Button
-        variant="bordered"
-        size="lg"
-        className="w-full"
-        onClick={() => {
-          onClose();
-          resetStep();
-        }}
-      >
-        Batal
-      </Button>
-      <Button
-        variant="primary"
-        size="lg"
-        className="w-full"
-        onClick={() => {
-          handleUpdateItem && handleUpdateItem();
-          onClose();
-          resetStep();
-        }}
-      >
-        Update
-      </Button>
-    </Modal.Content>
-  </>
-);
+const StepTwo = ({ onClose, handleUpdateItem, resetStep }: IStepTwoProps) => {
+  const { onConfirm, onCancel } = useConfirmItem(
+    onClose,
+    resetStep,
+    handleUpdateItem
+  );
+
+  return (
+    <>
+      <Modal.Header className="mb-0 text-center items-center">
+        <h2 className="text-p1 font-semibold text-primary-500 mb-3">
+          Update Item
+        </h2>
+        <p className="text-p3 text-neutral-400">
+          Apakah kamu yakin dengan
+          <br /> perubahan yang dilakukan?
+        </p>
+      </Modal.Header>
+      <Modal.Content className="flex gap-4">
+        <Button
+          variant="bordered"
+          size="lg"
+          className="w-full"
+          onClick={onCancel}
+        >
+          Batal
+        </Button>
+        <Button
+          variant="primary"
+          size="lg"
+          className="w-full"
+          onClick={onConfirm}
+        >
+          Update
+        </Button>
+      </Modal.Content>
+    </>
+  );
+};
 
 export default ModalUpdateItem;

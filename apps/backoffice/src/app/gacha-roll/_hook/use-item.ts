@@ -5,10 +5,14 @@ import {
   TGachaRollItem
 } from '@imphnen-frontend-service/service';
 
-export const useAddItem = (nextStep: () => void) => {
+export const useItem = (
+  nextStep: () => void,
+  initialValues?: TGachaRollItem
+) => {
   const form = useForm<TGachaRollItem>({
     resolver: zodResolver(gachaRollItemSchema),
     mode: 'all',
+    defaultValues: initialValues,
   });
 
   const onSubmit = form.handleSubmit((data) => {
@@ -22,13 +26,13 @@ export const useAddItem = (nextStep: () => void) => {
   };
 };
 
-export const useConfirmAddItem = (
+export const useConfirmItem = (
   onClose: () => void,
   resetStep: () => void,
-  handleAddItem?: () => void,
+  actionFunction?: () => void,
 ) => {
   const onConfirm = () => {
-    handleAddItem?.();
+    actionFunction?.();
     onClose();
     resetStep();
   };

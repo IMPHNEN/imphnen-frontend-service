@@ -1,7 +1,7 @@
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { Modal } from '@imphnen-frontend-service/ui/molecules';
 import { ControlledInputField } from '@imphnen-frontend-service/ui/organisms';
-import { useAddItem, useConfirmAddItem } from '../_hook/use-add-item';
+import { useItem, useConfirmItem } from '../_hook/use-item';
 
 interface IModalAddItem {
   isOpen: boolean;
@@ -18,7 +18,6 @@ const ModalAddItem = ({
   onClose,
   currentStep,
   nextStep,
-  prevStep,
   resetStep,
   handleAddItem,
 }: IModalAddItem) => {
@@ -50,7 +49,7 @@ interface IStepOneProps {
 }
 
 const StepOne = ({ nextStep }: IStepOneProps) => {
-  const { form, onSubmit } = useAddItem(nextStep);
+  const { form, onSubmit } = useItem(nextStep);
 
   return (
     <>
@@ -115,7 +114,11 @@ interface IStepTwoProps {
 }
 
 const StepTwo = ({ onClose, handleAddItem, resetStep }: IStepTwoProps) => {
-  const { onConfirm, onCancel } = useConfirmAddItem(onClose, resetStep);
+  const { onConfirm, onCancel } = useConfirmItem(
+    onClose,
+    resetStep,
+    handleAddItem
+  );
 
   return (
     <>
