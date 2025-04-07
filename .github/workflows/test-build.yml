@@ -1,0 +1,28 @@
+name: Test and Build
+
+on:
+  push:
+    branches: ['develop']
+  pull_request:
+    branches: ['develop']
+
+env:
+  NODE_VERSION: 22.14.0
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+
+      - name: Nx Build
+        run: npx nx run-many --target=build --all

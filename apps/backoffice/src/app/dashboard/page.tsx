@@ -31,20 +31,17 @@ export const Components: FC = (): ReactElement => {
   return (
     <Fragment>
       <main className="w-full px-[48px] py-[40px] flex flex-col gap-8">
-        {/* Dashboard Header */}
         <header className="bg-white py-4 px-8 rounded-lg shadow p-4">
           <h1 className="text-p2 font-semibold">Dashboard</h1>
         </header>
 
         <div className="flex justify-between gap-[40px] p-8 bg-white rounded-md">
           <div className="w-full flex flex-col gap-[40px]">
-            {/* Summary Section */}
             <section>
               <h2 className="text-p2 font-medium text-primary-500 mb-8">
                 Summary
               </h2>
               <div className="grid grid-cols-2 gap-4">
-                {/* Participants */}
                 <div className="bg-white rounded-lg shadow-sm py-4 px-6 flex items-center border border-neutral-100">
                   <div className="mr-4 text-primary-500 bg-primary-100 p-[8px] rounded-md">
                     <UsergroupAddOutlined className="text-[20px]" />
@@ -55,7 +52,6 @@ export const Components: FC = (): ReactElement => {
                   </div>
                 </div>
 
-                {/* Roll and Reroll */}
                 <div className="bg-white rounded-lg shadow-sm py-4 px-6 flex items-center border border-neutral-100">
                   <div className="mr-4 text-primary-500 bg-primary-100 p-[8px] rounded-md">
                     <ReloadOutlined className="text-[20px]" />
@@ -68,7 +64,6 @@ export const Components: FC = (): ReactElement => {
                   </div>
                 </div>
 
-                {/* Redeem */}
                 <div className="bg-white rounded-lg shadow-sm py-4 px-6 flex items-center border border-neutral-100">
                   <div className="mr-4 text-primary-500 bg-primary-100 p-[8px] rounded-md">
                     <UserSwitchOutlined className="text-[20px]" />
@@ -79,7 +74,6 @@ export const Components: FC = (): ReactElement => {
                   </div>
                 </div>
 
-                {/* Inactive Users */}
                 <div className="bg-white rounded-lg shadow-sm py-4 px-6 flex items-center border border-neutral-100">
                   <div className="mr-4 text-primary-500 bg-primary-100 p-[8px] rounded-md">
                     <UsergroupDeleteOutlined className="text-[20px]" />
@@ -94,7 +88,6 @@ export const Components: FC = (): ReactElement => {
               </div>
             </section>
 
-            {/* Gacha Items Section */}
             <section className="flex flex-col gap-8">
               <div className="flex justify-between items-center">
                 <h2 className="text-p2 font-medium text-primary-500">
@@ -111,21 +104,20 @@ export const Components: FC = (): ReactElement => {
                 </Button>
               </div>
 
-              {/* Gacha Items List */}
               <div className="flex flex-col gap-4 max-h-140 overflow-auto">
                 {[1, 2, 3, 4, 5, 6].map((item) => (
                   <div
                     key={item}
-                    className="bg-white max-h-[80px] overflow-clip rounded-lg shadow-sm flex justify-between border border-neutral-100"
+                    className="bg-white overflow-clip rounded-lg shadow-sm flex justify-between border border-neutral-100"
                   >
-                    <div className="flex flex-col py-4 px-6 gap-4">
+                    <div className="flex flex-col py-4 px-6 gap-[8px]">
                       <div>
                         <h3 className="text-p3 text-primary-500 font-medium">
                           Lanyard IMPHNEN
                         </h3>
-                        <div className="flex items-center gap-2 text-label2 text-gray-500 mt-1">
+                        <div className="flex items-center justify-start gap-10 text-label2 text-gray-500 mt-1">
                           <span>Prize {item}</span>
-                          <span>Chance Rate: (0.1%)</span>
+                          <span>Quantity: 10</span>
                         </div>
                       </div>
                       <div className="flex justify-start gap-2">
@@ -148,12 +140,7 @@ export const Components: FC = (): ReactElement => {
                       </div>
                     </div>
 
-                    {/* Lebih baik gunakan gambar yang sudah di-clip dengan size height: 78px daripada hard-code object-position dan margin */}
-                    <img
-                      src="gacha-clip.webp"
-                      alt="Lanyard IMPHNEN"
-                      className="h-full"
-                    />
+                    <img src="gacha-clip.webp" alt="Lanyard IMPHNEN" />
                   </div>
                 ))}
               </div>
@@ -174,9 +161,6 @@ export const Components: FC = (): ReactElement => {
         currentStep={currentStep}
         isOpen={showModalAddItem}
         onClose={() => setShowModalAddItem(false)}
-        handleAddItem={() => {
-          console.log('Item added');
-        }}
         nextStep={nextStep}
         prevStep={prevStep}
         resetStep={resetStep}
@@ -187,9 +171,6 @@ export const Components: FC = (): ReactElement => {
         currentStep={currentStep}
         isOpen={showModalEditItem}
         onClose={() => setShowModalEditItem(false)}
-        handleEditItem={() => {
-          console.log('Item edited');
-        }}
         nextStep={nextStep}
         prevStep={prevStep}
         resetStep={resetStep}
@@ -199,9 +180,6 @@ export const Components: FC = (): ReactElement => {
       <ModalDeleteItem
         isOpen={showModalDeleteItem}
         onClose={() => setShowModalDeleteItem(false)}
-        handleDeleteItem={() => {
-          console.log('Item deleted');
-        }}
       />
     </Fragment>
   );

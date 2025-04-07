@@ -3,24 +3,26 @@ import {
   AuditOutlined,
   InboxOutlined,
   LogoutOutlined,
+  ReloadOutlined,
+  UsergroupAddOutlined,
   UserOutlined,
+  UserSwitchOutlined,
 } from '@ant-design/icons';
 import { Button } from '../../atoms';
 import { FC, ReactElement } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { useSession } from '@imphnen-frontend-service/utils';
 
 export const BackofficeSidebar: FC = (): ReactElement => {
+  const { signOut } = useSession();
   const location = useLocation();
-  const navigate = useNavigate();
   const isActive = (path: string) => location.pathname.includes(path);
 
   return (
     <aside className="sticky top-0 left-0 w-[280px] bg-white min-h-screen py-[60px] px-[28px] shadow-xl flex flex-col justify-between">
       <div className="flex flex-col gap-20 justify-between items-center">
-        {/* Logo */}
         <img src="/logos/simple.svg" alt="IMPHNEN Logo" className="w-[150px]" />
 
-        {/* Navigation Menu */}
         <nav className="flex flex-col gap-4 w-full">
           <Link
             to="/dashboard"
@@ -32,6 +34,42 @@ export const BackofficeSidebar: FC = (): ReactElement => {
           >
             <AppstoreOutlined className="text-[20px]" />
             <span className="text-p3 font-medium">Dashboard & Set Gacha</span>
+          </Link>
+
+          <Link
+            to="/gacha-roll"
+            className={`flex items-center justify-items-start gap-3 px-[8px] py-[10px] ${
+              isActive('/gacha-roll')
+                ? 'bg-primary-500 text-white rounded-md'
+                : 'text-gray-700 hover:bg-gray-100'
+            }`}
+          >
+            <ReloadOutlined className="text-[20px]" />
+            <span className="text-p3 font-medium">Gacha Roll</span>
+          </Link>
+
+          <Link
+            to="/permissions"
+            className={`flex items-center justify-items-start gap-3 px-[8px] py-[10px] ${
+              isActive('/permissions')
+                ? 'bg-primary-500 text-white rounded-md'
+                : 'text-gray-700 hover:bg-gray-100'
+            }`}
+          >
+            <UserSwitchOutlined className="text-[20px]" />
+            <span className="text-p3 font-medium">Permissions</span>
+          </Link>
+
+          <Link
+            to="/roles"
+            className={`flex items-center justify-items-start gap-3 px-[8px] py-[10px] ${
+              isActive('/roles')
+                ? 'bg-primary-500 text-white rounded-md'
+                : 'text-gray-700 hover:bg-gray-100'
+            }`}
+          >
+            <UsergroupAddOutlined className="text-[20px]" />
+            <span className="text-p3 font-medium">Roles</span>
           </Link>
 
           <Link
@@ -72,14 +110,10 @@ export const BackofficeSidebar: FC = (): ReactElement => {
         </nav>
       </div>
 
-      {/* Log Out Button */}
       <div className="w-full">
         <hr className="mb-5 border-primary-200" />
-
         <Button
-          onClick={() => {
-            navigate('/');
-          }}
+          onClick={signOut}
           variant="text"
           className="items-start justify-start gap-3 px-[8px] py-[10px] text-gray-700 hover:text-red-500 transition-colors w-full"
         >

@@ -7,10 +7,9 @@ import {
 import { Input } from '../../atoms';
 import { cn } from '@imphnen-frontend-service/utils';
 
-type TInputType = 'text' | 'email' | 'password' | 'file';
-type TInputSize = 'sm' | 'md' | 'lg';
-
-type TInputFormProps = Omit<
+export type TInputType = 'text' | 'email' | 'number' | 'password' | 'file';
+export type TInputSize = 'sm' | 'md' | 'lg';
+export type TInputFieldProps = Omit<
   DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>,
   'size' | 'type'
 > & {
@@ -19,7 +18,6 @@ type TInputFormProps = Omit<
   size?: TInputSize;
   error?: string;
   disabled?: boolean;
-
   helperText?: string;
   htmlFor?: string;
 };
@@ -39,7 +37,7 @@ const sizeClasses: Record<TInputSize, { label: string; helperText: string }> = {
   },
 };
 
-export const InputForm: FC<TInputFormProps> = ({
+export const InputField: FC<TInputFieldProps> = ({
   label,
   placeholder,
   type = 'text',
@@ -56,7 +54,7 @@ export const InputForm: FC<TInputFormProps> = ({
       <label
         htmlFor={htmlFor}
         className={cn(
-          'items-start justify-item-start text-start',
+          'items-start justify-item-start text-start !text-neutral-800',
           sizeClasses[size].label
         )}
       >
@@ -72,15 +70,20 @@ export const InputForm: FC<TInputFormProps> = ({
           error &&
             'border-danger-500 hover:border-danger-500 focus:outline-danger-500',
           className,
-          disabled && 'opacity-50 cursor-not-allowed' // Add styles for disabled state
+          disabled && 'opacity-50 cursor-not-allowed'
         )}
         {...rest}
       />
       {error ? (
-        <p className="text-danger-500 text-xs mt-1">{error}</p>
+        <p className="text-danger-500 text-label1 text-left">{error}</p>
       ) : (
         helperText && (
-          <p className={cn('text-cs mt-1', sizeClasses[size].helperText)}>
+          <p
+            className={cn(
+              'text-label2 text-left',
+              sizeClasses[size].helperText
+            )}
+          >
             {helperText}
           </p>
         )
@@ -88,5 +91,3 @@ export const InputForm: FC<TInputFormProps> = ({
     </div>
   );
 };
-
-export default InputForm;

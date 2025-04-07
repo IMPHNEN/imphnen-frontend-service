@@ -1,10 +1,12 @@
 import { Button } from '@imphnen-frontend-service/ui/atoms';
-import { InputForm, Modal } from '@imphnen-frontend-service/ui/molecules';
+import { Modal } from '@imphnen-frontend-service/ui/molecules';
+import { useConfirmItem, useItem } from '../_hook/use-item';
+import { ControlledInputField } from '@imphnen-frontend-service/ui/organisms';
 
 interface IModalAddItem {
   isOpen: boolean;
   onClose: () => void;
-  handleAddItem: () => void;
+  handleAddItem?: () => Promise<boolean>;
   currentStep?: number;
   nextStep: () => void;
   prevStep: () => void;
@@ -46,91 +48,114 @@ interface IStepOneProps {
   onClose: () => void;
 }
 
-const StepOne = ({ nextStep }: IStepOneProps) => (
-  <>
-    <Modal.Header>
-      <h2 className="text-p1 font-semibold text-primary-500 mb-3">
-        Tambah Item Gacha
-      </h2>
-      <p className="text-p3 text-neutral-400">
-        Lengkapi detail di bawah ini untuk menambahkan item gacha
-      </p>
-    </Modal.Header>
-    <Modal.Content className="flex flex-col gap-8">
-      <div className="flex flex-col gap-4">
-        <InputForm
-          label="Nama Hadiah"
-          type="text"
-          placeholder="Masukkan Nama Hadiah"
-          size="lg"
-          className="w-full"
-        />
-        <InputForm
-          label="Chance Rate"
-          type="text"
-          placeholder="Masukkan Chance Rate"
-          size="lg"
-          className="w-full"
-        />
-        <InputForm
-          label="Foto Barang"
-          type="file"
-          placeholder=".jpg, .jpeg, atau .png"
-          size="lg"
-          className="w-full"
-        />
-      </div>
+const StepOne = ({ nextStep }: IStepOneProps) => {
+  const { form, onSubmit } = useItem(nextStep);
 
-      <Button variant="primary" size="lg" className="w-full" onClick={nextStep}>
-        Tambahkan Item
-      </Button>
-    </Modal.Content>
-  </>
-);
+  return (
+    <>
+      <Modal.Header>
+        <h2 className="text-p1 font-semibold text-primary-500 mb-3">
+          Tambah Item Gacha
+        </h2>
+        <p className="text-p3 text-neutral-400">
+          Lengkapi detail di bawah ini untuk menambahkan item gacha
+        </p>
+      </Modal.Header>
+      <Modal.Content>
+        <form onSubmit={onSubmit} className="flex flex-col gap-8">
+          <div className="flex flex-col gap-4">
+            <ControlledInputField
+              control={form.control}
+              label="Nama Hadiah"
+              name="itemName"
+              type="text"
+              placeholder="Masukkan Nama Hadiah"
+              size="lg"
+              className="w-full"
+            />
+            <ControlledInputField
+              control={form.control}
+              label="Quantity"
+              name="quantity"
+              type="number"
+              min={1}
+              placeholder="Masukkan Kuantitas Item"
+              size="lg"
+              className="w-full"
+            />
+            <ControlledInputField
+              control={form.control}
+              label="Foto Barang"
+              type="file"
+              name="foto"
+              placeholder=".jpg, .jpeg, atau .png"
+              size="lg"
+              className="w-full"
+            />
+          </div>
+
+          <Button
+            variant="primary"
+            size="lg"
+            className="w-full"
+            onClick={nextStep}
+          >
+            Tambahkan Item
+          </Button>
+        </form>
+      </Modal.Content>
+    </>
+  );
+};
 
 interface IStepTwoProps {
   onClose: () => void;
-  handleAddItem?: () => void;
+  handleAddItem?: () => Promise<boolean>;
   resetStep: () => void;
 }
 
-const StepTwo = ({ onClose, handleAddItem, resetStep }: IStepTwoProps) => (
-  <>
-    <Modal.Header className="mb-0 text-center items-center">
-      <h2 className="text-p1 font-semibold text-primary-500 mb-3">
-        Tambah Item
-      </h2>
-      <p className="text-p3 text-neutral-400">
-        Apakah kamu yakin ingin
-        <br /> menambahkan item ini?
-      </p>
-    </Modal.Header>
-    <Modal.Content className="flex gap-4">
-      <Button
-        variant="bordered"
-        size="lg"
-        className="w-full"
-        onClick={() => {
-          onClose();
-          resetStep();
-        }}
-      >
-        Batal
-      </Button>
-      <Button
-        variant="primary"
-        size="lg"
-        className="w-full"
-        onClick={() => {
-          handleAddItem && handleAddItem();
-          onClose();
-          resetStep();
-        }}
-      >
-        Tambahkan
-      </Button>
-    </Modal.Content>
-  </>
-);
+const StepTwo = ({ onClose, handleAddItem, resetStep }: IStepTwoProps) => {
+  const { onConfirm, onCancel } = useConfirmItem(
+    onClose,
+    resetStep,
+    handleAddItem,
+    {
+      success: 'Item ditambahkan ke gacha item',
+      error: 'Item gagal ditambahkan ke gacha item',
+    }
+  );
+
+  return (
+    <>
+      <Modal.Header className="mb-0 text-center items-center">
+        <h2 className="text-p1 font-semibold text-primary-500 mb-3">
+          Tambah Item
+        </h2>
+        <p className="text-p3 text-neutral-400">
+          Apakah kamu yakin ingin
+          <br /> menambahkan item ini?
+        </p>
+      </Modal.Header>
+      <Modal.Content className="flex gap-4">
+        <Button
+          variant="bordered"
+          size="lg"
+          className="w-full"
+          onClick={onCancel}
+        >
+          Batal
+        </Button>
+        <Button
+          variant="primary"
+          size="lg"
+          className="w-full"
+          onClick={onConfirm}
+        >
+          Tambahkan
+        </Button>
+      </Modal.Content>
+    </>
+  );
+};
 
 export default ModalAddItem;

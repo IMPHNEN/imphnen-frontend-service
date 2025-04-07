@@ -31,7 +31,7 @@ const variantClasses: Record<TButtonVariant, string> = {
   bordered:
     'border border-primary-500 hover:border-primary-600 bg-transparent hover:text-primary-600 hover:bg-gray-50 text-primary-500',
   success: 'bg-success-500 hover:bg-success-600 text-white shadow-md',
-  danger: 'bg-danger-500 hover:bg-danger-600 text-white shadow-md',
+  danger: 'bg-danger-100 hover:bg-danger-200 text-danger-500 shadow-md',
 };
 
 const sizeClasses: Record<TButtonSize, string> = {

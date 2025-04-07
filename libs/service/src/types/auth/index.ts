@@ -1,3 +1,5 @@
+import { TUserItem } from '../users';
+
 export type TLoginRequest = {
   email: string;
   password: string;
@@ -9,18 +11,19 @@ export type TLoginResponse = {
       access_token: string;
       refresh_token: string;
     };
-    user: {
-      fullname: string;
-      email: string;
-      is_active: boolean;
-    };
+    user: TUserItem;
   };
 };
 
 export type TRegisterRequest = {
-  fullname: string;
   email: string;
+  fullname: string;
   password: string;
+  phone_number: string;
+  referral_code?: string;
+  referred_by?: string;
+  student_type: string;
+  confirm_password: string;
 };
 
 export type TVerifyEmailRequest = {

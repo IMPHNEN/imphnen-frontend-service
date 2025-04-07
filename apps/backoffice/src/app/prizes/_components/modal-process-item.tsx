@@ -1,5 +1,5 @@
 import { Button } from '@imphnen-frontend-service/ui/atoms';
-import { InputForm, Modal } from '@imphnen-frontend-service/ui/molecules';
+import { InputField, Modal } from '@imphnen-frontend-service/ui/molecules';
 
 interface IModalProcessDelivery {
   isOpen: boolean;
@@ -30,7 +30,7 @@ const ModalProcessDelivery = ({
       </Modal.Header>
       <Modal.Content className="flex flex-col gap-8">
         <div className="flex flex-col gap-4">
-          <InputForm
+          <InputField
             label="Nama Lengkap"
             type="text"
             placeholder="Masukkan Nama Lengkap"
@@ -39,7 +39,7 @@ const ModalProcessDelivery = ({
             className="w-full"
             readOnly
           />
-          <InputForm
+          <InputField
             label="Item yang didapatkan"
             type="text"
             placeholder="Masukkan Nama Item"
@@ -48,7 +48,7 @@ const ModalProcessDelivery = ({
             className="w-full"
             readOnly
           />
-          <InputForm
+          <InputField
             label="Alamat Pengiriman"
             type="text"
             placeholder="Masukkan Alamat Pengiriman"
@@ -57,7 +57,7 @@ const ModalProcessDelivery = ({
             className="w-full"
             readOnly
           />
-          <InputForm
+          <InputField
             label="Status"
             type="text"
             placeholder="Isi Status Pengiriman"

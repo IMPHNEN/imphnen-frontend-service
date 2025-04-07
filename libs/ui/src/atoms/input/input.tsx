@@ -9,7 +9,7 @@ import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons'; // Import
 import { cn } from '@imphnen-frontend-service/utils';
 import { Button } from '../button';
 
-type TInputType = 'text' | 'email' | 'password' | 'file';
+type TInputType = 'text' | 'email' | 'number' | 'password' | 'file';
 type TInputSize = 'sm' | 'md' | 'lg';
 type Width = 'standard' | 'custom'
 
@@ -43,7 +43,8 @@ export const Input: FC<TInputProps> = ({
 }): ReactElement => {
   const [showPassword, setShowPassword] = useState(false); // State for password visibility
 
-  const togglePasswordVisibility = () => {
+  const togglePasswordVisibility = (e: React.FormEvent) => {
+    e.preventDefault();
     if (!disabled) setShowPassword((prev) => !prev);
   };
 
@@ -66,6 +67,7 @@ export const Input: FC<TInputProps> = ({
       {type === 'password' && (
         <div className="absolute end-0 px-[12px] h-full flex items-center">
           <Button
+            type="button"
             variant="text"
             size={size}
             onClick={togglePasswordVisibility}

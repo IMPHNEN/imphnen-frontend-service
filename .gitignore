@@ -45,3 +45,16 @@ vite.config.*.timestamp*
 vitest.config.*.timestamp*
 
 storybook-static
+
+
+.env
+.env.prod
+.env.develop
+.env.staging
+
+# Nuxt dev/build outputs
+.output
+.data
+.nuxt
+.nitro
+.cache
