@@ -51,3 +51,10 @@ storybook-static
 .env.prod
 .env.develop
 .env.staging
+
+# Nuxt dev/build outputs
+.output
+.data
+.nuxt
+.nitro
+.cache
