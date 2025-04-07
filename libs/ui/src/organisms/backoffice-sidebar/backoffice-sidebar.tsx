@@ -4,7 +4,9 @@ import {
   InboxOutlined,
   LogoutOutlined,
   ReloadOutlined,
+  UsergroupAddOutlined,
   UserOutlined,
+  UserSwitchOutlined,
 } from '@ant-design/icons';
 import { Button } from '../../atoms';
 import { FC, ReactElement } from 'react';
@@ -44,6 +46,30 @@ export const BackofficeSidebar: FC = (): ReactElement => {
           >
             <ReloadOutlined className="text-[20px]" />
             <span className="text-p3 font-medium">Gacha Roll</span>
+          </Link>
+
+          <Link
+            to="/permissions"
+            className={`flex items-center justify-items-start gap-3 px-[8px] py-[10px] ${
+              isActive('/permissions')
+                ? 'bg-primary-500 text-white rounded-md'
+                : 'text-gray-700 hover:bg-gray-100'
+            }`}
+          >
+            <UserSwitchOutlined className="text-[20px]" />
+            <span className="text-p3 font-medium">Permissions</span>
+          </Link>
+
+          <Link
+            to="/roles"
+            className={`flex items-center justify-items-start gap-3 px-[8px] py-[10px] ${
+              isActive('/roles')
+                ? 'bg-primary-500 text-white rounded-md'
+                : 'text-gray-700 hover:bg-gray-100'
+            }`}
+          >
+            <UsergroupAddOutlined className="text-[20px]" />
+            <span className="text-p3 font-medium">Roles</span>
           </Link>
 
           <Link

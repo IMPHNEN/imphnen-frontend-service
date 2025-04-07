@@ -54,7 +54,7 @@ export const InputField: FC<TInputFieldProps> = ({
       <label
         htmlFor={htmlFor}
         className={cn(
-          'items-start justify-item-start text-start',
+          'items-start justify-item-start text-start !text-neutral-800',
           sizeClasses[size].label
         )}
       >
@@ -70,7 +70,7 @@ export const InputField: FC<TInputFieldProps> = ({
           error &&
             'border-danger-500 hover:border-danger-500 focus:outline-danger-500',
           className,
-          disabled && 'opacity-50 cursor-not-allowed' // Add styles for disabled state
+          disabled && 'opacity-50 cursor-not-allowed'
         )}
         {...rest}
       />
