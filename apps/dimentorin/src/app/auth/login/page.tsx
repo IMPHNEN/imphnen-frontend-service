@@ -10,12 +10,12 @@ export const Components: FC = (): ReactElement => {
 
   return (
     <div className='flex flex-col justify-center items-center min-h-screen py-[60px] px-[80px]'>
-      <div className='bg-white min-w-[1120px] min-h-[712px] p-10 rounded-2xl shadow-md flex gap-6'>
+      <div className='bg-white xl:min-w-[1120px] min-h-[712px] p-3 md:p-10 rounded-2xl shadow-md flex gap-6'>
         <LoginBanner />
-        <div className='border-2 border-primary-500/50 w-[596px] rounded-lg py-[70px] px-[96px] flex justify-center'>
-          <div className='w-[404px]'>
-            <h2 className='text-4xl font-semibold text-primary-500 text-center mb-2'>Hallo Minna-san</h2>
-            <h5 className='text-xl font-medium text-primary-500 text-center'>Welcome to Dimentorin by IMPHNEN</h5>
+        <div className='xl:border-2 xl:border-primary-500/50 md:w-[596px] rounded-lg py-[20px] px-[30px] md:py-[70px] md:px-[96px] flex justify-center'>
+          <div className='md:w-[404px]'>
+            <h2 className='text-2xl md:text-4xl font-semibold text-primary-500 text-center mb-2'>Hallo Minna-san</h2>
+            <h5 className='text-md md:text-xl font-medium text-primary-500 text-center mb-10'>Welcome to Dimentorin by IMPHNEN</h5>
             <InputForm label='Email' error={error ? error : undefined} size='lg' className='w-full' placeholder='Masukkan email-mu, Senpai~! ✨ (Pastikan tidak typo, ya~ 😆)' />
             <InputForm label="password" error={error ? error : undefined} className='w-full' size='lg' type='password' placeholder='Masukkan password rahasiamu!' />
             <div className='flex justify-end my-5'>

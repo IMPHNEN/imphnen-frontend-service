@@ -11,6 +11,7 @@ import { Button } from '../button';
 
 type TInputType = 'text' | 'email' | 'password' | 'file';
 type TInputSize = 'sm' | 'md' | 'lg';
+type Width = 'standard' | 'custom'
 
 type TInputProps = Omit<
   DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>,
@@ -18,6 +19,7 @@ type TInputProps = Omit<
 > & {
   type?: TInputType;
   size?: TInputSize;
+  widthform?: Width;
   disabled?: boolean;
 };
 
@@ -34,6 +36,7 @@ export const Input: FC<TInputProps> = ({
   type = 'text',
   size = 'md',
   placeholder = 'Placeholder',
+  widthform='standard',
   disabled,
   className,
   ...rest
@@ -45,7 +48,7 @@ export const Input: FC<TInputProps> = ({
   };
 
   const mergedClassName = cn(
-    'px-[12px] py-[8px] text-neutral-800 bg-white placeholder:text-neutral-300 border border-neutral-200 hover:border-blue-300 focus:outline-1 focus:outline-blue-500 rounded-md font-bai-jamjuree min-w-70',
+    `px-[12px] py-[8px] text-neutral-800 bg-white placeholder:text-neutral-300 border border-neutral-200 hover:border-blue-300 focus:outline-1 focus:outline-blue-500 rounded-md font-bai-jamjuree ${widthform === "standard" ? "min-w-70" : ""}`,
     sizeClasses[size].textSize,
     disabled && disabledClass,
     className
