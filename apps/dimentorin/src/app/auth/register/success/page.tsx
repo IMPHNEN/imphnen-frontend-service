@@ -1,7 +1,6 @@
 import { FC, ReactElement } from 'react';
 import { RegisterResetBanner } from '@imphnen-frontend-service/ui/organisms';
-import { Button, Input } from '@imphnen-frontend-service/ui/atoms';
-import { InputField } from '@imphnen-frontend-service/ui/molecules';
+import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { ArrowRightOutlined } from '@ant-design/icons';
 
 export const Components: FC = (): ReactElement => {

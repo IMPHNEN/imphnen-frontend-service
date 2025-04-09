@@ -37,7 +37,6 @@ export const Components: FC = (): ReactElement => {
                 <div className="flex flex-col gap-2">
                   <h4 className="font-medium">OTP Code</h4>
                   <Input
-                    widthform="custom"
                     className="w-full"
                     size="lg"
                     placeholder="Kode OTP"

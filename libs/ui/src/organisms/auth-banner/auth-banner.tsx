@@ -5,7 +5,7 @@ import { FC, ReactElement } from "react";
 
 function AuthBanner({text, href}: {text: string, href: string}){
     return (
-        <div className='relative rounded-md'>
+        <div className='hidden xl:block relative rounded-md'>
           <img src="/image/95319c4f9953dfe6180200e529dfcea5.webp" alt="Banner" className='w-[420px] h-[632px] object-[80%] object-cover rounded-lg' />
           <div className='absolute top-0 bg-gradient-to-b from-primary-500 to-transparent w-full rounded-t-lg h-[163px] py-5 px-5'>
             <Button variant='secondary' className='gap-2' onClick={() => document.location.href = `${href}`}>
