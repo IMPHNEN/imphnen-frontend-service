@@ -1,3 +1,4 @@
+import { Features } from './_components/features';
 import { Header } from './_components/header';
 import { Hero } from './_components/hero';
 
@@ -7,6 +8,7 @@ export default function Page() {
       <Header />
       <main className="flex-1">
         <Hero />
+        <Features />
       </main>
     </div>
   );
