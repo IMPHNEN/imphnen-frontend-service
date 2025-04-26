@@ -1,6 +1,7 @@
 import { CallToAction } from './_components/call-to-action';
 import { Community } from './_components/community';
 import { Features } from './_components/features';
+import Footer from './_components/footer';
 import { Header } from './_components/header';
 import { Hero } from './_components/hero';
 import { LearningResources } from './_components/learning-resources';
@@ -18,6 +19,7 @@ export default function Page() {
         <Testimonials />
         <CallToAction />
       </main>
+      <Footer />
     </div>
   );
 }
