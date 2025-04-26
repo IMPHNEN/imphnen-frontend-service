@@ -1,3 +1,4 @@
+import { CallToAction } from './_components/call-to-action';
 import { Community } from './_components/community';
 import { Features } from './_components/features';
 import { Header } from './_components/header';
@@ -15,6 +16,7 @@ export default function Page() {
         <Community />
         <LearningResources />
         <Testimonials />
+        <CallToAction />
       </main>
     </div>
   );
