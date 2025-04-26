@@ -1,10 +1,10 @@
-import { Button } from '@imphnen-frontend-service/shadcn-ui/atoms';
+import { Header } from './_components/header';
 
 export default function Page() {
   return (
-    <>
-      <h1 className="text-2xl underline">Hello World</h1>
-      <Button>Click Me</Button>
-    </>
+    <div className="flex min-h-screen flex-col">
+      <Header />
+      <main className="flex-1"></main>
+    </div>
   );
 }
