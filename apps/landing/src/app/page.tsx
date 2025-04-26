@@ -3,6 +3,7 @@ import { Features } from './_components/features';
 import { Header } from './_components/header';
 import { Hero } from './_components/hero';
 import { LearningResources } from './_components/learning-resources';
+import { Testimonials } from './_components/testimonials';
 
 export default function Page() {
   return (
@@ -13,6 +14,7 @@ export default function Page() {
         <Features />
         <Community />
         <LearningResources />
+        <Testimonials />
       </main>
     </div>
   );
