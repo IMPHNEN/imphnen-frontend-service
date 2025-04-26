@@ -9,6 +9,7 @@ import { cn } from '@imphnen-frontend-service/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { SimpleThemeToggle } from './simple-theme-toggle';
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -80,6 +81,7 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-4">
+          <SimpleThemeToggle />
           <Button className="hidden md:flex bg-gradient-to-r from-primary to-blue-400 hover:from-primary/90 hover:to-blue-400/90 transition-all duration-300">
             Gabung Discord
           </Button>
