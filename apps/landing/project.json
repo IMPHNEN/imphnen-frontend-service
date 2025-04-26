@@ -1,0 +1,9 @@
+{
+  "name": "landing",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/landing",
+  "projectType": "application",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project landing --web",
+  "targets": {}
+}
