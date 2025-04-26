@@ -1,8 +1,9 @@
 import { type Metadata } from 'next';
-import { description, title } from '../data/metadata.json';
 import '../styles/globals.css';
 
-export const metadata: Metadata = { title, description };
+export const metadata: Metadata = {
+  title: 'IMPHNEN',
+};
 
 export default function RootLayout({
   children,
