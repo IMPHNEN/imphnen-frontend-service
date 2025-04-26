@@ -1,3 +1,4 @@
+import { Community } from './_components/community';
 import { Features } from './_components/features';
 import { Header } from './_components/header';
 import { Hero } from './_components/hero';
@@ -9,6 +10,7 @@ export default function Page() {
       <main className="flex-1">
         <Hero />
         <Features />
+        <Community />
       </main>
     </div>
   );
