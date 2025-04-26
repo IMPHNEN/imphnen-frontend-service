@@ -17,6 +17,7 @@
     "dimentorin:prod": "serve ./dist/apps/dimentorin",
     "landing:dev": "nx serve landing",
     "landing:build": "nx build landing",
+    "landing:prod": "cd ./dist/apps/landing && npx next start",
     "ui:test": "nx test ui",
     "ui:build": "nx build ui",
     "ui:storybook": "nx storybook ui"
