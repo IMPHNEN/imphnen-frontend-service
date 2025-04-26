@@ -7,8 +7,10 @@ import {
   LuLaptop as LaptopIcon,
   LuMenu as MenuIcon,
   LuMessageCircle as MessageCircleIcon,
+  LuShare2 as Share2Icon,
   LuSparkles as SparklesIcon,
   LuUsers as UsersIcon,
+  LuVideo as VideoIcon,
   LuX as XIcon,
 } from 'react-icons/lu';
 
@@ -21,7 +23,9 @@ export {
   LaptopIcon,
   MenuIcon,
   MessageCircleIcon,
+  Share2Icon,
   SparklesIcon,
   UsersIcon,
+  VideoIcon,
   XIcon,
 };

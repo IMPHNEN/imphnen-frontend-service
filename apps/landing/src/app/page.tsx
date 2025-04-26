@@ -2,6 +2,7 @@ import { Community } from './_components/community';
 import { Features } from './_components/features';
 import { Header } from './_components/header';
 import { Hero } from './_components/hero';
+import { LearningResources } from './_components/learning-resources';
 
 export default function Page() {
   return (
@@ -11,6 +12,7 @@ export default function Page() {
         <Hero />
         <Features />
         <Community />
+        <LearningResources />
       </main>
     </div>
   );
