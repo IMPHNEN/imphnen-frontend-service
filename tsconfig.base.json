@@ -24,8 +24,7 @@
       "@imphnen-frontend-service/ui/organisms": [
         "libs/ui/src/organisms/index.ts"
       ],
-      "@imphnen-frontend-service/utils": ["libs/utils/src/index.ts"],
-      "@payload-config": ["apps/landing/src/payload.config.ts"],
+      "@imphnen-frontend-service/utils": ["libs/utils/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
