@@ -17,4 +17,6 @@ const nextConfig = {
 
 const plugins = [withNx, withPayload];
 
-module.exports = composePlugins(...plugins)(nextConfig);
+const configWithNxPlugin = composePlugins(...plugins)(nextConfig);
+
+module.exports = withPayload(configWithNxPlugin);

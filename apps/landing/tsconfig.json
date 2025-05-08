@@ -1,6 +1,10 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@payload-config": ["./src/payload.config.ts"]
+    },
     "jsx": "preserve",
     "strict": true,
     "noEmit": true,
