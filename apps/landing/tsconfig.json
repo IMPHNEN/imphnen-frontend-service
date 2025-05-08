@@ -1,11 +1,6 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "target": "ES2022",
-    "baseUrl": ".",
-    "paths": {
-      "@payload-config": ["./src/payload.config.ts"]
-    },
     "jsx": "preserve",
     "strict": true,
     "noEmit": true,
