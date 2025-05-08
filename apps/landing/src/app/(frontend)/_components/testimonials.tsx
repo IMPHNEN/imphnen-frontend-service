@@ -101,7 +101,7 @@ export function Testimonials() {
 
               <div className="relative z-10">
                 <p className="mb-6 text-muted-foreground italic">
-                  "{testimonial.quote}"
+                  &ldquo;{testimonial.quote}&rdquo;
                 </p>
 
                 <div className="flex items-center gap-4">
