@@ -15,11 +15,6 @@ const nextConfig = {
   },
 };
 
-const plugins = [
-  // Add more Next.js plugins to this list if needed.
-  withNx,
-];
+const plugins = [withNx, withPayload];
 
-const configWithNxPlugin = composePlugins(...plugins)(nextConfig);
-
-module.exports = withPayload(configWithNxPlugin);
+module.exports = composePlugins(...plugins)(nextConfig);
