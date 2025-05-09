@@ -84,8 +84,12 @@ export interface Config {
   db: {
     defaultIDType: number;
   };
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'hero-section': HeroSection;
+  };
+  globalsSelect: {
+    'hero-section': HeroSectionSelect<false> | HeroSectionSelect<true>;
+  };
   locale: null;
   user: User & {
     collection: 'users';
@@ -270,6 +274,60 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "hero-section".
+ */
+export interface HeroSection {
+  id: number;
+  badgeText: string;
+  title: string;
+  highlight: string;
+  description: string;
+  buttons: {
+    primaryLabel: string;
+    primaryUrl: string;
+    secondaryLabel: string;
+    secondaryUrl: string;
+  };
+  stats?:
+    | {
+        value: string;
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "hero-section_select".
+ */
+export interface HeroSectionSelect<T extends boolean = true> {
+  badgeText?: T;
+  title?: T;
+  highlight?: T;
+  description?: T;
+  buttons?:
+    | T
+    | {
+        primaryLabel?: T;
+        primaryUrl?: T;
+        secondaryLabel?: T;
+        secondaryUrl?: T;
+      };
+  stats?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
