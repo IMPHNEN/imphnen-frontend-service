@@ -9,7 +9,7 @@ import { Hero } from './_components/hero';
 import { LearningResources } from './_components/learning-resources';
 import { Testimonials } from './_components/testimonials';
 
-export const revalidate = 60 * 5; // Seconds
+export const revalidate = 10; // Seconds
 
 export default async function Page() {
   const [heroData, featuresData] = await Promise.all([
