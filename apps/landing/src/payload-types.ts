@@ -86,9 +86,11 @@ export interface Config {
   };
   globals: {
     'hero-section': HeroSection;
+    'features-section': FeaturesSection;
   };
   globalsSelect: {
     'hero-section': HeroSectionSelect<false> | HeroSectionSelect<true>;
+    'features-section': FeaturesSectionSelect<false> | FeaturesSectionSelect<true>;
   };
   locale: null;
   user: User & {
@@ -303,6 +305,25 @@ export interface HeroSection {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "features-section".
+ */
+export interface FeaturesSection {
+  id: number;
+  heading?: string | null;
+  subheading?: string | null;
+  features?:
+    | {
+        icon?: ('LaptopIcon' | 'UsersIcon' | 'BookOpenIcon' | 'CodeIcon') | null;
+        title?: string | null;
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "hero-section_select".
  */
 export interface HeroSectionSelect<T extends boolean = true> {
@@ -323,6 +344,25 @@ export interface HeroSectionSelect<T extends boolean = true> {
     | {
         value?: T;
         label?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "features-section_select".
+ */
+export interface FeaturesSectionSelect<T extends boolean = true> {
+  heading?: T;
+  subheading?: T;
+  features?:
+    | T
+    | {
+        icon?: T;
+        title?: T;
+        description?: T;
         id?: T;
       };
   updatedAt?: T;

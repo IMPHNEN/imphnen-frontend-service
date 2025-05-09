@@ -1,3 +1,4 @@
+import { getGlobalsFeaturesSection } from '../../repositories/get-globals-features-section';
 import { getGlobalsHeroSection } from '../../repositories/get-globals-hero-section';
 import { CallToAction } from './_components/call-to-action';
 import { Community } from './_components/community';
@@ -10,13 +11,14 @@ import { Testimonials } from './_components/testimonials';
 
 export default async function Page() {
   const heroData = await getGlobalsHeroSection();
+  const featuresData = await getGlobalsFeaturesSection();
 
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1">
         <Hero {...heroData} />
-        <Features />
+        <Features {...featuresData} />
         <Community />
         <LearningResources />
         <Testimonials />
