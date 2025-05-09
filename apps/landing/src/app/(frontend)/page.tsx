@@ -9,6 +9,8 @@ import { Hero } from './_components/hero';
 import { LearningResources } from './_components/learning-resources';
 import { Testimonials } from './_components/testimonials';
 
+export const revalidate = 60 * 5; // Seconds
+
 export default async function Page() {
   const heroData = await getGlobalsHeroSection();
   const featuresData = await getGlobalsFeaturesSection();
