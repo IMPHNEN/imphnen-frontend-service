@@ -1,6 +1,6 @@
-import { getGlobalsCommunitiesSection } from '../../repositories/get-globals-communitues-section';
-import { getGlobalsFeaturesSection } from '../../repositories/get-globals-features-section';
-import { getGlobalsHeroSection } from '../../repositories/get-globals-hero-section';
+import { getGlobalsCommunitiesSection } from '../../services/get-globals-communitues-section';
+import { getGlobalsFeaturesSection } from '../../services/get-globals-features-section';
+import { getGlobalsHeroSection } from '../../services/get-globals-hero-section';
 import { CallToAction } from './_components/call-to-action';
 import { Community } from './_components/community';
 import { Features } from './_components/features';
