@@ -1,3 +1,4 @@
+import { getGlobalsCommunitiesSection } from '../../repositories/get-globals-communitues-section';
 import { getGlobalsFeaturesSection } from '../../repositories/get-globals-features-section';
 import { getGlobalsHeroSection } from '../../repositories/get-globals-hero-section';
 import { CallToAction } from './_components/call-to-action';
@@ -12,9 +13,10 @@ import { Testimonials } from './_components/testimonials';
 export const revalidate = 10; // Seconds
 
 export default async function Page() {
-  const [heroData, featuresData] = await Promise.all([
+  const [heroData, featuresData, communitiesData] = await Promise.all([
     getGlobalsHeroSection(),
     getGlobalsFeaturesSection(),
+    getGlobalsCommunitiesSection(),
   ]);
 
   return (
@@ -23,7 +25,7 @@ export default async function Page() {
       <main className="flex-1">
         <Hero {...heroData} />
         <Features {...featuresData} />
-        <Community />
+        <Community {...communitiesData} />
         <LearningResources />
         <Testimonials />
         <CallToAction />

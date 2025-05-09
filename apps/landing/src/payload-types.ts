@@ -87,10 +87,12 @@ export interface Config {
   globals: {
     'hero-section': HeroSection;
     'features-section': FeaturesSection;
+    'communities-section': CommunitiesSection;
   };
   globalsSelect: {
     'hero-section': HeroSectionSelect<false> | HeroSectionSelect<true>;
     'features-section': FeaturesSectionSelect<false> | FeaturesSectionSelect<true>;
+    'communities-section': CommunitiesSectionSelect<false> | CommunitiesSectionSelect<true>;
   };
   locale: null;
   user: User & {
@@ -324,6 +326,28 @@ export interface FeaturesSection {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "communities-section".
+ */
+export interface CommunitiesSection {
+  id: number;
+  items: {
+    iconName: 'FacebookIcon' | 'InstagramIcon' | 'MessageCircleIcon';
+    title: string;
+    description: string;
+    buttonText: string;
+    buttonLink: string;
+    id?: string | null;
+  }[];
+  stats: {
+    value: string;
+    label: string;
+    id?: string | null;
+  }[];
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "hero-section_select".
  */
 export interface HeroSectionSelect<T extends boolean = true> {
@@ -363,6 +387,32 @@ export interface FeaturesSectionSelect<T extends boolean = true> {
         icon?: T;
         title?: T;
         description?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "communities-section_select".
+ */
+export interface CommunitiesSectionSelect<T extends boolean = true> {
+  items?:
+    | T
+    | {
+        iconName?: T;
+        title?: T;
+        description?: T;
+        buttonText?: T;
+        buttonLink?: T;
+        id?: T;
+      };
+  stats?:
+    | T
+    | {
+        value?: T;
+        label?: T;
         id?: T;
       };
   updatedAt?: T;
