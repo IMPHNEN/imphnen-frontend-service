@@ -12,8 +12,10 @@ import { Testimonials } from './_components/testimonials';
 export const revalidate = 60 * 5; // Seconds
 
 export default async function Page() {
-  const heroData = await getGlobalsHeroSection();
-  const featuresData = await getGlobalsFeaturesSection();
+  const [heroData, featuresData] = await Promise.all([
+    getGlobalsHeroSection(),
+    getGlobalsFeaturesSection(),
+  ]);
 
   return (
     <div className="flex min-h-screen flex-col">
