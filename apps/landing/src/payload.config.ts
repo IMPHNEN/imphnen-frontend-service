@@ -5,6 +5,7 @@ import { buildConfig } from 'payload';
 import sharp from 'sharp';
 import { fileURLToPath } from 'url';
 
+import { FeaturesSection } from './collections/FeaturesSection';
 import { HeroSection } from './collections/HeroSection';
 import { Media } from './collections/Media';
 import { Users } from './collections/Users';
@@ -26,7 +27,7 @@ export default buildConfig({
     },
   },
   collections: [Users, Media],
-  globals: [HeroSection],
+  globals: [HeroSection, FeaturesSection],
   editor: lexicalEditor(),
   secret: process.env.CMS_SECRET || '',
   typescript: {
