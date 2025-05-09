@@ -3,10 +3,6 @@ import type { GlobalConfig } from 'payload';
 export const HeroSection: GlobalConfig = {
   slug: 'hero-section',
   label: 'Hero Section',
-  access: {
-    read: () => true,
-    update: () => true,
-  },
   fields: [
     {
       name: 'badgeText',

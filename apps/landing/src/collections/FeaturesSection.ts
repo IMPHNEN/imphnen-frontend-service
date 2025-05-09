@@ -3,9 +3,6 @@ import { GlobalConfig } from 'payload';
 export const FeaturesSection: GlobalConfig = {
   slug: 'features-section',
   label: 'Features Section',
-  access: {
-    read: (): boolean => true,
-  },
   fields: [
     {
       name: 'heading',
