@@ -115,18 +115,7 @@ export function Testimonials(props: TestimonialsSection) {
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div>
               <h3 className="text-2xl md:text-3xl font-bold mb-4">
-                {joinTitle.split(' ').map((word, i) =>
-                  i === 1 ? (
-                    <span
-                      key={i}
-                      className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400"
-                    >
-                      {word}
-                    </span>
-                  ) : (
-                    <span key={i}>{word} </span>
-                  )
-                )}
+                {joinTitle}
               </h3>
               <p className="text-muted-foreground">{joinText}</p>
             </div>
