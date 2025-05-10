@@ -82,11 +82,15 @@ export function Header() {
 
         <div className="flex items-center gap-4">
           <SimpleThemeToggle />
-          <a href="https://discord.com/invite/imphnen" target="_blank">
-            <Button className="hidden md:flex bg-gradient-to-r from-primary to-blue-400 hover:from-primary/90 hover:to-blue-400/90 transition-all duration-300 font-bold text-black hover:text-white cursor-pointer">
-              Gabung Discord
-            </Button>
-          </a>
+
+          <Button
+            className="hidden md:flex bg-gradient-to-r from-primary to-blue-400 hover:from-primary/90 hover:to-blue-400/90 transition-all duration-300 font-bold text-black hover:text-white cursor-pointer"
+            onClick={() =>
+              window.open('https://discord.com/invite/imphnen', '_blank')
+            }
+          >
+            Gabung Discord
+          </Button>
 
           {/* Mobile Menu Button */}
           <Button

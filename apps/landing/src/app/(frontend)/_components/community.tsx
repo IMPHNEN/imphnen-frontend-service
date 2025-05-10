@@ -77,14 +77,13 @@ export function Community(props: CommunitiesSection) {
                 </div>
                 <h3 className="mb-2 text-xl font-bold">{c.title}</h3>
                 <p className="mb-6 text-muted-foreground">{c.description}</p>
-                <a href={c.buttonLink} target="_blank">
-                  <Button
-                    variant="outline"
-                    className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300"
-                  >
-                    {c.buttonText}
-                  </Button>
-                </a>
+                <Button
+                  variant="outline"
+                  className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300"
+                  onClick={() => window.open(c.buttonLink, '_blank')}
+                >
+                  {c.buttonText}
+                </Button>
               </div>
               <div className="absolute -bottom-1 -right-1 w-20 h-20 bg-gradient-to-tl from-primary/20 to-transparent rounded-tl-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             </motion.div>
