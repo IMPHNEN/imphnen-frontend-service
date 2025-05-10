@@ -1,3 +1,4 @@
+import { getGlobalsCallToActionSection } from '../../services/get-globals-call-to-action-section';
 import { getGlobalsCommunitiesSection } from '../../services/get-globals-communitues-section';
 import { getGlobalsFeaturesSection } from '../../services/get-globals-features-section';
 import { getGlobalsHeroSection } from '../../services/get-globals-hero-section';
@@ -19,12 +20,14 @@ export default async function Page() {
     communitiesData,
     learningResourcesData,
     testimonialsData,
+    callToActionData,
   ] = await Promise.all([
     getGlobalsHeroSection(),
     getGlobalsFeaturesSection(),
     getGlobalsCommunitiesSection(),
     getGlobalsLearningResourcesSection(),
     getGlobalsTestimonialsSection(),
+    getGlobalsCallToActionSection(),
   ]);
 
   return (
@@ -34,7 +37,7 @@ export default async function Page() {
       <Community {...communitiesData} />
       <LearningResources {...learningResourcesData} />
       <Testimonials {...testimonialsData} />
-      <CallToAction />
+      <CallToAction {...callToActionData} />
     </>
   );
 }
