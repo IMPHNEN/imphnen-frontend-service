@@ -82,7 +82,7 @@ export function Header() {
 
         <div className="flex items-center gap-4">
           <SimpleThemeToggle />
-          <Button className="hidden md:flex bg-gradient-to-r from-primary to-blue-400 hover:from-primary/90 hover:to-blue-400/90 transition-all duration-300 font-bold text-black hover:text-white cursor-pointer">
+          <Button className="hidden md:flex bg-gradient-to-r from-primary to-blue-400 hover:from-primary/90 hover:to-blue-400/90 transition-all duration-300 font-bold text-white dark:text-black hover:text-black dark:hover:text-white cursor-pointer">
             Gabung Discord
           </Button>
 
@@ -134,7 +134,7 @@ export function Header() {
             >
               Testimoni
             </Link>
-            <Button className="mt-4 bg-gradient-to-r from-primary to-blue-400 hover:from-primary/90 hover:to-blue-400/90 font-bold text-black hover:text-white cursor-pointer">
+            <Button className="mt-4 bg-gradient-to-r from-primary to-blue-400 hover:from-primary/90 hover:to-blue-400/90 font-bold text-white dark:text-black hover:text-black dark:hover:text-white cursor-pointer">
               Gabung Discord
             </Button>
           </nav>

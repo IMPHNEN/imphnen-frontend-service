@@ -42,7 +42,7 @@ export function CallToAction() {
                 <Button
                   size="lg"
                   className="bg-gradient-to-r from-primary to-blue-400 hover:from-primary/90 hover:to-blue-400/90 
-font-bold text-black hover:text-white cursor-pointer"
+font-bold dark:text-black hover:text-black dark:hover:text-white cursor-pointer"
                 >
                   Gabung Discord
                 </Button>

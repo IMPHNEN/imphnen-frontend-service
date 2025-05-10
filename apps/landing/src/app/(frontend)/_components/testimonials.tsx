@@ -15,21 +15,21 @@ export function Testimonials() {
         'Saya yang tadinya tidak mengerti apa-apa tentang programming, sekarang bisa membuat website sendiri dengan mudah. Terima kasih IMPHNEN!',
       name: 'Budi Santoso',
       role: 'Web Developer Pemula',
-      avatar: '/Budi Santoso.jpg',
+      avatar: '/Budi Santoso.webp',
     },
     {
       quote:
         'Komunitas yang sangat supportif! Setiap pertanyaan selalu dijawab dengan cepat dan jelas. Diskusi programnya mudah dipahami.',
       name: 'Anita Ratna',
       role: 'Mobile App Developer',
-      avatar: '/Anita Ratna.jpg',
+      avatar: '/Anita Ratna.webp',
     },
     {
       quote:
         'Server Discord IMPHNEN adalah tempat belajar terbaik untuk programmer pemula seperti saya. Materinya lengkap dan komunitasnya sangat membantu!',
       name: 'Dedi Permana',
       role: 'Data Scientist',
-      avatar: '/Dedi Permana.jpg',
+      avatar: '/Dedi Permana.webp',
     },
   ];
 
