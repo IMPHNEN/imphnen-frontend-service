@@ -81,24 +81,22 @@ export function Hero(props: HeroSection) {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <a href={buttons.primaryUrl} target="_blank">
-                <Button
-                  size="lg"
-                  className="bg-gradient-to-r from-primary to-blue-400 hover:from-primary/90 hover:to-blue-400/90 transition-all duration-300"
-                >
-                  {buttons.primaryLabel}
-                </Button>
-              </a>
-              <a href={buttons.secondaryUrl} target="_blank">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="group relative overflow-hidden border-primary"
-                >
-                  <span className="absolute inset-0 bg-gradient-to-r from-primary/10 to-blue-400/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                  <span className="relative">{buttons.secondaryLabel}</span>
-                </Button>
-              </a>
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-primary to-blue-400 text-white hover:from-primary/90 hover:to-blue-400/90 transition-all duration-300"
+                onClick={() => window.open(buttons.primaryUrl, '_blank')}
+              >
+                {buttons.primaryLabel}
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="group relative overflow-hidden border-primary"
+                onClick={() => window.open(buttons.secondaryUrl, '_blank')}
+              >
+                <span className="absolute inset-0 bg-gradient-to-r from-primary/10 to-blue-400/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                <span className="relative">{buttons.secondaryLabel}</span>
+              </Button>
             </div>
 
             <div className="flex items-center gap-8">

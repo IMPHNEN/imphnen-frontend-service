@@ -78,15 +78,15 @@ export function LearningResources(props: LearningResourcesSection) {
                 </div>
                 <h3 className="mb-2 text-xl font-bold">{r.title}</h3>
                 <p className="mb-6 text-muted-foreground">{r.description}</p>
-                <a href={r.buttonLink} target="_blank">
-                  <Button
-                    variant="link"
-                    className="p-0 h-auto font-medium text-primary hover:text-primary/80"
-                  >
-                    {r.buttonText}
-                    <Icon icon="tabler:arrow-right" className="h-6 w-6" />
-                  </Button>
-                </a>
+
+                <Button
+                  variant="link"
+                  className="p-0 h-auto font-medium text-primary hover:text-primary/80"
+                  onClick={() => window.open(r.buttonLink, '_blank')}
+                >
+                  {r.buttonText}
+                  <Icon icon="tabler:arrow-right" className="h-6 w-6" />
+                </Button>
               </div>
               <div className="absolute -bottom-32 -right-32 w-64 h-64 bg-gradient-to-tl from-primary/10 to-transparent rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 group-hover:-translate-y-10 group-hover:-translate-x-10" />
             </motion.div>
@@ -110,16 +110,22 @@ export function LearningResources(props: LearningResourcesSection) {
                 {featured.description}
               </p>
               <div className="flex flex-wrap gap-4">
-                <a href={featured.primaryButtonLink} target="_blank">
-                  <Button className="bg-gradient-to-r from-primary to-blue-400 hover:from-primary/90 hover:to-blue-400/90">
-                    {featured.primaryButtonText}
-                  </Button>
-                </a>
-                <a href={featured.secondaryButtonLink} target="_blank">
-                  <Button variant="outline">
-                    {featured.secondaryButtonText}
-                  </Button>
-                </a>
+                <Button
+                  className="bg-gradient-to-r from-primary to-blue-400 text-white hover:from-primary/90 hover:to-blue-400/90"
+                  onClick={() =>
+                    window.open(featured.primaryButtonLink, '_blank')
+                  }
+                >
+                  {featured.primaryButtonText}
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() =>
+                    window.open(featured.secondaryButtonLink, '_blank')
+                  }
+                >
+                  {featured.secondaryButtonText}
+                </Button>
               </div>
             </div>
             <div className="relative h-64 md:h-auto">

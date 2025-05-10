@@ -51,7 +51,7 @@ export function CallToAction(props: CallToActionSection) {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button
                   size="lg"
-                  className="bg-gradient-to-r from-primary to-blue-400 hover:from-primary/90 hover:to-blue-400/90"
+                  className="bg-gradient-to-r from-primary to-blue-400 text-white hover:from-primary/90 hover:to-blue-400/90"
                   onClick={() => window.open(primaryButtonLink, '_blank')}
                 >
                   {primaryButtonLabel}
