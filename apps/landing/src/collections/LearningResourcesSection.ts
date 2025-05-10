@@ -1,3 +1,4 @@
+// payload config
 import { GlobalConfig } from 'payload';
 
 export const LearningResourcesSection: GlobalConfig = {
@@ -22,31 +23,11 @@ export const LearningResourcesSection: GlobalConfig = {
       type: 'array',
       required: true,
       fields: [
-        {
-          name: 'icon',
-          type: 'text',
-          required: true,
-        },
-        {
-          name: 'title',
-          type: 'text',
-          required: true,
-        },
-        {
-          name: 'description',
-          type: 'textarea',
-          required: true,
-        },
-        {
-          name: 'buttonText',
-          type: 'text',
-          required: true,
-        },
-        {
-          name: 'buttonLink',
-          type: 'text',
-          required: true,
-        },
+        { name: 'icon', type: 'text', required: true },
+        { name: 'title', type: 'text', required: true },
+        { name: 'description', type: 'textarea', required: true },
+        { name: 'buttonText', type: 'text', required: true },
+        { name: 'buttonLink', type: 'text', required: true },
       ],
       defaultValue: [
         {
@@ -113,10 +94,22 @@ export const LearningResourcesSection: GlobalConfig = {
           defaultValue: 'Mulai Kursus',
         },
         {
+          name: 'primaryButtonLink',
+          type: 'text',
+          required: true,
+          defaultValue: '#',
+        },
+        {
           name: 'secondaryButtonText',
           type: 'text',
           required: true,
           defaultValue: 'Lihat Silabus',
+        },
+        {
+          name: 'secondaryButtonLink',
+          type: 'text',
+          required: true,
+          defaultValue: '#',
         },
       ],
     },

@@ -370,7 +370,9 @@ export interface LearningResourcesSection {
     title: string;
     description: string;
     primaryButtonText: string;
+    primaryButtonLink: string;
     secondaryButtonText: string;
+    secondaryButtonLink: string;
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -473,7 +475,9 @@ export interface LearningResourcesSectionSelect<T extends boolean = true> {
         title?: T;
         description?: T;
         primaryButtonText?: T;
+        primaryButtonLink?: T;
         secondaryButtonText?: T;
+        secondaryButtonLink?: T;
       };
   updatedAt?: T;
   createdAt?: T;
