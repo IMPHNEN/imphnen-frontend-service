@@ -134,9 +134,15 @@ export function Header() {
             >
               Testimoni
             </Link>
-            <Button className="mt-4 bg-gradient-to-r from-primary to-blue-400 hover:from-primary/90 hover:to-blue-400/90">
-              Gabung Discord
-            </Button>
+            <a
+              href="https://discord.com/invite/imphnen"
+              target="_blank"
+              className="mt-4"
+            >
+              <Button className="bg-gradient-to-r from-primary to-blue-400 hover:from-primary/90 hover:to-blue-400/90">
+                Gabung Discord
+              </Button>
+            </a>
           </nav>
         </div>
       )}
