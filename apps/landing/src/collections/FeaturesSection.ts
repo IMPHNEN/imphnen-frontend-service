@@ -20,25 +20,25 @@ export const FeaturesSection: GlobalConfig = {
       type: 'array',
       defaultValue: [
         {
-          icon: 'LaptopIcon',
+          iconName: 'tabler:device-laptop',
           title: 'Belajar Tanpa Koding',
           description:
             'Pelajari konsep programming dengan cara yang mudah dipahami tanpa harus menulis kode yang rumit.',
         },
         {
-          icon: 'UsersIcon',
+          iconName: 'tabler:users',
           title: 'Komunitas Supportif',
           description:
             'Bergabunglah dengan komunitas programmer Indonesia yang siap membantu dan berbagi pengalaman.',
         },
         {
-          icon: 'BookOpenIcon',
+          iconName: 'tabler:book',
           title: 'Tutorial Interaktif',
           description:
             'Akses tutorial interaktif yang membuat konsep programming lebih mudah untuk dipahami.',
         },
         {
-          icon: 'CodeIcon',
+          iconName: 'tabler:code',
           title: 'Proyek Praktis',
           description:
             'Terapkan pengetahuan Anda dalam proyek nyata dengan panduan langkah demi langkah.',
@@ -46,18 +46,14 @@ export const FeaturesSection: GlobalConfig = {
       ],
       fields: [
         {
-          name: 'icon',
-          type: 'select',
-          options: [
-            { label: 'LaptopIcon', value: 'LaptopIcon' },
-            { label: 'UsersIcon', value: 'UsersIcon' },
-            { label: 'BookOpenIcon', value: 'BookOpenIcon' },
-            { label: 'CodeIcon', value: 'CodeIcon' },
-          ],
+          name: 'iconName',
+          type: 'text',
+          required: true,
         },
         {
           name: 'title',
           type: 'text',
+          required: true,
         },
         {
           name: 'description',

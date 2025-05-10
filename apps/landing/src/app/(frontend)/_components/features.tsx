@@ -1,23 +1,12 @@
 'use client';
 
-import {
-  BookOpenIcon,
-  CodeIcon,
-  LaptopIcon,
-  UsersIcon,
-} from '@imphnen-frontend-service/shadcn-ui/atoms';
+import { Icon } from '@iconify/react';
 import { FeaturesSection } from 'apps/landing/src/payload-types';
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 
 export function Features(props: FeaturesSection) {
   const { heading, subheading, features } = props;
-
-  const featuresFormatted = features?.map((f) => ({
-    icon: IconMapper(String(f.icon)),
-    title: f.title,
-    description: f.description,
-  }));
 
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
@@ -77,7 +66,7 @@ export function Features(props: FeaturesSection) {
           initial="hidden"
           animate={isInView ? 'visible' : 'hidden'}
         >
-          {featuresFormatted?.map((feature, index) => (
+          {features?.map((feature, index) => (
             <motion.div
               key={index}
               className="group relative overflow-hidden rounded-xl border bg-background/50 backdrop-blur-sm p-6 transition-all hover:shadow-md hover:shadow-primary/5 hover:border-primary/50"
@@ -87,7 +76,10 @@ export function Features(props: FeaturesSection) {
 
               <div className="relative z-10">
                 <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                  {feature.icon}
+                  <Icon
+                    icon={feature.iconName}
+                    className="h-6 w-6 text-primary"
+                  />
                 </div>
                 <h3 className="mb-2 text-xl font-bold">{feature.title}</h3>
                 <p className="text-muted-foreground">{feature.description}</p>
@@ -100,19 +92,4 @@ export function Features(props: FeaturesSection) {
       </div>
     </section>
   );
-}
-
-function IconMapper(name: string) {
-  switch (name) {
-    case 'LaptopIcon':
-      return <LaptopIcon className="h-6 w-6 text-primary" />;
-    case 'UsersIcon':
-      return <UsersIcon className="h-6 w-6 text-primary" />;
-    case 'BookOpenIcon':
-      return <BookOpenIcon className="h-6 w-6 text-primary" />;
-    case 'CodeIcon':
-      return <CodeIcon className="h-6 w-6 text-primary" />;
-    default:
-      return null;
-  }
 }
