@@ -5,6 +5,13 @@ export const HeroSection: GlobalConfig = {
   label: 'Hero Section',
   fields: [
     {
+      name: 'heroImage',
+      label: 'Hero Image',
+      type: 'upload',
+      relationTo: 'media',
+      required: true,
+    },
+    {
       name: 'badgeText',
       label: 'Badge Text',
       type: 'text',

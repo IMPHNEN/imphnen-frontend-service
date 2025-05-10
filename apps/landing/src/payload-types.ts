@@ -285,6 +285,7 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface HeroSection {
   id: number;
+  heroImage: number | Media;
   badgeText: string;
   title: string;
   highlight: string;
@@ -351,6 +352,7 @@ export interface CommunitiesSection {
  * via the `definition` "hero-section_select".
  */
 export interface HeroSectionSelect<T extends boolean = true> {
+  heroImage?: T;
   badgeText?: T;
   title?: T;
   highlight?: T;
