@@ -1,16 +1,13 @@
 'use client';
 
 import { Icon } from '@iconify/react';
-import { buttonVariants } from '@imphnen-frontend-service/shadcn-ui/atoms';
-import { cn } from '@imphnen-frontend-service/utils';
+import { Button } from '@imphnen-frontend-service/shadcn-ui/atoms';
 import { CommunitiesSection } from 'apps/landing/src/payload-types';
 import { motion, useInView } from 'framer-motion';
-import Link from 'next/link';
 import { useRef } from 'react';
 
 export function Community(props: CommunitiesSection) {
   const { items, stats } = props;
-
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
 
@@ -80,15 +77,14 @@ export function Community(props: CommunitiesSection) {
                 </div>
                 <h3 className="mb-2 text-xl font-bold">{c.title}</h3>
                 <p className="mb-6 text-muted-foreground">{c.description}</p>
-                <Link
-                  href={c.buttonLink}
-                  className={cn(
-                    buttonVariants({ variant: 'outline' }),
-                    'w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300'
-                  )}
-                >
-                  {c.buttonText}
-                </Link>
+                <a href={c.buttonLink} target="_blank">
+                  <Button
+                    variant="outline"
+                    className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300"
+                  >
+                    {c.buttonText}
+                  </Button>
+                </a>
               </div>
               <div className="absolute -bottom-1 -right-1 w-20 h-20 bg-gradient-to-tl from-primary/20 to-transparent rounded-tl-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             </motion.div>
