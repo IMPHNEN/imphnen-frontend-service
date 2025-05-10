@@ -28,6 +28,7 @@
   "dependencies": {
     "@ant-design/icons": "^6.0.0",
     "@hookform/resolvers": "^5.0.1",
+    "@iconify/react": "^6.0.0",
     "@payloadcms/db-postgres": "^3.37.0",
     "@payloadcms/next": "^3.37.0",
     "@payloadcms/richtext-lexical": "^3.37.0",
