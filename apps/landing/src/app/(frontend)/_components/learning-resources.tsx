@@ -111,10 +111,7 @@ export function LearningResources(props: LearningResourcesSection) {
               </p>
               <div className="flex flex-wrap gap-4">
                 <a href={featured.primaryButtonLink} target="_blank">
-                  <Button
-                    className="bg-gradient-to-r from-primary to-blue-400 hover:from-primary/90 hover:to-blue-400/90
-font-bold text-black hover:text-white cursor-pointer"
-                  >
+                  <Button className="bg-gradient-to-r from-primary to-blue-400 hover:from-primary/90 hover:to-blue-400/90 font-bold text-black hover:text-white cursor-pointer">
                     {featured.primaryButtonText}
                   </Button>
                 </a>

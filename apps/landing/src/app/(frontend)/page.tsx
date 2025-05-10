@@ -5,8 +5,6 @@ import { getGlobalsLearningResourcesSection } from '../../services/get-globals-l
 import { CallToAction } from './_components/call-to-action';
 import { Community } from './_components/community';
 import { Features } from './_components/features';
-import Footer from './_components/footer';
-import { Header } from './_components/header';
 import { Hero } from './_components/hero';
 import { LearningResources } from './_components/learning-resources';
 import { Testimonials } from './_components/testimonials';
@@ -23,17 +21,13 @@ export default async function Page() {
     ]);
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <Header />
-      <main className="flex-1">
-        <Hero {...heroData} />
-        <Features {...featuresData} />
-        <Community {...communitiesData} />
-        <LearningResources {...learningResourcesData} />
-        <Testimonials />
-        <CallToAction />
-      </main>
-      <Footer />
-    </div>
+    <>
+      <Hero {...heroData} />
+      <Features {...featuresData} />
+      <Community {...communitiesData} />
+      <LearningResources {...learningResourcesData} />
+      <Testimonials />
+      <CallToAction />
+    </>
   );
 }
