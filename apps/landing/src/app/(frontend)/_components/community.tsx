@@ -1,31 +1,18 @@
 'use client';
 
-import {
-  Button,
-  FacebookIcon,
-  InstagramIcon,
-  MessageCircleIcon,
-} from '@imphnen-frontend-service/shadcn-ui/atoms';
+import { Icon } from '@iconify/react';
+import { buttonVariants } from '@imphnen-frontend-service/shadcn-ui/atoms';
+import { cn } from '@imphnen-frontend-service/utils';
 import { CommunitiesSection } from 'apps/landing/src/payload-types';
 import { motion, useInView } from 'framer-motion';
+import Link from 'next/link';
 import { useRef } from 'react';
 
 export function Community(props: CommunitiesSection) {
-  const { items: communities, stats } = props;
+  const { items, stats } = props;
+
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
-
-  const iconMap = {
-    FacebookIcon: (
-      <FacebookIcon className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-    ),
-    InstagramIcon: (
-      <InstagramIcon className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-    ),
-    MessageCircleIcon: (
-      <MessageCircleIcon className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-    ),
-  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -77,7 +64,7 @@ export function Community(props: CommunitiesSection) {
           initial="hidden"
           animate={isInView ? 'visible' : 'hidden'}
         >
-          {communities?.map((c, i) => (
+          {items?.map((c, i) => (
             <motion.div
               key={i}
               className="group relative overflow-hidden rounded-xl border bg-background p-6 transition-all hover:shadow-xl"
@@ -86,16 +73,22 @@ export function Community(props: CommunitiesSection) {
               <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-blue-400/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="relative z-10">
                 <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900">
-                  {iconMap[c.iconName]}
+                  <Icon
+                    icon={c.iconName}
+                    className="h-6 w-6 text-blue-600 dark:text-blue-400"
+                  />
                 </div>
                 <h3 className="mb-2 text-xl font-bold">{c.title}</h3>
                 <p className="mb-6 text-muted-foreground">{c.description}</p>
-                <Button
-                  variant="outline"
-                  className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300"
+                <Link
+                  href={c.buttonLink}
+                  className={cn(
+                    buttonVariants({ variant: 'outline' }),
+                    'w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300'
+                  )}
                 >
                   {c.buttonText}
-                </Button>
+                </Link>
               </div>
               <div className="absolute -bottom-1 -right-1 w-20 h-20 bg-gradient-to-tl from-primary/20 to-transparent rounded-tl-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             </motion.div>

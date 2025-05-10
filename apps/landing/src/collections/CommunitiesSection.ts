@@ -10,7 +10,7 @@ export const CommunitiesSection: GlobalConfig = {
       required: true,
       defaultValue: [
         {
-          iconName: 'FacebookIcon',
+          iconName: 'tabler:brand-facebook',
           title: 'Facebook Group',
           description:
             'Bergabunglah dengan grup Facebook kami untuk diskusi santai dan berbagi artikel menarik.',
@@ -18,7 +18,7 @@ export const CommunitiesSection: GlobalConfig = {
           buttonLink: 'https://facebook.com/groups/1032515944638255',
         },
         {
-          iconName: 'InstagramIcon',
+          iconName: 'tabler:brand-instagram',
           title: 'Instagram',
           description:
             'Ikuti kami di Instagram untuk tips programming, konten inspiratif, dan info event terbaru.',
@@ -26,7 +26,7 @@ export const CommunitiesSection: GlobalConfig = {
           buttonLink: 'https://www.instagram.com/imphnen.dev',
         },
         {
-          iconName: 'MessageCircleIcon',
+          iconName: 'tabler:brand-discord-filled',
           title: 'Discord Server',
           description:
             'Diskusikan langsung dengan sesama programmer dan dapatkan bantuan langsung dari para ahli.',
@@ -37,12 +37,7 @@ export const CommunitiesSection: GlobalConfig = {
       fields: [
         {
           name: 'iconName',
-          type: 'select',
-          options: [
-            { label: 'Facebook', value: 'FacebookIcon' },
-            { label: 'Instagram', value: 'InstagramIcon' },
-            { label: 'Discord', value: 'MessageCircleIcon' },
-          ],
+          type: 'text',
           required: true,
         },
         { name: 'title', type: 'text', required: true },
