@@ -11,6 +11,7 @@ import { fileURLToPath } from 'url';
 import { CommunitiesSection } from './collections/CommunitiesSection';
 import { FeaturesSection } from './collections/FeaturesSection';
 import { HeroSection } from './collections/HeroSection';
+import { LearningResourcesSection } from './collections/LearningResourcesSection';
 import { Media } from './collections/Media';
 import { Users } from './collections/Users';
 
@@ -31,7 +32,12 @@ export default buildConfig({
     },
   },
   collections: [Users, Media],
-  globals: [HeroSection, FeaturesSection, CommunitiesSection],
+  globals: [
+    HeroSection,
+    FeaturesSection,
+    CommunitiesSection,
+    LearningResourcesSection,
+  ],
   editor: lexicalEditor(),
   secret: process.env.CMS_SECRET || '',
   typescript: {

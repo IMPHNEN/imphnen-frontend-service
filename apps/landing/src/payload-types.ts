@@ -88,11 +88,13 @@ export interface Config {
     'hero-section': HeroSection;
     'features-section': FeaturesSection;
     'communities-section': CommunitiesSection;
+    'learning-resources-section': LearningResourcesSection;
   };
   globalsSelect: {
     'hero-section': HeroSectionSelect<false> | HeroSectionSelect<true>;
     'features-section': FeaturesSectionSelect<false> | FeaturesSectionSelect<true>;
     'communities-section': CommunitiesSectionSelect<false> | CommunitiesSectionSelect<true>;
+    'learning-resources-section': LearningResourcesSectionSelect<false> | LearningResourcesSectionSelect<true>;
   };
   locale: null;
   user: User & {
@@ -349,6 +351,32 @@ export interface CommunitiesSection {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "learning-resources-section".
+ */
+export interface LearningResourcesSection {
+  id: number;
+  title: string;
+  description: string;
+  resources: {
+    icon: string;
+    title: string;
+    description: string;
+    buttonText: string;
+    buttonLink: string;
+    id?: string | null;
+  }[];
+  featured: {
+    label: string;
+    title: string;
+    description: string;
+    primaryButtonText: string;
+    secondaryButtonText: string;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "hero-section_select".
  */
 export interface HeroSectionSelect<T extends boolean = true> {
@@ -416,6 +444,36 @@ export interface CommunitiesSectionSelect<T extends boolean = true> {
         value?: T;
         label?: T;
         id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "learning-resources-section_select".
+ */
+export interface LearningResourcesSectionSelect<T extends boolean = true> {
+  title?: T;
+  description?: T;
+  resources?:
+    | T
+    | {
+        icon?: T;
+        title?: T;
+        description?: T;
+        buttonText?: T;
+        buttonLink?: T;
+        id?: T;
+      };
+  featured?:
+    | T
+    | {
+        label?: T;
+        title?: T;
+        description?: T;
+        primaryButtonText?: T;
+        secondaryButtonText?: T;
       };
   updatedAt?: T;
   createdAt?: T;
