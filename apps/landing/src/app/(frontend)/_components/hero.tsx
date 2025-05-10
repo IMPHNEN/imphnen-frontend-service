@@ -6,13 +6,22 @@ import {
   SparklesIcon,
   UsersIcon,
 } from '@imphnen-frontend-service/shadcn-ui/atoms';
+import { formatCMSImageDataToMedia } from 'apps/landing/src/lib/format';
 import { HeroSection } from 'apps/landing/src/payload-types';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { Fragment, useEffect, useState } from 'react';
 
 export function Hero(props: HeroSection) {
-  const { badgeText, buttons, description, highlight, title, stats } = props;
+  const {
+    badgeText,
+    buttons,
+    description,
+    highlight,
+    title,
+    stats,
+    heroImage,
+  } = props;
 
   const [scrollY, setScrollY] = useState(0);
 
@@ -54,7 +63,7 @@ export function Hero(props: HeroSection) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <div className="inline-flex items-center rounded-full border px-3 py-1 text-sm">
+            <div className="inline-flex items-center rounded-full border px-3 py-1 text-sm w-fit">
               <SparklesIcon className="mr-1 h-3.5 w-3.5 text-primary" />
               <span>{badgeText}</span>
             </div>
@@ -124,13 +133,19 @@ export function Hero(props: HeroSection) {
               </div>
               <div className="relative z-10 rounded-2xl overflow-hidden border shadow-2xl">
                 <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 to-blue-400/10" />
-                <Image
-                  src="/hero.jpeg"
-                  width={600}
-                  height={500}
-                  alt="IMPHNEN Programming Community"
-                  className="w-full h-auto object-cover"
-                />
+                {(() => {
+                  const media = formatCMSImageDataToMedia(heroImage);
+                  if (!media) return null;
+                  return (
+                    <Image
+                      src={media.url!}
+                      alt={media.alt}
+                      width={600}
+                      height={500}
+                      className="w-full h-auto object-cover"
+                    />
+                  );
+                })()}
               </div>
             </div>
           </motion.div>
