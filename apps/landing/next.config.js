@@ -10,9 +10,6 @@ const nextConfig = {
       warn: () => {},
     },
   },
-  webpack(config) {
-    return config;
-  },
 };
 
 module.exports = composePlugins(withNx, withPayload)(nextConfig);
