@@ -35,13 +35,15 @@ export function Header() {
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="relative overflow-hidden rounded">
-            <Image
-              src="/logo.png"
-              alt="IMPHNEN Logo"
-              width={64}
-              height={64}
-              className="object-cover cursor-pointer"
-            />
+            <Link href="/">
+              <Image
+                src="/logo.png"
+                alt="IMPHNEN"
+                width={64}
+                height={64}
+                className="object-cover"
+              />
+            </Link>
           </div>
         </div>
 
