@@ -7,13 +7,7 @@ on:
     branches: ['develop']
 
 env:
-  NODE_VERSION: 22.14.0
   CMS_SECRET: fake-secret
-  CMS_POSTGRES_URL: postgres://user:password@localhost:5432/fake-db
-  CMS_STORAGE_ENDPOINT: https://fake-s3-endpoint.com
-  CMS_STORAGE_ACCESS_KEY_ID: fake-access-key
-  CMS_STORAGE_SECRET_ACCESS_KEY: fake-secret-key
-  CMS_STORAGE_REGION: ap-southeast-1
 
 jobs:
   build:
