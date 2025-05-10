@@ -40,7 +40,7 @@ export default buildConfig({
     CommunitiesSection,
     LearningResourcesSection,
     TestimonialsSection,
-    CallToActionSection
+    CallToActionSection,
   ],
   editor: lexicalEditor(),
   secret: process.env.CMS_SECRET || '',
