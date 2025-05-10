@@ -2,6 +2,7 @@ import { GlobalConfig } from 'payload';
 
 export const CallToActionSection: GlobalConfig = {
   slug: 'call-to-action-section',
+  label: 'Call To Action Section',
   fields: [
     {
       name: 'title',
