@@ -79,7 +79,8 @@ export function Hero() {
               <a href="https://facebook.com">
                 <Button
                   size="lg"
-                  className="bg-gradient-to-r from-primary to-blue-400 hover:from-primary/90 hover:to-blue-400/90 transition-all duration-300"
+                  className="bg-gradient-to-r from-primary to-blue-400 hover:from-primary/90 hover:to-blue-400/90 transition-all duration-300 
+font-bold text-black hover:text-white cursor-pointer"
                 >
                   Mulai Belajar
                 </Button>

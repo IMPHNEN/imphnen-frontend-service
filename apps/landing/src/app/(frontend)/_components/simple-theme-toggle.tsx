@@ -29,7 +29,7 @@ export function SimpleThemeToggle() {
       variant="outline"
       size="icon"
       onClick={toggleTheme}
-      className="focus-visible:ring-0"
+      className="focus-visible:ring-0 cursor-pointer"
     >
       {theme === 'dark' ? (
         <SunIcon className="h-[1.2rem] w-[1.2rem]" />

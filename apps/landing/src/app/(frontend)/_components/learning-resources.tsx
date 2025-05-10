@@ -170,7 +170,8 @@ export function LearningResources() {
                 menengah.
               </p>
               <div className="flex flex-wrap gap-4">
-                <Button className="bg-gradient-to-r from-primary to-blue-400 hover:from-primary/90 hover:to-blue-400/90">
+                <Button className="bg-gradient-to-r from-primary to-blue-400 hover:from-primary/90 hover:to-blue-400/90 
+font-bold text-black hover:text-white cursor-pointer">
                   Mulai Kursus
                 </Button>
                 <Button variant="outline">Lihat Silabus</Button>
