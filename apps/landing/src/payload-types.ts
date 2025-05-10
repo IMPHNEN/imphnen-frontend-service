@@ -89,12 +89,14 @@ export interface Config {
     'features-section': FeaturesSection;
     'communities-section': CommunitiesSection;
     'learning-resources-section': LearningResourcesSection;
+    'testimonials-section': TestimonialsSection;
   };
   globalsSelect: {
     'hero-section': HeroSectionSelect<false> | HeroSectionSelect<true>;
     'features-section': FeaturesSectionSelect<false> | FeaturesSectionSelect<true>;
     'communities-section': CommunitiesSectionSelect<false> | CommunitiesSectionSelect<true>;
     'learning-resources-section': LearningResourcesSectionSelect<false> | LearningResourcesSectionSelect<true>;
+    'testimonials-section': TestimonialsSectionSelect<false> | TestimonialsSectionSelect<true>;
   };
   locale: null;
   user: User & {
@@ -379,6 +381,35 @@ export interface LearningResourcesSection {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials-section".
+ */
+export interface TestimonialsSection {
+  id: number;
+  title: string;
+  subtitle: string;
+  items?:
+    | {
+        quote: string;
+        name: string;
+        role: string;
+        avatar: number | Media;
+        id?: string | null;
+      }[]
+    | null;
+  stats?:
+    | {
+        value: string;
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  joinTitle: string;
+  joinText: string;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "hero-section_select".
  */
 export interface HeroSectionSelect<T extends boolean = true> {
@@ -479,6 +510,35 @@ export interface LearningResourcesSectionSelect<T extends boolean = true> {
         secondaryButtonText?: T;
         secondaryButtonLink?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials-section_select".
+ */
+export interface TestimonialsSectionSelect<T extends boolean = true> {
+  title?: T;
+  subtitle?: T;
+  items?:
+    | T
+    | {
+        quote?: T;
+        name?: T;
+        role?: T;
+        avatar?: T;
+        id?: T;
+      };
+  stats?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  joinTitle?: T;
+  joinText?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
