@@ -90,6 +90,7 @@ export interface Config {
     'communities-section': CommunitiesSection;
     'learning-resources-section': LearningResourcesSection;
     'testimonials-section': TestimonialsSection;
+    'call-to-action-section': CallToActionSection;
   };
   globalsSelect: {
     'hero-section': HeroSectionSelect<false> | HeroSectionSelect<true>;
@@ -97,6 +98,7 @@ export interface Config {
     'communities-section': CommunitiesSectionSelect<false> | CommunitiesSectionSelect<true>;
     'learning-resources-section': LearningResourcesSectionSelect<false> | LearningResourcesSectionSelect<true>;
     'testimonials-section': TestimonialsSectionSelect<false> | TestimonialsSectionSelect<true>;
+    'call-to-action-section': CallToActionSectionSelect<false> | CallToActionSectionSelect<true>;
   };
   locale: null;
   user: User & {
@@ -410,6 +412,22 @@ export interface TestimonialsSection {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "call-to-action-section".
+ */
+export interface CallToActionSection {
+  id: number;
+  title: string;
+  highlightedTitle: string;
+  subtitle: string;
+  primaryButtonLabel: string;
+  primaryButtonLink: string;
+  secondaryButtonLabel: string;
+  secondaryButtonLink: string;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "hero-section_select".
  */
 export interface HeroSectionSelect<T extends boolean = true> {
@@ -539,6 +557,22 @@ export interface TestimonialsSectionSelect<T extends boolean = true> {
       };
   joinTitle?: T;
   joinText?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "call-to-action-section_select".
+ */
+export interface CallToActionSectionSelect<T extends boolean = true> {
+  title?: T;
+  highlightedTitle?: T;
+  subtitle?: T;
+  primaryButtonLabel?: T;
+  primaryButtonLink?: T;
+  secondaryButtonLabel?: T;
+  secondaryButtonLink?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

@@ -8,6 +8,7 @@ import { buildConfig } from 'payload';
 import sharp from 'sharp';
 import { fileURLToPath } from 'url';
 
+import { CallToActionSection } from './collections/CallToActionSection';
 import { CommunitiesSection } from './collections/CommunitiesSection';
 import { FeaturesSection } from './collections/FeaturesSection';
 import { HeroSection } from './collections/HeroSection';
@@ -39,6 +40,7 @@ export default buildConfig({
     CommunitiesSection,
     LearningResourcesSection,
     TestimonialsSection,
+    CallToActionSection
   ],
   editor: lexicalEditor(),
   secret: process.env.CMS_SECRET || '',

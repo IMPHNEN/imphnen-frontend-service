@@ -15,7 +15,7 @@ export const CommunitiesSection: GlobalConfig = {
           description:
             'Bergabunglah dengan grup Facebook kami untuk diskusi santai dan berbagi artikel menarik.',
           buttonText: 'Gabung Sekarang',
-          buttonLink: 'https://facebook.com/groups/1032515944638255',
+          buttonLink: 'https://facebook.com/groups/programmerhandal',
         },
         {
           iconName: 'tabler:brand-instagram',

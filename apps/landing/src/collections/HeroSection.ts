@@ -57,7 +57,7 @@ export const HeroSection: GlobalConfig = {
           label: 'Primary Button URL',
           type: 'text',
           required: true,
-          defaultValue: 'https://web.facebook.com/groups/1032515944638255',
+          defaultValue: 'https://facebook.com/groups/programmerhandal',
         },
         {
           name: 'secondaryLabel',
