@@ -7,7 +7,7 @@ on:
     branches: ['develop']
 
 env:
-  CMS_SECRET: fake-secret
+  NODE_VERSION: 22.14.0
 
 jobs:
   build:
