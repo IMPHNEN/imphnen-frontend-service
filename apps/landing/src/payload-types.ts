@@ -315,8 +315,8 @@ export interface FeaturesSection {
   subheading?: string | null;
   features?:
     | {
-        icon?: ('LaptopIcon' | 'UsersIcon' | 'BookOpenIcon' | 'CodeIcon') | null;
-        title?: string | null;
+        iconName: string;
+        title: string;
         description?: string | null;
         id?: string | null;
       }[]
@@ -331,7 +331,7 @@ export interface FeaturesSection {
 export interface CommunitiesSection {
   id: number;
   items: {
-    iconName: 'FacebookIcon' | 'InstagramIcon' | 'MessageCircleIcon';
+    iconName: string;
     title: string;
     description: string;
     buttonText: string;
@@ -384,7 +384,7 @@ export interface FeaturesSectionSelect<T extends boolean = true> {
   features?:
     | T
     | {
-        icon?: T;
+        iconName?: T;
         title?: T;
         description?: T;
         id?: T;
