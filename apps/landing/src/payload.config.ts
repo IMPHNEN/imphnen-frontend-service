@@ -13,6 +13,7 @@ import { FeaturesSection } from './collections/FeaturesSection';
 import { HeroSection } from './collections/HeroSection';
 import { LearningResourcesSection } from './collections/LearningResourcesSection';
 import { Media } from './collections/Media';
+import { TestimonialsSection } from './collections/TestimonialsSection';
 import { Users } from './collections/Users';
 
 const filename = fileURLToPath(import.meta.url);
@@ -37,6 +38,7 @@ export default buildConfig({
     FeaturesSection,
     CommunitiesSection,
     LearningResourcesSection,
+    TestimonialsSection,
   ],
   editor: lexicalEditor(),
   secret: process.env.CMS_SECRET || '',
