@@ -69,7 +69,7 @@ export function Hero(props: HeroSection) {
             </div>
 
             <div className="space-y-4">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-foreground via-foreground to-foreground/70">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-foreground via-foreground to-foreground/70">
                 {title} <br />
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400">
                   {highlight}
