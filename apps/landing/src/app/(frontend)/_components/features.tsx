@@ -1,44 +1,15 @@
 'use client';
 
-import {
-  BookOpenIcon,
-  CodeIcon,
-  LaptopIcon,
-  UsersIcon,
-} from '@imphnen-frontend-service/shadcn-ui/atoms';
+import { Icon } from '@iconify/react';
+import { FeaturesSection } from 'apps/landing/src/payload-types';
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 
-export function Features() {
+export function Features(props: FeaturesSection) {
+  const { heading, subheading, features } = props;
+
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
-
-  const features = [
-    {
-      icon: <LaptopIcon className="h-6 w-6 text-primary" />,
-      title: 'Belajar Tanpa Koding',
-      description:
-        'Pelajari konsep programming dengan cara yang mudah dipahami tanpa harus menulis kode yang rumit.',
-    },
-    {
-      icon: <UsersIcon className="h-6 w-6 text-primary" />,
-      title: 'Komunitas Supportif',
-      description:
-        'Bergabunglah dengan komunitas programmer Indonesia yang siap membantu dan berbagi pengalaman.',
-    },
-    {
-      icon: <BookOpenIcon className="h-6 w-6 text-primary" />,
-      title: 'Tutorial Interaktif',
-      description:
-        'Akses tutorial interaktif yang membuat konsep programming lebih mudah untuk dipahami.',
-    },
-    {
-      icon: <CodeIcon className="h-6 w-6 text-primary" />,
-      title: 'Proyek Praktis',
-      description:
-        'Terapkan pengetahuan Anda dalam proyek nyata dengan panduan langkah demi langkah.',
-    },
-  ];
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -64,7 +35,6 @@ export function Features() {
       id="fitur"
       className="w-full py-20 md:py-32 relative overflow-hidden"
     >
-      {/* Background Elements */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-gradient-to-b from-background via-background to-muted/50" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-gradient-to-tr from-primary/5 to-blue-400/5 blur-3xl" />
@@ -82,14 +52,10 @@ export function Features() {
               Fitur Unggulan
             </div>
             <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight lg:text-5xl">
-              Belajar programming dengan{' '}
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400">
-                cara yang lebih baik
-              </span>
+              {heading}
             </h2>
             <p className="max-w-[800px] mx-auto text-muted-foreground md:text-lg">
-              IMPHNEN hadir dengan berbagai fitur untuk membantu kamu menjadi
-              programmer handal tanpa harus pusing dengan coding.
+              {subheading}
             </p>
           </motion.div>
         </div>
@@ -100,7 +66,7 @@ export function Features() {
           initial="hidden"
           animate={isInView ? 'visible' : 'hidden'}
         >
-          {features.map((feature, index) => (
+          {features?.map((feature, index) => (
             <motion.div
               key={index}
               className="group relative overflow-hidden rounded-xl border bg-background/50 backdrop-blur-sm p-6 transition-all hover:shadow-md hover:shadow-primary/5 hover:border-primary/50"
@@ -110,7 +76,10 @@ export function Features() {
 
               <div className="relative z-10">
                 <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                  {feature.icon}
+                  <Icon
+                    icon={feature.iconName}
+                    className="h-6 w-6 text-primary"
+                  />
                 </div>
                 <h3 className="mb-2 text-xl font-bold">{feature.title}</h3>
                 <p className="text-muted-foreground">{feature.description}</p>

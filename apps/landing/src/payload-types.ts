@@ -84,8 +84,22 @@ export interface Config {
   db: {
     defaultIDType: number;
   };
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'hero-section': HeroSection;
+    'features-section': FeaturesSection;
+    'communities-section': CommunitiesSection;
+    'learning-resources-section': LearningResourcesSection;
+    'testimonials-section': TestimonialsSection;
+    'call-to-action-section': CallToActionSection;
+  };
+  globalsSelect: {
+    'hero-section': HeroSectionSelect<false> | HeroSectionSelect<true>;
+    'features-section': FeaturesSectionSelect<false> | FeaturesSectionSelect<true>;
+    'communities-section': CommunitiesSectionSelect<false> | CommunitiesSectionSelect<true>;
+    'learning-resources-section': LearningResourcesSectionSelect<false> | LearningResourcesSectionSelect<true>;
+    'testimonials-section': TestimonialsSectionSelect<false> | TestimonialsSectionSelect<true>;
+    'call-to-action-section': CallToActionSectionSelect<false> | CallToActionSectionSelect<true>;
+  };
   locale: null;
   user: User & {
     collection: 'users';
@@ -270,6 +284,298 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "hero-section".
+ */
+export interface HeroSection {
+  id: number;
+  heroImage: number | Media;
+  badgeText: string;
+  title: string;
+  highlight: string;
+  description: string;
+  buttons: {
+    primaryLabel: string;
+    primaryUrl: string;
+    secondaryLabel: string;
+    secondaryUrl: string;
+  };
+  stats?:
+    | {
+        value: string;
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "features-section".
+ */
+export interface FeaturesSection {
+  id: number;
+  heading?: string | null;
+  subheading?: string | null;
+  features?:
+    | {
+        iconName: string;
+        title: string;
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "communities-section".
+ */
+export interface CommunitiesSection {
+  id: number;
+  items: {
+    iconName: string;
+    title: string;
+    description: string;
+    buttonText: string;
+    buttonLink: string;
+    id?: string | null;
+  }[];
+  stats: {
+    value: string;
+    label: string;
+    id?: string | null;
+  }[];
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "learning-resources-section".
+ */
+export interface LearningResourcesSection {
+  id: number;
+  title: string;
+  description: string;
+  resources: {
+    icon: string;
+    title: string;
+    description: string;
+    buttonText: string;
+    buttonLink: string;
+    id?: string | null;
+  }[];
+  featured: {
+    label: string;
+    title: string;
+    description: string;
+    primaryButtonText: string;
+    primaryButtonLink: string;
+    secondaryButtonText: string;
+    secondaryButtonLink: string;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials-section".
+ */
+export interface TestimonialsSection {
+  id: number;
+  title: string;
+  subtitle: string;
+  items?:
+    | {
+        quote: string;
+        name: string;
+        role: string;
+        avatar: number | Media;
+        id?: string | null;
+      }[]
+    | null;
+  stats?:
+    | {
+        value: string;
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  joinTitle: string;
+  joinText: string;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "call-to-action-section".
+ */
+export interface CallToActionSection {
+  id: number;
+  title: string;
+  highlightedTitle: string;
+  subtitle: string;
+  primaryButtonLabel: string;
+  primaryButtonLink: string;
+  secondaryButtonLabel: string;
+  secondaryButtonLink: string;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "hero-section_select".
+ */
+export interface HeroSectionSelect<T extends boolean = true> {
+  heroImage?: T;
+  badgeText?: T;
+  title?: T;
+  highlight?: T;
+  description?: T;
+  buttons?:
+    | T
+    | {
+        primaryLabel?: T;
+        primaryUrl?: T;
+        secondaryLabel?: T;
+        secondaryUrl?: T;
+      };
+  stats?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "features-section_select".
+ */
+export interface FeaturesSectionSelect<T extends boolean = true> {
+  heading?: T;
+  subheading?: T;
+  features?:
+    | T
+    | {
+        iconName?: T;
+        title?: T;
+        description?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "communities-section_select".
+ */
+export interface CommunitiesSectionSelect<T extends boolean = true> {
+  items?:
+    | T
+    | {
+        iconName?: T;
+        title?: T;
+        description?: T;
+        buttonText?: T;
+        buttonLink?: T;
+        id?: T;
+      };
+  stats?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "learning-resources-section_select".
+ */
+export interface LearningResourcesSectionSelect<T extends boolean = true> {
+  title?: T;
+  description?: T;
+  resources?:
+    | T
+    | {
+        icon?: T;
+        title?: T;
+        description?: T;
+        buttonText?: T;
+        buttonLink?: T;
+        id?: T;
+      };
+  featured?:
+    | T
+    | {
+        label?: T;
+        title?: T;
+        description?: T;
+        primaryButtonText?: T;
+        primaryButtonLink?: T;
+        secondaryButtonText?: T;
+        secondaryButtonLink?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials-section_select".
+ */
+export interface TestimonialsSectionSelect<T extends boolean = true> {
+  title?: T;
+  subtitle?: T;
+  items?:
+    | T
+    | {
+        quote?: T;
+        name?: T;
+        role?: T;
+        avatar?: T;
+        id?: T;
+      };
+  stats?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  joinTitle?: T;
+  joinText?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "call-to-action-section_select".
+ */
+export interface CallToActionSectionSelect<T extends boolean = true> {
+  title?: T;
+  highlightedTitle?: T;
+  subtitle?: T;
+  primaryButtonLabel?: T;
+  primaryButtonLink?: T;
+  secondaryButtonLabel?: T;
+  secondaryButtonLink?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

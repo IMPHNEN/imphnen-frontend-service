@@ -35,13 +35,15 @@ export function Header() {
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="relative overflow-hidden rounded">
-            <Image
-              src="/logo.png"
-              alt="IMPHNEN Logo"
-              width={64}
-              height={64}
-              className="object-cover cursor-pointer"
-            />
+            <Link href="/">
+              <Image
+                src="/logo.png"
+                alt="IMPHNEN"
+                width={64}
+                height={64}
+                className="object-cover"
+              />
+            </Link>
           </div>
         </div>
 
@@ -82,7 +84,13 @@ export function Header() {
 
         <div className="flex items-center gap-4">
           <SimpleThemeToggle />
-          <Button className="hidden md:flex bg-gradient-to-r from-primary to-blue-400 hover:from-primary/90 hover:to-blue-400/90 transition-all duration-300 font-bold text-black hover:text-white cursor-pointer">
+
+          <Button
+            className="hidden md:flex bg-gradient-to-r from-primary to-blue-400 hover:from-primary/90 hover:to-blue-400/90 transition-all duration-300 font-bold text-black hover:text-white cursor-pointer"
+            onClick={() =>
+              window.open('https://discord.com/invite/imphnen', '_blank')
+            }
+          >
             Gabung Discord
           </Button>
 
@@ -134,9 +142,15 @@ export function Header() {
             >
               Testimoni
             </Link>
-            <Button className="mt-4 bg-gradient-to-r from-primary to-blue-400 hover:from-primary/90 hover:to-blue-400/90 font-bold text-black hover:text-white cursor-pointer">
-              Gabung Discord
-            </Button>
+            <a
+              href="https://discord.com/invite/imphnen"
+              target="_blank"
+              className="mt-4"
+            >
+              <Button className="mt-4 bg-gradient-to-r from-primary to-blue-400 hover:from-primary/90 hover:to-blue-400/90 font-bold text-black hover:text-white cursor-pointer">
+                Gabung Discord
+              </Button>
+            </a>
           </nav>
         </div>
       )}

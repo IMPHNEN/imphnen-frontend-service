@@ -1,87 +1,64 @@
 'use client';
 
 import { QuoteIcon } from '@imphnen-frontend-service/shadcn-ui/atoms';
+import { formatCMSImageDataToMedia } from 'apps/landing/src/lib/format';
+import { TestimonialsSection } from 'apps/landing/src/payload-types';
 import { motion, useInView } from 'framer-motion';
 import Image from 'next/image';
 import { useRef } from 'react';
 
-export function Testimonials() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.2 });
+export function Testimonials(props: TestimonialsSection) {
+  const { title, subtitle, items, stats, joinTitle, joinText } = props;
 
-  const testimonials = [
-    {
-      quote:
-        'Saya yang tadinya tidak mengerti apa-apa tentang programming, sekarang bisa membuat website sendiri dengan mudah. Terima kasih IMPHNEN!',
-      name: 'Budi Santoso',
-      role: 'Web Developer Pemula',
-      avatar: '/Budi Santoso.jpg',
-    },
-    {
-      quote:
-        'Komunitas yang sangat supportif! Setiap pertanyaan selalu dijawab dengan cepat dan jelas. Diskusi programnya mudah dipahami.',
-      name: 'Anita Ratna',
-      role: 'Mobile App Developer',
-      avatar: '/Anita Ratna.jpg',
-    },
-    {
-      quote:
-        'Server Discord IMPHNEN adalah tempat belajar terbaik untuk programmer pemula seperti saya. Materinya lengkap dan komunitasnya sangat membantu!',
-      name: 'Dedi Permana',
-      role: 'Data Scientist',
-      avatar: '/Dedi Permana.jpg',
-    },
-  ];
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, amount: 0.2 });
 
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
+    visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
   };
 
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { duration: 0.5 },
-    },
+    visible: { y: 0, opacity: 1, transition: { duration: 0.5 } },
   };
 
   return (
     <section
       id="testimoni"
       className="w-full py-20 md:py-32 bg-muted relative overflow-hidden"
+      ref={ref}
     >
-      {/* Background Elements */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(59,130,246,0.1),transparent_50%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(96,165,250,0.1),transparent_50%)]" />
       </div>
 
-      <div className="container px-4 md:px-6" ref={ref}>
-        <div className="flex flex-col items-center justify-center space-y-4 text-center mb-16">
-          <motion.div
-            className="space-y-2"
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight lg:text-5xl">
-              Testimoni{' '}
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400">
-                Member
-              </span>
-            </h2>
-            <p className="max-w-[800px] mx-auto text-muted-foreground md:text-lg">
-              Apa kata mereka yang telah bergabung dengan komunitas IMPHNEN?
-            </p>
-          </motion.div>
-        </div>
+      <div className="container px-4 md:px-6">
+        <motion.div
+          className="flex flex-col items-center justify-center space-y-4 text-center mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5 }}
+        >
+          <h2 className="text-3xl font-bold tracking-tighter md:text-4xl lg:text-5xl">
+            {title.split(' ').map((word, i) =>
+              i === title.split(' ').length - 1 ? (
+                <span
+                  key={i}
+                  className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400"
+                >
+                  {word}
+                </span>
+              ) : (
+                <span key={i}>{word} </span>
+              )
+            )}
+          </h2>
+          <p className="max-w-[800px] mx-auto text-muted-foreground md:text-lg">
+            {subtitle}
+          </p>
+        </motion.div>
 
         <motion.div
           className="grid gap-8 md:grid-cols-3"
@@ -89,98 +66,68 @@ export function Testimonials() {
           initial="hidden"
           animate={isInView ? 'visible' : 'hidden'}
         >
-          {testimonials.map((testimonial, index) => (
+          {items?.map((t, idx) => (
             <motion.div
-              key={index}
+              key={idx}
               className="group relative overflow-hidden rounded-xl border bg-background p-6 transition-all hover:shadow-lg"
               variants={itemVariants}
             >
               <div className="absolute top-6 right-6 text-primary/20 group-hover:text-primary/40 transition-colors">
                 <QuoteIcon className="h-8 w-8" />
               </div>
-
               <div className="relative z-10">
                 <p className="mb-6 text-muted-foreground italic">
-                  &ldquo;{testimonial.quote}&rdquo;
+                  &ldquo;{t.quote}&rdquo;
                 </p>
-
                 <div className="flex items-center gap-4">
                   <div className="relative h-12 w-12 overflow-hidden rounded-full border-2 border-primary/20">
-                    <Image
-                      src={testimonial.avatar || '/placeholder.svg'}
-                      alt={testimonial.name}
-                      width={48}
-                      height={48}
-                      className="object-cover"
-                    />
+                    {(() => {
+                      const media = formatCMSImageDataToMedia(t.avatar);
+                      if (!media) return null;
+                      return (
+                        <Image
+                          src={media.url!}
+                          alt={media.alt}
+                          width={600}
+                          height={500}
+                          className="object-cover"
+                        />
+                      );
+                    })()}
                   </div>
                   <div>
-                    <h4 className="font-bold">{testimonial.name}</h4>
-                    <p className="text-sm text-muted-foreground">
-                      {testimonial.role}
-                    </p>
+                    <h4 className="font-bold">{t.name}</h4>
+                    <p className="text-sm text-muted-foreground">{t.role}</p>
                   </div>
                 </div>
               </div>
-
               <div className="absolute -bottom-1 -left-1 w-20 h-20 bg-gradient-to-tr from-primary/10 to-transparent rounded-tr-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             </motion.div>
           ))}
         </motion.div>
 
-        {/* Testimonial Stats */}
         <motion.div
           className="mt-20 rounded-xl overflow-hidden border bg-background/50 backdrop-blur-sm p-8 md:p-12"
           initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5, delay: 0.3 }}
         >
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div>
               <h3 className="text-2xl md:text-3xl font-bold mb-4">
-                Bergabunglah dengan{' '}
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400">
-                  10,000+
-                </span>{' '}
-                programmer Indonesia lainnya
+                {joinTitle}
               </h3>
-              <p className="text-muted-foreground">
-                Komunitas kami terus berkembang dengan programmer dari berbagai
-                latar belakang dan tingkat keahlian. Bersama-sama, kita belajar,
-                berbagi, dan tumbuh sebagai profesional.
-              </p>
+              <p className="text-muted-foreground">{joinText}</p>
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <div className="rounded-lg border p-4 text-center">
-                <div className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400">
-                  98%
+              {stats?.map((s, idx) => (
+                <div key={idx} className="rounded-lg border p-4 text-center">
+                  <div className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400">
+                    {s.value}
+                  </div>
+                  <div className="text-sm text-muted-foreground">{s.label}</div>
                 </div>
-                <div className="text-sm text-muted-foreground">
-                  Tingkat Kemalasan
-                </div>
-              </div>
-              <div className="rounded-lg border p-4 text-center">
-                <div className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400">
-                  4.9/5
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  Rating Drama
-                </div>
-              </div>
-              <div className="rounded-lg border p-4 text-center">
-                <div className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400">
-                  85%
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  Mendapat Pekerjaan
-                </div>
-              </div>
-              <div className="rounded-lg border p-4 text-center">
-                <div className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400">
-                  24/7
-                </div>
-                <div className="text-sm text-muted-foreground">Yapping</div>
-              </div>
+              ))}
             </div>
           </div>
         </motion.div>

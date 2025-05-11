@@ -1,10 +1,21 @@
 'use client';
 
 import { Button } from '@imphnen-frontend-service/shadcn-ui/atoms';
+import { CallToActionSection } from 'apps/landing/src/payload-types';
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 
-export function CallToAction() {
+export function CallToAction(props: CallToActionSection) {
+  const {
+    title,
+    highlightedTitle,
+    subtitle,
+    primaryButtonLabel,
+    primaryButtonLink,
+    secondaryButtonLabel,
+    secondaryButtonLink,
+  } = props;
+
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
 
@@ -28,30 +39,30 @@ export function CallToAction() {
 
             <div className="relative z-10 text-center">
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
-                Siap Menjadi{' '}
+                {title}{' '}
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400">
-                  Programmer Handal?
+                  {highlightedTitle}
                 </span>
               </h2>
               <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-                Bergabunglah dengan komunitas IMPHNEN sekarang dan mulai
-                perjalanan programming mu dengan cara yang menyenangkan!
+                {subtitle}
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button
                   size="lg"
-                  className="bg-gradient-to-r from-primary to-blue-400 hover:from-primary/90 hover:to-blue-400/90 
-font-bold text-black hover:text-white cursor-pointer"
+                  className="bg-gradient-to-r from-primary to-blue-400 hover:from-primary/90 hover:to-blue-400/90 font-bold text-black hover:text-white cursor-pointer"
+                  onClick={() => window.open(primaryButtonLink, '_blank')}
                 >
-                  Gabung Discord
+                  {primaryButtonLabel}
                 </Button>
                 <Button
                   size="lg"
                   variant="outline"
                   className="border-primary hover:bg-primary/10"
+                  onClick={() => window.open(secondaryButtonLink, '_blank')}
                 >
-                  Join Facebook Group
+                  {secondaryButtonLabel}
                 </Button>
               </div>
             </div>
