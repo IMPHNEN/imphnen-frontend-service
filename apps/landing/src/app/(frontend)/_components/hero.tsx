@@ -117,7 +117,7 @@ export function Hero(props: HeroSection) {
           </motion.div>
 
           <motion.div
-            className="relative w-full max-w-md mx-auto lg:ml-auto"
+            className="relative w-full lg:w-auto mx-auto lg:ml-auto"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
