@@ -1,11 +1,9 @@
 import { type Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { poppins } from '../../lib/fonts';
 import '../../styles/globals.css';
 import Footer from './_components/footer';
 import { Header } from './_components/header';
 import { ThemeProvider } from './_components/theme-provider';
-
-const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'IMPHNEN - Ingin Menjadi Programmer Handal Namung Enggan Ngonding',
@@ -20,7 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="id" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body className={poppins.className}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
