@@ -1,8 +1,8 @@
 'use client';
 
+import { CommunitiesSection } from '@/payload-types';
+import { Button } from '@components/atoms';
 import { Icon } from '@iconify/react';
-import { Button } from '@imphnen-frontend-service/shadcn-ui/atoms';
-import { CommunitiesSection } from 'apps/landing/src/payload-types';
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 

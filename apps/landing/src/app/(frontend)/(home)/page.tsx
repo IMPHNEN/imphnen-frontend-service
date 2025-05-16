@@ -1,7 +1,7 @@
-import { getGlobalsCallToActionSection } from '../../../services/get-globals-call-to-action-section';
-import { getGlobalsCommunitiesSection } from '../../../services/get-globals-communitues-section';
-import { getGlobalsHeroSection } from '../../../services/get-globals-hero-section';
-import { getGlobalsTestimonialsSection } from '../../../services/get-globals-testimonials-section';
+import { getGlobalsCallToActionSection } from '@/services/get-globals-call-to-action-section';
+import { getGlobalsCommunitiesSection } from '@/services/get-globals-communitues-section';
+import { getGlobalsHeroSection } from '@/services/get-globals-hero-section';
+import { getGlobalsTestimonialsSection } from '@/services/get-globals-testimonials-section';
 import { CallToAction } from './_components/call-to-action';
 import { Community } from './_components/community';
 import { Hero } from './_components/hero';

@@ -1,8 +1,8 @@
 'use client';
 
-import { QuoteIcon } from '@imphnen-frontend-service/shadcn-ui/atoms';
-import { formatCMSImageDataToMedia } from 'apps/landing/src/lib/format';
-import { TestimonialsSection } from 'apps/landing/src/payload-types';
+import { formatCMSImageDataToMedia } from '@/lib/format';
+import { TestimonialsSection } from '@/payload-types';
+import { QuoteIcon } from '@components/atoms';
 import { motion, useInView } from 'framer-motion';
 import Image from 'next/image';
 import { useRef } from 'react';

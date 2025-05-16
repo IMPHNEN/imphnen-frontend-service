@@ -1,6 +1,6 @@
 'use client';
 
-import { useMobileMenuStore } from '../../../../stores/mobile-menu-store';
+import { useMobileMenuStore } from '@/stores/mobile-menu-store';
 import { DesktopNavigation } from './desktop-navigation';
 import { HeaderWrapper } from './header-wrapper';
 import { Logo } from './logo';

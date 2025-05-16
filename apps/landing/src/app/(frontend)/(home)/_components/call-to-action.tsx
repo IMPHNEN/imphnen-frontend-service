@@ -1,7 +1,7 @@
 'use client';
 
-import { Button } from '@imphnen-frontend-service/shadcn-ui/atoms';
-import { CallToActionSection } from 'apps/landing/src/payload-types';
+import { CallToActionSection } from '@/payload-types';
+import { Button } from '@components/atoms';
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 

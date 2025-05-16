@@ -1,7 +1,7 @@
 'use client';
 
+import { FeaturesSection } from '@/payload-types';
 import { Icon } from '@iconify/react';
-import { FeaturesSection } from 'apps/landing/src/payload-types';
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 

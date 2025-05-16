@@ -1,13 +1,8 @@
 'use client';
 
-import {
-  Button,
-  CodeIcon,
-  SparklesIcon,
-  UsersIcon,
-} from '@imphnen-frontend-service/shadcn-ui/atoms';
-import { formatCMSImageDataToMedia } from 'apps/landing/src/lib/format';
-import { HeroSection } from 'apps/landing/src/payload-types';
+import { formatCMSImageDataToMedia } from '@/lib/format';
+import { HeroSection } from '@/payload-types';
+import { Button, CodeIcon, SparklesIcon, UsersIcon } from '@components/atoms';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { Fragment, useEffect, useState } from 'react';
@@ -136,7 +131,7 @@ export function Hero(props: HeroSection) {
                   if (!media) return null;
                   return (
                     <Image
-                      src={media.url!}
+                      src={String(media.url)}
                       alt={media.alt}
                       width={600}
                       height={500}

@@ -1,11 +1,7 @@
 'use client';
 
-import {
-  Button,
-  MenuIcon,
-  XIcon,
-} from '@imphnen-frontend-service/shadcn-ui/atoms';
-import { useMobileMenuStore } from '../../../../stores/mobile-menu-store';
+import { useMobileMenuStore } from '@/stores/mobile-menu-store';
+import { Button, MenuIcon, XIcon } from '@components/atoms';
 
 export function MobileMenuHamburger() {
   const mobileMenuOpen = useMobileMenuStore((s) => s.mobileMenuOpen);

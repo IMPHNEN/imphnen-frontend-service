@@ -1,10 +1,6 @@
 'use client';
 
-import {
-  Button,
-  MoonIcon,
-  SunIcon,
-} from '@imphnen-frontend-service/shadcn-ui/atoms';
+import { Button, MoonIcon, SunIcon } from '@components/atoms';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 

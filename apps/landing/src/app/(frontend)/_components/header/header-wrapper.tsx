@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@imphnen-frontend-service/utils';
+import { cn } from '@utils/ui';
 import { ReactNode, useEffect, useState } from 'react';
 
 export function HeaderWrapper({ children }: { children: ReactNode }) {
