@@ -69,7 +69,7 @@ export function Hero(props: HeroSection) {
             </div>
 
             <div className="space-y-4">
-              <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl bg-clip-text text-transparent bg-gradient-to-r from-foreground via-foreground to-foreground/70">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-foreground via-foreground to-foreground/70">
                 {title} <br />
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400">
                   {highlight}
@@ -80,10 +80,10 @@ export function Hero(props: HeroSection) {
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
               <Button
                 size="lg"
-                className="bg-gradient-to-r from-primary to-blue-400 hover:from-primary/90 hover:to-blue-400/90 transition-all duration-300 font-bold text-black hover:text-white cursor-pointer"
+                className="w-full sm:w-auto bg-gradient-to-r from-primary to-blue-400 hover:from-primary/90 hover:to-blue-400/90 transition-all duration-300 font-bold text-black hover:text-white cursor-pointer"
                 onClick={() => window.open(buttons.primaryUrl, '_blank')}
               >
                 {buttons.primaryLabel}
@@ -91,7 +91,7 @@ export function Hero(props: HeroSection) {
               <Button
                 size="lg"
                 variant="outline"
-                className="group relative overflow-hidden border-primary"
+                className="w-full sm:w-auto group relative overflow-hidden border-primary"
                 onClick={() => window.open(buttons.secondaryUrl, '_blank')}
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-primary/10 to-blue-400/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
@@ -99,7 +99,7 @@ export function Hero(props: HeroSection) {
               </Button>
             </div>
 
-            <div className="flex items-center gap-8">
+            <div className="flex flex-wrap justify-center gap-6 sm:gap-8">
               {stats?.map(({ value, label }, i) => (
                 <Fragment key={i}>
                   <div className="flex flex-col items-center">
@@ -109,7 +109,7 @@ export function Hero(props: HeroSection) {
                     <div className="text-xs text-muted-foreground">{label}</div>
                   </div>
                   {i < stats.length - 1 && (
-                    <div className="h-10 border-r border-border mx-4" />
+                    <div className="hidden sm:block h-10 border-r border-border mx-4" />
                   )}
                 </Fragment>
               ))}
@@ -117,7 +117,7 @@ export function Hero(props: HeroSection) {
           </motion.div>
 
           <motion.div
-            className="relative mx-auto lg:ml-auto"
+            className="relative w-full lg:w-auto mx-auto lg:ml-auto"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
