@@ -32,7 +32,7 @@ export function Community(props: CommunitiesSection) {
 
   return (
     <section
-      id="komunitas"
+      id="community"
       className="w-full py-20 md:py-32 bg-muted relative overflow-hidden"
     >
       <div className="absolute inset-0 -z-10">
