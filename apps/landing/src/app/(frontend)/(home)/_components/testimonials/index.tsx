@@ -134,7 +134,7 @@ export function Testimonials() {
             className="group relative w-full sm:w-auto bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 transition-all duration-300 font-bold text-white hover:text-white/90 shadow-lg"
           >
             <ImPencil2 className="size-5" />
-            Tulis Testimonial Kamu
+            Tulis dan Tampilkan Disini
           </Button>
         </motion.div>
       </div>
