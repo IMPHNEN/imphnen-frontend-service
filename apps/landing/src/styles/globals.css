@@ -1,3 +1,22 @@
 @import 'tailwindcss';
-@import "../../../../libs/shadcn-ui/src/index.css";
+@import '../../../../libs/shadcn-ui/src/index.css';
 @source "../../../../libs/shadcn-ui/src/atoms/**/*.{ts,tsx}";
+
+@layer utilities {
+  .marquee-container {
+    mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      black 5%,
+      black 95%,
+      transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      black 5%,
+      black 95%,
+      transparent 100%
+    );
+  }
+}
