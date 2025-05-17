@@ -6,6 +6,7 @@ import { ButtonJoinCommunity } from './button-join-community';
 import { HeroBadge } from './hero-badge';
 import { HeroImage } from './hero-image';
 import { HeroMainText } from './hero-main-text';
+import { HeroStat } from './hero-stat';
 import { HeroWrapper } from './hero-wrapper';
 
 export function Hero() {
@@ -26,6 +27,8 @@ export function Hero() {
               <ButtonJoinCommunity />
               <ButtonExploreEvent />
             </div>
+
+            <HeroStat />
           </motion.div>
 
           <HeroImage />

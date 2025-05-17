@@ -8,8 +8,8 @@ export function HeroMainText() {
         </span>
       </h1>
       <p className="max-w-[600px] text-muted-foreground md:text-xl lg:text-lg">
-        Bergabunglah bersama 180.000+ programmer Indonesia dan berkembang
-        bersama komunitas ini.
+        Tempat para programmer struggle bersama, berbagi meme, pengalaman,
+        tutorial, dan tempat yapping yang nyaman
       </p>
     </div>
   );
