@@ -1,10 +1,10 @@
 import { poppins } from '@/lib/fonts';
 import '@/styles/globals.css';
 import { type Metadata } from 'next';
-import { ThemeProvider } from './_components/theme-provider';
+import { Providers } from './_components/providers';
 
 export const metadata: Metadata = {
-  title: 'IMPHNEN - Ingin Menjadi Programmer Handal Namung Enggan Ngonding',
+  title: 'IMPHNEN - Ingin Menjadi Programmer Handal Namun Enggan Ngonding',
   description:
     'Komunitas Ingin Menjadi Programmer Handal Namung Enggan Ngonding',
 };
@@ -17,14 +17,14 @@ export default function RootLayout({
   return (
     <html lang="id" suppressHydrationWarning>
       <body className={poppins.className}>
-        <ThemeProvider
+        <Providers
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
           {children}
-        </ThemeProvider>
+        </Providers>
       </body>
     </html>
   );
