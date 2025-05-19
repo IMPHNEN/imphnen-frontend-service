@@ -1,8 +1,6 @@
+import { poppins } from '@/lib/fonts';
+import '@/styles/globals.css';
 import { type Metadata } from 'next';
-import { poppins } from '../../lib/fonts';
-import '../../styles/globals.css';
-import Footer from './_components/footer';
-import { Header } from './_components/header';
 import { ThemeProvider } from './_components/theme-provider';
 
 export const metadata: Metadata = {
@@ -25,11 +23,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="flex min-h-screen flex-col">
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </div>
+          {children}
         </ThemeProvider>
       </body>
     </html>
