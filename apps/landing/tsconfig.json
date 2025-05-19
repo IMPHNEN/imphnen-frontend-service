@@ -25,6 +25,7 @@
     "paths": {
       "@components/atoms": ["../../libs/shadcn-ui/src/atoms/index.ts"],
       "@utils/ui": ["../../libs/utils/src/index.ts"],
+      "@schemas": ["../../libs/service/src/schemas/index.ts"],
       "@/*": ["src/*"]
     }
   },

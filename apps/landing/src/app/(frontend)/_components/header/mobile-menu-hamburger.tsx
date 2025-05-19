@@ -1,7 +1,8 @@
 'use client';
 
 import { useMobileMenuStore } from '@/stores/mobile-menu-store';
-import { Button, MenuIcon, XIcon } from '@components/atoms';
+import { Button } from '@components/atoms';
+import { LuMenu, LuX } from 'react-icons/lu';
 
 export function MobileMenuHamburger() {
   const mobileMenuOpen = useMobileMenuStore((s) => s.mobileMenuOpen);
@@ -15,9 +16,9 @@ export function MobileMenuHamburger() {
       onClick={toggleMobileMenu}
     >
       {mobileMenuOpen ? (
-        <XIcon className="h-6 w-6" />
+        <LuX className="h-6 w-6" />
       ) : (
-        <MenuIcon className="h-6 w-6" />
+        <LuMenu className="h-6 w-6" />
       )}
     </Button>
   );
