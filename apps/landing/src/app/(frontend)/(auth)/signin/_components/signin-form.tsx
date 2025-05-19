@@ -11,21 +11,19 @@ import {
   Input,
 } from '@components/atoms';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { authLoginSchema } from '@schemas';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { LuLoader } from 'react-icons/lu';
 import { z } from 'zod';
 import { SigninAction } from '../_action/signin-action';
-
-type SigninData = z.infer<typeof authLoginSchema>;
+import { signInValidationSchema } from '../_validation/signin-validation';
 
 export function SigninForm() {
   const router = useRouter();
 
-  const form = useForm<SigninData>({
-    resolver: zodResolver(authLoginSchema),
+  const form = useForm<z.infer<typeof signInValidationSchema>>({
+    resolver: zodResolver(signInValidationSchema),
     defaultValues: {
       email: '',
       password: '',
@@ -42,7 +40,7 @@ export function SigninForm() {
     },
   });
 
-  const onSubmit = (values: SigninData) => {
+  const onSubmit = (values: z.infer<typeof signInValidationSchema>) => {
     mutate(values);
   };
 
@@ -50,7 +48,7 @@ export function SigninForm() {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         {error && (
-          <div className="mb-6 p-2 text-xs bg-red-50 border border-red-200 text-red-800 rounded-sm">
+          <div className="p-2 text-xs bg-red-50 border border-red-200 text-red-800 rounded-sm">
             {(error as Error).message}
           </div>
         )}
