@@ -4,7 +4,7 @@ import { Events } from './_components/events';
 import { Hero } from './_components/hero';
 import { Testimonials } from './_components/testimonials';
 
-export default async function Page() {
+export default function Page() {
   return (
     <>
       <Hero />
