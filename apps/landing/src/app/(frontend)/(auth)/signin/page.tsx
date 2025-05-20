@@ -27,7 +27,7 @@ export default function Page() {
           Belum punya akun?{' '}
           <Link
             href="/signup"
-            className="text-primary font-bold hover:underline hover:underline-offset-4 transition-colors"
+            className="text-[#22a5f1] font-bold hover:underline hover:underline-offset-4 transition-colors"
           >
             Daftar
           </Link>

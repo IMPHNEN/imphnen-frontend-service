@@ -15,3 +15,4 @@ export const signInValidationSchema = z.object({
     })
     .min(1, 'Password tidak boleh kosong'),
 });
+export type SignInValidationType = z.infer<typeof signInValidationSchema>;

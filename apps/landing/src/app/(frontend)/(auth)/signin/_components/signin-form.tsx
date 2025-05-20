@@ -10,37 +10,16 @@ import {
   FormMessage,
   Input,
 } from '@components/atoms';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
 import { LuLoader } from 'react-icons/lu';
-import { z } from 'zod';
-import { SigninAction } from '../_action/signin-action';
-import { signInValidationSchema } from '../_validation/signin-validation';
+import { useFormSignin } from '../_hooks/use-form-signin';
+import { usePostSignin } from '../_hooks/use-post-signin';
+import { type SignInValidationType } from '../_validation/signin-validation';
 
 export function SigninForm() {
-  const router = useRouter();
+  const form = useFormSignin();
+  const { mutate, isPending, error } = usePostSignin(form);
 
-  const form = useForm<z.infer<typeof signInValidationSchema>>({
-    resolver: zodResolver(signInValidationSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-    },
-  });
-
-  const { mutate, isPending, error } = useMutation({
-    mutationFn: SigninAction,
-    onSuccess: () => {
-      router.push('/');
-    },
-    onError: () => {
-      form.resetField('password');
-    },
-  });
-
-  const onSubmit = (values: z.infer<typeof signInValidationSchema>) => {
+  const onSubmit = (values: SignInValidationType) => {
     mutate(values);
   };
 
@@ -81,7 +60,11 @@ export function SigninForm() {
           )}
         />
 
-        <Button type="submit" disabled={isPending} className="w-full">
+        <Button
+          type="submit"
+          disabled={isPending}
+          className="w-full hover:bg-[#5fbaef] bg-[#22a5f1] font-bold"
+        >
           {isPending ? <LuLoader className="h-5 w-5 animate-spin" /> : 'Masuk'}
         </Button>
       </form>
