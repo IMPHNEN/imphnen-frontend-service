@@ -6,9 +6,10 @@
 
 This repository is a **monorepo** for all frontend services of IMPHNEN. The monorepo includes three main applications:
 
-1. **Gacha** - Application for <a href="https://gacha.imphnen.dev/" target="_blank">gacha website</a>.
-2. **Backoffice** - Application for internal management.
-3. **Dimentorin** - Application for mentoring services.
+1. **Gacha** - Application for <a href="https://gacha.imphnen.dev/" target="_blank">Gacha Website</a>.
+2. **Backoffice** - Application for <a href="https://gacha.imphnen.dev/" target="_blank">Internal Management Website</a>.
+3. **Dimentorin** - Application for <a href="https://dimentorin.imphnen.dev/" target="_blank">Mentoring Service</a>.
+4. **Landing Page** - Application for <a href="https://imphnen.dev/" target="_blank">Landing Page</a>.
 
 ## How to install
 
@@ -23,6 +24,15 @@ This repository is a **monorepo** for all frontend services of IMPHNEN. The mono
    ```
 
 ## How to run
+
+### Setup Environment Variables
+
+Before running the applications, you need to set up the environment variables. You can do this by copying the `.env.example` file to `.env` and modifying the values according to your needs.
+
+```sh
+cd apps/{appname}
+cp .env.example .env
+```
 
 ### Development
 
@@ -39,6 +49,10 @@ Use the following commands to run in development mode:
 - **Dimentorin**:
   ```sh
   npm run dimentorin:dev
+  ```
+- **Landing Page**:
+  ```sh
+  npm run landing:dev
   ```
 
 ### Build
@@ -57,6 +71,10 @@ Use the following commands to build the applications:
   ```sh
   npm run dimentorin:build
   ```
+- **Landing Page**:
+  ```sh
+  npm run landing:build
+  ```
 
 ### Production
 
@@ -74,19 +92,22 @@ Use the following commands to run the applications in production mode:
   ```sh
   npm run dimentorin:prod
   ```
+- **Landing Page**:
+  ```sh
+  npm run landing:prod
+  ```
 
 ### Storybook
 
 This repository uses Storybook to develop, test, and document UI components in an isolated and interactive environment. Below are the commands to work with Storybook:
 
 - **Run Storybook**
-  
+
   This command starts Storybook in development mode, allowing you to view and test UI components interactively.
 
   ```sh
   npm run ui:storybook
   ```
-  
 
 - **Run Unit Test**
 
