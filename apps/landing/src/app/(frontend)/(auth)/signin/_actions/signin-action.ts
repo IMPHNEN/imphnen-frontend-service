@@ -1,7 +1,7 @@
 'use server';
 
 import { setAccessToken, setRefreshToken } from '@/lib/cookies';
-import { fetchPostSignin } from '../_http/signin-http';
+import { fetchPostSignin } from '../_http/fetch-post-signin';
 import {
   type SignInValidationType,
   signInValidationSchema,
