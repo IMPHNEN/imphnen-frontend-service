@@ -116,6 +116,166 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/gacha/claims/create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["post_create_gacha_claim"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/gacha/claims/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["get_detail_gacha_claim"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/gacha/items": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["get_gacha_item_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/gacha/items/create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["post_create_gacha_item"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/gacha/items/delete/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["delete_gacha_item"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/gacha/items/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["get_gacha_item_by_id"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/gacha/items/update/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["put_update_gacha_item"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/gacha/rolls/create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["post_create_gacha_roll"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/gacha/rolls/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["get_detail_gacha_roll"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/gacha/rolls/execute": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["post_execute_gacha_roll"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/permissions": {
         parameters: {
             query?: never;
@@ -414,7 +574,7 @@ export interface components {
         };
         AuthLoginResponsetDto: {
             token: components["schemas"]["TokenDto"];
-            user: components["schemas"]["AuthUserItemDto"];
+            user: components["schemas"]["UsersDetailItemDto"];
         };
         AuthNewPasswordRequestDto: {
             password: string;
@@ -428,28 +588,55 @@ export interface components {
             fullname: string;
             password: string;
             phone_number: string;
-            referral_code?: string | null;
-            referred_by?: string | null;
-            student_type: string;
         };
         AuthResendOtpRequestDto: {
             email: string;
-        };
-        AuthUserItemDto: {
-            avatar?: string | null;
-            birthdate?: string | null;
-            email: string;
-            fullname: string;
-            gender?: string | null;
-            id: string;
-            is_active: boolean;
-            phone_number: string;
-            role: components["schemas"]["RolesItemDto"];
         };
         AuthVerifyEmailRequestDto: {
             email: string;
             /** Format: int32 */
             otp: number;
+        };
+        GachaClaimItemDto: {
+            created_at?: string | null;
+            id: string;
+            is_deleted: boolean;
+            item: components["schemas"]["GachaItemDto"];
+            updated_at?: string | null;
+            user: components["schemas"]["UsersDetailItemDto"];
+        };
+        GachaClaimRequestDto: {
+            item_id: string;
+            user_id: string;
+        };
+        GachaItemDto: {
+            created_at?: string | null;
+            id: string;
+            is_deleted: boolean;
+            name: string;
+            updated_at?: string | null;
+        };
+        GachaItemRequestDto: {
+            image_url: string;
+            name: string;
+        };
+        GachaRollItemDto: {
+            created_at?: string | null;
+            id: string;
+            is_deleted: boolean;
+            item: components["schemas"]["GachaItemDto"];
+            /** Format: int32 */
+            quantity: number;
+            updated_at?: string | null;
+            /** Format: float */
+            weight: number;
+        };
+        GachaRollRequestDto: {
+            item_id: string;
+            /** Format: int32 */
+            quantity: number;
+            /** Format: float */
+            weight: number;
         };
         MessageResponseDto: {
             message: string;
@@ -483,6 +670,16 @@ export interface components {
         PermissionsRequestDto: {
             name: string;
         };
+        ResponseListSuccessDto_Vec_GachaItemDto: {
+            data: {
+                created_at?: string | null;
+                id: string;
+                is_deleted: boolean;
+                name: string;
+                updated_at?: string | null;
+            }[];
+            meta?: null | components["schemas"]["MetaResponseDto"];
+        };
         ResponseListSuccessDto_Vec_PermissionsItemDto: {
             data: {
                 created_at?: string | null;
@@ -492,12 +689,12 @@ export interface components {
             }[];
             meta?: null | components["schemas"]["MetaResponseDto"];
         };
-        ResponseListSuccessDto_Vec_RolesItemDto: {
+        ResponseListSuccessDto_Vec_RolesListItemDto: {
             data: {
                 created_at?: string | null;
                 id: string;
                 name: string;
-                permissions: components["schemas"]["PermissionsItemDto"][];
+                permissions_count: number;
                 updated_at?: string | null;
             }[];
             meta?: null | components["schemas"]["MetaResponseDto"];
@@ -519,7 +716,39 @@ export interface components {
         ResponseSuccessDto_AuthLoginResponsetDto: {
             data: {
                 token: components["schemas"]["TokenDto"];
-                user: components["schemas"]["AuthUserItemDto"];
+                user: components["schemas"]["UsersDetailItemDto"];
+            };
+        };
+        ResponseSuccessDto_GachaClaimItemDto: {
+            data: {
+                created_at?: string | null;
+                id: string;
+                is_deleted: boolean;
+                item: components["schemas"]["GachaItemDto"];
+                updated_at?: string | null;
+                user: components["schemas"]["UsersDetailItemDto"];
+            };
+        };
+        ResponseSuccessDto_GachaItemDto: {
+            data: {
+                created_at?: string | null;
+                id: string;
+                is_deleted: boolean;
+                name: string;
+                updated_at?: string | null;
+            };
+        };
+        ResponseSuccessDto_GachaRollItemDto: {
+            data: {
+                created_at?: string | null;
+                id: string;
+                is_deleted: boolean;
+                item: components["schemas"]["GachaItemDto"];
+                /** Format: int32 */
+                quantity: number;
+                updated_at?: string | null;
+                /** Format: float */
+                weight: number;
             };
         };
         ResponseSuccessDto_PermissionsItemDto: {
@@ -530,10 +759,11 @@ export interface components {
                 updated_at?: string | null;
             };
         };
-        ResponseSuccessDto_RolesItemDto: {
+        ResponseSuccessDto_RolesDetailItemDto: {
             data: {
                 created_at?: string | null;
                 id: string;
+                is_deleted: boolean;
                 name: string;
                 permissions: components["schemas"]["PermissionsItemDto"][];
                 updated_at?: string | null;
@@ -549,20 +779,30 @@ export interface components {
             data: {
                 avatar?: string | null;
                 birthdate?: string | null;
+                created_at: string;
                 email: string;
                 fullname: string;
                 gender?: string | null;
                 id: string;
                 is_active: boolean;
                 phone_number: string;
-                role: components["schemas"]["RolesItemDto"];
+                role: components["schemas"]["RolesDetailItemDto"];
+                updated_at: string;
             };
         };
-        RolesItemDto: {
+        RolesDetailItemDto: {
+            created_at?: string | null;
+            id: string;
+            is_deleted: boolean;
+            name: string;
+            permissions: components["schemas"]["PermissionsItemDto"][];
+            updated_at?: string | null;
+        };
+        RolesListItemDto: {
             created_at?: string | null;
             id: string;
             name: string;
-            permissions: components["schemas"]["PermissionsItemDto"][];
+            permissions_count: number;
             updated_at?: string | null;
         };
         RolesRequestCreateDto: {
@@ -571,6 +811,7 @@ export interface components {
         };
         RolesRequestUpdateDto: {
             name?: string | null;
+            overwrite?: boolean | null;
             permissions?: string[] | null;
         };
         TokenDto: {
@@ -591,27 +832,14 @@ export interface components {
         UsersDetailItemDto: {
             avatar?: string | null;
             birthdate?: string | null;
-            email: string;
-            fullname: string;
-            gender?: string | null;
-            id: string;
-            is_active: boolean;
-            phone_number: string;
-            role: components["schemas"]["RolesItemDto"];
-        };
-        UsersItemDto: {
-            avatar?: string | null;
-            birthdate?: string | null;
             created_at: string;
             email: string;
             fullname: string;
             gender?: string | null;
             id: string;
             is_active: boolean;
-            is_deleted: boolean;
-            password: string;
             phone_number: string;
-            role: components["schemas"]["RolesItemDto"];
+            role: components["schemas"]["RolesDetailItemDto"];
             updated_at: string;
         };
         UsersListItemDto: {
@@ -875,6 +1103,250 @@ export interface operations {
             };
         };
     };
+    post_create_gacha_claim: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GachaClaimRequestDto"];
+            };
+        };
+        responses: {
+            /** @description Create new gacha claim */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageResponseDto"];
+                };
+            };
+        };
+    };
+    get_detail_gacha_claim: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Gacha Claim ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Get Gacha Claim by ID */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseSuccessDto_GachaClaimItemDto"];
+                };
+            };
+        };
+    };
+    get_gacha_item_list: {
+        parameters: {
+            query?: {
+                /** @description Page number */
+                page?: number;
+                /** @description Items per page */
+                per_page?: number;
+                /** @description Search keyword */
+                search?: string;
+                /** @description Sort by field */
+                sort_by?: string;
+                /** @description Order ASC or DESC */
+                order?: string;
+                /** @description Filter value */
+                filter?: string;
+                /** @description Field to filter by */
+                filter_by?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Get gacha item list */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseListSuccessDto_Vec_GachaItemDto"];
+                };
+            };
+        };
+    };
+    post_create_gacha_item: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GachaItemRequestDto"];
+            };
+        };
+        responses: {
+            /** @description Create gacha item */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageResponseDto"];
+                };
+            };
+        };
+    };
+    delete_gacha_item: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Delete gacha item */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageResponseDto"];
+                };
+            };
+        };
+    };
+    get_gacha_item_by_id: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Gacha Item ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Get gacha item by ID */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseSuccessDto_GachaItemDto"];
+                };
+            };
+        };
+    };
+    put_update_gacha_item: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GachaItemRequestDto"];
+            };
+        };
+        responses: {
+            /** @description Update gacha item */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageResponseDto"];
+                };
+            };
+        };
+    };
+    post_create_gacha_roll: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GachaRollRequestDto"];
+            };
+        };
+        responses: {
+            /** @description Create new gacha roll */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageResponseDto"];
+                };
+            };
+        };
+    };
+    get_detail_gacha_roll: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Gacha Roll ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Get Gacha Roll by ID */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseSuccessDto_GachaRollItemDto"];
+                };
+            };
+        };
+    };
+    post_execute_gacha_roll: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Execute and get 1 gacha result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseSuccessDto_GachaRollItemDto"];
+                };
+            };
+        };
+    };
     get_permission_list: {
         parameters: {
             query?: {
@@ -1035,7 +1507,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ResponseListSuccessDto_Vec_RolesItemDto"];
+                    "application/json": components["schemas"]["ResponseListSuccessDto_Vec_RolesListItemDto"];
                 };
             };
         };
@@ -1104,7 +1576,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ResponseSuccessDto_RolesItemDto"];
+                    "application/json": components["schemas"]["ResponseSuccessDto_RolesDetailItemDto"];
                 };
             };
         };
