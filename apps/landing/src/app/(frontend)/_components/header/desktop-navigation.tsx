@@ -17,6 +17,12 @@ export function DesktopNavigation() {
         </span>
         <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
       </Link>
+      <Link href="/request" className="text-sm font-medium relative group">
+        <span className="transition-colors hover:text-primary">
+          Request Fitur
+        </span>
+        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+      </Link>
     </nav>
   );
 }
