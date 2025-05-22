@@ -10,7 +10,7 @@ import { FC, Fragment, ReactElement, useState } from 'react';
 import ModalAddItem from './_components/modal-add-item';
 import ModalEditItem from './_components/modal-edit-item';
 import ModalDeleteItem from './_components/modal-delete-item';
-import { useQueryState } from '../../hook/use-query-state';
+import { useQueryState } from '@imphnen-frontend-service/utils';
 
 export const Components: FC = (): ReactElement => {
   const [showModalAddItem, setShowModalAddItem] = useState(false);

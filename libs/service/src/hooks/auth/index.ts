@@ -6,7 +6,6 @@ import {
   TRegisterRequest,
   TVerifyEmailRequest,
 } from '../../types/auth';
-import { SessionToken, SessionUser } from '@imphnen-frontend-service/utils';
 
 import { TResponseError, TResponseMessage } from '../../types/common';
 
@@ -19,11 +18,6 @@ export const usePostLogin = (): UseMutationResult<
   return useMutation({
     mutationKey: ['post-login'],
     mutationFn: async (payload) => await postLogin(payload),
-    onSuccess: (res) => {
-      SessionUser.set(res.data.user);
-      SessionToken.set(res.data.token);
-      window.location.reload();
-    },
   });
 };
 

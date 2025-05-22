@@ -32,7 +32,16 @@ export const Components: FC = (): ReactElement => {
             size="lg"
             className="w-full"
           />
-          <Button type="submit" size="md" className="w-full">
+          <Button
+            disabled={
+              form.formState.isSubmitting ||
+              form.formState.isValidating ||
+              !form.formState.isValid
+            }
+            type="submit"
+            size="md"
+            className="w-full"
+          >
             Login
           </Button>
         </form>

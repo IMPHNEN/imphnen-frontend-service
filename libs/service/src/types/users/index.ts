@@ -1,4 +1,4 @@
-import { TRoleItem } from '../roles';
+import { TRoleDetailItem } from '../roles';
 
 export type TUserItem = {
   id: string;
@@ -7,13 +7,7 @@ export type TUserItem = {
   email: string;
   fullname: string;
   gender: string;
-  identity_number: string;
   is_active: boolean;
-  is_profile_completed: boolean;
   phone_number: string;
-  referral_code: string;
-  referred_by: string;
-  religion: string;
-  student_type: string;
-  role: TRoleItem;
+  role: TRoleDetailItem;
 };

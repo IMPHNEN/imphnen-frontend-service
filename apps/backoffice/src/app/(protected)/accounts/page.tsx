@@ -18,7 +18,7 @@ import {
   RowSelectionState,
 } from '@tanstack/react-table';
 import ModalEditAccount from './_components/modal-edit-account';
-import { useQueryState } from '../../hook/use-query-state';
+import { useQueryState } from '@imphnen-frontend-service/utils';
 
 interface Account {
   id: number;
@@ -166,7 +166,7 @@ export const Components: FC = (): ReactElement => {
               </Button>
               {showFilter && (
                 <div className="absolute right-0 top-[calc(100%+12px)] z-10 shadow-lg">
-                  <Filter onClose={() => setShowFilter(false)} />
+                  <Filter onClose={() => setShowFilter(false)} options={[]} />
                 </div>
               )}
             </div>
