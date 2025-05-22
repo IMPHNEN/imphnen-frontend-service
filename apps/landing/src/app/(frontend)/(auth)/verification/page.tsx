@@ -1,5 +1,5 @@
 import { LogoSimple } from '../../_components/logo';
-import { SignupForm } from './_components/signup-form';
+import { VerifyEmailForm } from './_components/verify-email-form';
 
 export default function Page() {
   return (
@@ -8,11 +8,11 @@ export default function Page() {
         <LogoSimple />
 
         <p className="text-muted-foreground text-center text-sm sm:text-base">
-          Buat akunmu sekarang
+          Verifikasi akun mu sekarang
         </p>
       </div>
 
-      <SignupForm />
+      <VerifyEmailForm />
     </>
   );
 }

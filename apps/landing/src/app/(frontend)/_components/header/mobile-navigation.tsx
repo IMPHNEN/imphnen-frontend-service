@@ -5,10 +5,10 @@ export function MobileNavigation() {
     <div className="md:hidden border-t bg-background/95 backdrop-blur-md">
       <nav className="container flex flex-col py-4 text-center">
         <Link
-          href="/about"
+          href="/"
           className="py-3 text-sm font-medium border-b border-border/50"
         >
-          About
+          Home
         </Link>
         <Link
           href="/events"
