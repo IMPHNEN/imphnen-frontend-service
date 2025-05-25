@@ -1,17 +1,12 @@
 'use client';
 
+import HERO_STATS from '@/data/hero-stats.json';
 import { Button, CodeIcon, SparklesIcon, UsersIcon } from '@components';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { Fragment, useEffect, useState } from 'react';
 
 export function Hero() {
-  const stats = [
-    { value: '180K+', label: 'Member' },
-    { value: '500+', label: 'Tutorial' },
-    { value: '24/7', label: 'Yapping' },
-  ];
-
   const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
@@ -98,7 +93,7 @@ export function Hero() {
             </div>
 
             <div className="flex flex-wrap justify-center gap-6 sm:gap-8">
-              {stats.map(({ value, label }, i) => (
+              {HERO_STATS.map(({ value, label }, i) => (
                 <Fragment key={i}>
                   <div className="flex flex-col items-center">
                     <div className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400">
@@ -106,7 +101,7 @@ export function Hero() {
                     </div>
                     <div className="text-xs text-muted-foreground">{label}</div>
                   </div>
-                  {i < stats.length - 1 && (
+                  {i < HERO_STATS.length - 1 && (
                     <div className="hidden sm:block h-10 border-r border-border mx-4" />
                   )}
                 </Fragment>

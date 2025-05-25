@@ -1,42 +1,13 @@
 'use client';
 
+import TESTIMONIAL_STATS from '@/data/testimonial-stats.json';
+import TESTIMONIALS from '@/data/testimonials.json';
 import { QuoteIcon } from '@components';
 import { motion, useInView } from 'framer-motion';
 import Image from 'next/image';
 import { useRef } from 'react';
 
 export function Testimonials() {
-  const items = [
-    {
-      quote:
-        'Saya yang tadinya tidak mengerti apa-apa tentang programming, sekarang bisa membuat website sendiri dengan mudah. Terima kasih IMPHNEN!',
-      name: 'Budi Santoso',
-      role: 'Web Developer Pemula',
-      avatar: '',
-    },
-    {
-      quote:
-        'Komunitas yang sangat supportif! Setiap pertanyaan selalu dijawab dengan cepat dan jelas. Diskusi programnya mudah dipahami.',
-      name: 'Anita Ratna',
-      role: 'Mobile App Developer',
-      avatar: '',
-    },
-    {
-      quote:
-        'Server Discord IMPHNEN adalah tempat belajar terbaik untuk programmer pemula seperti saya. Materinya lengkap dan komunitasnya sangat membantu!',
-      name: 'Dedi Permana',
-      role: 'Data Scientist',
-      avatar: '',
-    },
-  ];
-
-  const stats = [
-    { value: '98%', label: 'Tingkat Kemalasan' },
-    { value: '4.9/5', label: 'Rating Drama' },
-    { value: '85%', label: 'Mendapat Pekerjaan' },
-    { value: '24/7', label: 'Yapping' },
-  ];
-
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
 
@@ -85,7 +56,7 @@ export function Testimonials() {
           initial="hidden"
           animate={isInView ? 'visible' : 'hidden'}
         >
-          {items.map((t, idx) => (
+          {TESTIMONIALS.map((t, idx) => (
             <motion.div
               key={idx}
               className="group relative overflow-hidden rounded-xl border bg-background p-6 transition-all hover:shadow-lg"
@@ -106,6 +77,7 @@ export function Testimonials() {
                       width={600}
                       height={500}
                       className="object-cover"
+                      unoptimized
                     />
                   </div>
                   <div>
@@ -137,7 +109,7 @@ export function Testimonials() {
               </p>
             </div>
             <div className="grid grid-cols-2 gap-4">
-              {stats.map((s, idx) => (
+              {TESTIMONIAL_STATS.map((s, idx) => (
                 <div key={idx} className="rounded-lg border p-4 text-center">
                   <div className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400">
                     {s.value}

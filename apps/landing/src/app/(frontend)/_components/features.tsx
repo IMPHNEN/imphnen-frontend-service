@@ -1,37 +1,11 @@
 'use client';
 
+import FEATURES from '@/data/features.json';
 import { Icon } from '@iconify/react';
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 
 export function Features() {
-  const features = [
-    {
-      iconName: 'tabler:device-laptop',
-      title: 'Belajar Tanpa Koding',
-      description:
-        'Pelajari konsep programming dengan cara yang mudah dipahami tanpa harus menulis kode yang rumit.',
-    },
-    {
-      iconName: 'tabler:users',
-      title: 'Komunitas Supportif',
-      description:
-        'Bergabunglah dengan komunitas programmer Indonesia yang siap membantu dan berbagi pengalaman.',
-    },
-    {
-      iconName: 'tabler:book',
-      title: 'Tutorial Interaktif',
-      description:
-        'Akses tutorial interaktif yang membuat konsep programming lebih mudah untuk dipahami.',
-    },
-    {
-      iconName: 'tabler:code',
-      title: 'Proyek Praktis',
-      description:
-        'Terapkan pengetahuan Anda dalam proyek nyata dengan panduan langkah demi langkah.',
-    },
-  ];
-
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
 
@@ -91,7 +65,7 @@ export function Features() {
           initial="hidden"
           animate={isInView ? 'visible' : 'hidden'}
         >
-          {features.map((feature, index) => (
+          {FEATURES.map((feature, index) => (
             <motion.div
               key={index}
               className="group relative overflow-hidden rounded-xl border bg-background/50 backdrop-blur-sm p-6 transition-all hover:shadow-md hover:shadow-primary/5 hover:border-primary/50"

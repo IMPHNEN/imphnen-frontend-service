@@ -1,46 +1,12 @@
 'use client';
 
+import LEARNING_RESOURCES from '@/data/learning-resources.json';
 import { Button } from '@components';
 import { Icon } from '@iconify/react';
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 
 export function LearningResources() {
-  const resources = [
-    {
-      icon: 'tabler:video',
-      title: 'Video Tutorial',
-      description:
-        'Belajar melalui tutorial video dari langkah awal hingga mahir.',
-      buttonText: 'Lihat Semua Video',
-      buttonLink: '#',
-    },
-    {
-      icon: 'tabler:article',
-      title: 'Artikel & Tutorial',
-      description:
-        'Pelajari konsep programming melalui artikel yang disusun secara terstruktur.',
-      buttonText: 'Baca Artikel',
-      buttonLink: '#',
-    },
-    {
-      icon: 'tabler:brand-vscode',
-      title: 'Tantangan Koding',
-      description:
-        'Uji kemampuan koding kamu dengan tantangan yang menyenangkan dan menantang.',
-      buttonText: 'Mulai Tantangan',
-      buttonLink: '#',
-    },
-    {
-      icon: 'tabler:device-desktop-share',
-      title: 'Sharing Session',
-      description:
-        'Ikuti sesi berbagi pengalaman dari programmer berpengalaman dan belajar dari pengalaman mereka.',
-      buttonText: 'Jadwal Session',
-      buttonLink: '#',
-    },
-  ];
-
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
 
@@ -95,7 +61,7 @@ export function LearningResources() {
           initial="hidden"
           animate={isInView ? 'visible' : 'hidden'}
         >
-          {resources.map((r, i) => (
+          {LEARNING_RESOURCES.map((r, i) => (
             <motion.div
               key={i}
               className="group relative overflow-hidden rounded-xl border bg-background p-6 hover:shadow-lg"
