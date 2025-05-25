@@ -1,0 +1,3 @@
+@import 'tailwindcss';
+@import "../../../../libs/shadcn-ui/src/index.css";
+@source "../../../../libs/shadcn-ui/src/atoms/**/*.{ts,tsx}";

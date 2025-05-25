@@ -16,7 +16,7 @@ export const authLoginSchema = z.object({
     .min(1, 'Password tidak boleh kosong'),
 });
 
-export const stepOneRegisterSchema = z
+export const authRegisterSchema = z
   .object({
     email: z
       .string({
@@ -25,6 +25,12 @@ export const stepOneRegisterSchema = z
       })
       .min(1, 'Email tidak boleh kosong')
       .email('Email harus valid'),
+    phone_number: z
+      .string({
+        required_error: 'Nomor telepon tidak boleh kosong',
+      })
+      .min(1, 'Nomor telepon tidak boleh kosong')
+      .max(15, 'Nomor telepon tidak boleh lebih dari 15 digit'),
     fullname: z
       .string({
         required_error: 'Nama tidak boleh kosong',
@@ -51,28 +57,3 @@ export const stepOneRegisterSchema = z
     message: 'Password dan Konfirmasi Password harus sama',
     path: ['confirm_password'],
   });
-
-const stepTwoRegisterSchema = z.object({
-  phone_number: z
-    .string({
-      required_error: 'Nomor telepon tidak boleh kosong',
-      invalid_type_error: 'Nomor telepon harus berupa string',
-    })
-    .min(1, 'Nomor telepon tidak boleh kosong')
-    .max(15, 'Nomor telepon tidak boleh lebih dari 15 karakter'),
-  referral_code: z
-    .string()
-    .min(1, 'Kode referral tidak boleh kosong')
-    .max(4, 'Kode referral tidak boleh lebih dari 4 karakter')
-    .optional(),
-  referred_by: z
-    .string()
-    .min(1, 'Kode referral tidak boleh kosong')
-    .max(50, 'Kode referral tidak boleh lebih dari 50 karakter')
-    .optional(),
-  student_type: z.string(),
-});
-
-export const authRegisterSchema = stepOneRegisterSchema.and(
-  stepTwoRegisterSchema
-);

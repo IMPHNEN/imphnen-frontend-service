@@ -1,6 +1,9 @@
 import { FC, ReactElement } from 'react';
 import { ControlledInputField, LoginBanner } from '@imphnen-frontend-service/ui/organisms';
+import { ControlledInputField, LoginBanner } from '@imphnen-frontend-service/ui/organisms';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
+import { useLogin } from '../../_hooks/use-login';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 import { useLogin } from '../../_hooks/use-login';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 
@@ -9,12 +12,16 @@ export const Components: FC = (): ReactElement => {
   return (
     <div className="flex flex-col justify-center items-center min-h-screen py-[60px] px-[80px]">
       <div className="bg-white xl:min-w-[1120px] xl:min-h-[712px] p-10 rounded-2xl shadow-md flex gap-6">
+      <div className="bg-white xl:min-w-[1120px] xl:min-h-[712px] p-10 rounded-2xl shadow-md flex gap-6">
         <LoginBanner />
+        <div className="xl:border-2 xl:border-primary-500/50 md:w-[596px] rounded-lg md:py-[70px] md:px-[96px] flex justify-center">
+          <div className="md:w-[404px]">
         <div className="xl:border-2 xl:border-primary-500/50 md:w-[596px] rounded-lg md:py-[70px] md:px-[96px] flex justify-center">
           <div className="md:w-[404px]">
             <h2 className="text-4xl font-semibold text-primary-500 text-center mb-2">
               Hallo Minna-san
             </h2>
+            <h5 className="text-xl font-medium text-primary-500 text-center mb-5">
             <h5 className="text-xl font-medium text-primary-500 text-center mb-5">
               Welcome to Dimentorin by IMPHNEN
             </h5>
@@ -65,6 +72,13 @@ export const Components: FC = (): ReactElement => {
                 alt="Google Icon"
                 width={24}
               />
+            </Button>
+            <Button
+              className='xl:hidden w-full gap-3'
+              variant='secondary'
+            >
+              <ArrowLeftOutlined />
+              Kembali Ke Homepage
             </Button>
             <Button
               className='xl:hidden w-full gap-3'
