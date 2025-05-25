@@ -78,16 +78,16 @@ export function Header() {
           </Link>
         </nav>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-x-2">
           <SimpleThemeToggle />
 
           <Button
-            className="hidden md:flex bg-gradient-to-r from-primary to-blue-400 hover:from-primary/90 hover:to-blue-400/90 transition-all duration-300 font-bold text-black hover:text-white cursor-pointer"
+            className="group relative w-full sm:w-auto bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 transition-all duration-300 font-bold text-white hover:text-white/90 shadow-lg cursor-pointer"
             onClick={() =>
               window.open('https://discord.com/invite/imphnen', '_blank')
             }
           >
-            Gabung Discord
+            Login
           </Button>
 
           {/* Mobile Menu Button */}
@@ -143,8 +143,8 @@ export function Header() {
               target="_blank"
               className="mt-4"
             >
-              <Button className="mt-4 bg-gradient-to-r from-primary to-blue-400 hover:from-primary/90 hover:to-blue-400/90 font-bold text-black hover:text-white cursor-pointer">
-                Gabung Discord
+              <Button className="group relative w-full sm:w-auto bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 transition-all duration-300 font-bold text-white hover:text-white/90 shadow-lg cursor-pointer">
+                Login
               </Button>
             </a>
           </nav>

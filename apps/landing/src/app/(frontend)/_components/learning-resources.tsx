@@ -112,7 +112,7 @@ export function LearningResources() {
               </p>
               <div className="flex flex-wrap gap-4">
                 <Button
-                  className="bg-gradient-to-r from-primary to-blue-400 hover:from-primary/90 hover:to-blue-400/90 font-bold text-black hover:text-white cursor-pointer"
+                  className="group relative w-full sm:w-auto bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 transition-all duration-300 font-bold text-white hover:text-white/90 shadow-lg cursor-pointer"
                   onClick={() => window.open('/', '_blank')}
                 >
                   Mulai Kursus

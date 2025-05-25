@@ -69,7 +69,7 @@ export function Hero() {
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
               <Button
                 size="lg"
-                className="w-full sm:w-auto bg-gradient-to-r from-primary to-blue-400 hover:from-primary/90 hover:to-blue-400/90 transition-all duration-300 font-bold text-black hover:text-white cursor-pointer"
+                className="group relative w-full sm:w-auto bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 transition-all duration-300 font-bold text-white hover:text-white/90 shadow-lg cursor-pointer"
                 onClick={() =>
                   window.open(
                     'https://facebook.com/groups/programmerhandal',
