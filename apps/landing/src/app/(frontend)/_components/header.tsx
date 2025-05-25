@@ -33,7 +33,7 @@ export function Header() {
           <div className="relative overflow-hidden rounded">
             <Link href="/">
               <Image
-                src="/logo.png"
+                src="/logo.webp"
                 alt="IMPHNEN"
                 width={64}
                 height={64}

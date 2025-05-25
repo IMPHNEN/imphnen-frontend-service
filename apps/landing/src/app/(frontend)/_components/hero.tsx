@@ -116,7 +116,7 @@ export function Hero() {
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <Image
-              src="/logo.png"
+              src="/logo.webp"
               alt="logo"
               width={600}
               height={500}
