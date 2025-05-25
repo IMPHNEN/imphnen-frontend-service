@@ -4,10 +4,13 @@ import { Button, MenuIcon, XIcon } from '@components';
 import { cn } from '@utils';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { SimpleThemeToggle } from './simple-theme-toggle';
 
 export function Header() {
+  const router = useRouter();
+
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -83,9 +86,7 @@ export function Header() {
 
           <Button
             className="group relative w-full sm:w-auto bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 transition-all duration-300 font-bold text-white hover:text-white/90 shadow-lg cursor-pointer"
-            onClick={() =>
-              window.open('https://discord.com/invite/imphnen', '_blank')
-            }
+            onClick={() => router.push('/signin')}
           >
             Login
           </Button>
@@ -138,15 +139,13 @@ export function Header() {
             >
               Testimoni
             </Link>
-            <a
-              href="https://discord.com/invite/imphnen"
-              target="_blank"
-              className="mt-4"
+
+            <Button
+              onClick={() => router.push('/signin')}
+              className="group relative w-full sm:w-auto bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 transition-all duration-300 font-bold text-white hover:text-white/90 shadow-lg cursor-pointer"
             >
-              <Button className="group relative w-full sm:w-auto bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 transition-all duration-300 font-bold text-white hover:text-white/90 shadow-lg cursor-pointer">
-                Login
-              </Button>
-            </a>
+              Login
+            </Button>
           </nav>
         </div>
       )}
