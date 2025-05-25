@@ -92,7 +92,7 @@ export function Hero() {
               </Button>
             </div>
 
-            <div className="flex flex-wrap justify-center gap-6 sm:gap-8">
+            <div className="flex flex-wrap justify-center md:justify-start gap-6 sm:gap-8">
               {HERO_STATS.map(({ value, label }, i) => (
                 <Fragment key={i}>
                   <div className="flex flex-col items-center">
