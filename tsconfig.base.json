@@ -16,7 +16,6 @@
     "baseUrl": ".",
     "paths": {
       "@imphnen-frontend-service/service": ["libs/service/src/index.ts"],
-      "@imphnen-frontend-service/shadcn-ui/atoms": ["libs/shadcn-ui/src/atoms/index.ts"],
       "@imphnen-frontend-service/ui/atoms": ["libs/ui/src/atoms/index.ts"],
       "@imphnen-frontend-service/ui/molecules": [
         "libs/ui/src/molecules/index.ts"
