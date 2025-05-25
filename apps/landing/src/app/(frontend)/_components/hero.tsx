@@ -1,7 +1,7 @@
 'use client';
 
 import HERO_STATS from '@/data/hero-stats.json';
-import { Button, CodeIcon, SparklesIcon, UsersIcon } from '@components';
+import { Button, SparklesIcon } from '@components';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { Fragment, useEffect, useState } from 'react';
@@ -115,24 +115,13 @@ export function Hero() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <div className="relative">
-              <div className="absolute -top-6 -left-6 w-12 h-12 rounded-lg border border-primary/30 bg-background/50 backdrop-blur-sm flex items-center justify-center">
-                <CodeIcon className="h-6 w-6 text-primary" />
-              </div>
-              <div className="absolute -bottom-6 -right-6 w-12 h-12 rounded-lg border border-blue-400/30 bg-background/50 backdrop-blur-sm flex items-center justify-center">
-                <UsersIcon className="h-6 w-6 text-blue-400" />
-              </div>
-              <div className="relative z-10 rounded-2xl overflow-hidden border shadow-2xl">
-                <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 to-blue-400/10" />
-                <Image
-                  src="/logo.webp"
-                  alt="logo"
-                  width={600}
-                  height={500}
-                  className="w-full h-auto object-cover"
-                />
-              </div>
-            </div>
+            <Image
+              src="/logo.png"
+              alt="logo"
+              width={600}
+              height={500}
+              className="w-full h-auto object-cover"
+            />
           </motion.div>
         </div>
       </div>
