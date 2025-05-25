@@ -1,14 +1,41 @@
 'use client';
 
 import { QuoteIcon } from '@imphnen-frontend-service/shadcn-ui/atoms';
-import { formatCMSImageDataToMedia } from 'apps/landing/src/lib/format';
-import { TestimonialsSection } from 'apps/landing/src/payload-types';
 import { motion, useInView } from 'framer-motion';
 import Image from 'next/image';
 import { useRef } from 'react';
 
-export function Testimonials(props: TestimonialsSection) {
-  const { title, subtitle, items, stats, joinTitle, joinText } = props;
+export function Testimonials() {
+  const items = [
+    {
+      quote:
+        'Saya yang tadinya tidak mengerti apa-apa tentang programming, sekarang bisa membuat website sendiri dengan mudah. Terima kasih IMPHNEN!',
+      name: 'Budi Santoso',
+      role: 'Web Developer Pemula',
+      avatar: '',
+    },
+    {
+      quote:
+        'Komunitas yang sangat supportif! Setiap pertanyaan selalu dijawab dengan cepat dan jelas. Diskusi programnya mudah dipahami.',
+      name: 'Anita Ratna',
+      role: 'Mobile App Developer',
+      avatar: '',
+    },
+    {
+      quote:
+        'Server Discord IMPHNEN adalah tempat belajar terbaik untuk programmer pemula seperti saya. Materinya lengkap dan komunitasnya sangat membantu!',
+      name: 'Dedi Permana',
+      role: 'Data Scientist',
+      avatar: '',
+    },
+  ];
+
+  const stats = [
+    { value: '98%', label: 'Tingkat Kemalasan' },
+    { value: '4.9/5', label: 'Rating Drama' },
+    { value: '85%', label: 'Mendapat Pekerjaan' },
+    { value: '24/7', label: 'Yapping' },
+  ];
 
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
@@ -42,21 +69,13 @@ export function Testimonials(props: TestimonialsSection) {
           transition={{ duration: 0.5 }}
         >
           <h2 className="text-3xl font-bold tracking-tighter md:text-4xl lg:text-5xl">
-            {title.split(' ').map((word, i) =>
-              i === title.split(' ').length - 1 ? (
-                <span
-                  key={i}
-                  className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400"
-                >
-                  {word}
-                </span>
-              ) : (
-                <span key={i}>{word} </span>
-              )
-            )}
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400">
+              Testimoni
+            </span>
+            <span> Member</span>
           </h2>
           <p className="max-w-[800px] mx-auto text-muted-foreground md:text-lg">
-            {subtitle}
+            Apa kata mereka yang telah bergabung dengan komunitas IMPHNEN?
           </p>
         </motion.div>
 
@@ -66,7 +85,7 @@ export function Testimonials(props: TestimonialsSection) {
           initial="hidden"
           animate={isInView ? 'visible' : 'hidden'}
         >
-          {items?.map((t, idx) => (
+          {items.map((t, idx) => (
             <motion.div
               key={idx}
               className="group relative overflow-hidden rounded-xl border bg-background p-6 transition-all hover:shadow-lg"
@@ -81,19 +100,13 @@ export function Testimonials(props: TestimonialsSection) {
                 </p>
                 <div className="flex items-center gap-4">
                   <div className="relative h-12 w-12 overflow-hidden rounded-full border-2 border-primary/20">
-                    {(() => {
-                      const media = formatCMSImageDataToMedia(t.avatar);
-                      if (!media) return null;
-                      return (
-                        <Image
-                          src={media.url!}
-                          alt={media.alt}
-                          width={600}
-                          height={500}
-                          className="object-cover"
-                        />
-                      );
-                    })()}
+                    <Image
+                      src={t.avatar}
+                      alt={t.name}
+                      width={600}
+                      height={500}
+                      className="object-cover"
+                    />
                   </div>
                   <div>
                     <h4 className="font-bold">{t.name}</h4>
@@ -115,12 +128,16 @@ export function Testimonials(props: TestimonialsSection) {
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div>
               <h3 className="text-2xl md:text-3xl font-bold mb-4">
-                {joinTitle}
+                Bergabunglah dengan 10,000+ programmer Indonesia lainnya
               </h3>
-              <p className="text-muted-foreground">{joinText}</p>
+              <p className="text-muted-foreground">
+                Komunitas kami terus berkembang dengan programmer dari berbagai
+                latar belakang dan tingkat keahlian. Bersama-sama, kita belajar,
+                berbagi, dan tumbuh sebagai profesional.
+              </p>
             </div>
             <div className="grid grid-cols-2 gap-4">
-              {stats?.map((s, idx) => (
+              {stats.map((s, idx) => (
                 <div key={idx} className="rounded-lg border p-4 text-center">
                   <div className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400">
                     {s.value}

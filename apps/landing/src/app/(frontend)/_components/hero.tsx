@@ -6,22 +6,16 @@ import {
   SparklesIcon,
   UsersIcon,
 } from '@imphnen-frontend-service/shadcn-ui/atoms';
-import { formatCMSImageDataToMedia } from 'apps/landing/src/lib/format';
-import { HeroSection } from 'apps/landing/src/payload-types';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { Fragment, useEffect, useState } from 'react';
 
-export function Hero(props: HeroSection) {
-  const {
-    badgeText,
-    buttons,
-    description,
-    highlight,
-    title,
-    stats,
-    heroImage,
-  } = props;
+export function Hero() {
+  const stats = [
+    { value: '180K+', label: 'Member' },
+    { value: '500+', label: 'Tutorial' },
+    { value: '24/7', label: 'Yapping' },
+  ];
 
   const [scrollY, setScrollY] = useState(0);
 
@@ -65,18 +59,20 @@ export function Hero(props: HeroSection) {
           >
             <div className="inline-flex items-center rounded-full border px-3 py-1 text-sm w-fit">
               <SparklesIcon className="mr-1 h-3.5 w-3.5 text-primary" />
-              <span>{badgeText}</span>
+              <span>Komunitas Programmer Indonesia</span>
             </div>
 
             <div className="space-y-4">
               <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-foreground via-foreground to-foreground/70">
-                {title} <br />
+                Programmer Handal, <br />
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400">
-                  {highlight}
+                  Tanpa Ribet
                 </span>
               </h1>
               <p className="max-w-[600px] text-muted-foreground md:text-xl">
-                {description}
+                Temukan potensi programming Anda bersama komunitas yang
+                mendukung, tutorial interaktif, dan sumber daya berkualitas
+                tinggi.
               </p>
             </div>
 
@@ -84,23 +80,30 @@ export function Hero(props: HeroSection) {
               <Button
                 size="lg"
                 className="w-full sm:w-auto bg-gradient-to-r from-primary to-blue-400 hover:from-primary/90 hover:to-blue-400/90 transition-all duration-300 font-bold text-black hover:text-white cursor-pointer"
-                onClick={() => window.open(buttons.primaryUrl, '_blank')}
+                onClick={() =>
+                  window.open(
+                    'https://facebook.com/groups/programmerhandal',
+                    '_blank'
+                  )
+                }
               >
-                {buttons.primaryLabel}
+                Mulai Belajar
               </Button>
               <Button
                 size="lg"
                 variant="outline"
                 className="w-full sm:w-auto group relative overflow-hidden border-primary"
-                onClick={() => window.open(buttons.secondaryUrl, '_blank')}
+                onClick={() =>
+                  window.open('https://discord.com/invite/imphnen', '_blank')
+                }
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-primary/10 to-blue-400/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                <span className="relative">{buttons.secondaryLabel}</span>
+                <span className="relative">Gabung Discord</span>
               </Button>
             </div>
 
             <div className="flex flex-wrap justify-center gap-6 sm:gap-8">
-              {stats?.map(({ value, label }, i) => (
+              {stats.map(({ value, label }, i) => (
                 <Fragment key={i}>
                   <div className="flex flex-col items-center">
                     <div className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400">
@@ -131,19 +134,13 @@ export function Hero(props: HeroSection) {
               </div>
               <div className="relative z-10 rounded-2xl overflow-hidden border shadow-2xl">
                 <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 to-blue-400/10" />
-                {(() => {
-                  const media = formatCMSImageDataToMedia(heroImage);
-                  if (!media) return null;
-                  return (
-                    <Image
-                      src={media.url!}
-                      alt={media.alt}
-                      width={600}
-                      height={500}
-                      className="w-full h-auto object-cover"
-                    />
-                  );
-                })()}
+                <Image
+                  src="/logo.webp"
+                  alt="logo"
+                  width={600}
+                  height={500}
+                  className="w-full h-auto object-cover"
+                />
               </div>
             </div>
           </motion.div>

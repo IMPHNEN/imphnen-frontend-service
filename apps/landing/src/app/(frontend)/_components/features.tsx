@@ -1,12 +1,36 @@
 'use client';
 
 import { Icon } from '@iconify/react';
-import { FeaturesSection } from 'apps/landing/src/payload-types';
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 
-export function Features(props: FeaturesSection) {
-  const { heading, subheading, features } = props;
+export function Features() {
+  const features = [
+    {
+      iconName: 'tabler:device-laptop',
+      title: 'Belajar Tanpa Koding',
+      description:
+        'Pelajari konsep programming dengan cara yang mudah dipahami tanpa harus menulis kode yang rumit.',
+    },
+    {
+      iconName: 'tabler:users',
+      title: 'Komunitas Supportif',
+      description:
+        'Bergabunglah dengan komunitas programmer Indonesia yang siap membantu dan berbagi pengalaman.',
+    },
+    {
+      iconName: 'tabler:book',
+      title: 'Tutorial Interaktif',
+      description:
+        'Akses tutorial interaktif yang membuat konsep programming lebih mudah untuk dipahami.',
+    },
+    {
+      iconName: 'tabler:code',
+      title: 'Proyek Praktis',
+      description:
+        'Terapkan pengetahuan Anda dalam proyek nyata dengan panduan langkah demi langkah.',
+    },
+  ];
 
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
@@ -52,10 +76,11 @@ export function Features(props: FeaturesSection) {
               Fitur Unggulan
             </div>
             <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight lg:text-5xl">
-              {heading}
+              Belajar programming dengan cara yang lebih baik
             </h2>
             <p className="max-w-[800px] mx-auto text-muted-foreground md:text-lg">
-              {subheading}
+              IMPHNEN hadir dengan berbagai fitur untuk membantu kamu menjadi
+              programmer handal tanpa harus pusing dengan coding.
             </p>
           </motion.div>
         </div>
@@ -66,7 +91,7 @@ export function Features(props: FeaturesSection) {
           initial="hidden"
           animate={isInView ? 'visible' : 'hidden'}
         >
-          {features?.map((feature, index) => (
+          {features.map((feature, index) => (
             <motion.div
               key={index}
               className="group relative overflow-hidden rounded-xl border bg-background/50 backdrop-blur-sm p-6 transition-all hover:shadow-md hover:shadow-primary/5 hover:border-primary/50"

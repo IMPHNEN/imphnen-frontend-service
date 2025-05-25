@@ -2,12 +2,44 @@
 
 import { Icon } from '@iconify/react';
 import { Button } from '@imphnen-frontend-service/shadcn-ui/atoms';
-import { LearningResourcesSection } from 'apps/landing/src/payload-types';
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 
-export function LearningResources(props: LearningResourcesSection) {
-  const { resources, featured, title, description } = props;
+export function LearningResources() {
+  const resources = [
+    {
+      icon: 'tabler:video',
+      title: 'Video Tutorial',
+      description:
+        'Belajar melalui tutorial video dari langkah awal hingga mahir.',
+      buttonText: 'Lihat Semua Video',
+      buttonLink: '#',
+    },
+    {
+      icon: 'tabler:article',
+      title: 'Artikel & Tutorial',
+      description:
+        'Pelajari konsep programming melalui artikel yang disusun secara terstruktur.',
+      buttonText: 'Baca Artikel',
+      buttonLink: '#',
+    },
+    {
+      icon: 'tabler:brand-vscode',
+      title: 'Tantangan Koding',
+      description:
+        'Uji kemampuan koding kamu dengan tantangan yang menyenangkan dan menantang.',
+      buttonText: 'Mulai Tantangan',
+      buttonLink: '#',
+    },
+    {
+      icon: 'tabler:device-desktop-share',
+      title: 'Sharing Session',
+      description:
+        'Ikuti sesi berbagi pengalaman dari programmer berpengalaman dan belajar dari pengalaman mereka.',
+      buttonText: 'Jadwal Session',
+      buttonLink: '#',
+    },
+  ];
 
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
@@ -49,10 +81,11 @@ export function LearningResources(props: LearningResourcesSection) {
             transition={{ duration: 0.5 }}
           >
             <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight lg:text-5xl">
-              {title}
+              Sumber Belajar
             </h2>
             <p className="max-w-[800px] mx-auto text-muted-foreground md:text-lg">
-              {description}
+              Akses berbagai materi belajar yang akan membantu kamu menguasai
+              konsep programming dengan cara yang menyenangkan.
             </p>
           </motion.div>
         </div>
@@ -101,30 +134,28 @@ export function LearningResources(props: LearningResourcesSection) {
           <div className="grid md:grid-cols-2 gap-0">
             <div className="p-8 md:p-12 flex flex-col justify-center">
               <div className="inline-block rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary mb-4 w-fit">
-                {featured.label}
+                Rekomendasi Terbaik
               </div>
               <h3 className="text-2xl md:text-3xl font-bold mb-4">
-                {featured.title}
+                Kursus Lengkap Web Development
               </h3>
               <p className="text-muted-foreground mb-6">
-                {featured.description}
+                Pelajari HTML, CSS, JavaScript, React, dan Node.js dalam satu
+                kursus komprehensif yang dirancang untuk pemula hingga tingkat
+                menengah.
               </p>
               <div className="flex flex-wrap gap-4">
                 <Button
                   className="bg-gradient-to-r from-primary to-blue-400 hover:from-primary/90 hover:to-blue-400/90 font-bold text-black hover:text-white cursor-pointer"
-                  onClick={() =>
-                    window.open(featured.primaryButtonLink, '_blank')
-                  }
+                  onClick={() => window.open('/', '_blank')}
                 >
-                  {featured.primaryButtonText}
+                  Mulai Kursus
                 </Button>
                 <Button
                   variant="outline"
-                  onClick={() =>
-                    window.open(featured.secondaryButtonLink, '_blank')
-                  }
+                  onClick={() => window.open('/', '_blank')}
                 >
-                  {featured.secondaryButtonText}
+                  Lihat Silabus
                 </Button>
               </div>
             </div>

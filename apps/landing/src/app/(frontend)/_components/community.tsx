@@ -2,12 +2,44 @@
 
 import { Icon } from '@iconify/react';
 import { Button } from '@imphnen-frontend-service/shadcn-ui/atoms';
-import { CommunitiesSection } from 'apps/landing/src/payload-types';
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 
-export function Community(props: CommunitiesSection) {
-  const { items, stats } = props;
+export function Community() {
+  const items = [
+    {
+      iconName: 'tabler:brand-facebook',
+      title: 'Facebook Group',
+      description:
+        'Bergabunglah dengan grup Facebook kami untuk diskusi santai dan berbagi artikel menarik.',
+      buttonText: 'Gabung Sekarang',
+      buttonLink: 'https://facebook.com/groups/programmerhandal',
+    },
+    {
+      iconName: 'tabler:brand-instagram',
+      title: 'Instagram',
+      description:
+        'Ikuti kami di Instagram untuk tips programming, konten inspiratif, dan info event terbaru.',
+      buttonText: 'Follow Kami',
+      buttonLink: 'https://www.instagram.com/imphnen.dev',
+    },
+    {
+      iconName: 'tabler:brand-discord-filled',
+      title: 'Discord Server',
+      description:
+        'Diskusikan langsung dengan sesama programmer dan dapatkan bantuan langsung dari para ahli.',
+      buttonText: 'Join Server',
+      buttonLink: 'https://discord.com/invite/imphnen',
+    },
+  ];
+
+  const stats = [
+    { value: '100K+', label: 'Member Aktif' },
+    { value: '50+', label: 'Event Bulanan' },
+    { value: '100+', label: 'Mentor Profesional' },
+    { value: '5K+', label: 'Diskusi Mingguan' },
+  ];
+
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
 
@@ -61,7 +93,7 @@ export function Community(props: CommunitiesSection) {
           initial="hidden"
           animate={isInView ? 'visible' : 'hidden'}
         >
-          {items?.map((c, i) => (
+          {items.map((c, i) => (
             <motion.div
               key={i}
               className="group relative overflow-hidden rounded-xl border bg-background p-6 transition-all hover:shadow-xl"
@@ -95,7 +127,7 @@ export function Community(props: CommunitiesSection) {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5, delay: 0.3 }}
         >
-          {stats?.map((s, i) => (
+          {stats.map((s, i) => (
             <div key={i} className="space-y-2">
               <div className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400">
                 {s.value}
