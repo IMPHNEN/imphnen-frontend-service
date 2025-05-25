@@ -1,29 +1,26 @@
+import { z } from 'zod';
+import { authLoginSchema, authRegisterSchema } from '../../schemas';
+import { TResponseDetail, TResponseMessage } from '../common';
 import { TUserItem } from '../users';
 
-export type TLoginRequest = {
-  email: string;
-  password: string;
+export type TTokenItem = {
+  access_token: string;
+  refresh_token: string;
 };
 
-export type TLoginResponse = {
-  data: {
-    token: {
-      access_token: string;
-      refresh_token: string;
-    };
-    user: TUserItem;
-  };
+export type TLoginItem = {
+  token?: TTokenItem;
+  user?: TUserItem;
 };
 
-export type TRegisterRequest = {
-  email: string;
-  fullname: string;
-  password: string;
-  phone_number: string;
-  referral_code?: string;
-  referred_by?: string;
-  student_type: string;
-  confirm_password: string;
+export type TLoginRequest = z.infer<typeof authLoginSchema>;
+export type TLoginResponse = TResponseDetail<TLoginItem>;
+
+export type TRegisterRequest = z.infer<typeof authRegisterSchema>;
+export type TRegisterResponse = TResponseDetail<TResponseMessage>;
+
+export type TVerifyOtpRequest = {
+  otp: number;
 };
 
 export type TVerifyEmailRequest = {

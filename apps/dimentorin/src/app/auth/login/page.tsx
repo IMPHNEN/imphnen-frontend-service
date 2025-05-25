@@ -1,46 +1,50 @@
 import { FC, ReactElement } from 'react';
-import { LoginBanner } from '@imphnen-frontend-service/ui/organisms';
+import { ControlledInputField, LoginBanner } from '@imphnen-frontend-service/ui/organisms';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
-import { useSearchParams } from 'react-router-dom';
-import { InputField } from '@imphnen-frontend-service/ui/molecules';
+import { useLogin } from '../../_hooks/use-login';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 
 export const Components: FC = (): ReactElement => {
-  const [searchParams] = useSearchParams();
-  const error = searchParams.get('error'); // Ambil nilai ?error=
+  const { form, onSubmit } = useLogin();
 
   return (
     <div className="flex flex-col justify-center items-center min-h-screen py-[60px] px-[80px]">
-      <div className="bg-white min-w-[1120px] min-h-[712px] p-10 rounded-2xl shadow-md flex gap-6">
+      <div className="bg-white xl:min-w-[1120px] xl:min-h-[712px] p-10 rounded-2xl shadow-md flex gap-6">
         <LoginBanner />
-        <div className="border-2 border-primary-500/50 w-[596px] rounded-lg py-[70px] px-[96px] flex justify-center">
-          <div className="w-[404px]">
+        <div className="xl:border-2 xl:border-primary-500/50 md:w-[596px] rounded-lg md:py-[70px] md:px-[96px] flex justify-center">
+          <div className="md:w-[404px]">
             <h2 className="text-4xl font-semibold text-primary-500 text-center mb-2">
               Hallo Minna-san
             </h2>
-            <h5 className="text-xl font-medium text-primary-500 text-center">
+            <h5 className="text-xl font-medium text-primary-500 text-center mb-5">
               Welcome to Dimentorin by IMPHNEN
             </h5>
-            <InputField
-              label="Email"
-              error={error ? error : undefined}
-              size="lg"
-              className="w-full"
-              placeholder="Masukkan email-mu, Senpai~! ✨ (Pastikan tidak typo, ya~ 😆)"
-            />
-            <InputField
-              label="password"
-              error={error ? error : undefined}
-              className="w-full"
-              size="lg"
-              type="password"
-              placeholder="Masukkan password rahasiamu!"
-            />
-            <div className="flex justify-end my-5">
-              <a href="/auth/forgot" className="text-primary-500 font-medium">
-                Lupa Password ?
-              </a>
-            </div>
-            <Button className="w-full">Enter Isekai</Button>
+            <form onSubmit={onSubmit} className="flex flex-col gap-2">
+              <ControlledInputField
+                control={form.control}
+                label="Email"
+                size="lg"
+                className="w-full mb-2"
+                placeholder="Masukkan email-mu, Senpai~! ✨ (Pastikan tidak typo, ya~ 😆)" 
+                name={'email'}            
+              />
+              <ControlledInputField
+                control={form.control}
+                label="Password"
+                className="w-full"
+                size="lg"
+                type="password"
+                placeholder="Masukkan password rahasiamu!"
+                name={'password'}
+              />
+              <div className="flex justify-end my-5">
+                <a href="/auth/forgot" className="text-primary-500 font-medium">
+                  Lupa Password ?
+                </a>
+              </div>
+              <Button className="w-full" type='submit'>Enter Isekai</Button>
+            </form>
+            
             <div className="flex my-3 gap-3 justify-center">
               <h5>Belum Punya akun ?</h5>
               <a href="/auth/register" className="text-primary-500 font-medium">
@@ -62,6 +66,13 @@ export const Components: FC = (): ReactElement => {
                 alt="Google Icon"
                 width={24}
               />
+            </Button>
+            <Button
+              className='xl:hidden w-full gap-3'
+              variant='secondary'
+            >
+              <ArrowLeftOutlined />
+              Kembali Ke Homepage
             </Button>
           </div>
         </div>

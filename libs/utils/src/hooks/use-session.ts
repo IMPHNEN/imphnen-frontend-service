@@ -1,22 +1,37 @@
-import { SessionToken, SessionUser } from '../local-storage';
+import { TLoginRequest, usePostLogin } from '@imphnen-frontend-service/service';
+import { useAuthStore } from './';
+import { toast } from 'sonner';
+import { useNavigate } from 'react-router';
 
 export const useSession = () => {
-  const session = {
-    user: SessionUser.get(),
-    token: SessionToken.get(),
+  const navigate = useNavigate();
+  const { mutate, isPending } = usePostLogin();
+  const { setLoading, setSession, clearSession, session } = useAuthStore();
+  const signIn = (payload: TLoginRequest) => {
+    setLoading(true);
+    mutate(payload, {
+      onSuccess: (data) => {
+        toast.success('Login sukses');
+        setSession(data.data);
+        navigate(0);
+      },
+      onError: (err) => {
+        toast.error(
+          err?.response?.data?.message ??
+            'Terjadi Kesalahan yang tidak diketahui'
+        );
+        clearSession();
+      },
+    });
   };
-
-  const isAuthenticated = !!session.token?.access_token;
-
   const signOut = () => {
-    SessionUser.remove();
-    SessionToken.remove();
-    window.location.reload();
+    clearSession();
+    navigate(0);
   };
-
   return {
-    isAuthenticated,
     session,
+    signIn,
     signOut,
+    isLoading: isPending,
   };
 };

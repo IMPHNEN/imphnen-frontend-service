@@ -8,6 +8,7 @@ import {
   convertPagesToRoute,
   QueryProvider,
 } from '@imphnen-frontend-service/utils';
+import { Toaster } from 'sonner';
 import './index.css';
 
 const files = import.meta.glob('./app/**/*(page|layout).tsx');
@@ -34,6 +35,7 @@ if (!rootElement) throw new Error('Failed to find the root element');
 createRoot(rootElement).render(
   <StrictMode>
     <QueryProvider>
+      <Toaster position="top-right" />
       <RouterProvider router={router} />
     </QueryProvider>
   </StrictMode>
