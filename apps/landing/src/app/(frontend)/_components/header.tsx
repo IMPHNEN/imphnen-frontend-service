@@ -1,11 +1,7 @@
 'use client';
 
-import {
-  Button,
-  MenuIcon,
-  XIcon,
-} from '@imphnen-frontend-service/shadcn-ui/atoms';
-import { cn } from '@imphnen-frontend-service/utils';
+import { Button, MenuIcon, XIcon } from '@components';
+import { cn } from '@utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';

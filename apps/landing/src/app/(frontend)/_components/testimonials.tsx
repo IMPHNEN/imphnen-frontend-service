@@ -1,6 +1,6 @@
 'use client';
 
-import { QuoteIcon } from '@imphnen-frontend-service/shadcn-ui/atoms';
+import { QuoteIcon } from '@components';
 import { motion, useInView } from 'framer-motion';
 import Image from 'next/image';
 import { useRef } from 'react';

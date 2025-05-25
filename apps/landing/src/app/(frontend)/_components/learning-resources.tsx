@@ -1,7 +1,7 @@
 'use client';
 
+import { Button } from '@components';
 import { Icon } from '@iconify/react';
-import { Button } from '@imphnen-frontend-service/shadcn-ui/atoms';
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 

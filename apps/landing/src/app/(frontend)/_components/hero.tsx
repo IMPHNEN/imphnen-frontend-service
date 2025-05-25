@@ -1,11 +1,6 @@
 'use client';
 
-import {
-  Button,
-  CodeIcon,
-  SparklesIcon,
-  UsersIcon,
-} from '@imphnen-frontend-service/shadcn-ui/atoms';
+import { Button, CodeIcon, SparklesIcon, UsersIcon } from '@components';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { Fragment, useEffect, useState } from 'react';
