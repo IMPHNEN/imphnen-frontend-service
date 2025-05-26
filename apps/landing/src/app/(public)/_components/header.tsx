@@ -1,7 +1,7 @@
 'use client';
 
 import { LogoSimple } from '@/app/_components/logo';
-import navigations from '@/data/navigations.json';
+import NAVIGATIONS from '@/data/navigations.json';
 import { Button } from '@components';
 import { cn } from '@utils';
 import Link from 'next/link';
@@ -43,7 +43,7 @@ export function Header() {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-8">
-          {navigations.map(({ link, title }) => (
+          {NAVIGATIONS.map(({ link, title }) => (
             <Link
               key={link}
               href={link}
@@ -90,7 +90,7 @@ export function Header() {
       {mobileMenuOpen && (
         <div className="md:hidden border-t bg-background/95 backdrop-blur-md">
           <nav className="container flex flex-col py-4 text-center">
-            {navigations.map(({ link, title }) => (
+            {NAVIGATIONS.map(({ link, title }) => (
               <Link
                 key={link}
                 href={link}
