@@ -20,10 +20,10 @@ export type TRegisterRequest = z.infer<typeof authRegisterSchema>;
 export type TRegisterResponse = TResponseDetail<TResponseMessage>;
 
 export type TVerifyOtpRequest = {
-  otp: number;
+  otp: string;
 };
 
 export type TVerifyEmailRequest = {
   email: string;
-  otp: number;
+  otp: string;
 };

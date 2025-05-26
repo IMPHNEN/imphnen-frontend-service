@@ -35,7 +35,7 @@ export const postVerifyEmail = async (
   const { data } = await api({
     method: 'POST',
     url: '/auth/verify-email',
-    data: payload,
+    data: { otp: parseInt(payload.otp), email: payload.email },
   });
   return data;
 };

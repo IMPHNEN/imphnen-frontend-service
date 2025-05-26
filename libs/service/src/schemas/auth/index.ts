@@ -57,3 +57,12 @@ export const authRegisterSchema = z
     message: 'Password dan Konfirmasi Password harus sama',
     path: ['confirm_password'],
   });
+
+export const verifyEmailSchema = z
+  .object({
+    otp: z
+      .string({
+        required_error: 'OTP tidak boleh kosong',
+      })
+      .min(6, 'Masukkan kode 6 digit yang dikirimkan ke email')
+  })
