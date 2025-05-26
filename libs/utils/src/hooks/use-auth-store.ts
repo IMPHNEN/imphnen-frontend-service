@@ -25,7 +25,7 @@ export const useAuthStore = create<SessionState>((set) => {
 
   return {
     isLoading: false,
-    session: isAuthenticated ? { ...session, ...user } : undefined,
+    session: isAuthenticated ? { token: session.token, user } : undefined,
     status: isAuthenticated
       ? ESessionStatus.Authenticated
       : ESessionStatus.Unauthenticated,

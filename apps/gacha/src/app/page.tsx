@@ -66,11 +66,15 @@ export const Components: FC = (): ReactElement => {
         <div className="order-1 lg:order-none flex flex-col col-span-4 justify-center items-center mb-8 relative">
           <div className="relative h-[150px] md:h-[230px]">
             <img
+              width={400}
+              height={400}
               src="/merch/1.png"
               alt="Merch 1"
               className="relative top-[3px] md:top-[6px] left-[4px] md:left-[7px] z-10 w-[165px] md:w-[266px]"
             />
             <img
+              width={400}
+              height={400}
               className="absolute top-0 left-0 min-w-[174px] md:min-w-[280px] z-0"
               src="/merch/Vector-1.svg"
               alt=""
@@ -88,7 +92,7 @@ export const Components: FC = (): ReactElement => {
             ~ 175k ~
           </div>
         </div>
-        <div className="order-2 flex flex-col col-span-4 justify-center items-center mb-8 relative overflow-hidden">
+        <div className="order-2 flex flex-col col-span-4 justify-center items-center mb-8 relative">
           <div className="relative h-[130px] md:h-[230px]">
             <img
               width={400}
@@ -105,8 +109,6 @@ export const Components: FC = (): ReactElement => {
               alt="Merch 3"
             />
             <img
-              width={400}
-              height={400}
               className="absolute hidden lg:block -bottom-[100px] -left-[55px]"
               src="/landing-arrow-2.svg"
               alt="Merch 1"
