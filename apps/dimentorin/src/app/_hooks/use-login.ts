@@ -12,12 +12,13 @@ export const useLogin = () => {
     mode: 'all',
   });
 
-  const { signIn } = useSession();
+  const { signIn, isLoading } = useSession();
 
   const onSubmit = form.handleSubmit((data) => signIn(data));
 
   return {
     form,
     onSubmit,
+    isLoading
   };
 };

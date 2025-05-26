@@ -5,7 +5,8 @@ import { useLogin } from '../../_hooks/use-login';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 
 export const Components: FC = (): ReactElement => {
-  const { form, onSubmit } = useLogin();
+  const { form, onSubmit, isLoading } = useLogin();
+
   return (
     <div className="flex flex-col justify-center items-center min-h-screen py-[60px] px-[80px]">
       <div className="bg-white xl:min-w-[1120px] xl:min-h-[712px] p-10 rounded-2xl shadow-md flex gap-6">
@@ -41,7 +42,7 @@ export const Components: FC = (): ReactElement => {
                   Lupa Password ?
                 </a>
               </div>
-              <Button className="w-full" type='submit' disabled={!form.formState.isValid}>Enter Isekai</Button>
+              <Button className="w-full" type='submit' disabled={(!form.formState.isValid || isLoading)}>Enter Isekai</Button>
             </form>
             
             <div className="flex my-3 gap-3 justify-center">
