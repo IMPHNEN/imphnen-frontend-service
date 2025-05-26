@@ -1,20 +1,25 @@
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { Input } from "@imphnen-frontend-service/ui/atoms";
-import { ChangeEvent, DetailedHTMLProps, FC, InputHTMLAttributes, ReactElement, useRef, useState } from "react"
+import { ChangeEvent, DetailedHTMLProps, FC, InputHTMLAttributes, ReactElement, useEffect, useRef, useState } from "react"
 
 type TForgotStepProps = Omit<
   DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>,
   'size' | 'type'
 > & {
-  
+  setChange?: React.Dispatch<React.SetStateAction<any[]>>
 };
 
 export const OtpForm: FC<TForgotStepProps> = ({
     step = 1,
+    setChange = (x: string[]) => {return},
     ...rest
 }): ReactElement => {
     const [cell, setCell] = useState(new Array(6).fill(""))
     const inputRef = useRef([])
+
+    useEffect(() => {
+      setChange(cell)
+    }, [cell, setChange])
 
     const handleChange = (index: number, e: ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value
