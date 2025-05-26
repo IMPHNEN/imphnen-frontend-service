@@ -1,5 +1,6 @@
 'use client';
 
+import HERO_CONTENT from '@/data/hero-content.json';
 import HERO_STATS from '@/data/hero-stats.json';
 import { Button } from '@components';
 import { motion } from 'framer-motion';
@@ -9,6 +10,8 @@ import { Fragment, useEffect, useState } from 'react';
 
 export function Hero() {
   const router = useRouter();
+  const { communityLabel, headingLine1, headingLine2, description, buttons } =
+    HERO_CONTENT;
 
   const [scrollY, setScrollY] = useState(0);
 
@@ -23,6 +26,7 @@ export function Hero() {
 
   return (
     <section className="relative w-full py-20 md:py-32 lg:py-40 overflow-hidden">
+      {/* Background gradients and motion */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-background to-background/50" />
         <div
@@ -51,34 +55,33 @@ export function Hero() {
             transition={{ duration: 0.5 }}
           >
             <span className="inline-flex items-center rounded-full border px-3 py-1 text-sm w-fit">
-              Komunitas Programmer Indonesia
+              {communityLabel}
             </span>
 
             <div className="space-y-4">
               <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-foreground via-foreground to-foreground/70">
-                Programmer Handal <br />
+                {headingLine1} <br />
                 <span className="bg-clip-text bg-gradient-to-r text-primary-500">
-                  Enggan Ngoding
+                  {headingLine2}
                 </span>
               </h1>
               <p className="max-w-[600px] text-muted-foreground md:text-xl">
-                Komunitas programmer terbesar di indonesia, tempat berbagi meme,
-                tutorial, pengalaman dan yapping
+                {description}
               </p>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-              <Button size="lg" onClick={() => router.push('#komunitas')}>
-                Join Komunitas
+              <Button size="lg" onClick={() => router.push(buttons.joinUrl)}>
+                {buttons.join}
               </Button>
               <Button
                 size="lg"
                 variant="bordered"
                 className="w-full sm:w-auto group relative overflow-hidden"
-                onClick={() => router.push('/events')}
+                onClick={() => router.push(buttons.exploreUrl)}
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-primary/10 to-blue-400/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                <span className="relative">Explore Event</span>
+                <span className="relative">{buttons.explore}</span>
               </Button>
             </div>
 

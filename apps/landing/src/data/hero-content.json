@@ -1,0 +1,12 @@
+{
+  "communityLabel": "Komunitas Programmer Indonesia",
+  "headingLine1": "Programmer Handal",
+  "headingLine2": "Enggan Ngoding",
+  "description": "Komunitas programmer terbesar di Indonesia, tempat berbagi meme, tutorial, pengalaman dan yapping",
+  "buttons": {
+    "join": "Join Komunitas",
+    "joinUrl": "#komunitas",
+    "explore": "Explore Event",
+    "exploreUrl": "/events"
+  }
+}
