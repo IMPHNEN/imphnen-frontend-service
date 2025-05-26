@@ -1,9 +1,7 @@
+import { baiJamjureeFont } from '@/lib/fonts';
 import '@/styles/globals.css';
 import { type Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import { Providers } from './_components/providers';
-
-const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'IMPHNEN - Ingin Menjadi Programmer Handal?',
@@ -17,7 +15,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="id" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body className={baiJamjureeFont.className}>
         <Providers
           attribute="class"
           defaultTheme="system"
