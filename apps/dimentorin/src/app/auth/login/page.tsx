@@ -5,7 +5,7 @@ import { useLogin } from '../../_hooks/use-login';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 
 export const Components: FC = (): ReactElement => {
-  const { form, onSubmit } = useLogin();
+  const { form, onSubmit, isLoading } = useLogin();
 
   return (
     <div className="flex flex-col justify-center items-center min-h-screen py-[60px] px-[80px]">
@@ -42,7 +42,7 @@ export const Components: FC = (): ReactElement => {
                   Lupa Password ?
                 </a>
               </div>
-              <Button className="w-full" type='submit'>Enter Isekai</Button>
+              <Button className="w-full" type='submit' disabled={(!form.formState.isValid || isLoading)}>Enter Isekai</Button>
             </form>
             
             <div className="flex my-3 gap-3 justify-center">
@@ -66,6 +66,13 @@ export const Components: FC = (): ReactElement => {
                 alt="Google Icon"
                 width={24}
               />
+            </Button>
+            <Button
+              className='xl:hidden w-full gap-3'
+              variant='secondary'
+            >
+              <ArrowLeftOutlined />
+              Kembali Ke Homepage
             </Button>
             <Button
               className='xl:hidden w-full gap-3'

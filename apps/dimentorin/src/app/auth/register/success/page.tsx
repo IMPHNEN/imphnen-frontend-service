@@ -6,10 +6,10 @@ import { ArrowRightOutlined } from '@ant-design/icons';
 export const Components: FC = (): ReactElement => {
   return (
     <div className="flex flex-col justify-center items-center min-h-screen py-[60px] px-[80px]">
-      <div className="bg-white min-w-[1220px] min-h-[712px] p-10 rounded-2xl shadow-md flex gap-6">
+      <div className="bg-white xl:min-w-[1220px] min-h-[712px] p-10 rounded-2xl shadow-md flex gap-6">
         <RegisterResetBanner />
-        <div className="border-2 border-primary-500/50 w-[696px] rounded-lg py-[32px] px-[48px] flex justify-center bg-primary-50">
-          <div className="w-[704px] flex flex-col justify-center items-center">
+        <div className="border-2 border-primary-500/50 xl:w-[696px] rounded-lg py-[32px] px-[48px] flex justify-center bg-primary-50">
+          <div className="xl:w-[704px] flex flex-col justify-center items-center">
             <h2 className="text-4xl text-primary-500 font-semibold">
               Register Successfull
             </h2>

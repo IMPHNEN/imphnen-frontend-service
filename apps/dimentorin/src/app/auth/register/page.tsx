@@ -2,24 +2,33 @@ import { FC, ReactElement } from 'react';
 import { RegisterResetBanner } from '@imphnen-frontend-service/ui/organisms';
 import { Button, Input } from '@imphnen-frontend-service/ui/atoms';
 import { InputField } from '@imphnen-frontend-service/ui/molecules';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 
 export const Components: FC = (): ReactElement => {
   return (
     <div className="flex flex-col justify-center items-center min-h-screen py-[60px] px-[80px]">
-      <div className="bg-white min-w-[1120px] min-h-[712px] p-10 rounded-2xl shadow-md flex gap-6">
+      <div className="bg-white xl:min-w-[1130px] min-h-[712px] p-10 rounded-2xl shadow-md flex gap-6">
         <RegisterResetBanner />
-        <div className="border-2 border-primary-500/50 w-[696px] rounded-lg py-[32px] px-[48px] flex justify-center">
-          <div className="w-[704px]">
+        <div className="xl:border-2 xl:border-primary-500/50 xl:w-[726px] rounded-lg py-[32px] px-[48px] flex justify-center">
+          <div className="xl:w-[714px]">
+            <Button
+              className='xl:hidden gap-3'
+              variant='secondary'
+            >
+              <ArrowLeftOutlined />
+              Login
+            </Button>
             <h3 className="mt-5 text-3xl font-semibold text-primary-500">
               Register
             </h3>
             <h5 className="text-primary-500 font-medium">
               Yosha~! Saatnya Bergabung dengan Dimentorin
             </h5>
-            <div className="grid grid-flow-row-dense my-7 grid-cols-2 gap-2">
+            <div className="grid grid-flow-row-dense my-7 lg:grid-cols-2 gap-2">
               <InputField
                 label="First Name"
                 size="lg"
+                className="w-full"
                 placeholder="Nama Depan"
               />
               <InputField
@@ -31,6 +40,7 @@ export const Components: FC = (): ReactElement => {
               <InputField
                 label="Email"
                 size="lg"
+                className="w-full"
                 placeholder="Contoh : yourname@mail.com"
               />
               <div className="flex gap-2">
@@ -90,7 +100,7 @@ export const Components: FC = (): ReactElement => {
               type="password"
               placeholder="Ulangi password-mu, Senpai~!"
             />
-            <Button className="w-full mt-2">Linked Start !!!</Button>
+            <Button className="xl:w-full mt-2">Linked Start !!!</Button>
           </div>
         </div>
       </div>
