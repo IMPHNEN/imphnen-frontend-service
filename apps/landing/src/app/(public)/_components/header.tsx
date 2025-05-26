@@ -1,11 +1,13 @@
 'use client';
 
-import { Button, MenuIcon, XIcon } from '@components';
+import navigations from '@/data/navigations.json';
+import { Button } from '@components';
 import { cn } from '@utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { LuMenu, LuX } from 'react-icons/lu';
 
 export function Header() {
   const router = useRouter();
@@ -47,55 +49,39 @@ export function Header() {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-8">
-          <Link href="#fitur" className="text-sm font-medium relative group">
-            <span className="transition-colors hover:text-primary">Fitur</span>
-            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-500 transition-all duration-300 group-hover:w-full"></span>
-          </Link>
-          <Link
-            href="#komunitas"
-            className="text-sm font-medium relative group"
-          >
-            <span className="transition-colors hover:text-primary">
-              Komunitas
-            </span>
-            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-500 transition-all duration-300 group-hover:w-full"></span>
-          </Link>
-          <Link
-            href="#sumber-belajar"
-            className="text-sm font-medium relative group"
-          >
-            <span className="transition-colors hover:text-primary">
-              Sumber Belajar
-            </span>
-            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-500 transition-all duration-300 group-hover:w-full"></span>
-          </Link>
-          <Link
-            href="#testimoni"
-            className="text-sm font-medium relative group"
-          >
-            <span className="transition-colors hover:text-primary">
-              Testimoni
-            </span>
-            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-500 transition-all duration-300 group-hover:w-full"></span>
-          </Link>
+          {navigations.map(({ link, title }) => (
+            <Link
+              key={link}
+              href={link}
+              className="text-sm font-medium relative group"
+            >
+              <span className="transition-colors hover:text-primary">
+                {title}
+              </span>
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-500 transition-all duration-300 group-hover:w-full"></span>
+            </Link>
+          ))}
         </nav>
 
         <div className="flex items-center gap-x-2">
-          <Button onClick={() => router.push('/signin')}>Login</Button>
+          <Button
+            onClick={() => router.push('/signin')}
+            className="hidden md:flex"
+          >
+            Login
+          </Button>
 
           {/* Mobile Menu Button */}
-          <Button
-            variant="secondary"
-            size="icon"
-            className="md:hidden"
+          <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="flex md:hidden"
           >
             {mobileMenuOpen ? (
-              <XIcon className="h-6 w-6" />
+              <LuX className="size-5" />
             ) : (
-              <MenuIcon className="h-6 w-6" />
+              <LuMenu className="size-5" />
             )}
-          </Button>
+          </button>
         </div>
       </div>
 
@@ -103,34 +89,16 @@ export function Header() {
       {mobileMenuOpen && (
         <div className="md:hidden border-t bg-background/95 backdrop-blur-md">
           <nav className="container flex flex-col py-4 text-center">
-            <Link
-              href="#fitur"
-              className="py-3 text-sm font-medium border-b border-border/50"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Fitur
-            </Link>
-            <Link
-              href="#komunitas"
-              className="py-3 text-sm font-medium border-b border-border/50"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Komunitas
-            </Link>
-            <Link
-              href="#sumber-belajar"
-              className="py-3 text-sm font-medium border-b border-border/50"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Sumber Belajar
-            </Link>
-            <Link
-              href="#testimoni"
-              className="py-3 text-sm font-medium"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Testimoni
-            </Link>
+            {navigations.map(({ link, title }) => (
+              <Link
+                key={link}
+                href={link}
+                className="py-3 text-sm font-medium border-b border-border/50"
+                onClick={() => router.push(link)}
+              >
+                {title}
+              </Link>
+            ))}
 
             <Button onClick={() => router.push('/signin')}>Login</Button>
           </nav>
