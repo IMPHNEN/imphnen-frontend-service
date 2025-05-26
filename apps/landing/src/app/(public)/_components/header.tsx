@@ -49,7 +49,7 @@ export function Header() {
         <nav className="hidden md:flex items-center gap-8">
           <Link href="#fitur" className="text-sm font-medium relative group">
             <span className="transition-colors hover:text-primary">Fitur</span>
-            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-500 transition-all duration-300 group-hover:w-full"></span>
           </Link>
           <Link
             href="#komunitas"
@@ -58,7 +58,7 @@ export function Header() {
             <span className="transition-colors hover:text-primary">
               Komunitas
             </span>
-            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-500 transition-all duration-300 group-hover:w-full"></span>
           </Link>
           <Link
             href="#sumber-belajar"
@@ -67,7 +67,7 @@ export function Header() {
             <span className="transition-colors hover:text-primary">
               Sumber Belajar
             </span>
-            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-500 transition-all duration-300 group-hover:w-full"></span>
           </Link>
           <Link
             href="#testimoni"
@@ -76,7 +76,7 @@ export function Header() {
             <span className="transition-colors hover:text-primary">
               Testimoni
             </span>
-            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-500 transition-all duration-300 group-hover:w-full"></span>
           </Link>
         </nav>
 
