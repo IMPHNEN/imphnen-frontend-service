@@ -19,14 +19,35 @@ export const useLogin = () => {
   const navigate = useNavigate();
   const { mutate, isPending } = usePostLogin();
   const { setLoading, setSession, clearSession } = useAuthStore();
-  const { openVerifyModal, showVerifyModal, verifyForm, onVerifySubmit, closeVerifyModal, isVerifying, emailToVerify } = useVerifyEmail();
+
+  const {
+    openVerifyModal,
+    showVerifyModal,
+    verifyForm,
+    onVerifySubmit,
+    closeVerifyModal,
+    isVerifying,
+    emailToVerify,
+  } = useVerifyEmail();
 
   const onSubmit = form.handleSubmit((data) => {
     setLoading(true);
     mutate(data, {
       onSuccess: (response) => {
         toast.success('Login sukses');
-        setSession(response.data);
+
+        if (response.data.token && response.data.user) {
+          setSession(response.data);
+        } else {
+          const { token, ...userData } = response.data;
+
+          const loginData = {
+            token,
+            userData,
+          };
+          setSession(loginData);
+        }
+
         navigate(0);
       },
       onError: (error) => {

@@ -29,7 +29,7 @@ export const Navbar: FC = (): ReactElement => {
                 <Button
                   size="md"
                   variant="text"
-                  className="lg:text-[19px] lg:max-h-[44px] text-primary-500 hover:text-primary-600 transition-colors"
+                  className="lg:text-p2 lg:max-h-[44px] text-primary-500 hover:text-primary-600 transition-colors"
                 >
                   <Link to="#">Home</Link>
                 </Button>
@@ -38,7 +38,7 @@ export const Navbar: FC = (): ReactElement => {
                 <Button
                   size="md"
                   variant="text"
-                  className="lg:text-[19px] lg:max-h-[44px] text-gray-600 hover:text-gray-700 transition-colors"
+                  className="lg:text-p2 lg:max-h-[44px] text-gray-600 hover:text-gray-700 transition-colors"
                 >
                   <Link to="#">Merch Gacha</Link>
                 </Button>
@@ -49,13 +49,17 @@ export const Navbar: FC = (): ReactElement => {
                 </li>
               ) : (
                 <li className="flex gap-x-4">
-                  <span className="text-lg">{session.user?.fullname}</span>
-                  <div
+                  <span className="lg:text-p2 text-p3 text-gray-600 self-center">
+                    {session?.user?.fullname}
+                  </span>
+                  <Button
                     onClick={signOut}
-                    className="text-lg text-red-500 font-bold"
+                    variant="text"
+                    size="md"
+                    className="lg:text-p2 text-red-500 font-bold hover:text-red-600"
                   >
                     Logout
-                  </div>
+                  </Button>
                 </li>
               )}
             </ul>
@@ -97,7 +101,19 @@ export const Navbar: FC = (): ReactElement => {
                         </Button>
                       </li>
                     ) : (
-                      <li>{session.user?.fullname}</li>
+                      <>
+                        <li className="px-4 py-2 text-center text-gray-600 font-semibold">
+                          {session?.user?.fullname}
+                        </li>
+                        <li>
+                          <div
+                            onClick={signOut}
+                            className="block text-red-500 font-bold transition-colors px-4 py-2 text-center cursor-pointer"
+                          >
+                            Logout
+                          </div>
+                        </li>
+                      </>
                     )}
                   </ul>
                 </div>
