@@ -9,6 +9,7 @@ const mappingPublicRoutes = [
   '/',
   '/auth/login',
   '/auth/forgot',
+  '/auth/register',
   '/auth/new-password',
 ];
 
