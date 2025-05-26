@@ -1,15 +1,12 @@
 'use client';
 
 import HERO_STATS from '@/data/hero-stats.json';
-import { Button } from '@components';
+import { Button, SparklesIcon } from '@components';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import { Fragment, useEffect, useState } from 'react';
 
 export function Hero() {
-  const router = useRouter();
-
   const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
@@ -50,35 +47,48 @@ export function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <span className="inline-flex items-center rounded-full border px-3 py-1 text-sm w-fit">
-              Komunitas Programmer Indonesia
-            </span>
+            <div className="inline-flex items-center rounded-full border px-3 py-1 text-sm w-fit">
+              <SparklesIcon className="mr-1 h-3.5 w-3.5 text-primary" />
+              <span>Komunitas Programmer Indonesia</span>
+            </div>
 
             <div className="space-y-4">
               <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-foreground via-foreground to-foreground/70">
-                Programmer Handal <br />
-                <span className="bg-clip-text bg-gradient-to-r text-primary-500">
-                  Enggan Ngoding
+                Programmer Handal, <br />
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400">
+                  Tanpa Ribet
                 </span>
               </h1>
               <p className="max-w-[600px] text-muted-foreground md:text-xl">
-                Komunitas programmer terbesar di indonesia, tempat berbagi meme,
-                tutorial, pengalaman dan yapping
+                Temukan potensi programming Anda bersama komunitas yang
+                mendukung, tutorial interaktif, dan sumber daya berkualitas
+                tinggi.
               </p>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-              <Button size="lg" onClick={() => router.push('#komunitas')}>
-                Join Komunitas
+              <Button
+                size="lg"
+                className="group relative w-full sm:w-auto bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 transition-all duration-300 font-bold text-white hover:text-white/90 shadow-lg cursor-pointer"
+                onClick={() =>
+                  window.open(
+                    'https://facebook.com/groups/programmerhandal',
+                    '_blank'
+                  )
+                }
+              >
+                Mulai Belajar
               </Button>
               <Button
                 size="lg"
-                variant="bordered"
-                className="w-full sm:w-auto group relative overflow-hidden"
-                onClick={() => router.push('/events')}
+                variant="outline"
+                className="w-full sm:w-auto group relative overflow-hidden border-primary"
+                onClick={() =>
+                  window.open('https://discord.com/invite/imphnen', '_blank')
+                }
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-primary/10 to-blue-400/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                <span className="relative">Explore Event</span>
+                <span className="relative">Gabung Discord</span>
               </Button>
             </div>
 
@@ -86,7 +96,7 @@ export function Hero() {
               {HERO_STATS.map(({ value, label }, i) => (
                 <Fragment key={i}>
                   <div className="flex flex-col items-center">
-                    <div className="text-2xl font-bold bg-clip-text text-primary-500">
+                    <div className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400">
                       {value}
                     </div>
                     <div className="text-xs text-muted-foreground">{label}</div>

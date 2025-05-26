@@ -22,7 +22,7 @@ export function ThemeToggle() {
 
   return (
     <Button
-      variant="outline"
+      variant="bordered"
       size="icon"
       onClick={toggleTheme}
       className="focus-visible:ring-0 cursor-pointer"

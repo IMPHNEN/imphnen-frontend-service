@@ -6,7 +6,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { ThemeToggle } from './theme-toggle';
 
 export function Header() {
   const router = useRouter();
@@ -82,18 +81,11 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-x-2">
-          <ThemeToggle />
-
-          <Button
-            className="group relative w-full sm:w-auto bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 transition-all duration-300 font-bold text-white hover:text-white/90 shadow-lg cursor-pointer"
-            onClick={() => router.push('/signin')}
-          >
-            Login
-          </Button>
+          <Button onClick={() => router.push('/signin')}>Login</Button>
 
           {/* Mobile Menu Button */}
           <Button
-            variant="ghost"
+            variant="secondary"
             size="icon"
             className="md:hidden"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -140,12 +132,7 @@ export function Header() {
               Testimoni
             </Link>
 
-            <Button
-              onClick={() => router.push('/signin')}
-              className="group relative w-full sm:w-auto bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 transition-all duration-300 font-bold text-white hover:text-white/90 shadow-lg cursor-pointer"
-            >
-              Login
-            </Button>
+            <Button onClick={() => router.push('/signin')}>Login</Button>
           </nav>
         </div>
       )}
