@@ -42,7 +42,7 @@ const ModalFormVerifyEmail = ({
             name="otp"
             label="Kode OTP"
             placeholder="Masukkan Kode OTP"
-            type="number"
+            type="text"
             size="lg"
             className="w-full"
           />

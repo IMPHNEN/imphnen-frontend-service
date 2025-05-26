@@ -49,7 +49,7 @@ export const Navbar: FC = (): ReactElement => {
                 </li>
               ) : (
                 <li className="flex gap-x-4">
-                  <span className="lg:text-p2 text-p3 text-gray-600 self-center">
+                  <span className="lg:text-p3 pb-[10px] self-end">
                     {session?.user?.fullname}
                   </span>
                   <Button

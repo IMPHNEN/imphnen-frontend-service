@@ -5,10 +5,12 @@ import {
 } from '@imphnen-frontend-service/service';
 import { toast } from 'sonner';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export const useVerifyEmail = () => {
   const [showVerifyModal, setShowVerifyModal] = useState(false);
   const [emailToVerify, setEmailToVerify] = useState('');
+  const navigate = useNavigate();
 
   const postVerifyEmail = usePostVerifyEmail();
 
@@ -20,12 +22,7 @@ export const useVerifyEmail = () => {
   });
 
   const onVerifySubmit = verifyForm.handleSubmit((data) => {
-    const otpNumber = Number(data.otp);
-
-    if (isNaN(otpNumber)) {
-      toast.error('OTP harus berupa angka');
-      return;
-    }
+    const otpNumber = data.otp;
 
     const verifyData: TVerifyEmailRequest = {
       email: emailToVerify,
@@ -35,10 +32,11 @@ export const useVerifyEmail = () => {
     postVerifyEmail.mutate(verifyData, {
       onSuccess: () => {
         toast.success('Verifikasi email sukses');
-        setShowVerifyModal(false);
-        verifyForm.reset();
+
+        navigate(0);
       },
-      onError: (error) => toast.error(error.message || 'Verifikasi email gagal'),
+      onError: (error) =>
+        toast.error(error.message || 'Verifikasi email gagal'),
     });
   });
 
