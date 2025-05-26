@@ -60,7 +60,7 @@ export function Hero() {
 
             <div className="space-y-4">
               <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-foreground via-foreground to-foreground/70">
-                {headingLine1} <br />
+                {headingLine1}{' '}
                 <span className="bg-clip-text bg-gradient-to-r text-primary-500">
                   {headingLine2}
                 </span>

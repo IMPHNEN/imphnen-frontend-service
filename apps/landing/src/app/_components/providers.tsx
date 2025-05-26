@@ -2,20 +2,20 @@
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { ThemeProviderProps } from 'next-themes';
-import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import { ReactNode } from 'react';
+// import { ThemeProvider as NextThemesProvider } from 'next-themes';
 
 export function Providers({ children }: ThemeProviderProps) {
   return (
     <QueryProvider>
-      <ThemeProvider
+      {/* <ThemeProvider
         attribute="class"
         defaultTheme="light"
         enableSystem
         disableTransitionOnChange
-      >
-        {children}
-      </ThemeProvider>
+      > */}
+      {children}
+      {/* </ThemeProvider> */}
     </QueryProvider>
   );
 }
@@ -28,6 +28,6 @@ function QueryProvider({ children }: { children: ReactNode }) {
   );
 }
 
-function ThemeProvider({ children, ...props }: ThemeProviderProps) {
-  return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
-}
+// function ThemeProvider({ children, ...props }: ThemeProviderProps) {
+//   return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
+// }
