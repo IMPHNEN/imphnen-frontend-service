@@ -4,7 +4,7 @@ import { Button, MoonIcon, SunIcon } from '@components';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 
-export function SimpleThemeToggle() {
+export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
