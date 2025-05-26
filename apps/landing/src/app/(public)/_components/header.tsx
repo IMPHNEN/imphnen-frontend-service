@@ -62,7 +62,14 @@ export function Header() {
             onClick={() => router.push('/signin')}
             className="hidden md:flex"
           >
-            Login
+            Masuk
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={() => router.push('/signup')}
+            className="hidden md:flex"
+          >
+            Daftar
           </Button>
 
           {/* Mobile Menu Button */}

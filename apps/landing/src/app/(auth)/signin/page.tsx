@@ -5,8 +5,6 @@ import { SigninForm } from './_components/signin-form';
 
 export const metadata: Metadata = {
   title: 'IMPHNEN - Signin',
-  description:
-    'Komunitas Ingin Menjadi Programmer Handal Namung Enggan Ngonding',
 };
 
 export default function Page() {
