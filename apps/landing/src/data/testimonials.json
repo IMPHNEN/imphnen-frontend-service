@@ -1,0 +1,20 @@
+[
+  {
+    "quote": "Sebagai seseorang yang awalnya buta sama sekali tentang programming, kini saya bisa membuat website sendiri dengan percaya diri. IMPHNEN benar-benar jadi pintu gerbang saya ke dunia web development!",
+    "name": "Ega",
+    "role": "Web Developer",
+    "avatar": "https://avatars.githubusercontent.com/u/97678571?v=4"
+  },
+  {
+    "quote": "IMPHNEN bukan cuma komunitas, tapi juga jadi tempat saya berkembang sebagai backend engineer. Diskusi teknisnya berbobot, dan respon dari komunitas selalu cepat dan tepat sasaran.",
+    "name": "Maulana",
+    "role": "Backend Engineer",
+    "avatar": "https://avatars.githubusercontent.com/u/53475078?v=4"
+  },
+  {
+    "quote": "Sebagai fullstack engineer pemula, saya merasa sangat terbantu dengan komunitas Discord IMPHNEN. Materinya praktikal, pembahasannya jelas, dan member-nya selalu siap membantu.",
+    "name": "Rasyid",
+    "role": "Fullstack Engineer",
+    "avatar": "https://avatars.githubusercontent.com/u/49753444?v=4"
+  }
+]

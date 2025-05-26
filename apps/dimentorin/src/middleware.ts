@@ -13,6 +13,7 @@ const mappingPublicRoutes = [
   '/auth/register',
   '/auth/register/otp',
   '/auth/register/success',
+  '/auth/register',
   '/auth/new-password',
 ];
 
