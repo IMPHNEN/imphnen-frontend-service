@@ -34,7 +34,7 @@ export const postVerifyEmail = async (
 ): Promise<TResponseMessage> => {
   const { data } = await api({
     method: 'POST',
-    url: '/auth/verify',
+    url: '/auth/verify-email',
     data: payload,
   });
   return data;

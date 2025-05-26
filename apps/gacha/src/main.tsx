@@ -35,7 +35,7 @@ if (!rootElement) throw new Error('Failed to find the root element');
 createRoot(rootElement).render(
   <StrictMode>
     <QueryProvider>
-      <Toaster />
+      <Toaster position="top-right"/>
       <RouterProvider router={router} />
     </QueryProvider>
   </StrictMode>

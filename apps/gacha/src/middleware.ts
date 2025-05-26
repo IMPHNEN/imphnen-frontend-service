@@ -84,10 +84,10 @@ export const middleware = async ({ request }: LoaderFunctionArgs) => {
   const userPermissions =
     session?.role?.permissions?.map?.((perm) => perm?.name) ?? [];
 
-  if (mappingPublicRoutes.includes(pathname)) {
-    if (token) return redirect('/dashboard');
-    return null;
-  }
+  // if (mappingPublicRoutes.includes(pathname)) {
+  //   if (token) return redirect('/');
+  //   return null;
+  // }
 
   if (!session) return redirect('/auth/login');
 
