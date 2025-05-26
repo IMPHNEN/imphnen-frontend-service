@@ -1,9 +1,9 @@
 'use client';
 
+import { LogoSimple } from '@/app/_components/logo';
 import navigations from '@/data/navigations.json';
 import { Button } from '@components';
 import { cn } from '@utils';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -36,13 +36,7 @@ export function Header() {
         <div className="flex items-center gap-2">
           <div className="relative overflow-hidden rounded">
             <Link href="/">
-              <Image
-                src="/logo.webp"
-                alt="IMPHNEN"
-                width={64}
-                height={64}
-                className="object-cover"
-              />
+              <LogoSimple className="w-[80px]" />
             </Link>
           </div>
         </div>

@@ -1,6 +1,7 @@
-export function Logo() {
+export function Logo(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
+      {...props}
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
       width="317"
@@ -33,9 +34,10 @@ export function Logo() {
   );
 }
 
-export function LogoSimple() {
+export function LogoSimple(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
+      {...props}
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
       width="138"
