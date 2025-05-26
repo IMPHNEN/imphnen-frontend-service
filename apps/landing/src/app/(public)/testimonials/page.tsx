@@ -33,7 +33,7 @@ export default function Page() {
           Menampilkan pengalaman dan cerita para member yang telah join ke dalam
           komunitas kami
         </p>
-        <Link href="/testimonial/submit">
+        <Link href="/testimonials/submit">
           <Button>Tulis Testimonialmu</Button>
         </Link>
       </div>
