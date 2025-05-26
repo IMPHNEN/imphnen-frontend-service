@@ -107,7 +107,7 @@ export function Communities() {
         </div>
 
         <motion.div
-          className="grid gap-6 md:gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+          className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
           variants={containerVariants}
           initial="hidden"
           animate={isInView ? 'visible' : 'hidden'}
