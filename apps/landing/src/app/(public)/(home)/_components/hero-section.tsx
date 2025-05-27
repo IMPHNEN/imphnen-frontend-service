@@ -8,7 +8,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Fragment, useEffect, useState } from 'react';
 
-export function Hero() {
+export function HeroSection() {
   const router = useRouter();
   const { communityLabel, headingLine1, headingLine2, description, buttons } =
     HERO_CONTENT;
