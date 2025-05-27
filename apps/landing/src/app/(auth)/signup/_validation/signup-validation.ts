@@ -37,6 +37,14 @@ export const stepOneSignupValidationSchema = z
         /(?=.*[!@#$%^&*()_\-+={}[\]|\\:;"'<>,.?/~`])/,
         'Password harus mengandung setidaknya satu karakter spesial'
       ),
+    phone_number: z
+      .string({
+        required_error: 'Nomor telepon tidak boleh kosong',
+        invalid_type_error: 'Nomor telepon harus berupa string',
+      })
+      .min(10, 'Nomor telepon tidak boleh kurang dari 10 karakter')
+      .max(15, 'Nomor telepon tidak boleh lebih dari 15 karakter')
+      .regex(/^\d+$/, 'Nomor telepon hanya boleh berisi angka'),
     confirm_password: z
       .string({
         required_error: 'Konfirmasi password tidak boleh kosong',
@@ -50,23 +58,7 @@ export const stepOneSignupValidationSchema = z
   });
 
 export const stepTwoSignupValidationSchema = z.object({
-  phone_number: z
-    .string({
-      required_error: 'Nomor telepon tidak boleh kosong',
-      invalid_type_error: 'Nomor telepon harus berupa string',
-    })
-    .min(10, 'Nomor telepon tidak boleh kurang dari 10 karakter')
-    .max(15, 'Nomor telepon tidak boleh lebih dari 15 karakter')
-    .regex(/^\d+$/, 'Nomor telepon hanya boleh berisi angka'),
-  referral_code: z
-    .string()
-    .max(4, 'Kode referral tidak boleh lebih dari 4 karakter')
-    .optional(),
-  referred_by: z
-    .string()
-    .max(50, 'Kode referral tidak boleh lebih dari 50 karakter')
-    .optional(),
-  student_type: z.string(),
+  token: z.string(),
 });
 
 export const signupValidationSchema = stepOneSignupValidationSchema.and(

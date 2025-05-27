@@ -11,9 +11,10 @@ import {
   Input,
 } from '@components';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Turnstile, TurnstileInstance } from '@marsidev/react-turnstile';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { LuLoader } from 'react-icons/lu';
 import { z } from 'zod';
@@ -26,10 +27,30 @@ import {
 
 export function SignupForm() {
   const router = useRouter();
+  const ref = useRef<TurnstileInstance | null>(null);
+
   const [step, setStep] = useState(1);
   const [stepOneData, setStepOneData] = useState<z.infer<
     typeof stepOneSignupValidationSchema
   > | null>(null);
+
+  const firstForm = useForm<z.infer<typeof stepOneSignupValidationSchema>>({
+    resolver: zodResolver(stepOneSignupValidationSchema),
+    defaultValues: {
+      email: '',
+      phone_number: '',
+      fullname: '',
+      password: '',
+      confirm_password: '',
+    },
+  });
+
+  const secondForm = useForm<z.infer<typeof stepTwoSignupValidationSchema>>({
+    resolver: zodResolver(stepTwoSignupValidationSchema),
+    defaultValues: {
+      token: '',
+    },
+  });
 
   const { mutate, isPending, error } = useMutation({
     mutationFn: async (data: z.infer<typeof signupValidationSchema>) => {
@@ -44,27 +65,8 @@ export function SignupForm() {
       router.push(`/verification?ref=${email}`);
     },
     onError: () => {
-      secondForm.reset();
-    },
-  });
-
-  const firstForm = useForm<z.infer<typeof stepOneSignupValidationSchema>>({
-    resolver: zodResolver(stepOneSignupValidationSchema),
-    defaultValues: {
-      email: '',
-      fullname: '',
-      password: '',
-      confirm_password: '',
-    },
-  });
-
-  const secondForm = useForm<z.infer<typeof stepTwoSignupValidationSchema>>({
-    resolver: zodResolver(stepTwoSignupValidationSchema),
-    defaultValues: {
-      phone_number: '',
-      referral_code: '',
-      referred_by: '',
-      student_type: '',
+      ref.current?.reset();
+      secondForm.resetField('token');
     },
   });
 
@@ -121,6 +123,20 @@ export function SignupForm() {
 
             <FormField
               control={firstForm.control}
+              name="phone_number"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nomor Telepon</FormLabel>
+                  <FormControl>
+                    <Input placeholder="08123456789" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={firstForm.control}
               name="password"
               render={({ field }) => (
                 <FormItem>
@@ -169,62 +185,15 @@ export function SignupForm() {
               </div>
             )}
 
-            <FormField
-              control={secondForm.control}
-              name="phone_number"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nomor Telepon</FormLabel>
-                  <FormControl>
-                    <Input placeholder="081234567890" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className="flex gap-x-4">
-              <FormField
-                control={secondForm.control}
-                name="referral_code"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Kode Referral</FormLabel>
-                    <FormControl>
-                      <Input placeholder="ABCD" maxLength={4} {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={secondForm.control}
-                name="referred_by"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Referrer</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Referral ID" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <FormField
-              control={secondForm.control}
-              name="student_type"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Status</FormLabel>
-                  <FormControl>
-                    <Input placeholder="e.g., Undergraduate" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+            <Turnstile
+              ref={ref}
+              siteKey={String(process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY)}
+              onSuccess={(token) => secondForm.setValue('token', token)}
+              options={{
+                theme: 'light',
+                size: 'flexible',
+                language: 'id',
+              }}
             />
 
             <div className="flex justify-between">
@@ -237,8 +206,7 @@ export function SignupForm() {
               </Button>
               <Button
                 type="submit"
-                disabled={isPending}
-                className="flex items-center gap-2 hover:bg-[#5fbaef] bg-[#22a5f1]"
+                disabled={isPending || !secondForm.watch('token')}
               >
                 {isPending ? (
                   <LuLoader className="h-5 w-5 animate-spin" />

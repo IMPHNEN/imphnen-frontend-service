@@ -6,9 +6,6 @@ export async function fetchPostSignin({
   password,
   fullname,
   phone_number,
-  student_type,
-  referral_code,
-  referred_by,
 }: SignupValidationSchema) {
   const { data, error, response } = await fetcher.POST('/v1/auth/register', {
     body: {
@@ -16,9 +13,6 @@ export async function fetchPostSignin({
       password,
       fullname,
       phone_number,
-      student_type,
-      referral_code,
-      referred_by,
     },
   });
 
