@@ -17,8 +17,6 @@ export async function ForgotPasswordAction(
     },
   });
 
-  console.log(data, error);
-
   if (error) throw new Error(error.message);
 
   return data;
