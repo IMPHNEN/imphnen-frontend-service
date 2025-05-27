@@ -1,27 +1,9 @@
+import TESTIMONIALS from '@/data/testimonials.json';
 import { Button } from '@components';
+import Image from 'next/image';
 import Link from 'next/link';
 import { BsChatLeftQuote } from 'react-icons/bs';
-
-const testimonials = [
-  {
-    id: 1,
-    name: 'User 1',
-    date: 'April 2025',
-    text: 'Bergabung dengan komunitas ini memberikan saya banyak inspirasi. Saya belajar banyak hal baru dan bertemu dengan orang-orang yang luar biasa.',
-  },
-  {
-    id: 2,
-    name: 'User 2',
-    date: 'Maret 2025',
-    text: 'Pengalaman yang sangat berharga. Saya mendapatkan banyak wawasan baru dan dapat mengembangkan keterampilan menulis saya dengan lebih baik.',
-  },
-  {
-    id: 3,
-    name: 'User 3',
-    date: 'Maret 2025',
-    text: 'Komunitas ini sangat mendukung dan memotivasi. Saya senang bisa menjadi bagian dari perjalanan ini dan berbagi pengalaman dengan sesama anggota.',
-  },
-];
+import { FaQuoteLeft } from 'react-icons/fa';
 
 export default function Page() {
   return (
@@ -38,30 +20,36 @@ export default function Page() {
         </Link>
       </div>
 
-      {/* Testimonial Cards */}
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {testimonials.map((testimonial) => (
-            <div
-              key={testimonial.id}
-              className="border rounded-lg p-6 shadow-sm bg-card border-border"
-            >
-              <div className="flex items-center mb-4">
+      <div className="grid gap-8 md:gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 my-16 container">
+        {TESTIMONIALS.map((testimonial) => (
+          <div
+            key={testimonial.id}
+            className="p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300"
+          >
+            <div className="flex flex-col space-y-4">
+              <div className="flex items-center gap-4">
+                <Image
+                  src={testimonial.image}
+                  alt={testimonial.name}
+                  width={48}
+                  height={48}
+                  className="w-12 h-12 rounded-full object-cover"
+                  unoptimized
+                />
                 <div>
-                  <h3 className="font-semibold text-foreground">
+                  <h4 className="font-semibold text-gray-900">
                     {testimonial.name}
-                  </h3>
-                  <p className="text-sm text-muted-foreground">
-                    Lulus: {testimonial.date}
-                  </p>
+                  </h4>
+                  <p className="text-sm text-gray-600">{testimonial.role}</p>
                 </div>
               </div>
-              <p className="text-foreground/80 italic">
-                &quot;{testimonial.text}&quot;
-              </p>
+              <div className="text-gray-600 relative">
+                <FaQuoteLeft className="text-primary-500/30 w-6 h-6 mb-2" />
+                <p className="text-sm/relaxed">{testimonial.text}</p>
+              </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </div>
   );
