@@ -29,12 +29,12 @@ export function CTASection() {
               transition={{ duration: 0.6 }}
             >
               <h2 className="text-4xl md:text-5xl font-bold text-white leading-tight">
-                <span className="block">Let&apos;s go</span>
-                <span className="block text-5xl md:text-6xl mt-4">
+                <span className="block">LET&apos;S GO</span>
+                <span className="block text-5xl md:text-6xl mt-2">
                   <span className="text-yellow-300">SAAT</span>
                   <span className="text-white">NYA</span>
                 </span>
-                <span className="block mt-4">KAMU JOIN!</span>
+                <span className="block mt-2">KAMU JOIN!</span>
               </h2>
             </motion.div>
 
