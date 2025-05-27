@@ -10,6 +10,7 @@ import {
   FormMessage,
   Input,
 } from '@components';
+import Link from 'next/link';
 import { LuLoader } from 'react-icons/lu';
 import { useFormSignin } from '../_hooks/use-form-signin';
 import { usePostSignin } from '../_hooks/use-post-signin';
@@ -56,6 +57,14 @@ export function SigninForm() {
                 <Input type="password" placeholder="••••••••" {...field} />
               </FormControl>
               <FormMessage />
+              <div className="text-right mt-1">
+                <Link
+                  href="/forgot-password"
+                  className="text-sm text-primary-500 font-bold hover:underline"
+                >
+                  Lupa Password?
+                </Link>
+              </div>
             </FormItem>
           )}
         />
