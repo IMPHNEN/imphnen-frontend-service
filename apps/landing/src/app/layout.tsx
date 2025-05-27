@@ -3,6 +3,7 @@ import '@/styles/globals.css';
 import { cn } from '@utils';
 import { type Metadata } from 'next';
 import { Providers } from './_components/providers';
+import { Toaster } from './_components/toaster';
 
 export const metadata: Metadata = {
   title: 'IMPHNEN - Ingin Menjadi Programmer Handal?',
@@ -24,6 +25,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <Toaster />
         </Providers>
       </body>
     </html>
