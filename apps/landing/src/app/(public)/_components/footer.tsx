@@ -1,4 +1,6 @@
 import { LogoSimple } from '@/app/_components/logo';
+import NAVIGATIONS from '@/data/navigations.json';
+import SOCIALS from '@/data/socials.json';
 import Link from 'next/link';
 
 export default function Footer() {
@@ -11,8 +13,7 @@ export default function Footer() {
               <LogoSimple />
             </div>
             <p className="text-sm text-muted-foreground">
-              Ingin Menjadi Programmer Handal merupakan komunitas Programmer
-              Indonesia.
+              Ingin Menjadi Programmer Handal Namun Enggan Ngoding
             </p>
             <div className="flex space-x-4">
               <Link
@@ -74,107 +75,38 @@ export default function Footer() {
             </div>
           </div>
           <div className="space-y-4">
-            <h3 className="text-lg font-bold">Tautan Cepat</h3>
+            <h3 className="text-lg font-bold">Halaman</h3>
             <ul className="space-y-2">
-              <li>
-                <Link
-                  href="#fitur"
-                  className="text-sm text-muted-foreground hover:text-foreground"
-                >
-                  Fitur
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#community"
-                  className="text-sm text-muted-foreground hover:text-foreground"
-                >
-                  Komunitas
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#sumber-belajar"
-                  className="text-sm text-muted-foreground hover:text-foreground"
-                >
-                  Sumber Belajar
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#testimoni"
-                  className="text-sm text-muted-foreground hover:text-foreground"
-                >
-                  Testimoni
-                </Link>
-              </li>
+              {NAVIGATIONS.map(({ link, title }) => (
+                <li key={link}>
+                  <Link
+                    href={link}
+                    className="text-sm text-muted-foreground hover:text-foreground"
+                  >
+                    {title}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
           <div className="space-y-4">
-            <h3 className="text-lg font-bold">Sumber Belajar</h3>
+            <h3 className="text-lg font-bold">Link</h3>
             <ul className="space-y-2">
-              <li>
-                <Link
-                  href="#"
-                  className="text-sm text-muted-foreground hover:text-foreground"
-                >
-                  Video Tutorial
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#"
-                  className="text-sm text-muted-foreground hover:text-foreground"
-                >
-                  Artikel
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#"
-                  className="text-sm text-muted-foreground hover:text-foreground"
-                >
-                  Tantangan Koding
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="#"
-                  className="text-sm text-muted-foreground hover:text-foreground"
-                >
-                  Sharing Session
-                </Link>
-              </li>
+              {SOCIALS.map(({ link, name }) => (
+                <li key={name}>
+                  <Link
+                    href={link}
+                    className="text-sm text-muted-foreground hover:text-foreground"
+                  >
+                    {name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
           <div className="space-y-4">
-            <h3 className="text-lg font-bold">Bahasa Pemrograman</h3>
-            <div className="flex flex-wrap gap-2">
-              <span className="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-600/10 dark:bg-blue-900/30 dark:text-blue-400 dark:ring-blue-400/20">
-                PHP
-              </span>
-              <span className="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-700 ring-1 ring-inset ring-yellow-600/10 dark:bg-yellow-900/30 dark:text-yellow-400 dark:ring-yellow-400/20">
-                JavaScript
-              </span>
-              <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/10 dark:bg-green-900/30 dark:text-green-400 dark:ring-green-400/20">
-                Python
-              </span>
-              <span className="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-600/10 dark:bg-blue-900/30 dark:text-blue-400 dark:ring-blue-400/20">
-                C#
-              </span>
-              <span className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10 dark:bg-red-900/30 dark:text-red-400 dark:ring-red-400/20">
-                Java
-              </span>
-              <span className="inline-flex items-center rounded-md bg-cyan-50 px-2 py-1 text-xs font-medium text-cyan-700 ring-1 ring-inset ring-cyan-600/10 dark:bg-cyan-900/30 dark:text-cyan-400 dark:ring-cyan-400/20">
-                Go
-              </span>
-              <span className="inline-flex items-center rounded-md bg-orange-50 px-2 py-1 text-xs font-medium text-orange-700 ring-1 ring-inset ring-orange-600/10 dark:bg-orange-900/30 dark:text-orange-400 dark:ring-orange-400/20">
-                Rust
-              </span>
-              <span className="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-600/10 dark:bg-blue-900/30 dark:text-blue-400 dark:ring-blue-400/20">
-                HTML
-              </span>
-            </div>
+            <h3 className="text-lg font-bold">Community Patners</h3>
+            <ul className="space-y-2"></ul>
           </div>
         </div>
         <div className="mt-8 border-t pt-8 text-center">
