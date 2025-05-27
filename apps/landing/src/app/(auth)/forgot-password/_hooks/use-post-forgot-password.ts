@@ -10,7 +10,11 @@ export function usePostForgotPassowrd(
     mutationFn: ForgotPasswordAction,
     onSuccess: ({ message }) => {
       form.reset();
-      toast(message);
+      toast.success(message);
+    },
+    onError: ({ message }) => {
+      form.reset();
+      toast.error(message);
     },
   });
 }

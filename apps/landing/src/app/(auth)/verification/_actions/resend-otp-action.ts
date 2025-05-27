@@ -1,7 +1,8 @@
 'use server';
 
 import { fetcher } from '@/lib/fetcher';
-import { fetchPostverifyTurnstile } from '../_http/fetch-post-verify-turnstile';
+import { getRemoteIp } from '@/lib/headers';
+import { fetchPostverifyTurnstile } from '../../_http/fetch-post-verify-turnstile';
 import {
   resendOTPValidationSchema,
   type ResendOTPValidationType,
@@ -9,12 +10,14 @@ import {
 
 export async function resendOTPAction(request: ResendOTPValidationType) {
   const validRequest = resendOTPValidationSchema.parse(request);
+  const remoteIp = await getRemoteIp();
 
-  const isCapchaValidationValid = await fetchPostverifyTurnstile(
-    validRequest.token
+  const isCapchaValid = await fetchPostverifyTurnstile(
+    validRequest.token,
+    remoteIp
   );
 
-  if (!isCapchaValidationValid) throw new Error('Failed to verify captcha');
+  if (!isCapchaValid) throw new Error('Failed to verify captcha');
 
   const { data } = await fetcher.POST('/v1/auth/send-otp', {
     body: {

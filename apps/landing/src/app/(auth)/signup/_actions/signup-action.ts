@@ -1,20 +1,23 @@
 'use server';
 
+import { getRemoteIp } from '@/lib/headers';
 import { z } from 'zod';
+import { fetchPostverifyTurnstile } from '../../_http/fetch-post-verify-turnstile';
 import { fetchPostSignin } from '../_http/fetch-post-signup';
-import { fetchPostverifyTurnstile } from '../_http/fetch-post-verify-turnstile';
 import { signupValidationSchema } from '../_validation/signup-validation';
 
 export async function SignupAction(
   request: z.infer<typeof signupValidationSchema>
 ) {
   const validRequest = signupValidationSchema.parse(request);
+  const remoteIp = await getRemoteIp();
 
-  const isCapchaValidationValid = await fetchPostverifyTurnstile(
-    validRequest.token
+  const isCapchaValid = await fetchPostverifyTurnstile(
+    validRequest.token,
+    remoteIp
   );
 
-  if (!isCapchaValidationValid) throw new Error('Failed to verify captcha');
+  if (!isCapchaValid) throw new Error('Failed to verify captcha');
 
   const data = await fetchPostSignin(validRequest);
 
