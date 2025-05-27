@@ -25,7 +25,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
-          <Toaster />
+          <Toaster richColors />
         </Providers>
       </body>
     </html>
