@@ -1,3 +1,4 @@
+import { LogoSimple } from '@/app/_components/logo';
 import Link from 'next/link';
 
 export default function Footer() {
@@ -7,9 +8,7 @@ export default function Footer() {
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400">
-                IMPHNEN
-              </span>
+              <LogoSimple />
             </div>
             <p className="text-sm text-muted-foreground">
               Ingin Menjadi Programmer Handal merupakan komunitas Programmer
@@ -87,7 +86,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="#komunitas"
+                  href="#community"
                   className="text-sm text-muted-foreground hover:text-foreground"
                 >
                   Komunitas
@@ -175,26 +174,6 @@ export default function Footer() {
               <span className="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-600/10 dark:bg-blue-900/30 dark:text-blue-400 dark:ring-blue-400/20">
                 HTML
               </span>
-            </div>
-
-            <div className="mt-6">
-              <h3 className="text-lg font-bold mb-2">Newsletter</h3>
-              <p className="text-sm text-muted-foreground mb-2">
-                Dapatkan update terbaru dari kami
-              </p>
-              <div className="flex gap-2">
-                <input
-                  type="email"
-                  placeholder="Email Anda"
-                  className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                />
-                <button
-                  className="inline-flex items-center justify-center rounded-md bg-primary px-3 py-1 text-sm shadow hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 
-font-bold text-black hover:text-white cursor-pointer"
-                >
-                  Daftar
-                </button>
-              </div>
             </div>
           </div>
         </div>
