@@ -1,20 +1,13 @@
 [
   {
-    "name": "Facebook Group",
+    "name": "Facebook",
     "icon": "FaFacebook",
     "color": "#1877F2",
     "description": "Join discussions and share knowledge",
     "link": "#"
   },
   {
-    "name": "Facebook Group II",
-    "icon": "FaFacebook",
-    "color": "#1877F2",
-    "description": "Join discussions and share knowledge",
-    "link": "#"
-  },
-  {
-    "name": "Discord Server",
+    "name": "Discord",
     "icon": "FaDiscord",
     "color": "#5865F2",
     "description": "Real-time collaboration chat",
