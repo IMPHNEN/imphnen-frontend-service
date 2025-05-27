@@ -86,7 +86,7 @@ export function Communities() {
   };
 
   return (
-    <section id="komunitas" className="w-full py-20 md:py-28 bg-gray-50">
+    <section id="community" className="w-full py-20 md:py-28">
       <div className="container" ref={ref}>
         <div className="flex flex-col items-center justify-center space-y-4 text-center mb-16">
           <motion.div
