@@ -21,22 +21,18 @@ export const stepOneSignupValidationSchema = z
         required_error: 'Password tidak boleh kosong',
         invalid_type_error: 'Password harus berupa string',
       })
-      .min(1, 'Password tidak boleh kosong')
-      .min(8, 'Password harus lebih dari 8 karakter')
+      .min(8, 'Password harus minimal 8 karakter')
       .max(50, 'Password tidak boleh lebih dari 50 karakter')
       .regex(
-        /(?=.*[A-Z])/,
-        'Password harus mengandung setidaknya satu huruf kapital'
-      )
-      .regex(
-        /(?=.*[a-z])/,
-        'Password harus mengandung setidaknya satu huruf kecil'
-      )
-      .regex(/(?=.*\d)/, 'Password harus mengandung setidaknya satu angka')
-      .regex(
-        /(?=.*[!@#$%^&*()_\-+={}[\]|\\:;"'<>,.?/~`])/,
-        'Password harus mengandung setidaknya satu karakter spesial'
+        /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*\W).+$/,
+        'Password harus mengandung setidaknya satu huruf kapital, satu huruf kecil, satu angka, dan satu karakter spesial'
       ),
+    confirm_password: z
+      .string({
+        required_error: 'Konfirmasi password tidak boleh kosong',
+      })
+      .min(8, 'Konfirmasi password harus minimal 8 karakter')
+      .max(50, 'Konfirmasi password tidak boleh lebih dari 50 karakter'),
     phone_number: z
       .string({
         required_error: 'Nomor telepon tidak boleh kosong',
@@ -45,12 +41,6 @@ export const stepOneSignupValidationSchema = z
       .min(10, 'Nomor telepon tidak boleh kurang dari 10 karakter')
       .max(15, 'Nomor telepon tidak boleh lebih dari 15 karakter')
       .regex(/^\d+$/, 'Nomor telepon hanya boleh berisi angka'),
-    confirm_password: z
-      .string({
-        required_error: 'Konfirmasi password tidak boleh kosong',
-      })
-      .min(1, 'Konfirmasi password tidak boleh kosong')
-      .max(50, 'Konfirmasi password tidak boleh lebih dari 50 karakter'),
   })
   .refine((data) => data.password === data.confirm_password, {
     message: 'Password dan Konfirmasi Password harus sama',
