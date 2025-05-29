@@ -10,5 +10,13 @@
   {
     "title": "Testimoni",
     "link": "/testimonials"
+  },
+  {
+    "title": "Roadmap",
+    "link": "/roadmaps"
+  },
+  {
+    "title": "Artikel",
+    "link": "/articles"
   }
 ]
