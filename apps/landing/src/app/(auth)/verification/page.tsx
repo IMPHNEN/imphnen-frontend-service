@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { LogoSimple } from '../../_components/logo';
 import { VerificationTabs } from './_components/verification-tabs';
 
@@ -12,7 +13,9 @@ export default function Page() {
         </p>
       </div>
 
-      <VerificationTabs />
+      <Suspense>
+        <VerificationTabs />
+      </Suspense>
     </>
   );
 }
