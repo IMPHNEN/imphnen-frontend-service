@@ -19,13 +19,13 @@ export async function resendOTPAction(request: ResendOTPValidationType) {
 
   if (!isCapchaValid) throw new Error('Failed to verify captcha');
 
-  const { data } = await fetcher.POST('/v1/auth/send-otp', {
+  const { data, error } = await fetcher.POST('/v1/auth/send-otp', {
     body: {
       email: validRequest.email,
     },
   });
 
-  console.log(data);
+  if (error) throw new Error(error.message);
 
-  return data?.message;
+  return data;
 }

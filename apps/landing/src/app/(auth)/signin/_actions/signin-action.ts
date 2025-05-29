@@ -8,8 +8,6 @@ import {
 } from '../_validation/signin-validation';
 
 export async function SigninAction(request: SignInValidationType) {
-  console.log(request);
-
   const validRequest = signInValidationSchema.parse(request);
 
   const { data } = await fetchPostSignin(validRequest);

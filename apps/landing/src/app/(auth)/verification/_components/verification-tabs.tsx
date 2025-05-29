@@ -31,7 +31,7 @@ export function VerificationTabs() {
           )}
           onClick={() => setActiveTab('resend')}
         >
-          Kirim Ulang OTP
+          Resend OTP
         </button>
       </div>
 
