@@ -1,9 +1,10 @@
 import { useMutation, UseMutationResult } from '@tanstack/react-query';
-import { postLogin, postRegister, postVerifyEmail } from '../../api/auth';
+import { postLogin, postRegister, postSendOtp, postVerifyEmail } from '../../api/auth';
 import {
   TLoginRequest,
   TLoginResponse,
   TRegisterRequest,
+  TSendOTPRequest,
   TVerifyEmailRequest,
 } from '../../types/auth';
 
@@ -44,3 +45,16 @@ export const usePostVerifyEmail = (): UseMutationResult<
     mutationFn: async (payload) => await postVerifyEmail(payload),
   });
 };
+
+export const usePostSendOTP = (): UseMutationResult<
+  TResponseMessage,
+  TResponseError,
+  TSendOTPRequest,
+  unknown
+> => {
+  return useMutation({
+    mutationKey: ['post-send-otp'],
+    mutationFn: async (payload) => await postSendOtp(payload),
+  });
+};
+
