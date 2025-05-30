@@ -1,11 +1,9 @@
+import { poppinsFont } from '@/lib/fonts';
 import '@/styles/globals.css';
+import { cn } from '@utils';
 import { type Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import Footer from './_components/footer';
-import { Header } from './_components/header';
-import { ThemeProvider } from './_components/theme-provider';
-
-const inter = Inter({ subsets: ['latin'] });
+import { Providers } from './_components/providers';
+import { Toaster } from './_components/toaster';
 
 export const metadata: Metadata = {
   title: 'IMPHNEN - Ingin Menjadi Programmer Handal?',
@@ -19,19 +17,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="id" suppressHydrationWarning>
-      <body className={inter.className}>
-        <ThemeProvider
+      <body className={cn(poppinsFont.className, 'antialiased')}>
+        <Providers
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          <div className="flex min-h-screen flex-col">
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </div>
-        </ThemeProvider>
+          {children}
+          <Toaster richColors />
+        </Providers>
       </body>
     </html>
   );

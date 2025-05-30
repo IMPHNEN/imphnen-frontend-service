@@ -1,0 +1,22 @@
+[
+  {
+    "title": "Home",
+    "link": "/"
+  },
+  {
+    "title": "Event",
+    "link": "/events"
+  },
+  {
+    "title": "Testimoni",
+    "link": "/testimonials"
+  },
+  {
+    "title": "Roadmap",
+    "link": "/roadmaps"
+  },
+  {
+    "title": "Artikel",
+    "link": "/articles"
+  }
+]
