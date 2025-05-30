@@ -6,7 +6,10 @@ import { useNavigate } from 'react-router';
 export const useSession = () => {
   const navigate = useNavigate();
   const { mutate, isPending } = usePostLogin();
-  const { setLoading, setSession, clearSession, session } = useAuthStore();
+  const { setLoading, setSession, clearSession, session, status } =
+    useAuthStore();
+  const isAuthenticated = status === 'authenticated';
+
   const signIn = (payload: TLoginRequest) => {
     setLoading(true);
     mutate(payload, {
@@ -33,5 +36,6 @@ export const useSession = () => {
     signIn,
     signOut,
     isLoading: isPending,
+    isAuthenticated,
   };
 };

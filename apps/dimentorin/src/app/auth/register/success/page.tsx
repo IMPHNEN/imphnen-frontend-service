@@ -1,15 +1,21 @@
-import { FC, ReactElement } from 'react';
+import { FC, ReactElement, useEffect } from 'react';
 import { RegisterResetBanner } from '@imphnen-frontend-service/ui/organisms';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { ArrowRightOutlined } from '@ant-design/icons';
 
 export const Components: FC = (): ReactElement => {
+  useEffect(() => {
+    setTimeout(() => {
+      document.location.href = "/auth/login"
+    }, 10000)
+  }, [])
+
   return (
     <div className="flex flex-col justify-center items-center min-h-screen py-[60px] px-[80px]">
-      <div className="bg-white min-w-[1220px] min-h-[712px] p-10 rounded-2xl shadow-md flex gap-6">
+      <div className="bg-white xl:min-w-[1220px] min-h-[712px] p-10 rounded-2xl shadow-md flex gap-6">
         <RegisterResetBanner />
-        <div className="border-2 border-primary-500/50 w-[696px] rounded-lg py-[32px] px-[48px] flex justify-center bg-primary-50">
-          <div className="w-[704px] flex flex-col justify-center items-center">
+        <div className="border-2 border-primary-500/50 xl:w-[696px] rounded-lg py-[32px] px-[48px] flex justify-center bg-primary-50">
+          <div className="xl:w-[704px] flex flex-col justify-center items-center">
             <h2 className="text-4xl text-primary-500 font-semibold">
               Register Successfull
             </h2>
@@ -41,10 +47,12 @@ export const Components: FC = (): ReactElement => {
             <h4 className="mt-10 text-primary-500 font-medium text-xl">
               Kamu akan memasuki isekai dalam 10 dtk
             </h4>
-            <Button className="gap-3 mt-10" size="lg">
-              Masuk Isekai
-              <ArrowRightOutlined />
-            </Button>
+            <a href="/auth/login">
+              <Button className="gap-3 mt-10" size="lg">
+                Masuk Isekai
+                <ArrowRightOutlined />
+              </Button>
+            </a>
           </div>
         </div>
       </div>
