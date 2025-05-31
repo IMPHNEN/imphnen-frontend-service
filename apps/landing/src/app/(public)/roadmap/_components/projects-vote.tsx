@@ -23,7 +23,7 @@ export default function ProjectsVote() {
       description: 'Buat Twibbon kece untuk profile media sosialmu',
     },
     {
-      title: 'IMPHNEN Cerficate',
+      title: 'IMPHNEN Certificate',
       description: 'Cetak sertifikat keren secara instan untuk anggota IMPHNEN',
     },
   ];

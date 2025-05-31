@@ -18,5 +18,9 @@
   {
     "title": "Artikel",
     "link": "/articles"
+  },
+  {
+    "title": "Team",
+    "link": "/teams"
   }
 ]
