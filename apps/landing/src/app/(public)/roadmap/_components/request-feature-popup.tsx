@@ -13,7 +13,6 @@ import {
   Drawer,
   DrawerClose,
   DrawerContent,
-  DrawerDescription,
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
@@ -52,10 +51,6 @@ export function RequestFeaturePopup() {
       <DrawerContent>
         <DrawerHeader className="text-left">
           <DrawerTitle>Request Fitur</DrawerTitle>
-          <DrawerDescription>
-            Punya ide fitur keren? Bagikan di sini! Kami selalu terbuka untuk
-            inovasi yang bisa membuat produk ini lebih baik.
-          </DrawerDescription>
         </DrawerHeader>
         <ProfileForm className="px-4" />
         <DrawerFooter className="pt-2">
