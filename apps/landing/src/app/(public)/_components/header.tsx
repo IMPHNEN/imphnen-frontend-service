@@ -13,45 +13,26 @@ import { LuMenu, LuX } from 'react-icons/lu';
 export function Header() {
   const router = useRouter();
   const pathname = usePathname();
-  const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-
-    // Lock body scroll when mobile menu is open
     if (mobileMenuOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'auto';
     }
-
     return () => {
-      window.removeEventListener('scroll', handleScroll);
       document.body.style.overflow = 'auto';
     };
   }, [mobileMenuOpen]);
 
-  // Close mobile menu when route changes
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [pathname]);
 
   return (
-    <header
-      className={cn(
-        'sticky top-0 z-50 w-full transition-all duration-300',
-        isScrolled
-          ? 'bg-background/90 backdrop-blur-lg border-b shadow-sm'
-          : 'bg-background/70'
-      )}
-    >
+    <header className="sticky top-0 w-full z-50 bg-background/70">
       <div className="container flex h-20 items-center justify-between">
-        {/* Logo */}
         <Link
           href="/"
           className="relative overflow-hidden rounded z-50"
@@ -60,7 +41,6 @@ export function Header() {
           <LogoSimple className="w-24 md:w-28" />
         </Link>
 
-        {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-8">
           {NAVIGATIONS.map(({ link, title }) => (
             <Link
@@ -84,7 +64,6 @@ export function Header() {
           ))}
         </nav>
 
-        {/* Desktop Auth Buttons */}
         <div className="hidden md:flex items-center gap-x-3">
           <Button
             onClick={() => router.push('/signin')}
@@ -93,7 +72,7 @@ export function Header() {
             Masuk
           </Button>
           <Button
-            variant="primary"
+            variant="bordered"
             onClick={() => router.push('/signup')}
             className="px-5 py-2 text-sm font-medium shadow-lg shadow-primary/20 hover:shadow-primary/30"
           >
@@ -101,9 +80,8 @@ export function Header() {
           </Button>
         </div>
 
-        {/* Mobile Menu Button */}
         <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          onClick={() => setMobileMenuOpen((prev) => !prev)}
           className="flex md:hidden relative z-50 p-2 rounded-lg hover:bg-muted transition-colors"
           aria-label={mobileMenuOpen ? 'Tutup menu' : 'Buka menu'}
         >
@@ -114,16 +92,14 @@ export function Header() {
           )}
         </button>
 
-        {/* Fullscreen Mobile Menu */}
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-40 bg-background flex flex-col"
+              className="fixed inset-0 z-60 bg-background flex flex-col"
             >
-              {/* Menu Header */}
               <div className="container flex h-20 items-center justify-between">
                 <Link
                   href="/"
@@ -142,7 +118,6 @@ export function Header() {
                 </button>
               </div>
 
-              {/* Navigation Links */}
               <motion.nav
                 className="flex-1 flex flex-col items-center justify-center gap-6 py-10"
                 initial={{ y: 20, opacity: 0 }}
@@ -166,7 +141,6 @@ export function Header() {
                 ))}
               </motion.nav>
 
-              {/* Auth Buttons */}
               <motion.div
                 className="container space-y-4 pb-10"
                 initial={{ y: 20, opacity: 0 }}
@@ -183,7 +157,7 @@ export function Header() {
                   Masuk
                 </Button>
                 <Button
-                  variant="primary"
+                  variant="bordered"
                   onClick={() => {
                     setMobileMenuOpen(false);
                     router.push('/signup');
