@@ -26,8 +26,7 @@ export function FeatureRequestCTA() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
         >
-          Bagikan ide fitur atau layanan yang ingin Anda lihat di komunitas. Ide
-          terbaik dengan vote tertinggi akan kami prioritaskan!
+          Bagikan ide fitur yang kamu inginkan dan vote untuk membuatnya nyata!
         </motion.p>
         <RequestFeaturePopup />
       </div>
