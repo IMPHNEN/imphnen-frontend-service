@@ -10,6 +10,12 @@ import { MdOutlineOpenInNew } from 'react-icons/md';
 export default function ProjectsVote() {
   const [upcomingItems, setUpcomingItems] = useState([
     {
+      title: 'IMPHNEN Project Showcase',
+      description: 'Showcase projectmu ke member lain dan dapatkan feedback',
+      votes: 42,
+      voted: false,
+    },
+    {
       title: 'IMPHNEN Meme Generator',
       description: 'Bikin meme kocak kapanpun dengan mudah',
       votes: 42,

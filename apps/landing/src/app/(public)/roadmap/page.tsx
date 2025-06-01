@@ -3,7 +3,7 @@ import ProjectsVote from './_components/projects-vote';
 
 export default function Page() {
   return (
-    <div className="p-4 md:p-6 bg-gray-50 min-h-screen">
+    <div className="pt-4 md:pt-6 pb-56 bg-gray-50 min-h-screen">
       <FeatureRequestCTA />
       <ProjectsVote />
     </div>

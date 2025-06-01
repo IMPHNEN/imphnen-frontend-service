@@ -1,13 +1,9 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { FiPlus } from 'react-icons/fi';
+import { RequestFeaturePopup } from './request-feature-popup';
 
 export function FeatureRequestCTA() {
-  const handleSubmitFeature = () => {
-    alert('Feature submission form would appear here!');
-  };
-
   return (
     <motion.div
       initial={{ opacity: 0, y: -20 }}
@@ -33,18 +29,7 @@ export function FeatureRequestCTA() {
           Bagikan ide fitur atau layanan yang ingin Anda lihat di komunitas. Ide
           terbaik dengan vote tertinggi akan kami prioritaskan!
         </motion.p>
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={handleSubmitFeature}
-          className="bg-white text-primary-500 font-semibold py-3 px-8 rounded-full flex items-center justify-center gap-2 mx-auto shadow-lg hover:shadow-xl transition-all"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-        >
-          <FiPlus className="w-5 h-5" />
-          <span>Ajukan Fitur</span>
-        </motion.button>
+        <RequestFeaturePopup />
       </div>
     </motion.div>
   );
