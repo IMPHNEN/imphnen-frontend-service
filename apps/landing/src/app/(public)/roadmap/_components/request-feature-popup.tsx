@@ -7,7 +7,6 @@ import {
   Button,
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -38,10 +37,6 @@ export function RequestFeaturePopup() {
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle className="text-2xl">Request Fitur</DialogTitle>
-            <DialogDescription>
-              Request fitur apa pun disini. Kami akan mempertimbangkan
-              permintaan Anda.
-            </DialogDescription>
           </DialogHeader>
           <ProfileForm />
         </DialogContent>
@@ -108,7 +103,7 @@ function ProfileForm({
         </div>
         <Textarea
           id="deskripsiFitur"
-          placeholder="Jelaskan fitur yang Anda inginkan secara detail..."
+          placeholder="Jelaskan fitur yang Anda inginkan secara detail"
           maxLength={maxDescriptionLength}
           rows={6}
           className="min-h-[150px]"
