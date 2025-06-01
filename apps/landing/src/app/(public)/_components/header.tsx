@@ -55,10 +55,7 @@ export function Header() {
                 {title}
               </span>
               {pathname === link && (
-                <motion.span
-                  className="absolute bottom-0 left-0 w-full h-0.5 bg-primary-500"
-                  layoutId="header-underline"
-                />
+                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary-500" />
               )}
             </Link>
           ))}
