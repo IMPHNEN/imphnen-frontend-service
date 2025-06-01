@@ -1,8 +1,9 @@
 'use client';
 
-import { Button, MoonIcon, SunIcon } from '@components';
+import { Button } from '@components';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
+import { LuMoon, LuSun } from 'react-icons/lu';
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
@@ -28,9 +29,9 @@ export function ThemeToggle() {
       className="focus-visible:ring-0 cursor-pointer"
     >
       {theme === 'dark' ? (
-        <SunIcon className="h-[1.2rem] w-[1.2rem]" />
+        <LuSun className="h-[1.2rem] w-[1.2rem]" />
       ) : (
-        <MoonIcon className="h-[1.2rem] w-[1.2rem]" />
+        <LuMoon className="h-[1.2rem] w-[1.2rem]" />
       )}
       <span className="sr-only">Toggle theme</span>
     </Button>
