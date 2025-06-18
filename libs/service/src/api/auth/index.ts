@@ -3,6 +3,7 @@ import {
   TLoginRequest,
   TLoginResponse,
   TRegisterRequest,
+  TSendOTPRequest,
   TVerifyEmailRequest,
 } from '../../types/auth';
 import { TResponseMessage } from '../../types/common';
@@ -35,7 +36,18 @@ export const postVerifyEmail = async (
   const { data } = await api({
     method: 'POST',
     url: '/auth/verify-email',
-    data: { otp: parseInt(payload.otp), email: payload.email },
+    data: {otp: parseInt(payload.otp), email: payload.email},
+  });
+  return data;
+};
+
+export const postSendOtp = async (
+  payload: TSendOTPRequest
+): Promise<TResponseMessage> => {
+  const { data } = await api({
+    method: 'POST',
+    url: '/auth/send-otp',
+    data: payload,
   });
   return data;
 };
