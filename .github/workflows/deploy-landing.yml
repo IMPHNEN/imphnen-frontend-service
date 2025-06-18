@@ -1,0 +1,36 @@
+name: Deploy Landing
+
+on:
+  push:
+    branches:
+      - main  # Change to your deployment branch if needed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            set -e
+            if [ ! -d imphnen-frontend-service ]; then
+              git clone https://github.com/<your-org-or-user>/imphnen-frontend-service.git
+            else
+              cd imphnen-frontend-service && git pull && cd ..
+            fi
+            cd imphnen-frontend-service
+            echo "NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}" > apps/landing/.env
+            echo "TURNSTILE_SECRET_KEY=${{ secrets.TURNSTILE_SECRET_KEY }}" >> apps/landing/.env
+            echo "NEXT_PUBLIC_TURNSTILE_SITEKEY=${{ secrets.NEXT_PUBLIC_TURNSTILE_SITEKEY }}" >> apps/landing/.env
+            docker compose -f installer/landing/docker-compose.yml down || true
+            docker compose -f installer/landing/docker-compose.yml build
+            docker compose -f installer/landing/docker-compose.yml up -d
+            docker image prune -af
