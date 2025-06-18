@@ -1,27 +1,17 @@
-FROM node:22-alpine AS deps
+FROM node:22-alpine AS builder
 WORKDIR /app
+
 COPY  . .
 RUN npm install
-ENV NEXT_PRIVATE_STANDALONE=true
 RUN npm run landing:build
-
-RUN ls -lah /app/dist/apps/landing/.next
 
 FROM node:22-alpine AS runner
 WORKDIR /app
 
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S nextjs -u 1001
-
-COPY --from=deps --chown=nextjs:nodejs /app/dist/apps/landing/.next/standalone /app
-COPY --from=deps --chown=nextjs:nodejs /app/dist/apps/landing/.next/static /app/.next/static
-COPY --from=deps --chown=nextjs:nodejs /app/dist/apps/landing/public /app/public
-
-RUN mkdir -p /app/.next/cache/images
-RUN chown -R nextjs:nodejs /app/.next
-
-USER nextjs:nodejs
+COPY --from=builder /app/dist/apps/landing/.next/standalone .
+COPY --from=builder /app/dist/apps/landing/public apps/landing/public
+COPY --from=builder /app/dist/apps/landing/.next/static dist/apps/landing/.next/static
 
 EXPOSE 3000
 
-CMD ["node", "/app/server.js"]
+ENTRYPOINT ["node", "apps/landing/server.js"]

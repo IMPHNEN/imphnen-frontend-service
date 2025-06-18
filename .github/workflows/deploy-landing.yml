@@ -2,8 +2,8 @@ name: Deploy Landing
 
 on:
   push:
-    branches:
-      - main  # Change to your deployment branch if needed
+    paths:
+      - 'apps/landing/**' # INI BASED ON PATH CHANGES JADI NTAR KALAU ADA PUSH DIISNI OTOMATIS DEPLOY
 
 jobs:
   deploy:
@@ -21,16 +21,13 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             set -e
-            if [ ! -d imphnen-frontend-service ]; then
-              git clone https://github.com/<your-org-or-user>/imphnen-frontend-service.git
+            if [ ! -d ~/imphnen-frontend-service ]; then
+              git clone https://github.com/IMPHNEN/imphnen-frontend-service.git ~/imphnen-frontend-service
             else
-              cd imphnen-frontend-service && git pull && cd ..
+              cd ~/imphnen-frontend-service && git pull
             fi
-            cd imphnen-frontend-service
-            echo "NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}" > apps/landing/.env
-            echo "TURNSTILE_SECRET_KEY=${{ secrets.TURNSTILE_SECRET_KEY }}" >> apps/landing/.env
-            echo "NEXT_PUBLIC_TURNSTILE_SITEKEY=${{ secrets.NEXT_PUBLIC_TURNSTILE_SITEKEY }}" >> apps/landing/.env
-            docker compose -f installer/landing/docker-compose.yml down || true
-            docker compose -f installer/landing/docker-compose.yml build
-            docker compose -f installer/landing/docker-compose.yml up -d
+            echo "NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}" > ~/imphnen-frontend-service/apps/landing/.env
+            docker compose -f ~/imphnen-frontend-service/docker-compose-landing.yml down || true
+            docker compose -f ~/imphnen-frontend-service/docker-compose-landing.yml build
+            docker compose -f ~/imphnen-frontend-service/docker-compose-landing.yml up -d
             docker image prune -af
