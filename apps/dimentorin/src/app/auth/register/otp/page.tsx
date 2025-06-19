@@ -32,7 +32,7 @@ export const Components: FC = (): ReactElement => {
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;
     return `${m}:${s.toString().padStart(2, '0')}`;
-  };
+  }; 
 
   return (
     <div className='flex flex-col justify-center items-center min-h-screen py-[60px] px-[80px]'>
@@ -51,7 +51,7 @@ export const Components: FC = (): ReactElement => {
               name={'otp'}
               maxLength={6}
               control={form.control}
-            />
+            /> 
             <Button type="button" className="mt-2" disabled={disabled} onClick={
               () => {
                 resendOTP({email: searchParams.get("email") || ""})
