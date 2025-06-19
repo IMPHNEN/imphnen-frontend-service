@@ -39,7 +39,7 @@ export function TestimonialPopup() {
         </DialogTrigger>
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader className="pb-2">
-            <DialogTitle>Tambah Testimoni</DialogTitle>
+            <DialogTitle>Tulis Testimoni</DialogTitle>
           </DialogHeader>
           <TestimonialForm setOpen={setOpen} />
         </DialogContent>
@@ -50,11 +50,11 @@ export function TestimonialPopup() {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button className="w-full">Tambah Testimoni</Button>
+        <Button>Tambah Testimoni</Button>
       </DrawerTrigger>
       <DrawerContent className="max-h-[85vh]">
         <DrawerHeader className="pb-0">
-          <DrawerTitle>Tambah Testimoni</DrawerTitle>
+          <DrawerTitle>Tulis Testimoni</DrawerTitle>
         </DrawerHeader>
         <div className="overflow-y-auto px-4">
           <TestimonialForm setOpen={setOpen} className="py-2" />
@@ -83,7 +83,6 @@ function TestimonialForm({ className, setOpen }: TestimonialFormProps) {
     name: '',
     email: '',
     role: '',
-    company: '',
     testimonial: '',
   });
 
@@ -152,7 +151,6 @@ function TestimonialForm({ className, setOpen }: TestimonialFormProps) {
       name: '',
       email: '',
       role: '',
-      company: '',
       testimonial: '',
     });
     if (fileInputRef.current) fileInputRef.current.value = '';
@@ -160,26 +158,16 @@ function TestimonialForm({ className, setOpen }: TestimonialFormProps) {
 
   return (
     <div className={cn('w-full', className)}>
-      {/* Progress Bar */}
-      <div className="mb-4">
-        <div className="flex items-center justify-between mb-1">
-          <span className="text-xs font-medium">Langkah {step} dari 2</span>
-        </div>
-        <div className="w-full bg-secondary rounded-full h-1.5">
-          <div
-            className="bg-primary h-1.5 rounded-full transition-all duration-300"
-            style={{ width: `${(step / 2) * 100}%` }}
-          ></div>
-        </div>
-      </div>
-
       <form onSubmit={handleSubmit}>
         <div className="relative">
           {step === 1 && (
             <div className="w-full">
-              <div className="pb-3 border-b mb-4">
-                <h3 className="text-lg font-semibold">Data Diri</h3>
-                <p className="text-xs text-muted-foreground mt-1">1/2</p>
+              {/* Section header with step info aligned using justify-between */}
+              <div className="flex justify-between items-center pb-3 border-b mb-4">
+                <h3 className="text-base font-semibold">Lengkapi Data Diri</h3>
+                <span className="text-sm text-muted-foreground">
+                  Langkah 1 dari 2
+                </span>
               </div>
 
               <div className="space-y-6">
@@ -254,24 +242,11 @@ function TestimonialForm({ className, setOpen }: TestimonialFormProps) {
                       label: 'Role',
                       placeholder: 'Backend Developer',
                       required: true,
-                      optional: false,
-                    },
-                    {
-                      id: 'company',
-                      label: 'Perusahaan',
-                      placeholder: 'Nama perusahaan',
-                      required: false,
-                      optional: true,
                     },
                   ].map((field) => (
                     <div key={field.id} className="space-y-1">
                       <Label htmlFor={field.id} className="text-sm">
                         {field.label}
-                        {field.optional && (
-                          <span className="text-muted-foreground font-normal ml-1 text-xs">
-                            (opsional)
-                          </span>
-                        )}
                       </Label>
                       <Input
                         id={field.id}
@@ -305,9 +280,12 @@ function TestimonialForm({ className, setOpen }: TestimonialFormProps) {
 
           {step === 2 && (
             <div className="w-full">
-              <div className="pb-3 border-b mb-4">
-                <h3 className="text-lg font-semibold">Ulasan</h3>
-                <p className="text-xs text-muted-foreground mt-1">2/2</p>
+              {/* Section header with step info aligned using justify-between */}
+              <div className="flex justify-between items-center pb-3 border-b mb-4">
+                <h3 className="text-base font-semibold">Ulasan</h3>
+                <span className="text-sm text-muted-foreground">
+                  Langkah 2 dari 2
+                </span>
               </div>
 
               <div className="space-y-6">
@@ -323,7 +301,7 @@ function TestimonialForm({ className, setOpen }: TestimonialFormProps) {
 
                   <Textarea
                     id="testimonial"
-                    placeholder="Bagaimana pengalaman Anda menggunakan layanan kami?"
+                    placeholder="Bagaimana pengalaman Anda bersama IMPHNEN?"
                     className={cn(
                       'min-h-[140px]',
                       testimonialError && 'border-destructive'
