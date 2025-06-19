@@ -1,4 +1,4 @@
-import { poppinsFont } from '@/lib/fonts';
+import { baiJamjureeFont } from '@/lib/fonts';
 import '@/styles/globals.css';
 import { cn } from '@utils';
 import { type Metadata } from 'next';
@@ -17,7 +17,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="id" suppressHydrationWarning>
-      <body className={cn(poppinsFont.className, 'antialiased')}>
+      <body className={cn(baiJamjureeFont.className, 'antialiased')}>
         <Providers
           attribute="class"
           defaultTheme="system"

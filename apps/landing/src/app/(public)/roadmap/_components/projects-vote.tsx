@@ -32,21 +32,21 @@ export default function ProjectsVote() {
       title: 'IMPHNEN Certificate',
       description: 'Cetak sertifikat keren secara instan untuk anggota IMPHNEN',
     },
+    {
+      title: 'IMPHNEN Roadmap by Vote',
+      description: 'Usulkan ide fitur seru dan ajak anggota lain buat voting',
+    },
   ];
 
   const completedItems = [
     {
-      title: 'IMPHNEN List Event',
+      title: 'IMPHNEN Events Page',
       description:
         'Koleksi daftar event dan kolaborasi seru yang bisa kamu ikuti',
     },
     {
-      title: 'IMPHNEN Testimoni',
-      description: 'Berikan testimonial gokil buat komunitas IMPHNEN',
-    },
-    {
-      title: 'IMPHNEN Roadmap by Vote',
-      description: 'Usulkan ide fitur seru dan ajak anggota lain buat voting',
+      title: 'IMPHNEN Testimoni Page',
+      description: 'Berikan testimonial buat komunitas IMPHNEN',
     },
   ];
 
