@@ -11,8 +11,13 @@ const OFFERS: { title: string; description: string; image: string }[] = [
 
 export const WhatWeOfferSection: FC = () => {
   return (
-    <section className="container w-full mx-auto px-8 pb-4 max-w-7xl md:pb-8 lg:px-0 lg:pt-4">
-      <div className="mb-6 flex justify-center lg:mb-10">
+    <section className="w-full mx-auto px-8 pb-4 md:px-[60px] lg:px-20 lg:pt-4">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="mb-6 flex justify-center lg:mb-10"
+      >
         <Button
           type="button"
           size="sm"
@@ -21,9 +26,9 @@ export const WhatWeOfferSection: FC = () => {
         >
           Apa yang Kami Tawarkan
         </Button>
-      </div>
+      </motion.div>
 
-      <div className="grid gap-6 md:grid-cols-3">
+      <div className="grid gap-6 max-w-7xl mx-auto md:grid-cols-3">
         <For data={OFFERS}>
           {(offer) => (
             <motion.div
