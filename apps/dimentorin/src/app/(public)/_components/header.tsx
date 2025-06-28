@@ -18,7 +18,7 @@ export const Header: FC = () => {
   const [expandMenu, setExpandMenu] = useState(false);
 
   return (
-    <div className="bg-primary-50 w-full px-8 pt-8 top-0 z-50 md:px-[60px] md:pt-[60px] lg:px-20 sticky">
+    <div className="w-full px-8 pt-8 top-0 z-50 md:px-[60px] md:pt-[60px] lg:px-20 sticky">
       <header
         className="bg-white shadow-lg rounded-lg h-12 flex justify-between w-full max-w-7xl xl:mx-auto md:h-[60px] lg:h-[71px]"
         aria-roledescription="nav"
