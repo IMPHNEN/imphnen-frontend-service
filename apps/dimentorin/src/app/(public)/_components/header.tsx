@@ -1,6 +1,7 @@
 import { CloseOutlined, MenuOutlined } from "@ant-design/icons";
 import { Button } from "@imphnen-frontend-service/ui/atoms";
 import { cn, For, Show } from "@imphnen-frontend-service/utils";
+import { motion, useMotionValueEvent, useScroll, Variants } from "framer-motion";
 import { FC, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
@@ -13,13 +14,30 @@ const MENUS: { label: string; href: string }[] = [
 
 export const Header: FC = () => {
   const location = useLocation();
+  const { scrollY } = useScroll()
+
   const [expandMenu, setExpandMenu] = useState(false);
+  const [show, setShow] = useState(true)
+
+  const headerVariants: Variants = {
+    hidden: { opacity: 0, y: -100 },
+    show: { opacity: 1, y: 0 },
+  };
+
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    const prev = scrollY.getPrevious() || 0
+    if (latest > prev && latest > 100) setShow(false) 
+    else setShow(true)
+  })
 
   return (
-    <div className="w-full px-8 pt-8 top-0 z-50 md:px-[60px] md:pt-[60px] lg:px-20 sticky">
-      <header
+    <div className="w-full px-8 pt-8 top-0 z-50 md:px-[60px] md:pt-[60px] lg:px-20 sticky overflow-hidden">
+      <motion.header
         className="bg-white shadow-lg rounded-lg h-12 flex justify-between w-full max-w-7xl xl:mx-auto md:h-[60px] lg:h-[71px]"
         aria-roledescription="nav"
+        variants={headerVariants}
+        animate={show ? "show" : "hidden"}
+        transition={{ duration: 0.5, ease: "easeInOut" }}
       >
         <div className="flex w-full items-center justify-between p-4 md:px-8 md:py-2.5">
           <div className="flex items-center">
@@ -69,7 +87,7 @@ export const Header: FC = () => {
             </Button>
           </div>
         </div>
-      </header>
+      </motion.header>
     </div>
   );
 }
