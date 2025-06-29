@@ -65,7 +65,7 @@ export const WhatWeOfferSection: FC = () => {
           {(offer) => (
             <motion.div
               key={offer.title}
-              className="relative aspect-[3/2] overflow-hidden rounded-2xl md:aspect-[3/4] lg:aspect-[5/6]"
+              className="relative aspect-[16/10] overflow-hidden rounded-lg md:aspect-[24/35] lg:aspect-[6/7]"
               variants={childVariants}
             >
               <img src={offer.image} alt={offer.title} className="size-full object-cover" />

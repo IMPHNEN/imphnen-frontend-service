@@ -72,7 +72,7 @@ export const TestimonialSection: FC = () => {
               <motion.div
                 key={index}
                 variants={childVariants}
-                className="flex flex-col gap-6 p-6 w-52 bg-white rounded-2xl shadow-md md:w-xl md:flex-row md:gap-8 xl:w-full"
+                className="flex flex-col gap-6 p-6 w-52 bg-white rounded-xl shadow-md md:w-xl md:flex-row md:gap-8 xl:w-full"
               >
                 <div className="w-full aspect-[8/7] rounded-lg overflow-hidden md:w-40 md:aspect-[7/6] lg:aspect-square">
                   <img
