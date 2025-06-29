@@ -3,6 +3,7 @@ import { HeroSection } from './_components/hero-section';
 import { WhatWeOfferSection } from './_components/what-we-offer-section';
 import { TestimonialSection } from './_components/testimonial-section';
 import { FAQSection } from './_components/faq-section';
+import { CTASection } from './_components/cta-section';
 
 export const Components: FC = (): ReactElement => {
   return (
@@ -11,6 +12,7 @@ export const Components: FC = (): ReactElement => {
       <WhatWeOfferSection />
       <TestimonialSection />
       <FAQSection />
+      <CTASection />
     </>
   );
 };
