@@ -1,10 +1,8 @@
 import { CloseOutlined, MenuOutlined } from "@ant-design/icons";
 import { Button } from "@imphnen-frontend-service/ui/atoms";
-import { cn } from "@imphnen-frontend-service/utils";
+import { cn, For, Show } from "@imphnen-frontend-service/utils";
 import { FC, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { For } from "../../_components/logic/for";
-import { Show } from "../../_components/logic/show";
 
 const MENUS: { label: string; href: string }[] = [
   { label: "Home", href: "/" },

@@ -1,7 +1,7 @@
 import { Button } from "@imphnen-frontend-service/ui/atoms";
+import { For } from "@imphnen-frontend-service/utils";
 import { FC, useRef } from "react";
 import { motion, useInView, Variants } from 'framer-motion'
-import { For } from "../../../_components/logic/for";
 
 const OFFERS: { title: string; description: string; image: string }[] = [
   { title: "AI-Powered Learning", description: "Level Up Instantly!", image: "/image/what-we-offer/ai-powered-learning.webp" },
