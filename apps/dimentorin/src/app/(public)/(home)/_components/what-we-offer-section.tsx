@@ -1,6 +1,6 @@
 import { Button } from "@imphnen-frontend-service/ui/atoms";
-import { FC } from "react";
-import { motion } from 'framer-motion'
+import { FC, useRef } from "react";
+import { motion, useInView, Variants } from 'framer-motion'
 import { For } from "../../../_components/logic/for";
 
 const OFFERS: { title: string; description: string; image: string }[] = [
@@ -10,12 +10,39 @@ const OFFERS: { title: string; description: string; image: string }[] = [
 ]
 
 export const WhatWeOfferSection: FC = () => {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, amount: 0.2 })
+
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2,
+      },
+    },
+  }
+
+  const childVariants: Variants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.4,
+        ease: [0.25, 0.46, 0.45, 0.94],
+      },
+    },
+  }
+
   return (
-    <section className="w-full mx-auto px-8 pb-4 md:px-[60px] lg:px-20 lg:pt-4">
+    <section ref={ref} className="w-full mx-auto px-8 pb-4 md:px-[60px] lg:px-20 lg:pt-4">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
+        viewport={{ once: true }}
         className="mb-6 flex justify-center lg:mb-10"
       >
         <Button
@@ -28,14 +55,18 @@ export const WhatWeOfferSection: FC = () => {
         </Button>
       </motion.div>
 
-      <div className="grid gap-6 max-w-7xl mx-auto md:grid-cols-3">
+      <motion.div
+        className="grid gap-6 max-w-7xl mx-auto md:grid-cols-3" 
+        variants={containerVariants}
+        initial="hidden" 
+        animate={isInView ? "visible" : "hidden"}
+      >
         <For data={OFFERS}>
           {(offer) => (
             <motion.div
+              key={offer.title}
               className="relative aspect-[3/2] overflow-hidden rounded-2xl md:aspect-[3/4] lg:aspect-[5/6]"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
+              variants={childVariants}
             >
               <img src={offer.image} alt={offer.title} className="size-full object-cover" />
               <div
@@ -47,7 +78,7 @@ export const WhatWeOfferSection: FC = () => {
             </motion.div>
           )}
         </For>
-      </div>
+      </motion.div>
     </section>
   )
 }
