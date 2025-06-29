@@ -38,13 +38,33 @@ export const FAQSection: FC = () => {
   }
 
   return (
-    <section ref={ref} className="mx-auto py-4 px-8 md:py-8 md:px-[60px] lg:px-20 md:pb-8">
+    <section ref={ref} className="relative mx-auto py-4 px-8 overflow-x-clip md:py-8 md:px-[60px] lg:px-20 md:pb-8">
+      {/* Background shapes */}
+      <div className="absolute inset-0">
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: isInView ? 1 : 0 }}
+          transition={{ duration: 0.5 }}
+          className={cn(
+            "absolute -top-10 -right-14 size-60 bg-primary-200 rounded-full justify-center items-center hidden",
+            "md:flex lg:size-[344px] lg:top-48 lg:-right-[88px]"
+          )}
+        >
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: isInView ? 1 : 0 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
+            className="size-[168px] bg-primary-50 rounded-full lg:size-64"
+          />
+        </motion.div>
+      </div>
+
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         viewport={{ once: true }}
-        className="mb-6 flex justify-center md:mb-10"
+        className="relative mb-6 flex justify-center md:mb-10"
       >
         <Button
           type="button"
@@ -58,7 +78,7 @@ export const FAQSection: FC = () => {
 
       <div
         className={cn(
-          "grid max-w-7xl mx-auto gap-y-7 divide-y-2 divide-primary-200",
+          "relative grid max-w-7xl mx-auto gap-y-7 divide-y-2 divide-primary-200",
           "md:grid-cols-11 md:gap-x-10 md:divide-y-0 md:divide-x-2 lg:grid-cols-7 lg:gap-x-[72px]"
         )}
       >
