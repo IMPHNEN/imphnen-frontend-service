@@ -20,13 +20,13 @@ export const Accordion: FC<AccordionProps> = ({ title, description, className, t
   const [expand, setExpand] = useState(false)
 
   const variants: Variants = {
-    expand: { opacity: 1, y: 0, marginBottom: 16, height: 'auto' },
-    collapse: { opacity: 0, y: -10, marginBottom: 0, height: 0 },
+    expand: { opacity: 1, y: 0, marginTop: 16, height: 'auto' },
+    collapse: { opacity: 0, y: -10, marginTop: 0, height: 0 },
   }
 
   return (
-    <div className={cn("bg-white rounded-lg shadow cursor-pointer", className)} {...rest}>
-      <div className="px-5 py-4 select-none flex justify-between items-center gap-x-2" onClick={() => setExpand(prev => !prev)}>
+    <div className={cn("bg-white rounded-lg shadow cursor-pointer pb-4", className)} {...rest}>
+      <div className="px-5 pt-4 select-none flex justify-between items-center gap-x-2" onClick={() => setExpand(prev => !prev)}>
         <h4 className={cn("text-primary-500 font-semibold text-lg leading-tight md:text-xl", titleClassName)}>{title}</h4>
         <div className={cn("text-primary-500 transition-all duration-300", expand && "rotate-90")}>
           <Show condition={expand} fallback={<PlusOutlined />}>
@@ -37,7 +37,7 @@ export const Accordion: FC<AccordionProps> = ({ title, description, className, t
       <AnimatePresence>
         {expand && (
           <motion.p
-            className={cn("px-5 text-neutral-500 text-sm font-medium cursor-text md:text-base", contentClassName)}
+            className={cn("mt-4 px-5 text-neutral-500 text-sm font-medium cursor-text md:text-base", contentClassName)}
             variants={variants}
             initial="collapse"
             animate="expand"
