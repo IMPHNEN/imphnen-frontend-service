@@ -1,0 +1,35 @@
+name: Deploy Dimentorin
+
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - 'apps/dimentorin/**' # INI BASED ON PATH CHANGES JADI NTAR KALAU ADA PUSH DIISNI OTOMATIS DEPLOY
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            set -e
+            if [ ! -d ~/imphnen-frontend-service-dimentorin ]; then
+              git clone https://github.com/IMPHNEN/imphnen-frontend-service.git ~/imphnen-frontend-service-dimentorin
+            else
+              cd ~/imphnen-frontend-service-dimentorin && git pull
+            fi
+            echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" > ~/imphnen-frontend-service-dimentorin/apps/dimentorin/.env
+            docker compose -f ~/imphnen-frontend-service-dimentorin/docker-compose-dimentorin.yml down || true
+            docker compose -f ~/imphnen-frontend-service-dimentorin/docker-compose-dimentorin.yml build
+            docker compose -f ~/imphnen-frontend-service-dimentorin/docker-compose-dimentorin.yml up -d
+            docker image prune -af
