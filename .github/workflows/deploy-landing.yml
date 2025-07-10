@@ -1,0 +1,33 @@
+name: Deploy Landing
+
+on:
+  push:
+    paths:
+      - 'apps/landing/**' # INI BASED ON PATH CHANGES JADI NTAR KALAU ADA PUSH DIISNI OTOMATIS DEPLOY
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            set -e
+            if [ ! -d ~/imphnen-frontend-service ]; then
+              git clone https://github.com/IMPHNEN/imphnen-frontend-service.git ~/imphnen-frontend-service
+            else
+              cd ~/imphnen-frontend-service && git pull
+            fi
+            echo "NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}" > ~/imphnen-frontend-service/apps/landing/.env
+            docker compose -f ~/imphnen-frontend-service/docker-compose-landing.yml down || true
+            docker compose -f ~/imphnen-frontend-service/docker-compose-landing.yml build
+            docker compose -f ~/imphnen-frontend-service/docker-compose-landing.yml up -d
+            docker image prune -af

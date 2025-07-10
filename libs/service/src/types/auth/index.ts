@@ -27,3 +27,7 @@ export type TVerifyEmailRequest = {
   email: string;
   otp: string;
 };
+
+export type TSendOTPRequest = {
+  email: string
+};
