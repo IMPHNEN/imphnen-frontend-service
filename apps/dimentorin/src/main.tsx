@@ -6,6 +6,7 @@ import {
   add404PageToRoutesChildren,
   addErrorElementToRoutes,
   convertPagesToRoute,
+  ModalLoginProvider,
   QueryProvider,
 } from '@imphnen-frontend-service/utils';
 import { Toaster } from 'sonner';
@@ -35,8 +36,10 @@ if (!rootElement) throw new Error('Failed to find the root element');
 createRoot(rootElement).render(
   <StrictMode>
     <QueryProvider>
-      <Toaster position="top-right" />
-      <RouterProvider router={router} />
+      <ModalLoginProvider>
+        <Toaster position="top-right" />
+        <RouterProvider router={router} />
+      </ModalLoginProvider>
     </QueryProvider>
   </StrictMode>
 );
