@@ -14,6 +14,7 @@ const mappingPublicRoutes = [
   '/auth/register/otp',
   '/auth/register/success',
   '/auth/new-password',
+  '/auth/register-mentor'
 ];
 
 const mappingRoutePermissions = [
