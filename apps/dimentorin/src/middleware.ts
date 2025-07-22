@@ -14,7 +14,6 @@ const mappingPublicRoutes = [
   '/auth/register/otp',
   '/auth/register/success',
   '/auth/new-password',
-  '/mentoring'
 ];
 
 const mappingRoutePermissions = [
@@ -72,6 +71,10 @@ const mappingRoutePermissions = [
   },
 ];
 
+const mappingPublicPrefixRoutes = [
+  '/mentoring',
+]
+
 //TODO : Fix this later
 // const redirectToFirstAccessibleRoute = (userPermissions: string[]) => {
 //   const fallback = mappingRoutePermissions.find((route) =>
@@ -88,6 +91,13 @@ export const middleware = async ({ request }: LoaderFunctionArgs) => {
   const token = session_token?.token?.access_token;
   const userPermissions =
     session?.role?.permissions?.map?.((perm) => perm?.name) ?? [];
+  
+  // Allow to access the landing page without authentication
+  // So, if the route prefix is in the mappingPublicPrefixRoutes, we return null
+  // to indicate that we don't need to authenticate the user
+  if (mappingPublicPrefixRoutes.some((prefix) => pathname.startsWith(prefix))) {
+    return null;
+  }
 
   if (mappingPublicRoutes.includes(pathname)) {
     if (token) return redirect('/dashboard');

@@ -1,5 +1,6 @@
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { FC } from 'react';
+import { Link } from 'react-router-dom';
 
 export const MentorCard: FC = () => {
   return (
@@ -11,8 +12,10 @@ export const MentorCard: FC = () => {
         <Button variant="text" size="sm" className="bg-primary-100 h-auto px-1.5 py-1 text-[8px] font-normal mb-2 hover:bg-primary-100 md:text-[10px] md:font-medium md:mb-4">
           3-5 Years Experience
         </Button>
-        <h2 className="text-xs font-semibold text-primary-500 mb-1 md:text-[15px] md:font-semibold lg:text-[19px]">
-          Fullname
+        <h2 className="mb-1">
+          <Link to="/mentoring/detail" className="text-xs font-semibold text-primary-500 md:text-[15px] md:font-semibold lg:text-[19px]">
+            Fullname
+          </Link>
         </h2>
         <p className="text-[8px] text-neutral-500 mb-3 md:text-[10px] md:font-medium md:mb-4 lg:text-xs">
           Full Stack Enjoyer at name company
