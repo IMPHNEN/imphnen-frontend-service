@@ -51,6 +51,11 @@ export const Components: FC = (): ReactElement => {
                 Daftar Disini
               </a>
             </div>
+            <div className='text-center w-full mb-1'>
+              <a href="/auth/register-mentor" className="text-primary-500 font-medium">
+                Daftar Sebagai Mentor
+              </a>
+            </div>
             <div className="flex items-center w-full">
               <div className="flex-grow border-t border-blue-400 opacity-50"></div>
               <span className="px-3 text-blue-400">Or</span>

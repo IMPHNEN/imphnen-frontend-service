@@ -2,6 +2,8 @@ name: Deploy Landing
 
 on:
   push:
+    branches:
+      - develop
     paths:
       - 'apps/landing/**' # INI BASED ON PATH CHANGES JADI NTAR KALAU ADA PUSH DIISNI OTOMATIS DEPLOY
 
