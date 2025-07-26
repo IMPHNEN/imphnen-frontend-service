@@ -1,14 +1,14 @@
 import { For } from "@imphnen-frontend-service/utils"
 import { FC } from "react"
 
-const TOPICS = [
-  { icon: '💼', name: 'Career & Self Development' },
-  { icon: '🏢', name: 'Industry Insight' },
-  { icon: '🗂️', name: 'Project Management & IT Tools' },
-  { icon: '🖥️', name: 'Basic IT' },
-  { icon: '💻', name: 'Programming/Software Dev' },
-  { icon: '🗃️', name: 'Data & Database' },
-  { icon: <span className="font-bold text-primary-500">AI</span>, name: 'AI Tips' }
+export const TOPICS = [
+  { id: 1, icon: '💼', name: 'Career & Self Development' },
+  { id: 2, icon: '🏢', name: 'Industry Insight' },
+  { id: 3, icon: '🗂️', name: 'Project Management & IT Tools' },
+  { id: 4, icon: '🖥️', name: 'Basic IT' },
+  { id: 5, icon: '💻', name: 'Programming/Software Dev' },
+  { id: 6, icon: '🗃️', name: 'Data & Database' },
+  { id: 7, icon: <span className="font-bold text-primary-500">AI</span>, name: 'AI Tips' }
 ]
 
 export const TopicsSection: FC = () => {

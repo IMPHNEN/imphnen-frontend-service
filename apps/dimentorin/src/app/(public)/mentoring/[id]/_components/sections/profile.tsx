@@ -2,7 +2,11 @@ import { StarFilled } from "@ant-design/icons"
 import { Button } from "@imphnen-frontend-service/ui/atoms"
 import { cn, For } from "@imphnen-frontend-service/utils"
 
-export const ProfileSection: React.FC = () => {
+type Props = {
+  onBook: () => void
+}
+
+export const ProfileSection: React.FC<Props> = ({ onBook }) => {
   return (
     <div className="bg-white px-4 py-5 space-y-6 md:px-8 md:pt-6 md:pb-0 xl:space-y-0 xl:py-[30px] xl:flex xl:gap-x-9 xl:justify-between">
       <div
@@ -80,7 +84,7 @@ export const ProfileSection: React.FC = () => {
           <p className="text-primary-500 text-[15px] font-semibold">Jum, 4 April 2025</p>
           <p className="text-neutral-500 text-xs font-medium">Jum, 4 April 2025</p>
         </div>
-        <Button type="button" size="sm">
+        <Button type="button" size="sm" onClick={onBook}>
           Book Your Senpai!
         </Button>
       </div>

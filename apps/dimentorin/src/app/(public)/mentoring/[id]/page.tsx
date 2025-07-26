@@ -1,20 +1,25 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import { ProfileSection } from './_components/sections/profile'
 import { StatisticsSection } from './_components/sections/senpai-statistics'
 import { TopicsSection } from './_components/sections/topics'
 import { ExperienceSection } from './_components/sections/experience'
 import { EducationSection } from './_components/sections/education'
 import { SenpaiScheduleSection } from './_components/sections/senpai-schedule'
-
-
-
+import { Button } from '@imphnen-frontend-service/ui/atoms'
+import { AppointmentModal } from './_components/modals/appointment'
 
 export const Components: FC = () => {
+  const [open, setOpen] = useState(false)
+
   return (
     <main>
       <section className="w-full p-8 md:py-14 md:px-[60px] lg:py-16 lg:px-20">
         <div className="max-w-7xl mx-auto space-y-8 md:bg-white xl:bg-transparent">
-          <ProfileSection />
+          <ProfileSection onBook={() => setOpen(true)} />
+
+          <Button type="button" size="sm" className="w-full md:hidden" onClick={() => setOpen(true)}>
+            Book Your Senpai!
+          </Button>
 
           <div className="bg-white px-4 py-5 md:px-8 md:pb-6 md:pt-0 xl:py-7 xl:flex xl:gap-x-10">
             <div className="space-y-10 md:space-y-7 xl:flex-1">
@@ -33,11 +38,13 @@ export const Components: FC = () => {
             </div>
 
             <div className="hidden xl:block xl:w-[400px]">
-              <SenpaiScheduleSection />
+              <SenpaiScheduleSection onBook={() => setOpen(true)} />
             </div>
           </div>
         </div>
       </section>
+
+      <AppointmentModal open={open} setOpen={setOpen} />
     </main>
   )
 }

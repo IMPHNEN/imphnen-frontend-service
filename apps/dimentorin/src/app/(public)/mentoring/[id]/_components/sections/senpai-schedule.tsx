@@ -25,7 +25,11 @@ const SCHEDULES = [
   }
 ]
 
-export const SenpaiScheduleSection: FC = () => {
+type Props = {
+  onBook: () => void
+}
+
+export const SenpaiScheduleSection: FC<Props> = ({ onBook }) => {
   return (
     <div>
       <h2 className="text-xs font-semibold mb-3 md:text-[15px] xl:text-[19px]">Senpai Schedule</h2>
@@ -62,7 +66,7 @@ export const SenpaiScheduleSection: FC = () => {
 
         <hr className="border-primary-200" />
 
-        <Button type="button" size="sm" className="w-full">
+        <Button type="button" size="sm" className="w-full" onClick={onBook}>
           Book Your Senpai!
         </Button>
       </div>

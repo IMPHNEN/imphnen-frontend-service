@@ -71,7 +71,7 @@ export const Header: FC = () => {
               )}
             </For>
             <Link to="/auth/login">
-              <Button type="button" className="px-12 py-1 md:hidden">Login</Button>
+              <Button type="button" className="px-12 py-1 lg:hidden">Login</Button>
             </Link>
           </nav>
 
