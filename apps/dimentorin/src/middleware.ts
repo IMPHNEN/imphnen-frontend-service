@@ -76,6 +76,7 @@ const mappingRoutePermissions = [
 
 const mappingPublicPrefixRoutes = [
   '/mentoring',
+  '/resources',
 ]
 
 //TODO : Fix this later
