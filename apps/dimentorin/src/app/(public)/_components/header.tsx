@@ -2,7 +2,7 @@ import { CloseOutlined, MenuOutlined } from "@ant-design/icons";
 import { Button } from "@imphnen-frontend-service/ui/atoms";
 import { cn, For, Show } from "@imphnen-frontend-service/utils";
 import { motion, useMotionValueEvent, useScroll, Variants } from "framer-motion";
-import { FC, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 
 const MENUS: { label: string; href: string }[] = [
@@ -29,6 +29,13 @@ export const Header: FC = () => {
     if (latest > prev && latest > 100) setShow(false) 
     else setShow(true)
   })
+
+  const isActive = useMemo(() => {
+    return (path: string) => {
+      if (path === '/' && location.pathname !== '/') return false
+      return location.pathname.includes(path)
+    }
+  }, [location.pathname]);
 
   return (
     <div className={cn("w-full px-8 pt-8 top-0 z-50 md:px-[60px] md:pt-[60px] lg:px-20 sticky", !show && "overflow-hidden")}>
@@ -63,7 +70,7 @@ export const Header: FC = () => {
                 variant="text"
                 className={cn(
                   "px-10 py-1.5 text-neutral-300 hover:text-neutral-400 lg:px-2.5 lg:py-2",
-                  location.pathname === menu.href && "text-primary-500 hover:text-primary-500"
+                  isActive(menu.href) && "text-primary-500 hover:text-primary-500"
                 )}
               >
                 <NavLink to={menu.href}>{menu.label}</NavLink>

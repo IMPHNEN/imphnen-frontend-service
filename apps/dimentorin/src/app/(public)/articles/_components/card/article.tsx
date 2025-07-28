@@ -1,6 +1,7 @@
 import { Button } from "@imphnen-frontend-service/ui/atoms"
 import { cn, Show } from "@imphnen-frontend-service/utils"
 import { FC } from "react"
+import { Link } from "react-router-dom"
 
 export type ArticleCardProps = {
   variant?: "default" | "recent" | "featured"
@@ -31,7 +32,8 @@ export const ArticleCard: FC<ArticleCardProps> = ({ variant = 'default' }) => {
         <div className="w-max bg-primary-200 text-primary-600 px-3 py-1 text-xs font-medium rounded-4xl mb-4 xl:mb-[15px]">
           5 min read
         </div>
-        <h1
+        <Link
+          to="/articles/detail"
           className={cn(
             "text-[15px] text-neutral-800 font-semibold mb-4 line-clamp-2 md:text-[19px] xl:mb-[23px]",
             variant === "featured" && "text-[19px] md:text-[23px]",
@@ -39,7 +41,7 @@ export const ArticleCard: FC<ArticleCardProps> = ({ variant = 'default' }) => {
           )}
         >
           Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-        </h1>
+        </Link>
         <Show condition={variant !== "recent"}>
           <p 
             className={cn(
