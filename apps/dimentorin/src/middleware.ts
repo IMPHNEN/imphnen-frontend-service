@@ -16,7 +16,8 @@ const mappingPublicRoutes = [
   '/auth/new-password',
   '/auth/register-mentor',
   '/auth/register-mentor/pending',
-  '/auth/register-mentor/success'
+  '/auth/register-mentor/success',
+  '/resources',
 ];
 
 const mappingRoutePermissions = [
@@ -76,7 +77,7 @@ const mappingRoutePermissions = [
 
 const mappingPublicPrefixRoutes = [
   '/mentoring',
-  '/resources',
+  '/articles',
 ]
 
 //TODO : Fix this later
