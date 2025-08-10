@@ -11,12 +11,26 @@ import {
 import { Button } from '../../atoms';
 import { FC, ReactElement } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useSession } from '@imphnen-frontend-service/utils';
+import { cn, For, useSession } from '@imphnen-frontend-service/utils';
+
+const MENUS = [
+  { label: 'Dashboard & Set Gacha', href: '/dashboard', icon: <AppstoreOutlined className="text-[20px]" /> },
+  { label: 'Dashboard - Dimentorin', href: '/dashboard-dimentorin', icon: <AppstoreOutlined className="text-[20px]" /> },
+  { label: 'Gacha Roll', href: '/gacha-roll', icon: <ReloadOutlined className="text-[20px]" /> },
+  { label: 'Permissions', href: '/permissions', icon: <UserSwitchOutlined className="text-[20px]" /> },
+  { label: 'Roles', href: '/roles', icon: <UsergroupAddOutlined className="text-[20px]" /> },
+  { label: 'Data Akun', href: '/accounts', icon: <UserOutlined className="text-[20px]" /> },
+  { label: 'Validasi Transaksi', href: '/transactions', icon: <AuditOutlined className="text-[20px]" /> },
+  { label: 'Data Pengiriman Hadiah', href: '/prizes', icon: <InboxOutlined className="text-[20px]" /> },
+]
 
 export const BackofficeSidebar: FC = (): ReactElement => {
   const { signOut } = useSession();
   const location = useLocation();
-  const isActive = (path: string) => location.pathname.includes(path);
+  const isActive = (path: string) => {
+    if (path === '/dashboard' && location.pathname === '/dashboard-dimentorin') return false
+    return location.pathname.includes(path)
+  };
 
   return (
     <aside className="sticky top-0 left-0 w-[280px] bg-white min-h-screen py-[60px] px-[28px] shadow-xl flex flex-col justify-between">
@@ -24,89 +38,21 @@ export const BackofficeSidebar: FC = (): ReactElement => {
         <img src="/logos/simple.svg" alt="IMPHNEN Logo" className="w-[150px]" />
 
         <nav className="flex flex-col gap-4 w-full">
-          <Link
-            to="/dashboard"
-            className={`flex items-center justify-items-start gap-3 px-[8px] py-[10px] ${
-              isActive('/dashboard')
-                ? 'bg-primary-500 text-white rounded-md'
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            <AppstoreOutlined className="text-[20px]" />
-            <span className="text-p3 font-medium">Dashboard & Set Gacha</span>
-          </Link>
-
-          <Link
-            to="/gacha-roll"
-            className={`flex items-center justify-items-start gap-3 px-[8px] py-[10px] ${
-              isActive('/gacha-roll')
-                ? 'bg-primary-500 text-white rounded-md'
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            <ReloadOutlined className="text-[20px]" />
-            <span className="text-p3 font-medium">Gacha Roll</span>
-          </Link>
-
-          <Link
-            to="/permissions"
-            className={`flex items-center justify-items-start gap-3 px-[8px] py-[10px] ${
-              isActive('/permissions')
-                ? 'bg-primary-500 text-white rounded-md'
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            <UserSwitchOutlined className="text-[20px]" />
-            <span className="text-p3 font-medium">Permissions</span>
-          </Link>
-
-          <Link
-            to="/roles"
-            className={`flex items-center justify-items-start gap-3 px-[8px] py-[10px] ${
-              isActive('/roles')
-                ? 'bg-primary-500 text-white rounded-md'
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            <UsergroupAddOutlined className="text-[20px]" />
-            <span className="text-p3 font-medium">Roles</span>
-          </Link>
-
-          <Link
-            to="/accounts"
-            className={`flex items-center justify-items-start gap-3 px-[8px] py-[10px] ${
-              isActive('/accounts')
-                ? 'bg-primary-500 text-white rounded-md'
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            <UserOutlined className="text-[20px]" />
-            <span className="text-p3 font-medium">Data Akun</span>
-          </Link>
-
-          <Link
-            to="/transactions"
-            className={`flex items-center justify-items-start gap-3 px-[8px] py-[10px] ${
-              isActive('/transactions')
-                ? 'bg-primary-500 text-white rounded-md'
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            <AuditOutlined className="text-[20px]" />
-            <span className="text-p3 font-medium">Validasi Transaksi</span>
-          </Link>
-
-          <Link
-            to="/prizes"
-            className={`flex items-center justify-items-start gap-3 px-[8px] py-[10px] ${
-              isActive('/prizes')
-                ? 'bg-primary-500 text-white rounded-md'
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            <InboxOutlined className="text-[20px]" />
-            <span className="text-p3 font-medium">Data Pengiriman Hadiah</span>
-          </Link>
+          <For data={MENUS}>
+            {({ label, href, icon }) => (
+              <Link
+                key={href}
+                to={href}
+                className={cn(
+                  "flex items-center justify-items-start gap-3 px-[8px] py-[10px]",
+                  isActive(href) ? "bg-primary-500 text-white rounded-md" : "text-gray-700 hover:bg-gray-100"
+                )}
+              >
+                {icon}
+                <span className="text-p3 font-medium">{label}</span>
+              </Link>
+            )}
+          </For>
         </nav>
       </div>
 

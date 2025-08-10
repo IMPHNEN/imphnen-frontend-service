@@ -5,3 +5,4 @@ export * from './backoffice-sidebar';
 export * from './datatable';
 export * from './filter';
 export * from './controlled-field';
+export * from './backoffice-wrapper';
