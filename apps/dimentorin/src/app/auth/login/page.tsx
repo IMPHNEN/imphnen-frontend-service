@@ -2,10 +2,12 @@ import { FC, ReactElement } from 'react';
 import { ControlledInputField, LoginBanner } from '@imphnen-frontend-service/ui/organisms';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { useLogin } from '../../_hooks/use-login';
+import { useGoogleLogin } from '../../_hooks/use-google-login';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 
 export const Components: FC = (): ReactElement => {
   const { form, onSubmit, isLoading } = useLogin();
+  const { handleGoogleLogin } = useGoogleLogin();
 
   return (
     <div className="flex flex-col justify-center items-center min-h-screen py-[60px] px-[80px]">
@@ -25,8 +27,8 @@ export const Components: FC = (): ReactElement => {
                 label="Email"
                 size="lg"
                 className="w-full mb-2"
-                placeholder="Masukkan email-mu, Senpai~! ✨ (Pastikan tidak typo, ya~ 😆)" 
-                name={'email'}            
+                placeholder="Masukkan email-mu, Senpai~! ✨ (Pastikan tidak typo, ya~ 😆)"
+                name={'email'}
               />
               <ControlledInputField
                 control={form.control}
@@ -44,7 +46,7 @@ export const Components: FC = (): ReactElement => {
               </div>
               <Button className="w-full" type='submit' disabled={(!form.formState.isValid || isLoading)}>Enter Isekai</Button>
             </form>
-            
+
             <div className="flex my-3 gap-3 justify-center">
               <h5>Belum Punya akun ?</h5>
               <a href="/auth/register" className="text-primary-500 font-medium">
@@ -64,6 +66,7 @@ export const Components: FC = (): ReactElement => {
             <Button
               className="w-full my-3 text-gray-500 gap-2"
               variant="secondary"
+              onClick={handleGoogleLogin}
             >
               <p>Log In With Google</p>
               <img
