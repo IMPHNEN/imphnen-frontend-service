@@ -22,6 +22,7 @@ const MENUS = [
   { label: 'Data Akun', href: '/accounts', icon: <UserOutlined className="text-[20px]" /> },
   { label: 'Validasi Transaksi', href: '/transactions', icon: <AuditOutlined className="text-[20px]" /> },
   { label: 'Data Pengiriman Hadiah', href: '/prizes', icon: <InboxOutlined className="text-[20px]" /> },
+  { label: 'User - Dimentorin', href: '/users-dimentorin', icon: <UserSwitchOutlined className="text-[20px]" /> },
 ]
 
 export const BackofficeSidebar: FC = (): ReactElement => {
@@ -33,11 +34,11 @@ export const BackofficeSidebar: FC = (): ReactElement => {
   };
 
   return (
-    <aside className="sticky top-0 left-0 w-[280px] bg-white min-h-screen py-[60px] px-[28px] shadow-xl flex flex-col justify-between">
+    <aside className="sticky top-0 left-0 w-[280px] bg-white h-svh py-[60px] px-[28px] shadow-xl flex flex-col justify-between">
       <div className="flex flex-col gap-20 justify-between items-center">
         <img src="/logos/simple.svg" alt="IMPHNEN Logo" className="w-[150px]" />
 
-        <nav className="flex flex-col gap-4 w-full">
+        <nav className="flex flex-col gap-4 w-full h-[calc(100svh-20rem)] overflow-y-auto">
           <For data={MENUS}>
             {({ label, href, icon }) => (
               <Link
