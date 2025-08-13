@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import { UploadOutlined } from '@ant-design/icons';
-import { Button } from '@imphnen-frontend-service/ui/atoms';
+import { ModalButton } from '../buttons/modal-button';
 
 interface CVData {
   fileName: string;
@@ -29,7 +29,7 @@ export const CVModal: FC<CVModalProps> = ({
   };
 
   const handleCancel = () => {
-    setCvData(initialValue); // Reset to initial value
+    setCvData(initialValue);
     onClose();
   };
 
@@ -70,7 +70,7 @@ export const CVModal: FC<CVModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
+
       <button
         className="absolute inset-0 bg-black/20 backdrop-blur-sm"
         onClick={handleCancel}
@@ -78,18 +78,56 @@ export const CVModal: FC<CVModalProps> = ({
         type="button"
       />
 
-      {/* Modal */}
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-auto">
-        {/* Header */}
+
+      <div className="relative bg-white rounded-xl shadow-xl w-full max-w-5xl mx-auto">
+
         <div className="p-6 pb-4 border-b border-gray-200">
           <div className="flex">
-            <h2 className="text-xl font-semibold text-gray-900 px-3 py-1 bg-blue-50 rounded-md flex-1">Edit CV/Resume</h2>
+            <h2 className="text-xl font-semibold text-gray-900 px-3 py-1 bg-[#23A1EB]/10 rounded-md flex-1">Edit CV/Resume</h2>
           </div>
         </div>
 
-        {/* Content */}
+
         <div className="px-6 py-4 space-y-4">
-          {/* Current File */}
+            <div>
+              <button
+                type="button"
+                className={`w-full border-2 border-dashed rounded-lg p-6 text-center transition-colors ${isDragging
+                ? 'border-[#23A1EB] bg-[#23A1EB]/20'
+                : 'border-[#23A1EB] bg-[#23A1EB]/5 hover:bg-[#23A1EB]/10'
+              }`}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              onClick={() => {
+              // Trigger file input click
+              document.getElementById('cv-upload-input')?.click();
+              }}
+              onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                document.getElementById('cv-upload-input')?.click();
+              }
+              }}
+              aria-label="Upload CV/Resume"
+            >
+              <UploadOutlined className="w-8 h-8 text-[#23A1EB] mx-auto mb-2" />
+              <p className="text-sm text-[#23A1EB] mb-2">
+              Klik atau tarik file yang ingin di upload{' '}
+              <label className="text-[#23A1EB] hover:text-[#1e90d6] cursor-pointer font-medium">
+                <input
+                id="cv-upload-input"
+                type="file"
+                accept=".pdf"
+                onChange={handleFileSelect}
+                className="hidden" />
+                <span className="sr-only">Browse for CV/Resume PDF file</span>
+              </label>
+              </p>
+              <p className="text-xs text-gray-500">(Format .pdf, max 10mb)</p>
+            </button>
+            </div>
+
           {cvData.fileName && (
             <div className="p-4 bg-gray-50 rounded-lg">
               <h4 className="text-sm font-medium text-gray-700 mb-2">Current File</h4>
@@ -103,58 +141,26 @@ export const CVModal: FC<CVModalProps> = ({
               </div>
             </div>
           )}
-
-          {/* Upload Area */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Upload New CV/Resume
-            </label>
-            <div
-              className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
-                isDragging
-                  ? 'border-blue-500 bg-blue-50'
-                  : 'border-gray-300 hover:border-gray-400'
-              }`}
-              onDragOver={handleDragOver}
-              onDragLeave={handleDragLeave}
-              onDrop={handleDrop}
-            >
-              <UploadOutlined className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-              <p className="text-sm text-gray-600 mb-2">
-                Drag and drop your PDF file here, or{' '}
-                <label className="text-blue-600 hover:text-blue-700 cursor-pointer">
-                  browse
-                  <input
-                    type="file"
-                    accept=".pdf"
-                    onChange={handleFileSelect}
-                    className="hidden"
-                  />
-                </label>
-              </p>
-              <p className="text-xs text-gray-500">PDF files only, max 10MB</p>
-            </div>
-          </div>
         </div>
 
-        {/* Footer */}
+
         <div className="flex gap-3 p-6 pt-4">
-          <Button
-            variant="text"
+          <ModalButton variant="secondary"
             onClick={handleCancel}
             className="flex-1 bg-white shadow-md"
           >
             Batal
-          </Button>
-          <Button
-            variant="primary"
+          </ModalButton>
+          <ModalButton variant="primary"
             onClick={handleSave}
             className="flex-1"
           >
             Simpan
-          </Button>
+          </ModalButton>
         </div>
       </div>
     </div>
   );
 };
+
+

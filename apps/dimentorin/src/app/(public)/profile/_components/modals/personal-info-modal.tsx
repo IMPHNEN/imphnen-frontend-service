@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { Button } from '@imphnen-frontend-service/ui/atoms';
+import { ModalButton } from '../buttons/modal-button';
 
 interface PersonalInfo {
   email: string;
@@ -28,7 +28,7 @@ export const PersonalInfoModal: FC<PersonalInfoModalProps> = ({
   };
 
   const handleCancel = () => {
-    setPersonalInfo(initialValue); // Reset to initial value
+    setPersonalInfo(initialValue);
     onClose();
   };
 
@@ -36,7 +36,7 @@ export const PersonalInfoModal: FC<PersonalInfoModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
+
       <button
         className="absolute inset-0 bg-black/20 backdrop-blur-sm"
         onClick={handleCancel}
@@ -44,16 +44,16 @@ export const PersonalInfoModal: FC<PersonalInfoModalProps> = ({
         type="button"
       />
 
-      {/* Modal */}
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-auto">
-        {/* Header */}
+
+      <div className="relative bg-white rounded-xl shadow-xl w-full max-w-5xl mx-auto">
+
         <div className="p-6 pb-4 border-b border-gray-200">
           <div className="flex">
-            <h2 className="text-xl font-semibold text-gray-900 px-3 py-1 bg-blue-50 rounded-md flex-1">Edit Personal Information</h2>
+            <h2 className="text-xl font-semibold text-gray-900 px-3 py-1 bg-[#23A1EB]/10 rounded-md flex-1">Edit Personal Information</h2>
           </div>
         </div>
 
-        {/* Content */}
+
         <div className="px-6 py-4 space-y-4">
           <div>
             <label htmlFor="personal-email" className="block text-sm font-medium text-gray-700 mb-2">
@@ -65,7 +65,7 @@ export const PersonalInfoModal: FC<PersonalInfoModalProps> = ({
               value={personalInfo.email}
               onChange={(e) => setPersonalInfo({ ...personalInfo, email: e.target.value })}
               placeholder="Enter your email"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#23A1EB] focus:border-[#23A1EB] outline-none transition-colors"
             />
           </div>
 
@@ -79,7 +79,7 @@ export const PersonalInfoModal: FC<PersonalInfoModalProps> = ({
               value={personalInfo.phone}
               onChange={(e) => setPersonalInfo({ ...personalInfo, phone: e.target.value })}
               placeholder="Enter your phone number"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#23A1EB] focus:border-[#23A1EB] outline-none transition-colors"
             />
           </div>
 
@@ -93,29 +93,29 @@ export const PersonalInfoModal: FC<PersonalInfoModalProps> = ({
               value={personalInfo.location}
               onChange={(e) => setPersonalInfo({ ...personalInfo, location: e.target.value })}
               placeholder="Enter your location"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#23A1EB] focus:border-[#23A1EB] outline-none transition-colors"
             />
           </div>
         </div>
 
-        {/* Footer */}
+
         <div className="flex gap-3 p-6 pt-4">
-          <Button
-            variant="text"
+          <ModalButton variant="secondary"
             onClick={handleCancel}
             className="flex-1 bg-white shadow-md"
           >
             Batal
-          </Button>
-          <Button
-            variant="primary"
+          </ModalButton>
+          <ModalButton variant="primary"
             onClick={handleSave}
             className="flex-1"
           >
             Simpan
-          </Button>
+          </ModalButton>
         </div>
       </div>
     </div>
   );
 };
+
+

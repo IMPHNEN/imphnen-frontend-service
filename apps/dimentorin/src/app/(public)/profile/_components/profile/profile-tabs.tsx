@@ -211,7 +211,6 @@ export const ProfileTabs: FC = () => {
 
   return (
     <div className="bg-white rounded-lg shadow-sm">
-      {/* Tab Navigation */}
       <div className="border-b border-neutral-200">
         <nav className="flex space-x-8 px-6 py-4 overflow-x-auto">
           <For data={tabs}>
@@ -236,7 +235,6 @@ export const ProfileTabs: FC = () => {
         </nav>
       </div>
 
-      {/* Tab Content */}
       <div className="p-6">
         <AnimatePresence mode="wait">
           {renderTabContent()}

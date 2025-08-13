@@ -1,13 +1,23 @@
 import { FC } from 'react';
-import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
-import { Button } from '@imphnen-frontend-service/ui/atoms';
+import { CloseOutlined } from '@ant-design/icons';
+import { ModalButton } from '../buttons/modal-button';
 
-interface NotificationModalProps {
+export type NotificationType = {
   isOpen: boolean;
   onClose: () => void;
   type: 'success' | 'error';
   title: string;
   message?: string;
+  header: string;
+}
+
+interface NotificationModalProps extends NotificationType {
+  isOpen: boolean;
+  onClose: () => void;
+  type: 'success' | 'error';
+  title: string;
+  message?: string;
+  header: string;
 }
 
 export const NotificationModal: FC<NotificationModalProps> = ({
@@ -16,6 +26,7 @@ export const NotificationModal: FC<NotificationModalProps> = ({
   type,
   title,
   message,
+  header,
 }) => {
   if (!isOpen) return null;
 
@@ -23,50 +34,52 @@ export const NotificationModal: FC<NotificationModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
       <button
         className="absolute inset-0 bg-black/20 backdrop-blur-sm"
         onClick={onClose}
         aria-label="Close modal"
       />
 
-      {/* Modal Content */}
       <div className="relative bg-white rounded-xl shadow-xl max-w-md w-full overflow-hidden">
-        {/* Header */}
-        <div className="p-6 border-b border-gray-200">
-          <div className="flex items-center gap-3">
-            {isSuccess ? (
-              <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                <CheckCircleOutlined className="text-green-600 text-xl" />
-              </div>
-            ) : (
-              <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
-                <CloseCircleOutlined className="text-red-600 text-xl" />
-              </div>
-            )}
-            <h2 className={`text-xl font-semibold px-3 py-1 rounded-md flex-1 ${isSuccess ? 'bg-blue-50 text-blue-900' : 'bg-red-50 text-red-900'}`}>
-              {title}
-            </h2>
+        <div className="p-6 pb-4 border-b border-gray-200">
+          <div className="flex">
+            <h2 className="text-xl font-semibold text-gray-900 px-3 py-1 bg-[#23A1EB]/10 rounded-md flex-1">{header}</h2>
           </div>
         </div>
 
-        {/* Body */}
-        <div className="p-6">
-          {message && (
-            <p className="text-gray-700 mb-6">{message}</p>
-          )}
+        <div className="p-8 text-center">
+          <div className="mb-6">
+            {isSuccess ? (
+              <div className="w-30 h-30 mx-auto mb-4">
+                <img
+                  src="/image/success.png"
+                  alt="Success"
+                  width={80}
+                  height={80}
+                  className="w-full h-full object-contain"
+                />
+              </div>
+            ) : (
+              <div className="w-20 h-20 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <CloseOutlined className="text-white text-3xl" />
+              </div>
+            )}
 
-          <div className="flex justify-center">
-            <Button
-              variant={isSuccess ? 'primary' : 'danger'}
-              onClick={onClose}
-              className="min-w-[120px]"
-            >
-              Selesai
-            </Button>
+            <h2 className={`text-lg font-medium ${isSuccess ? 'text-green-600' : 'text-red-600'}`}>
+              {title}
+            </h2>
           </div>
+
+          <ModalButton
+            variant="primary"
+            onClick={onClose}
+            className="w-full bg-[#23A1EB] hover:bg-[#23A1EB]/90"
+          >
+            Selesai
+          </ModalButton>
         </div>
       </div>
     </div>
   );
 };
+

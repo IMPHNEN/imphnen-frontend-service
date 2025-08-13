@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Button } from '@imphnen-frontend-service/ui/atoms';
+import { ModalButton } from '../buttons/modal-button';
 import { InputField } from '@imphnen-frontend-service/ui/molecules';
 
 interface Education {
@@ -32,7 +32,7 @@ export const EducationModal: FC<EducationModalProps> = ({
   };
 
   const handleCancel = () => {
-    setEducations(initialValue); // Reset to initial value
+    setEducations(initialValue);
     onClose();
   };
 
@@ -61,35 +61,37 @@ export const EducationModal: FC<EducationModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
+
       <button
         className="absolute inset-0 bg-black/20 backdrop-blur-sm"
         onClick={handleCancel}
         aria-label="Close modal"
       />
 
-      {/* Modal Content */}
-      <div className="relative bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
-        {/* Header */}
+
+      <div className="relative bg-white rounded-xl shadow-xl max-w-5xl w-full max-h-[95vh] overflow-hidden">
+
         <div className="p-6 border-b border-gray-200">
           <div className="flex">
-            <h2 className="text-xl font-semibold text-gray-900 px-3 py-1 bg-blue-50 rounded-md flex-1">Edit Education</h2>
+            <h2 className="text-xl font-semibold text-gray-900 px-3 py-1 bg-[#23A1EB]/10 rounded-md flex-1">Edit Education</h2>
           </div>
         </div>
 
-        {/* Body */}
+
         <div className="p-6 max-h-[60vh] overflow-y-auto">
           <div className="space-y-6">
             {educations.map((education, index) => (
               <div key={education.id} className="border border-gray-200 rounded-lg p-4">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-medium text-gray-900">Education {index + 1}</h3>
-                  <button
+                  <ModalButton
+                    variant="danger"
+                    size="sm"
                     onClick={() => removeEducation(education.id)}
-                    className="text-red-500 hover:text-red-700 transition-colors"
+                    className="text-red-500 hover:text-red-700"
                   >
                     <DeleteOutlined />
-                  </button>
+                  </ModalButton>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -121,32 +123,33 @@ export const EducationModal: FC<EducationModalProps> = ({
               </div>
             ))}
 
-            <button
+            <ModalButton
+              variant="secondary"
               onClick={addEducation}
-              className="w-full border-2 border-dashed border-gray-300 rounded-lg p-4 text-gray-500 hover:border-blue-500 hover:text-blue-500 transition-colors flex items-center justify-center gap-2"
+              className="w-full border-2 border-dashed border-gray-300 rounded-lg p-4 text-gray-500 hover:border-[#23A1EB] hover:text-[#23A1EB] transition-colors flex items-center justify-center gap-2"
             >
               <PlusOutlined />
               Add Education
-            </button>
+            </ModalButton>
           </div>
         </div>
 
-        {/* Footer */}
+
         <div className="flex items-center justify-end gap-3 p-6 border-t border-gray-200 bg-gray-50">
-          <Button
-            variant="text" className="bg-white shadow-md"
+          <ModalButton variant="secondary" className="bg-white shadow-md"
             onClick={handleCancel}
           >
             Batal
-          </Button>
-          <Button
-            variant="primary"
+          </ModalButton>
+          <ModalButton variant="primary"
             onClick={handleSave}
           >
             Simpan
-          </Button>
+          </ModalButton>
         </div>
       </div>
     </div>
   );
 };
+
+

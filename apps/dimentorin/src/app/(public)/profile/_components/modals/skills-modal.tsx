@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Button } from '@imphnen-frontend-service/ui/atoms';
+import { ModalButton } from '../buttons/modal-button';
 import { InputField } from '@imphnen-frontend-service/ui/molecules';
 
 interface Skill {
@@ -31,7 +31,7 @@ export const SkillsModal: FC<SkillsModalProps> = ({
   };
 
   const handleCancel = () => {
-    setSkills(initialValue); // Reset to initial value
+    setSkills(initialValue);
     setNewSkill({ name: '', category: 'Technical' });
     onClose();
   };
@@ -56,7 +56,7 @@ export const SkillsModal: FC<SkillsModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
+
       <button
         className="absolute inset-0 bg-black/20 backdrop-blur-sm"
         onClick={handleCancel}
@@ -64,18 +64,18 @@ export const SkillsModal: FC<SkillsModalProps> = ({
         aria-label="Close modal"
       />
 
-      {/* Modal */}
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-auto max-h-[90vh] overflow-hidden">
-        {/* Header */}
+
+      <div className="relative bg-white rounded-xl shadow-xl w-full max-w-5xl mx-auto max-h-[95vh] overflow-hidden">
+
         <div className="p-6 pb-4 border-b border-gray-200">
           <div className="flex">
-            <h2 className="text-xl font-semibold text-gray-900 px-3 py-1 bg-blue-50 rounded-md flex-1">Edit Skills</h2>
+            <h2 className="text-xl font-semibold text-gray-900 px-3 py-1 bg-[#23A1EB]/10 rounded-md flex-1">Edit Skills</h2>
           </div>
         </div>
 
-        {/* Content */}
+
         <div className="p-6 max-h-[60vh] overflow-y-auto">
-          {/* Add New Skill */}
+
           <div className="mb-6 p-4 border border-gray-200 rounded-lg bg-gray-50">
             <h3 className="text-sm font-medium text-gray-700 mb-3">Add New Skill</h3>
             <div className="flex gap-3">
@@ -92,7 +92,7 @@ export const SkillsModal: FC<SkillsModalProps> = ({
                 <select
                   value={newSkill.category}
                   onChange={(e) => setNewSkill({ ...newSkill, category: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#23A1EB]"
                 >
                   <option value="Technical">Technical</option>
                   <option value="Soft Skill">Soft Skill</option>
@@ -100,18 +100,18 @@ export const SkillsModal: FC<SkillsModalProps> = ({
                 </select>
               </div>
               <div className="flex items-end">
-                <Button
+                <ModalButton
                   onClick={addSkill}
                   variant="primary"
                   size="sm"
                 >
                   <PlusOutlined />
-                </Button>
+                </ModalButton>
               </div>
             </div>
           </div>
 
-          {/* Skills List */}
+
           <div>
             <h3 className="text-sm font-medium text-gray-700 mb-3">Current Skills</h3>
             {skills.length === 0 ? (
@@ -129,14 +129,14 @@ export const SkillsModal: FC<SkillsModalProps> = ({
                         {skill.category}
                       </span>
                     </div>
-                    <Button
+                    <ModalButton
                       onClick={() => removeSkill(skill.id)}
-                      variant="text"
+                      variant="danger"
                       size="sm"
                       className="text-red-500 hover:text-red-700"
                     >
                       <DeleteOutlined />
-                    </Button>
+                    </ModalButton>
                   </div>
                 ))}
               </div>
@@ -144,24 +144,24 @@ export const SkillsModal: FC<SkillsModalProps> = ({
           </div>
         </div>
 
-        {/* Footer */}
+
         <div className="flex gap-3 p-6 pt-4">
-          <Button
-            variant="text"
+          <ModalButton variant="secondary"
             onClick={handleCancel}
             className="flex-1"
           >
             Batal
-          </Button>
-          <Button
-            variant="primary"
+          </ModalButton>
+          <ModalButton variant="primary"
             onClick={handleSave}
             className="flex-1"
           >
             Simpan
-          </Button>
+          </ModalButton>
         </div>
       </div>
     </div>
   );
 };
+
+

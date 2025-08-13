@@ -1,5 +1,14 @@
-export { ProfileHeader } from './profile-header';
-export { ProfileInfo } from './profile-info';
-export { ProfileTabs } from './profile-tabs';
-export { ProfileForm } from './profile-form';
-export { ProfileSidebar } from './profile-sidebar';
+// Profile Components
+export * from './profile';
+
+// Section Components
+export * from './sections';
+
+// Button Components
+export * from './buttons';
+
+// Shared Components
+export * from './shared';
+
+// Modal Components
+export * from './modals';

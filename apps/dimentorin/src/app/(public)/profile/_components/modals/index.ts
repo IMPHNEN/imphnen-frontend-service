@@ -6,4 +6,5 @@ export { ProfileBasicInfoModal } from './profile-basic-info-modal';
 export { CVModal } from './cv-modal';
 export { ExperienceModal } from './experience-modal';
 export { EducationModal } from './education-modal';
+export { LanguagesModal } from './languages-modal';
 export { NotificationModal } from './notification-modal';

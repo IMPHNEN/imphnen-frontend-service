@@ -36,6 +36,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/auth/login-mentor": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["post_login_mentor"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/auth/new-password": {
         parameters: {
             query?: never;
@@ -196,6 +212,86 @@ export interface paths {
         patch: operations["patch_update_event"];
         trace?: never;
     };
+    "/v1/cms/landing/testimonials": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["get_testimonial_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/cms/landing/testimonials/create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["post_create_testimonial"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/cms/landing/testimonials/delete/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["delete_testimonial"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/cms/landing/testimonials/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["get_testimonial_by_id"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/cms/landing/testimonials/update/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["patch_update_testimonial"];
+        trace?: never;
+    };
     "/v1/gacha/claims/create": {
         parameters: {
             query?: never;
@@ -350,6 +446,150 @@ export interface paths {
         get?: never;
         put?: never;
         post: operations["post_execute_gacha_roll"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/mentors": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["get_mentor_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/mentors/delete/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["delete_mentor"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/mentors/detail/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["get_mentor_by_id"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/mentors/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["get_mentor_me"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/mentors/register": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["post_register_mentor"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/mentors/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["get_mentor_status"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/mentors/update/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["put_update_mentor_me"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/mentors/update/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["put_update_mentor"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/mentors/verify/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["put_verify_mentor"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -772,6 +1012,116 @@ export interface components {
             /** Format: float */
             weight: number;
         };
+        IdentityAndVerification: {
+            domicile?: string | null;
+            gender?: string | null;
+            identity_document_url: string;
+            legal_name: string;
+            phone_for_verification: string;
+        };
+        MentorDetailResponseDto: {
+            availability_commitment: string;
+            bio?: string | null;
+            created_at: string;
+            current_company: string;
+            current_role: string;
+            cv_url?: string | null;
+            domicile?: string | null;
+            email?: string | null;
+            expertise: string[];
+            fullname?: string | null;
+            gender?: string | null;
+            github_url?: string | null;
+            id: string;
+            industries: string[];
+            languages: string[];
+            last_education?: string | null;
+            legal_name?: string | null;
+            linkedin_url?: string | null;
+            mentoring_rate: components["schemas"]["MentoringRate"];
+            phone_for_verification?: string | null;
+            portfolio_url?: string | null;
+            preferred_mentee_level: string[];
+            preferred_mentoring_formats: string[];
+            status: string;
+            topics_of_interest: string[];
+            updated_at: string;
+            user_id: string;
+            /** Format: int32 */
+            years_of_experience: number;
+        };
+        MentorListResponseDto: {
+            created_at: string;
+            email?: string | null;
+            fullname?: string | null;
+            id: string;
+            status: string;
+            updated_at: string;
+        };
+        MentorRegisterFromTokenRequestDto: {
+            identity_and_verification: components["schemas"]["IdentityAndVerification"];
+            mentoring_logistics: components["schemas"]["MentoringLogistics"];
+            professional_profile: components["schemas"]["ProfessionalProfile"];
+        };
+        MentorRegisterResponseDto: {
+            created_at: string;
+            email?: string | null;
+            id: string;
+            status: string;
+            updated_at: string;
+            user_id: string;
+        };
+        MentorUpdateRequestDto: {
+            availability_commitment?: string | null;
+            bio?: string | null;
+            current_company?: string | null;
+            current_role?: string | null;
+            cv_url?: string | null;
+            domicile?: string | null;
+            expertise?: string[] | null;
+            gender?: string | null;
+            github_url?: string | null;
+            industries?: string[] | null;
+            languages?: string[] | null;
+            last_education?: string | null;
+            legal_name?: string | null;
+            linkedin_url?: string | null;
+            /** Format: int64 */
+            mentoring_rate_amount?: number | null;
+            phone_for_verification?: string | null;
+            portfolio_url?: string | null;
+            preferred_mentee_level?: string[] | null;
+            preferred_mentoring_formats?: string[] | null;
+            topics_of_interest?: string[] | null;
+            /** Format: int32 */
+            years_of_experience?: number | null;
+        };
+        MentorUserRegisterRequestDto: {
+            email: string;
+            fullname: string;
+            identity_and_verification: components["schemas"]["IdentityAndVerification"];
+            mentoring_logistics: components["schemas"]["MentoringLogistics"];
+            password: string;
+            phone_number: string;
+            professional_profile: components["schemas"]["ProfessionalProfile"];
+        };
+        MentorVerifyRequestDto: {
+            status: string;
+        };
+        MentoringLogistics: {
+            availability_commitment: string;
+            /** Format: int64 */
+            mentoring_rate_amount: number;
+            preferred_mentee_level: string[];
+            preferred_mentoring_formats: string[];
+            topics_of_interest: string[];
+        };
+        MentoringRate: {
+            /** Format: int64 */
+            amount: number;
+            currency: string;
+            per_duration: string;
+        };
         MessageResponseDto: {
             message: string;
             version: string;
@@ -804,6 +1154,21 @@ export interface components {
         PermissionsRequestDto: {
             name: string;
         };
+        ProfessionalProfile: {
+            bio: string;
+            current_company: string;
+            current_role: string;
+            cv_url?: string | null;
+            expertise: string[];
+            github_url?: string | null;
+            industries: string[];
+            languages: string[];
+            last_education?: string | null;
+            linkedin_url?: string | null;
+            portfolio_url?: string | null;
+            /** Format: int32 */
+            years_of_experience: number;
+        };
         ResponseListSuccessDto_Vec_EventsListItemDto: {
             data: {
                 created_at: string;
@@ -831,6 +1196,17 @@ export interface components {
             }[];
             meta?: null | components["schemas"]["MetaResponseDto"];
         };
+        ResponseListSuccessDto_Vec_MentorListResponseDto: {
+            data: {
+                created_at: string;
+                email?: string | null;
+                fullname?: string | null;
+                id: string;
+                status: string;
+                updated_at: string;
+            }[];
+            meta?: null | components["schemas"]["MetaResponseDto"];
+        };
         ResponseListSuccessDto_Vec_PermissionsItemDto: {
             data: {
                 created_at?: string | null;
@@ -847,6 +1223,18 @@ export interface components {
                 name: string;
                 permissions_count: number;
                 updated_at?: string | null;
+            }[];
+            meta?: null | components["schemas"]["MetaResponseDto"];
+        };
+        ResponseListSuccessDto_Vec_TestimonialsListItemDto: {
+            data: {
+                content: string;
+                created_at: string;
+                id: string;
+                is_deleted: boolean;
+                role: string;
+                user_fullname: string;
+                user_id: string;
             }[];
             meta?: null | components["schemas"]["MetaResponseDto"];
         };
@@ -918,6 +1306,49 @@ export interface components {
                 weight: number;
             };
         };
+        ResponseSuccessDto_MentorDetailResponseDto: {
+            data: {
+                availability_commitment: string;
+                bio?: string | null;
+                created_at: string;
+                current_company: string;
+                current_role: string;
+                cv_url?: string | null;
+                domicile?: string | null;
+                email?: string | null;
+                expertise: string[];
+                fullname?: string | null;
+                gender?: string | null;
+                github_url?: string | null;
+                id: string;
+                industries: string[];
+                languages: string[];
+                last_education?: string | null;
+                legal_name?: string | null;
+                linkedin_url?: string | null;
+                mentoring_rate: components["schemas"]["MentoringRate"];
+                phone_for_verification?: string | null;
+                portfolio_url?: string | null;
+                preferred_mentee_level: string[];
+                preferred_mentoring_formats: string[];
+                status: string;
+                topics_of_interest: string[];
+                updated_at: string;
+                user_id: string;
+                /** Format: int32 */
+                years_of_experience: number;
+            };
+        };
+        ResponseSuccessDto_MentorRegisterResponseDto: {
+            data: {
+                created_at: string;
+                email?: string | null;
+                id: string;
+                status: string;
+                updated_at: string;
+                user_id: string;
+            };
+        };
         ResponseSuccessDto_PermissionsItemDto: {
             data: {
                 created_at?: string | null;
@@ -936,6 +1367,17 @@ export interface components {
                 updated_at?: string | null;
             };
         };
+        ResponseSuccessDto_TestimonialsDetailItemDto: {
+            data: {
+                content: string;
+                created_at: string;
+                id: string;
+                role: string;
+                updated_at: string;
+                user_fullname: string;
+                user_id: string;
+            };
+        };
         ResponseSuccessDto_TokenDto: {
             data: {
                 access_token: string;
@@ -945,14 +1387,23 @@ export interface components {
         ResponseSuccessDto_UsersDetailItemDto: {
             data: {
                 avatar?: string | null;
+                bio?: string | null;
                 birthdate?: string | null;
                 created_at: string;
+                cv_url?: string | null;
+                domicile?: string | null;
                 email: string;
                 fullname: string;
                 gender?: string | null;
+                github_url?: string | null;
                 id: string;
                 is_active: boolean;
+                last_education?: string | null;
+                legal_name?: string | null;
+                linkedin_url?: string | null;
+                phone_for_verification?: string | null;
                 phone_number: string;
+                portfolio_url?: string | null;
                 role: components["schemas"]["RolesDetailItemDto"];
                 updated_at: string;
             };
@@ -981,6 +1432,32 @@ export interface components {
             overwrite?: boolean | null;
             permissions?: string[] | null;
         };
+        TestimonialsCreateRequestDto: {
+            content: string;
+            role: string;
+        };
+        TestimonialsDetailItemDto: {
+            content: string;
+            created_at: string;
+            id: string;
+            role: string;
+            updated_at: string;
+            user_fullname: string;
+            user_id: string;
+        };
+        TestimonialsListItemDto: {
+            content: string;
+            created_at: string;
+            id: string;
+            is_deleted: boolean;
+            role: string;
+            user_fullname: string;
+            user_id: string;
+        };
+        TestimonialsUpdateRequestDto: {
+            content: string;
+            role: string;
+        };
         TokenDto: {
             access_token: string;
             refresh_token: string;
@@ -989,6 +1466,7 @@ export interface components {
             is_active: boolean;
         };
         UsersCreateRequestDto: {
+            avatar?: string | null;
             email: string;
             fullname: string;
             is_active: boolean;
@@ -998,14 +1476,23 @@ export interface components {
         };
         UsersDetailItemDto: {
             avatar?: string | null;
+            bio?: string | null;
             birthdate?: string | null;
             created_at: string;
+            cv_url?: string | null;
+            domicile?: string | null;
             email: string;
             fullname: string;
             gender?: string | null;
+            github_url?: string | null;
             id: string;
             is_active: boolean;
+            last_education?: string | null;
+            legal_name?: string | null;
+            linkedin_url?: string | null;
+            phone_for_verification?: string | null;
             phone_number: string;
+            portfolio_url?: string | null;
             role: components["schemas"]["RolesDetailItemDto"];
             updated_at: string;
         };
@@ -1022,12 +1509,22 @@ export interface components {
         };
         UsersUpdateRequestDto: {
             avatar?: string | null;
+            bio?: string | null;
             birthdate?: string | null;
+            cv_url?: string | null;
+            domicile?: string | null;
             email: string;
             fullname: string;
             gender?: string | null;
+            github_url?: string | null;
             is_active: boolean;
+            last_education?: string | null;
+            legal_name?: string | null;
+            linkedin_url?: string | null;
+            password: string;
+            phone_for_verification?: string | null;
             phone_number: string;
+            portfolio_url?: string | null;
             role_id: string;
         };
     };
@@ -1096,6 +1593,48 @@ export interface operations {
             };
             /** @description Login failed */
             401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageResponseDto"];
+                };
+            };
+        };
+    };
+    post_login_mentor: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AuthLoginRequestDto"];
+            };
+        };
+        responses: {
+            /** @description Mentor login successful */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseSuccessDto_AuthLoginResponsetDto"];
+                };
+            };
+            /** @description Mentor login failed */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageResponseDto"];
+                };
+            };
+            /** @description Forbidden - Not a mentor */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -1402,6 +1941,138 @@ export interface operations {
             };
         };
     };
+    get_testimonial_list: {
+        parameters: {
+            query?: {
+                /** @description Page number */
+                page?: number;
+                /** @description Items per page */
+                per_page?: number;
+                /** @description Search keyword */
+                search?: string;
+                /** @description Sort by field */
+                sort_by?: string;
+                /** @description Order ASC or DESC */
+                order?: string;
+                /** @description Filter value */
+                filter?: string;
+                /** @description Field to filter by */
+                filter_by?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Get testimonial list */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseListSuccessDto_Vec_TestimonialsListItemDto"];
+                };
+            };
+        };
+    };
+    post_create_testimonial: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TestimonialsCreateRequestDto"];
+            };
+        };
+        responses: {
+            /** @description Create new testimonial */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageResponseDto"];
+                };
+            };
+        };
+    };
+    delete_testimonial: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Testimonial ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Soft delete testimonial */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageResponseDto"];
+                };
+            };
+        };
+    };
+    get_testimonial_by_id: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Testimonial ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Get testimonial by ID */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseSuccessDto_TestimonialsDetailItemDto"];
+                };
+            };
+        };
+    };
+    patch_update_testimonial: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Testimonial ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TestimonialsUpdateRequestDto"];
+            };
+        };
+        responses: {
+            /** @description Update testimonial */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageResponseDto"];
+                };
+            };
+        };
+    };
     post_create_gacha_claim: {
         parameters: {
             query?: never;
@@ -1643,6 +2314,391 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["ResponseSuccessDto_GachaRollItemDto"];
                 };
+            };
+        };
+    };
+    get_mentor_list: {
+        parameters: {
+            query?: {
+                /** @description Page number */
+                page?: number;
+                /** @description Items per page */
+                per_page?: number;
+                /** @description Search query */
+                search?: string;
+                /** @description Sort by field */
+                sort_by?: string;
+                /** @description Sort order (ASC/DESC) */
+                order?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Get list of mentors */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MentorListResponseDto"][];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    delete_mentor: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Mentor ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Mentor deleted successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Mentor not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    get_mentor_by_id: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Mentor ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Get mentor by ID */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MentorDetailResponseDto"];
+                };
+            };
+            /** @description Mentor not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    get_mentor_me: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Current user's mentor profile */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MentorDetailResponseDto"];
+                };
+            };
+            /** @description Unauthorized - invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Mentor profile not found for current user */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    post_register_mentor: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MentorUserRegisterRequestDto"];
+            };
+        };
+        responses: {
+            /** @description Mentor registered successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MentorRegisterResponseDto"];
+                };
+            };
+            /** @description Bad request - validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Conflict - user already has mentor profile */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    get_mentor_status: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Mentor application status */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            /** @description Unauthorized - invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No mentor application found for current user */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    put_update_mentor_me: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MentorUpdateRequestDto"];
+            };
+        };
+        responses: {
+            /** @description Mentor profile updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MentorDetailResponseDto"];
+                };
+            };
+            /** @description Bad request - validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized - invalid token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Mentor profile not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    put_update_mentor: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Mentor ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MentorUpdateRequestDto"];
+            };
+        };
+        responses: {
+            /** @description Mentor updated successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MentorDetailResponseDto"];
+                };
+            };
+            /** @description Bad request - validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Mentor not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    put_verify_mentor: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Mentor ID */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MentorVerifyRequestDto"];
+            };
+        };
+        responses: {
+            /** @description Mentor verified successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MentorDetailResponseDto"];
+                };
+            };
+            /** @description Bad request - validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Mentor not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };
