@@ -151,14 +151,14 @@ export const SkillsModal: FC<SkillsModalProps> = ({
             onClick={handleCancel}
             className="flex-1"
           >
-            Cancel
+            Batal
           </Button>
           <Button
             variant="primary"
             onClick={handleSave}
             className="flex-1"
           >
-            Save
+            Simpan
           </Button>
         </div>
       </div>

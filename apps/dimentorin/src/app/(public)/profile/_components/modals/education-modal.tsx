@@ -134,16 +134,16 @@ export const EducationModal: FC<EducationModalProps> = ({
         {/* Footer */}
         <div className="flex items-center justify-end gap-3 p-6 border-t border-gray-200 bg-gray-50">
           <Button
-            variant="secondary"
+            variant="text" className="bg-white shadow-md"
             onClick={handleCancel}
           >
-            Cancel
+            Batal
           </Button>
           <Button
             variant="primary"
             onClick={handleSave}
           >
-            Save Changes
+            Simpan
           </Button>
         </div>
       </div>

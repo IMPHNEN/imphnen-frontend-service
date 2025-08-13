@@ -83,16 +83,16 @@ export const SocialMediaModal: FC<SocialMediaModalProps> = ({
           <Button
             variant="text"
             onClick={handleCancel}
-            className="flex-1"
+            className="flex-1 bg-white shadow-md"
           >
-            Cancel
+            Batal
           </Button>
           <Button
             variant="primary"
             onClick={handleSave}
             className="flex-1"
           >
-            Save
+            Simpan
           </Button>
         </div>
       </div>
