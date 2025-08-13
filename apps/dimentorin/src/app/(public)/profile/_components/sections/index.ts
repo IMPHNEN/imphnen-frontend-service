@@ -1,4 +1,3 @@
-export { ProfileBasicInfoSection } from './profile-basic-info-section';
 export { SocialMediaSection } from './social-media-section';
 export { DescriptionSection } from './description-section';
 export { CvResumeSection } from './cv-resume-section';

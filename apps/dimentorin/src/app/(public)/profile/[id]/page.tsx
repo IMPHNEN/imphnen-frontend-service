@@ -1,23 +1,26 @@
 'use client';
 
 import { FC, ReactElement, useState } from 'react';
-import { ProfileForm, ProfileSidebar, ProfileHeader } from './_components';
+import { useParams } from 'next/navigation';
+import { ProfileForm, ProfileSidebar } from '../_components';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
-import { NotificationModal, NotificationType } from './_components/modals/notification-modal';
-import { ProfileProvider, useProfile } from './_components/contexts/profile-context';
-import { EditProfileModal } from './_components/modals/edit-profile-modal';
+import { NotificationModal, NotificationType } from '../_components/modals/notification-modal';
+import { ProfileProvider, useProfile } from '../_components/contexts/profile-context';
 
-export const Components: FC = (): ReactElement => {
+const ProfileByIdPage: FC = (): ReactElement => {
+  const params = useParams();
+  const id = params.id as string;
+
   return (
-    <ProfileProvider profileType="user">
-      <ProfileContent />
+    <ProfileProvider profileId={id} profileType="user">
+      <ProfileByIdContent />
     </ProfileProvider>
   );
 };
 
-const ProfileContent: FC = (): ReactElement => {
-  const { isLoading, error } = useProfile();
+const ProfileByIdContent: FC = (): ReactElement => {
+  const { profileData, isLoading, error, profileType } = useProfile();
 
   const [notification, setNotification] = useState<{
     isOpen: boolean;
@@ -31,7 +34,12 @@ const ProfileContent: FC = (): ReactElement => {
     message: ''
   });
 
-  const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false); // State for edit profile modal
+  const getProfileTitle = () => {
+    if (profileData?.fullname) {
+      return `${profileData.fullname}'s Profile`;
+    }
+    return profileType === 'user' ? 'User Profile' : 'Mentor Profile';
+  };
 
   const showNotification = (type: NotificationType['type'], title: string, message?: string) => {
     setNotification({
@@ -44,14 +52,6 @@ const ProfileContent: FC = (): ReactElement => {
 
   const hideNotification = () => {
     setNotification(prev => ({ ...prev, isOpen: false }));
-  };
-
-  const openEditProfileModal = () => {
-    setIsEditProfileModalOpen(true);
-  };
-
-  const closeEditProfileModal = () => {
-    setIsEditProfileModalOpen(false);
   };
 
   if (isLoading) {
@@ -70,7 +70,7 @@ const ProfileContent: FC = (): ReactElement => {
       <main className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-600 text-lg">Failed to load profile</p>
-          <p className="text-gray-600 mt-2">Please try again later.</p>
+          <p className="text-gray-600 mt-2">Profile not found or you don't have permission to view it.</p>
         </div>
       </main>
     );
@@ -91,22 +91,25 @@ const ProfileContent: FC = (): ReactElement => {
 
       <div className="w-full px-8 md:px-[60px] lg:px-20 py-6">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-2xl font-semibold text-gray-900">Your Profile</h1>
+          <h1 className="text-2xl font-semibold text-gray-900">
+            {getProfileTitle()}
+          </h1>
         </div>
       </div>
 
       <div className="w-full px-8 md:px-[60px] lg:px-20 pb-12">
         <div className="max-w-7xl mx-auto">
           <div className="grid gap-8 lg:grid-cols-12">
-            <div className="lg:col-span-12">
-              <ProfileHeader onEditProfileClick={openEditProfileModal} />
-            </div>
             <div className="lg:col-span-8 order-1">
-              <ProfileForm showNotification={showNotification} />
+              <ProfileForm
+                showNotification={showNotification}
+              />
             </div>
 
             <div className="lg:col-span-4 order-2">
-              <ProfileSidebar showNotification={showNotification} />
+              <ProfileSidebar
+                showNotification={showNotification}
+              />
             </div>
           </div>
         </div>
@@ -119,14 +122,8 @@ const ProfileContent: FC = (): ReactElement => {
         message={notification.message}
         header="Profile"
       />
-      {/* Edit Profile Modal */}
-      <EditProfileModal
-        isOpen={isEditProfileModalOpen}
-        onClose={closeEditProfileModal}
-        showNotification={showNotification}
-      />
     </main>
   );
 };
 
-export default Components;
+export default ProfileByIdPage;
