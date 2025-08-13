@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { ModalButton } from '../buttons/modal-button';
 
 interface SocialLink {
@@ -21,6 +21,11 @@ export const SocialMediaModal: FC<SocialMediaModalProps> = ({
   onSave,
 }) => {
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>(initialValue);
+
+  // Sync local state with backend data
+  useEffect(() => {
+    setSocialLinks(initialValue);
+  }, [initialValue]);
 
   const handleSave = () => {
     onSave(socialLinks);

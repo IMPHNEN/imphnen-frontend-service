@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { EducationModal } from '../modals';
 import { SectionWrapper } from '../shared/section-wrapper';
 import { NotificationType } from '../modals/notification-modal';
@@ -16,20 +16,28 @@ interface EducationSectionProps {
   initialEducation: Education[];
   onSave: (newEducation: Education[]) => void;
   showNotification: (type: NotificationType['type'], title: string, message?: string) => void;
+  isLoading?: boolean;
 }
 
 export const EducationSection: FC<EducationSectionProps> = ({
   initialEducation,
   onSave,
   showNotification,
+  isLoading = false,
 }) => {
   const [isEducationModalOpen, setIsEducationModalOpen] = useState(false);
   const [education, setEducation] = useState<Education[]>(initialEducation);
 
+  // Sync local state with props when initialEducation changes
+  useEffect(() => {
+    setEducation(initialEducation);
+  }, [initialEducation]);
+
   const handleSave = (newEducation: Education[]) => {
-    setEducation(newEducation);
+    // Only call backend update, don't update local state
+    // Local state will be updated through useEffect when backend responds
+    // Don't show notification here - ProfileForm will handle it after backend success
     onSave(newEducation);
-    showNotification('success', 'Perubahan Berhasil Disimpan', '');
   };
 
   return (
@@ -37,7 +45,10 @@ export const EducationSection: FC<EducationSectionProps> = ({
       title="Education"
       editButton={
         <div className="flex gap-2">
-          <EditSectionButton onClick={() => setIsEducationModalOpen(true)} />
+          <EditSectionButton
+            onClick={() => setIsEducationModalOpen(true)}
+            disabled={isLoading}
+          />
         </div>
       }
       delay={0.5}
@@ -64,6 +75,7 @@ export const EducationSection: FC<EducationSectionProps> = ({
         onClose={() => setIsEducationModalOpen(false)}
         initialValue={education}
         onSave={handleSave}
+        isLoading={isLoading}
       />
     </SectionWrapper>
   );

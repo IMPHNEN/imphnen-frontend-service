@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import { ModalButton } from '../buttons/modal-button';
 import { InputField } from '@imphnen-frontend-service/ui/molecules';
@@ -24,6 +24,11 @@ export const SkillsModal: FC<SkillsModalProps> = ({
 }) => {
   const [skills, setSkills] = useState<Skill[]>(initialValue);
   const [newSkill, setNewSkill] = useState({ name: '', category: 'Technical' });
+
+  // Sync local state with backend data
+  useEffect(() => {
+    setSkills(initialValue);
+  }, [initialValue]);
 
   const handleSave = () => {
     onSave(skills);
@@ -78,7 +83,7 @@ export const SkillsModal: FC<SkillsModalProps> = ({
 
           <div className="mb-6 p-4 border border-gray-200 rounded-lg bg-gray-50">
             <h3 className="text-sm font-medium text-gray-700 mb-3">Add New Skill</h3>
-            <div className="flex gap-3">
+            <div className="flex flex-col sm:flex-row gap-3">
               <div className="flex-1">
                 <InputField
                   label="Skill Name"
@@ -87,9 +92,10 @@ export const SkillsModal: FC<SkillsModalProps> = ({
                   placeholder="e.g., React, JavaScript, etc."
                 />
               </div>
-              <div className="w-32">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+              <div className="w-full sm:w-32">
+                <label htmlFor="skill-category-select" className="block text-sm font-medium text-gray-700 mb-1">Category</label>
                 <select
+                  id="skill-category-select"
                   value={newSkill.category}
                   onChange={(e) => setNewSkill({ ...newSkill, category: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#23A1EB]"
@@ -99,13 +105,15 @@ export const SkillsModal: FC<SkillsModalProps> = ({
                   <option value="Language">Language</option>
                 </select>
               </div>
-              <div className="flex items-end">
+              <div className="flex sm:items-end">
                 <ModalButton
                   onClick={addSkill}
                   variant="primary"
                   size="sm"
+                  className="w-full sm:w-auto"
                 >
                   <PlusOutlined />
+                  <span className="sm:hidden ml-2">Add Skill</span>
                 </ModalButton>
               </div>
             </div>

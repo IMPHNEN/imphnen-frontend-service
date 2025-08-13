@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { ModalButton } from '../buttons/modal-button';
 
 interface PersonalInfo {
@@ -21,6 +21,11 @@ export const PersonalInfoModal: FC<PersonalInfoModalProps> = ({
   onSave,
 }) => {
   const [personalInfo, setPersonalInfo] = useState(initialValue);
+
+  // Sync local state with backend data
+  useEffect(() => {
+    setPersonalInfo(initialValue);
+  }, [initialValue]);
 
   const handleSave = () => {
     onSave(personalInfo);

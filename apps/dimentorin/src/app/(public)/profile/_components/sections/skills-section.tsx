@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { SkillsModal } from '../modals';
 import { SectionWrapper } from '../shared/section-wrapper';
 import { NotificationType } from '../modals/notification-modal';
@@ -24,11 +24,17 @@ export const SkillsSection: FC<SkillsSectionProps> = ({
   const [isSkillsModalOpen, setIsSkillsModalOpen] = useState(false);
   const [skills, setSkills] = useState<string[]>(initialSkills);
 
+  // Sync local state with props when initialSkills changes
+  useEffect(() => {
+    setSkills(initialSkills);
+  }, [initialSkills]);
+
   const handleSave = (newSkills: Skill[]) => {
     const stringSkills = newSkills.map(skill => skill.name);
-    setSkills(stringSkills);
+    // Only call backend update, don't update local state
+    // Local state will be updated through useEffect when backend responds
+    // Don't show notification here - ProfileForm will handle it after backend success
     onSave(stringSkills);
-    showNotification('success', 'Perubahan Berhasil Disimpan', '');
   };
 
   return (

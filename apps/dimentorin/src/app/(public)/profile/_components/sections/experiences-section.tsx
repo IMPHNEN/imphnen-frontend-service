@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { ExperienceModal } from '../modals';
 import { SectionWrapper } from '../shared/section-wrapper';
 import { NotificationType } from '../modals/notification-modal';
@@ -16,20 +16,28 @@ interface ExperiencesSectionProps {
   initialExperiences: Experience[];
   onSave: (newExperiences: Experience[]) => void;
   showNotification: (type: NotificationType['type'], title: string, message?: string) => void;
+  isLoading?: boolean;
 }
 
 export const ExperiencesSection: FC<ExperiencesSectionProps> = ({
   initialExperiences,
   onSave,
   showNotification,
+  isLoading = false,
 }) => {
   const [isExperienceModalOpen, setIsExperienceModalOpen] = useState(false);
   const [experiences, setExperiences] = useState<Experience[]>(initialExperiences);
 
+  // Sync local state with props when initialExperiences changes
+  useEffect(() => {
+    setExperiences(initialExperiences);
+  }, [initialExperiences]);
+
   const handleSave = (newExperiences: Experience[]) => {
-    setExperiences(newExperiences);
+    // Only call backend update, don't update local state
+    // Local state will be updated through useEffect when backend responds
+    // Don't show notification here - ProfileForm will handle it after backend success
     onSave(newExperiences);
-    showNotification('success', 'Perubahan Berhasil Disimpan', '');
   };
 
   return (
@@ -37,7 +45,10 @@ export const ExperiencesSection: FC<ExperiencesSectionProps> = ({
       title="Experiences"
       editButton={
         <div className="flex gap-2">
-          <EditSectionButton onClick={() => setIsExperienceModalOpen(true)} />
+          <EditSectionButton
+            onClick={() => setIsExperienceModalOpen(true)}
+            disabled={isLoading}
+          />
         </div>
       }
       delay={0.4}
@@ -64,6 +75,7 @@ export const ExperiencesSection: FC<ExperiencesSectionProps> = ({
         onClose={() => setIsExperienceModalOpen(false)}
         initialValue={experiences}
         onSave={handleSave}
+        isLoading={isLoading}
       />
     </SectionWrapper>
   );

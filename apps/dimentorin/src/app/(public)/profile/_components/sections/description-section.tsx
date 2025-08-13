@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { DescriptionModal } from '../modals';
 import { SectionWrapper } from '../shared/section-wrapper';
 import { NotificationType } from '../modals/notification-modal';
@@ -8,27 +8,38 @@ interface DescriptionSectionProps {
   initialDescription: string;
   onSave: (newDescription: string) => void;
   showNotification: (type: NotificationType['type'], title: string, message?: string) => void;
+  isLoading?: boolean;
 }
 
 export const DescriptionSection: FC<DescriptionSectionProps> = ({
   initialDescription,
   onSave,
   showNotification,
+  isLoading = false,
 }) => {
   const [isDescriptionModalOpen, setIsDescriptionModalOpen] = useState(false);
   const [description, setDescription] = useState(initialDescription);
 
+  // Sync local state with props when initialDescription changes
+  useEffect(() => {
+    setDescription(initialDescription);
+  }, [initialDescription]);
+
   const handleSave = (newDescription: string) => {
-    setDescription(newDescription);
+    // Only call backend update, don't update local state
+    // Local state will be updated through useEffect when backend responds
+    // Don't show notification here - ProfileForm will handle it after backend success
     onSave(newDescription);
-    showNotification('success', 'Perubahan Berhasil Disimpan', '');
   };
 
   return (
     <SectionWrapper
       title="Description"
       editButton={
-        <EditSectionButton onClick={() => setIsDescriptionModalOpen(true)} />
+        <EditSectionButton
+          onClick={() => setIsDescriptionModalOpen(true)}
+          disabled={isLoading}
+        />
       }
       delay={0.2}
     >
@@ -41,6 +52,7 @@ export const DescriptionSection: FC<DescriptionSectionProps> = ({
         onClose={() => setIsDescriptionModalOpen(false)}
         initialValue={description}
         onSave={handleSave}
+        isLoading={isLoading}
       />
     </SectionWrapper>
   );

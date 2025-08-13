@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import { ModalButton } from '../buttons/modal-button';
 import { InputField } from '@imphnen-frontend-service/ui/molecules';
@@ -16,6 +16,7 @@ interface ExperienceModalProps {
   onClose: () => void;
   initialValue: Experience[];
   onSave: (value: Experience[]) => void;
+  isLoading?: boolean;
 }
 
 export const ExperienceModal: FC<ExperienceModalProps> = ({
@@ -23,8 +24,14 @@ export const ExperienceModal: FC<ExperienceModalProps> = ({
   onClose,
   initialValue,
   onSave,
+  isLoading = false,
 }) => {
   const [experiences, setExperiences] = useState<Experience[]>(initialValue);
+
+  // Sync local state with backend data
+  useEffect(() => {
+    setExperiences(initialValue);
+  }, [initialValue]);
 
   const handleSave = () => {
     onSave(experiences);
@@ -131,15 +138,21 @@ export const ExperienceModal: FC<ExperienceModalProps> = ({
         </div>
 
         <div className="flex items-center justify-end gap-3 p-6 border-t border-gray-200 bg-gray-50">
-          <ModalButton variant="secondary" className="bg-white shadow-md"
+          <ModalButton
+            variant="secondary"
+            className="bg-white shadow-md"
             onClick={handleCancel}
+            disabled={isLoading}
           >
             Batal
           </ModalButton>
-          <ModalButton variant="primary"
+          <ModalButton
+            variant="primary"
             onClick={handleSave}
+            disabled={isLoading}
+            loading={isLoading}
           >
-            Simpan
+            {isLoading ? 'Menyimpan...' : 'Simpan'}
           </ModalButton>
         </div>
       </div>

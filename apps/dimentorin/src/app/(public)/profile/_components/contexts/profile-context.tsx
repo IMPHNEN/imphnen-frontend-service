@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useMemo, useCallback } from 'react';
 import { useParams } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '@imphnen-frontend-service/utils';
 import {
   // User hooks
@@ -67,6 +68,7 @@ export const ProfileProvider: React.FC<ProfileProviderProps> = ({
 }) => {
   const params = useParams();
   const { session } = useAuthStore();
+  const queryClient = useQueryClient();
 
   // Check if current user can access mentor features
   const canAccessMentor = useMemo(() => {
@@ -163,20 +165,22 @@ export const ProfileProvider: React.FC<ProfileProviderProps> = ({
         // Use mentor API if user has mentor role and profileType is mentor
         if (isOwnProfile) {
           await updateMentorMeMutation.mutateAsync(data as MentorUpdateRequestDto);
-          await mentorMeQuery.refetch();
+          // Invalidate mentor queries - React Query will automatically refetch
+          await queryClient.invalidateQueries({ queryKey: ['mentor-me'] });
         } else if (id) {
           await updateMentorByIdMutation.mutateAsync({ id, data: data as MentorUpdateRequestDto });
-          await mentorByIdQuery.refetch();
+          // Invalidate mentor by id queries - React Query will automatically refetch
+          await queryClient.invalidateQueries({ queryKey: ['mentor-by-id', id] });
         }
-      } else {
+      } else if (isOwnProfile) {
         // Use user API for 'user' profile type or if not a mentor
-        if (isOwnProfile) {
-          await updateUserMeMutation.mutateAsync(data as UserUpdateRequestDto);
-          await userMeQuery.refetch();
-        } else if (id) {
-          await updateUserByIdMutation.mutateAsync({ id, data: data as UserUpdateRequestDto });
-          await userByIdQuery.refetch();
-        }
+        await updateUserMeMutation.mutateAsync(data as UserUpdateRequestDto);
+        // Invalidate user queries - React Query will automatically refetch
+        await queryClient.invalidateQueries({ queryKey: ['user-me'] });
+      } else if (id) {
+        await updateUserByIdMutation.mutateAsync({ id, data: data as UserUpdateRequestDto });
+        // Invalidate user by id queries - React Query will automatically refetch
+        await queryClient.invalidateQueries({ queryKey: ['user-by-id', id] });
       }
     } catch (error) {
       console.error('Failed to update profile:', error);
@@ -187,14 +191,11 @@ export const ProfileProvider: React.FC<ProfileProviderProps> = ({
     isOwnProfile,
     canAccessMentor,
     id,
+    queryClient,
     updateUserMeMutation,
     updateUserByIdMutation,
     updateMentorMeMutation,
-    updateMentorByIdMutation,
-    userMeQuery,
-    userByIdQuery,
-    mentorMeQuery,
-    mentorByIdQuery
+    updateMentorByIdMutation
   ]);  const isUpdating = updateMutation.isPending;
 
   const value: ProfileContextType = useMemo(() => ({

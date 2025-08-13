@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { ModalButton } from '../buttons/modal-button';
 
 interface DescriptionModalProps {
@@ -6,6 +6,7 @@ interface DescriptionModalProps {
   onClose: () => void;
   initialValue: string;
   onSave: (value: string) => void;
+  isLoading?: boolean;
 }
 
 export const DescriptionModal: FC<DescriptionModalProps> = ({
@@ -13,8 +14,14 @@ export const DescriptionModal: FC<DescriptionModalProps> = ({
   onClose,
   initialValue,
   onSave,
+  isLoading = false,
 }) => {
   const [description, setDescription] = useState(initialValue);
+
+  // Sync local state with backend data
+  useEffect(() => {
+    setDescription(initialValue);
+  }, [initialValue]);
 
   const handleSave = () => {
     onSave(description);
@@ -65,6 +72,7 @@ export const DescriptionModal: FC<DescriptionModalProps> = ({
             variant="secondary"
             onClick={handleCancel}
             className="flex-1"
+            disabled={isLoading}
           >
             Batal
           </ModalButton>
@@ -72,8 +80,10 @@ export const DescriptionModal: FC<DescriptionModalProps> = ({
             variant="primary"
             onClick={handleSave}
             className="flex-1"
+            disabled={isLoading}
+            loading={isLoading}
           >
-            Simpan
+            {isLoading ? 'Menyimpan...' : 'Simpan'}
           </ModalButton>
         </div>
       </div>

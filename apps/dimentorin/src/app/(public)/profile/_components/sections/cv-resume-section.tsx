@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { DownloadOutlined } from '@ant-design/icons';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { CVModal } from '../modals';
@@ -10,27 +10,38 @@ interface CvResumeSectionProps {
   initialFileName: string;
   onSave: (cvData: { fileName: string }) => void;
   showNotification: (type: NotificationType['type'], title: string, message?: string) => void;
+  isLoading?: boolean;
 }
 
 export const CvResumeSection: FC<CvResumeSectionProps> = ({
   initialFileName,
   onSave,
   showNotification,
+  isLoading = false,
 }) => {
   const [isCVModalOpen, setIsCVModalOpen] = useState(false);
   const [fileName, setFileName] = useState(initialFileName);
 
+  // Sync local state with props when initialFileName changes
+  useEffect(() => {
+    setFileName(initialFileName);
+  }, [initialFileName]);
+
   const handleSave = (cvData: { fileName: string }) => {
-    setFileName(cvData.fileName);
+    // Only call backend update, don't update local state
+    // Local state will be updated through useEffect when backend responds
+    // Don't show notification here - ProfileForm will handle it after backend success
     onSave(cvData);
-    showNotification('success', 'Perubahan Berhasil Disimpan', '');
   };
 
   return (
     <SectionWrapper
       title="CV/Resume"
       editButton={
-        <EditSectionButton onClick={() => setIsCVModalOpen(true)} />
+        <EditSectionButton
+          onClick={() => setIsCVModalOpen(true)}
+          disabled={isLoading}
+        />
       }
       delay={0.3}
     >
@@ -52,6 +63,7 @@ export const CvResumeSection: FC<CvResumeSectionProps> = ({
         onClose={() => setIsCVModalOpen(false)}
         initialValue={{ fileName }}
         onSave={handleSave}
+        isLoading={isLoading}
       />
     </SectionWrapper>
   );

@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { UploadOutlined } from '@ant-design/icons';
 import { ModalButton } from '../buttons/modal-button';
 
@@ -12,6 +12,7 @@ interface CVModalProps {
   onClose: () => void;
   initialValue: CVData;
   onSave: (value: CVData) => void;
+  isLoading?: boolean;
 }
 
 export const CVModal: FC<CVModalProps> = ({
@@ -19,9 +20,15 @@ export const CVModal: FC<CVModalProps> = ({
   onClose,
   initialValue,
   onSave,
+  isLoading = false,
 }) => {
   const [cvData, setCvData] = useState(initialValue);
   const [isDragging, setIsDragging] = useState(false);
+
+  // Sync local state with backend data
+  useEffect(() => {
+    setCvData(initialValue);
+  }, [initialValue]);
 
   const handleSave = () => {
     onSave(cvData);
@@ -145,17 +152,22 @@ export const CVModal: FC<CVModalProps> = ({
 
 
         <div className="flex gap-3 p-6 pt-4">
-          <ModalButton variant="secondary"
+          <ModalButton
+            variant="secondary"
             onClick={handleCancel}
             className="flex-1 bg-white shadow-md"
+            disabled={isLoading}
           >
             Batal
           </ModalButton>
-          <ModalButton variant="primary"
+          <ModalButton
+            variant="primary"
             onClick={handleSave}
             className="flex-1"
+            disabled={isLoading}
+            loading={isLoading}
           >
-            Simpan
+            {isLoading ? 'Menyimpan...' : 'Simpan'}
           </ModalButton>
         </div>
       </div>

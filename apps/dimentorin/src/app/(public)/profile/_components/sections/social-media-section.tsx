@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { SocialMediaModal } from '../modals';
 import { SectionWrapper } from '../shared/section-wrapper';
 import { NotificationType } from '../modals/notification-modal';
@@ -24,10 +24,16 @@ export const SocialMediaSection: FC<SocialMediaSectionProps> = ({
   const [isSocialMediaModalOpen, setIsSocialMediaModalOpen] = useState(false);
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>(initialSocialLinks);
 
+  // Sync local state with props when initialSocialLinks changes
+  useEffect(() => {
+    setSocialLinks(initialSocialLinks);
+  }, [initialSocialLinks]);
+
   const handleSave = (newSocialLinks: SocialLink[]) => {
-    setSocialLinks(newSocialLinks);
+    // Only call backend update, don't update local state
+    // Local state will be updated through useEffect when backend responds
+    // Don't show notification here - ProfileForm will handle it after backend success
     onSave(newSocialLinks);
-    showNotification('success', 'Perubahan Berhasil Disimpan', '');
   };
 
   return (

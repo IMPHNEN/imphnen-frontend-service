@@ -34,7 +34,7 @@ interface ProfileFormProps {
 }
 
 export const ProfileForm: FC<ProfileFormProps> = ({ showNotification }) => {
-  const { profileData, updateProfile, profileType } = useProfile();
+  const { profileData, updateProfile, profileType, isUpdating } = useProfile();
 
   const [notification, setNotification] = useState<{
     isOpen: boolean;
@@ -159,25 +159,27 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification }) => {
           });
         }}
         showNotification={showNotification}
+        isLoading={isUpdating}
       />
 
       {/* Languages Section */}
       <LanguagesSection
         initialLanguages={languages}
         onSave={async (newLanguages) => {
-          setLanguages(newLanguages);
+          // Don't update local state, let useEffect handle it after backend responds
           await handleProfileUpdate({
             languages: newLanguages.map(lang => lang.name)
           } as MentorUpdateRequestDto | UserUpdateRequestDto);
         }}
         showNotification={showNotification}
+        isLoading={isUpdating}
       />
 
       {/* Experience Section */}
       <ExperiencesSection
         initialExperiences={experiences}
         onSave={async (newExperiences) => {
-          setExperiences(newExperiences);
+          // Don't update local state, let useEffect handle it after backend responds
           try {
             // Update backend with new experience data
             await handleProfileUpdate({
@@ -189,13 +191,14 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification }) => {
           }
         }}
         showNotification={showNotification}
+        isLoading={isUpdating}
       />
 
       {/* Education Section */}
       <EducationSection
         initialEducation={education}
         onSave={async (newEducations) => {
-          setEducation(newEducations);
+          // Don't update local state, let useEffect handle it after backend responds
           try {
             // Update backend with new education data
             await handleProfileUpdate({
@@ -207,6 +210,7 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification }) => {
           }
         }}
         showNotification={showNotification}
+        isLoading={isUpdating}
       />
 
       {/* CV/Resume Section - Only for mentors */}
@@ -219,6 +223,7 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification }) => {
             });
           }}
           showNotification={showNotification}
+          isLoading={isUpdating}
         />
       )}
 

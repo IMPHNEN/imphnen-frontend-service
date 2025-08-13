@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { LanguagesModal } from '../modals';
 import { SectionWrapper } from '../shared/section-wrapper';
 import { NotificationType } from '../modals/notification-modal';
@@ -13,27 +13,38 @@ interface LanguagesSectionProps {
   initialLanguages: Language[];
   onSave: (newLanguages: Language[]) => void;
   showNotification: (type: NotificationType['type'], title: string, message?: string) => void;
+  isLoading?: boolean;
 }
 
 export const LanguagesSection: FC<LanguagesSectionProps> = ({
   initialLanguages,
   onSave,
   showNotification,
+  isLoading = false,
 }) => {
   const [isLanguagesModalOpen, setIsLanguagesModalOpen] = useState(false);
   const [languages, setLanguages] = useState<Language[]>(initialLanguages);
 
+  // Sync local state with props when initialLanguages changes
+  useEffect(() => {
+    setLanguages(initialLanguages);
+  }, [initialLanguages]);
+
   const handleSave = (newLanguages: Language[]) => {
-    setLanguages(newLanguages);
+    // Only call backend update, don't update local state
+    // Local state will be updated through useEffect when backend responds
+    // Don't show notification here - ProfileForm will handle it after backend success
     onSave(newLanguages);
-    showNotification('success', 'Perubahan Berhasil Disimpan', '');
   };
 
   return (
     <SectionWrapper
       title="Languages"
       editButton={
-        <EditSectionButton onClick={() => setIsLanguagesModalOpen(true)} />
+        <EditSectionButton
+          onClick={() => setIsLanguagesModalOpen(true)}
+          disabled={isLoading}
+        />
       }
       delay={0.4}
     >
@@ -53,6 +64,7 @@ export const LanguagesSection: FC<LanguagesSectionProps> = ({
         onClose={() => setIsLanguagesModalOpen(false)}
         initialValue={languages}
         onSave={handleSave}
+        isLoading={isLoading}
       />
     </SectionWrapper>
   );

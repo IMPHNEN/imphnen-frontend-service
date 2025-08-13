@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { MailOutlined, PhoneOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import { PersonalInfoModal } from '../modals'; // Assuming this modal handles personal info including contact
 import { SectionWrapper } from '../shared/section-wrapper';
@@ -25,12 +25,18 @@ export const ContactInfoSection: FC<ContactInfoSectionProps> = ({
   const [isPersonalInfoModalOpen, setIsPersonalInfoModalOpen] = useState(false);
   const [contactInfo, setContactInfo] = useState<ContactInfo>(initialContactInfo);
 
+  // Sync local state with props when initialContactInfo changes
+  useEffect(() => {
+    setContactInfo(initialContactInfo);
+  }, [initialContactInfo]);
+
   const handleSave = (newInfo: { email: string; phone: string; location: string }) => {
     // PersonalInfoModal saves all personal info including location
     const newContactInfo = { email: newInfo.email, phone: newInfo.phone, location: newInfo.location };
-    setContactInfo(newContactInfo);
+    // Only call backend update, don't update local state
+    // Local state will be updated through useEffect when backend responds
+    // Don't show notification here - ProfileForm will handle it after backend success
     onSave(newContactInfo);
-    showNotification('success', 'Perubahan Berhasil Disimpan', '');
   };
 
   return (
