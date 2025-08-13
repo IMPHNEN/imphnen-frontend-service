@@ -37,6 +37,20 @@ export interface UserUpdateRequestDto {
   phone_number?: string;
   birthdate?: string;
   gender?: string;
+  experience?: Array<{
+    id: string;
+    company: string;
+    position: string;
+    duration: string;
+    period: string;
+  }>;
+  education?: Array<{
+    id: string;
+    institution: string;
+    degree: string;
+    field: string;
+    period: string;
+  }>;
 }
 
 export interface UserService {

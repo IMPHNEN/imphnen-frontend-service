@@ -917,6 +917,13 @@ export interface components {
             /** Format: int32 */
             otp: number;
         };
+        EducationDto: {
+            degree: string;
+            field: string;
+            id: string;
+            institution: string;
+            period: string;
+        };
         EventsCreateRequestDto: {
             description: string;
             detail_link: string;
@@ -971,6 +978,13 @@ export interface components {
             /** @example 2025-09-20T13:00:00Z */
             start_date: string;
         };
+        ExperienceDto: {
+            company: string;
+            duration: string;
+            id: string;
+            period: string;
+            position: string;
+        };
         GachaClaimItemDto: {
             created_at?: string | null;
             id: string;
@@ -993,6 +1007,10 @@ export interface components {
         GachaItemRequestDto: {
             image_url: string;
             name: string;
+        };
+        GachaItemUpdateRequestDto: {
+            image_url?: string | null;
+            name?: string | null;
         };
         GachaRollItemDto: {
             created_at?: string | null;
@@ -1153,6 +1171,9 @@ export interface components {
         };
         PermissionsRequestDto: {
             name: string;
+        };
+        PermissionsUpdateRequestDto: {
+            name?: string | null;
         };
         ProfessionalProfile: {
             bio: string;
@@ -1392,7 +1413,9 @@ export interface components {
                 created_at: string;
                 cv_url?: string | null;
                 domicile?: string | null;
+                education?: components["schemas"]["EducationDto"][] | null;
                 email: string;
+                experience?: components["schemas"]["ExperienceDto"][] | null;
                 fullname: string;
                 gender?: string | null;
                 github_url?: string | null;
@@ -1401,11 +1424,15 @@ export interface components {
                 last_education?: string | null;
                 legal_name?: string | null;
                 linkedin_url?: string | null;
+                location?: string | null;
                 phone_for_verification?: string | null;
                 phone_number: string;
                 portfolio_url?: string | null;
                 role: components["schemas"]["RolesDetailItemDto"];
+                skills?: string[] | null;
+                twitter_url?: string | null;
                 updated_at: string;
+                website_url?: string | null;
             };
         };
         RolesDetailItemDto: {
@@ -1481,7 +1508,9 @@ export interface components {
             created_at: string;
             cv_url?: string | null;
             domicile?: string | null;
+            education?: components["schemas"]["EducationDto"][] | null;
             email: string;
+            experience?: components["schemas"]["ExperienceDto"][] | null;
             fullname: string;
             gender?: string | null;
             github_url?: string | null;
@@ -1490,11 +1519,15 @@ export interface components {
             last_education?: string | null;
             legal_name?: string | null;
             linkedin_url?: string | null;
+            location?: string | null;
             phone_for_verification?: string | null;
             phone_number: string;
             portfolio_url?: string | null;
             role: components["schemas"]["RolesDetailItemDto"];
+            skills?: string[] | null;
+            twitter_url?: string | null;
             updated_at: string;
+            website_url?: string | null;
         };
         UsersListItemDto: {
             avatar?: string | null;
@@ -1513,19 +1546,25 @@ export interface components {
             birthdate?: string | null;
             cv_url?: string | null;
             domicile?: string | null;
-            email: string;
-            fullname: string;
+            education?: components["schemas"]["EducationDto"][] | null;
+            email?: string | null;
+            experience?: components["schemas"]["ExperienceDto"][] | null;
+            fullname?: string | null;
             gender?: string | null;
             github_url?: string | null;
-            is_active: boolean;
+            is_active?: boolean | null;
             last_education?: string | null;
             legal_name?: string | null;
             linkedin_url?: string | null;
-            password: string;
+            location?: string | null;
+            password?: string | null;
             phone_for_verification?: string | null;
-            phone_number: string;
+            phone_number?: string | null;
             portfolio_url?: string | null;
-            role_id: string;
+            role_id?: string | null;
+            skills?: string[] | null;
+            twitter_url?: string | null;
+            website_url?: string | null;
         };
     };
     responses: never;
@@ -2235,7 +2274,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["GachaItemRequestDto"];
+                "application/json": components["schemas"]["GachaItemUpdateRequestDto"];
             };
         };
         responses: {
@@ -2817,7 +2856,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["PermissionsRequestDto"];
+                "application/json": components["schemas"]["PermissionsUpdateRequestDto"];
             };
         };
         responses: {

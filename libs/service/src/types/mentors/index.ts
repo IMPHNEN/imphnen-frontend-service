@@ -34,6 +34,20 @@ export interface MentorDetailResponseDto {
   years_of_experience: number;
   mentoring_sessions?: number;
   rating?: number;
+  experience?: Array<{
+    id: string;
+    company: string;
+    position: string;
+    duration: string;
+    period: string;
+  }>;
+  education?: Array<{
+    id: string;
+    institution: string;
+    degree: string;
+    field: string;
+    period: string;
+  }>;
 }
 
 export interface MentorUpdateRequestDto {
@@ -58,4 +72,18 @@ export interface MentorUpdateRequestDto {
   preferred_mentoring_formats?: string[] | null;
   topics_of_interest?: string[] | null;
   years_of_experience?: number | null;
+  experience?: Array<{
+    id: string;
+    company: string;
+    position: string;
+    duration: string;
+    period: string;
+  }>;
+  education?: Array<{
+    id: string;
+    institution: string;
+    degree: string;
+    field: string;
+    period: string;
+  }>;
 }

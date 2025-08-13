@@ -40,9 +40,10 @@ export const ProfileInfo: FC<ProfileInfoProps> = ({ showNotification }) => {
     { platform: 'Twitter', placeholder: 'twitter.com/yourusername', value: '' }
   ]);
 
-  // Update contact info when profileData changes
+  // Update data when profileData changes
   useEffect(() => {
     if (profileData) {
+      // Update contact info
       const email = 'email' in profileData ? profileData.email || '' : '';
       let phone = '';
       if ('phone_number' in profileData) {
@@ -59,12 +60,8 @@ export const ProfileInfo: FC<ProfileInfoProps> = ({ showNotification }) => {
       }
 
       setContactInfo({ email, phone, location });
-    }
-  }, [profileData]);
 
-  // Update skills when profileData changes
-  useEffect(() => {
-    if (profileData) {
+      // Update skills
       let skills: string[] = [];
       if ('skills' in profileData) {
         skills = profileData.skills || [];
@@ -72,22 +69,14 @@ export const ProfileInfo: FC<ProfileInfoProps> = ({ showNotification }) => {
         skills = profileData.expertise || [];
       }
       setCurrentSkills(skills);
-    }
-  }, [profileData]);
 
-  // Update languages when profileData changes
-  useEffect(() => {
-    if (profileData) {
+      // Update languages
       const languages: Language[] = 'languages' in profileData
         ? (profileData.languages || []).map(lang => ({ name: lang, level: 'Intermediate' }))
         : [];
       setCurrentLanguages(languages);
-    }
-  }, [profileData]);
 
-  // Update social links when profileData changes
-  useEffect(() => {
-    if (profileData) {
+      // Update social links
       const linkedinUrl = 'linkedin_url' in profileData ? profileData.linkedin_url || '' : '';
       const githubUrl = 'github_url' in profileData ? profileData.github_url || '' : '';
       let portfolioUrl = '';

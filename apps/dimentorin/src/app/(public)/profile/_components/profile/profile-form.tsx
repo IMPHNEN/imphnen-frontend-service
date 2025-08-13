@@ -2,17 +2,11 @@ import { FC, useState, useEffect } from 'react';
 import { NotificationModal } from '../modals';
 import { ExperiencesSection } from '../sections/experiences-section';
 import { CvResumeSection } from '../sections/cv-resume-section';
-import { SocialMediaSection } from '../sections/social-media-section';
 import { DescriptionSection } from '../sections/description-section';
 import { EducationSection } from '../sections/education-section';
-import type { MentorUpdateRequestDto } from '@imphnen-frontend-service/service';
+import { LanguagesSection } from '../sections/languages-section';
+import type { MentorUpdateRequestDto, UserUpdateRequestDto } from '@imphnen-frontend-service/service';
 import { useProfile } from '../contexts/profile-context';
-
-interface SocialLink {
-  platform: string;
-  placeholder: string;
-  value: string;
-}
 
 interface Experience {
   id: string;
@@ -30,54 +24,17 @@ interface Education {
   period: string;
 }
 
+interface Language {
+  name: string;
+  level: string;
+}
+
 interface ProfileFormProps {
   showNotification: (type: 'success' | 'error', title: string, message?: string) => void;
 }
 
 export const ProfileForm: FC<ProfileFormProps> = ({ showNotification }) => {
   const { profileData, updateProfile, profileType } = useProfile();
-
-  // Helper functions to safely access profile data based on type
-  const getProfileName = () => {
-    if (!profileData) return '';
-    if (profileType === 'user' && 'fullname' in profileData) return profileData.fullname || '';
-    if (profileType === 'mentor' && 'legal_name' in profileData) return profileData.legal_name || '';
-    return '';
-  };
-
-  const getProfileTitle = () => {
-    if (!profileData) return '';
-    if (profileType === 'mentor' && 'current_role' in profileData) return profileData.current_role || '';
-    return '';
-  };
-
-  const getLinkedInUrl = () => {
-    if (!profileData || !('linkedin_url' in profileData)) return '';
-    return profileData.linkedin_url || '';
-  };
-
-  const getGithubUrl = () => {
-    if (!profileData || !('github_url' in profileData)) return '';
-    return profileData.github_url || '';
-  };
-
-  const getPortfolioUrl = () => {
-    if (!profileData) return '';
-    if (profileType === 'mentor' && 'portfolio_url' in profileData) return profileData.portfolio_url || '';
-    if (profileType === 'user' && 'website_url' in profileData) return profileData.website_url || '';
-    return '';
-  };
-
-  const getBio = () => {
-    if (!profileData || !('bio' in profileData)) return '';
-    return profileData.bio || '';
-  };
-
-  const getCvUrl = () => {
-    if (!profileData) return '';
-    if (profileType === 'mentor' && 'cv_url' in profileData) return profileData.cv_url || '';
-    return '';
-  };
 
   const [notification, setNotification] = useState<{
     isOpen: boolean;
@@ -91,141 +48,111 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification }) => {
     message: ''
   });
 
-  const [profileLocalData, setProfileLocalData] = useState(() => ({
-    name: getProfileName(),
-    title: getProfileTitle()
-  }));
+  const [experiences, setExperiences] = useState<Experience[]>([]);
+  const [education, setEducation] = useState<Education[]>([]);
+  const [languages, setLanguages] = useState<Language[]>([]);
 
-  const [socialLinks, setSocialLinks] = useState<SocialLink[]>(() => [
-    {
-      platform: 'LinkedIn',
-      placeholder: 'linkedin.com/in/yourprofile',
-      value: getLinkedInUrl()
-    },
-    {
-      platform: 'Github',
-      placeholder: 'github.com/yourusername',
-      value: getGithubUrl()
-    },
-    {
-      platform: 'Portfolio',
-      placeholder: 'yourportfolio.com',
-      value: getPortfolioUrl()
-    }
-  ]);
+  // Additional states for profile data
+  const [personalInfo, setPersonalInfo] = useState({
+    fullname: '',
+    title: '',
+    bio: '',
+    birthdate: '',
+    gender: ''
+  });
 
-  const [experiences, setExperiences] = useState<Experience[]>([
-    {
-      id: '1',
-      company: 'Adonis Tech',
-      position: 'Fullstack Developer',
-      duration: '1 Years',
-      period: 'Jan 2023 - Current'
-    },
-    {
-      id: '2',
-      company: 'CodeX Digital',
-      position: 'Intern Front-End',
-      duration: '6 Months',
-      period: 'July 2024 - Dec 2024'
-    }
-  ]);
+  const [cvResume, setCvResume] = useState({
+    cvUrl: '',
+    resumeUrl: ''
+  });
 
-  const [education, setEducation] = useState<Education[]>([
-    {
-      id: '1',
-      institution: 'Universitas Widjyabakti',
-      degree: 'Inform Front-End',
-      field: 'S.Teknik',
-      period: 'Sep 2022 - Current'
-    },
-    {
-      id: '2',
-      institution: 'SMKN 5B Banjaran',
-      degree: 'Rekayasa Perangkat Lunak',
-      field: 'Vocational High School',
-      period: 'Aug 2019 - May 2022'
-    }
-  ]);
-
-  // Update data when mentorData changes
+  // Update experiences when profileData changes
   useEffect(() => {
     if (profileData) {
-      const profileName = profileType === 'user' && 'fullname' in profileData
-        ? profileData.fullname || ''
-        : profileType === 'mentor' && 'legal_name' in profileData
-        ? profileData.legal_name || ''
-        : '';
+      const experiences = 'experience' in profileData ? profileData.experience || [] : [];
+      setExperiences(experiences);
+    }
+  }, [profileData]);
 
-      const profileTitle = profileType === 'mentor' && 'current_role' in profileData
-        ? profileData.current_role || ''
-        : '';
+  // Update education when profileData changes
+  useEffect(() => {
+    if (profileData) {
+      const education = 'education' in profileData ? profileData.education || [] : [];
+      setEducation(education);
+    }
+  }, [profileData]);
 
-      const linkedinUrl = 'linkedin_url' in profileData ? profileData.linkedin_url || '' : '';
-      const githubUrl = 'github_url' in profileData ? profileData.github_url || '' : '';
-      const portfolioUrl = profileType === 'mentor' && 'portfolio_url' in profileData
-        ? profileData.portfolio_url || ''
-        : profileType === 'user' && 'website_url' in profileData
-        ? profileData.website_url || ''
-        : '';
+  // Update languages when profileData changes
+  useEffect(() => {
+    if (profileData) {
+      const languages: Language[] = 'languages' in profileData
+        ? (profileData.languages || []).map(lang => ({ name: lang, level: 'Intermediate' }))
+        : [];
+      setLanguages(languages);
+    }
+  }, [profileData]);
 
-      setProfileLocalData({
-        name: profileName,
-        title: profileTitle
+  // Update personal info when profileData changes
+  useEffect(() => {
+    if (profileData) {
+      const bio = 'bio' in profileData ? profileData.bio || '' : '';
+
+      let fullname = '';
+      if ('fullname' in profileData) {
+        fullname = profileData.fullname || '';
+      } else if ('legal_name' in profileData) {
+        fullname = profileData.legal_name || '';
+      }
+
+      const title = 'current_role' in profileData ? profileData.current_role || '' : '';
+      const birthdate = 'birthdate' in profileData ? profileData.birthdate || '' : '';
+      const gender = 'gender' in profileData ? profileData.gender || '' : '';
+
+      setPersonalInfo({
+        fullname,
+        title,
+        bio,
+        birthdate,
+        gender
       });
+    }
+  }, [profileData]);
 
-      setSocialLinks([
-        {
-          platform: 'LinkedIn',
-          placeholder: 'linkedin.com/in/yourprofile',
-          value: linkedinUrl
-        },
-        {
-          platform: 'Github',
-          placeholder: 'github.com/yourusername',
-          value: githubUrl
-        },
-        {
-          platform: 'Portfolio',
-          placeholder: 'yourportfolio.com',
-          value: portfolioUrl
-        }
-      ]);
+  // Update CV/Resume info when profileData changes
+  useEffect(() => {
+    if (profileData) {
+      const cvUrl = profileType === 'mentor' && 'cv_url' in profileData ? profileData.cv_url || '' : '';
+
+      setCvResume({
+        cvUrl,
+        resumeUrl: ''
+      });
     }
   }, [profileData, profileType]);
 
   // Handle profile updates using the context
-  const handleProfileUpdate = async (updates: Partial<MentorUpdateRequestDto>) => {
+  const handleProfileUpdate = async (updates: Partial<MentorUpdateRequestDto | UserUpdateRequestDto>) => {
     try {
-      await updateProfile(updates);
+      // Wait for the backend update to complete
+      const result = await updateProfile(updates);
+
+      // Only show success notification if the backend update was successful
+      // The updateProfile function should throw an error if the backend update fails
       showNotification('success', 'Perubahan Berhasil Disimpan');
+
+      return result;
     } catch (err) {
       console.error('Profile update error:', err);
       showNotification('error', 'Gagal menyimpan perubahan', 'Silakan coba lagi');
+      throw err; // Re-throw the error so calling functions can handle it if needed
     }
   };
 
   return (
     <div className="space-y-6">
-      <SocialMediaSection
-        initialSocialLinks={socialLinks}
-        onSave={async (newSocialLinks) => {
-          setSocialLinks(newSocialLinks);
-          const linkedIn = newSocialLinks.find(link => link.platform === 'LinkedIn')?.value;
-          const github = newSocialLinks.find(link => link.platform === 'Github')?.value;
-          const portfolio = newSocialLinks.find(link => link.platform === 'Portfolio')?.value;
-
-          await handleProfileUpdate({
-            linkedin_url: linkedIn || null,
-            github_url: github || null,
-            portfolio_url: portfolio || null,
-          });
-        }}
-        showNotification={showNotification}
-      />
-
+      {/* Description/Bio Section */}
       <DescriptionSection
-        initialDescription={getBio()}
+        initialDescription={personalInfo.bio}
         onSave={async (newDescription) => {
           await handleProfileUpdate({
             bio: newDescription || null
@@ -234,49 +161,66 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification }) => {
         showNotification={showNotification}
       />
 
+      {/* Languages Section */}
+      <LanguagesSection
+        initialLanguages={languages}
+        onSave={async (newLanguages) => {
+          setLanguages(newLanguages);
+          await handleProfileUpdate({
+            languages: newLanguages.map(lang => lang.name)
+          } as MentorUpdateRequestDto | UserUpdateRequestDto);
+        }}
+        showNotification={showNotification}
+      />
+
+      {/* Experience Section */}
       <ExperiencesSection
         initialExperiences={experiences}
         onSave={async (newExperiences) => {
           setExperiences(newExperiences);
-          // Note: experiences field needs to be checked in the API types
-          // await handleProfileUpdate({
-          //   experiences: newExperiences.map(exp => ({
-          //     company: exp.company,
-          //     position: exp.position,
-          //     duration: exp.duration,
-          //     period: exp.period
-          //   }))
-          // });
+          try {
+            // Update backend with new experience data
+            await handleProfileUpdate({
+              experience: newExperiences
+            });
+          } catch (error) {
+            console.error('Experience update error:', error);
+            // Error notification is already handled in handleProfileUpdate
+          }
         }}
         showNotification={showNotification}
       />
 
+      {/* Education Section */}
       <EducationSection
         initialEducation={education}
         onSave={async (newEducations) => {
           setEducation(newEducations);
-          // Note: educations field needs to be checked in the API types
-          // await handleProfileUpdate({
-          //   educations: newEducations.map(edu => ({
-          //     institution: edu.institution,
-          //     degree: edu.degree,
-          //     field: edu.field,
-          //     period: edu.period
-          //   }))
-          // });
+          try {
+            // Update backend with new education data
+            await handleProfileUpdate({
+              education: newEducations
+            });
+          } catch (error) {
+            console.error('Education update error:', error);
+            // Error notification is already handled in handleProfileUpdate
+          }
         }}
         showNotification={showNotification}
       />
 
-      <CvResumeSection
-        initialFileName={getCvUrl()}
-        onSave={async (cvData) => {
-          await handleProfileUpdate({
-            cv_url: cvData.fileName || null
-          });
-        }}
-        showNotification={showNotification}
-      />
+      {/* CV/Resume Section - Only for mentors */}
+      {profileType === 'mentor' && (
+        <CvResumeSection
+          initialFileName={cvResume.cvUrl}
+          onSave={async (cvData) => {
+            await handleProfileUpdate({
+              cv_url: cvData.fileName || null
+            });
+          }}
+          showNotification={showNotification}
+        />
+      )}
 
       <NotificationModal
         isOpen={notification.isOpen}
