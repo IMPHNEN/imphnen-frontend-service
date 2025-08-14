@@ -4,10 +4,8 @@ import { UploadOutlined, LoadingOutlined } from '@ant-design/icons';
 
 interface FileUploaderProps {
   accept?: string;
-  maxSize?: number; // in bytes
+  maxSize?: number;
   onFileSelect?: (file: File) => void;
-  onUploadComplete?: (url: string, fileName: string) => void;
-  onUploadError?: (error: string) => void;
   isLoading?: boolean;
   className?: string;
   children?: React.ReactNode;
@@ -18,7 +16,7 @@ interface FileUploaderProps {
 
 export const FileUploader: FC<FileUploaderProps> = ({
   accept = "*/*",
-  maxSize = 10 * 1024 * 1024, // 10MB default
+  maxSize = 10 * 1024 * 1024,
   onFileSelect,
   isLoading = false,
   className = "",
@@ -40,7 +38,7 @@ export const FileUploader: FC<FileUploaderProps> = ({
       if (trimmedType.startsWith('.')) {
         return file.name.toLowerCase().endsWith(trimmedType.toLowerCase());
       }
-      return file.type.match(trimmedType.replace('*', '.*'));
+      return new RegExp(trimmedType.replace('*', '.*')).exec(file.type);
     })) {
       return `File type not supported. Accepted types: ${accept}`;
     }
@@ -51,7 +49,7 @@ export const FileUploader: FC<FileUploaderProps> = ({
   const handleFileSelect = (file: File) => {
     const error = validateFile(file);
     if (error) {
-      console.error('File validation error:', error);
+  // removed log
       return;
     }
 

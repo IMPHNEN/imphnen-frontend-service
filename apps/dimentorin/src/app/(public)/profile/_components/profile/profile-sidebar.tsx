@@ -14,16 +14,13 @@ interface ProfileSidebarProps {
 export const ProfileSidebar: FC<ProfileSidebarProps> = ({ showNotification }) => {
   const { profileData, updateProfile, profileType, isLoading, isUpdating } = useProfile();
 
-  console.log('ProfileSidebar: Component render - profileData:', profileData, 'profileType:', profileType, 'isLoading:', isLoading);
-  console.log('ProfileSidebar: Should show Career Status?', profileType === 'mentor');
 
-  // Helper functions to safely access profile data
+
   const getCareerStatus = useCallback(() => {
     if (!profileData) {
       return 'Career Status';
     }
 
-    // For users, check career_status field
     if (profileType === 'user' && 'career_status' in profileData) {
       const status = profileData.career_status;
       if (status && typeof status === 'string' && status.trim() !== '') {
@@ -31,7 +28,6 @@ export const ProfileSidebar: FC<ProfileSidebarProps> = ({ showNotification }) =>
       }
     }
 
-    // For mentors, check availability_commitment field (legacy)
     if (profileType === 'mentor' && 'availability_commitment' in profileData) {
       const commitment = profileData.availability_commitment;
       if (commitment && typeof commitment === 'string' && commitment.trim() !== '') {
@@ -50,11 +46,9 @@ export const ProfileSidebar: FC<ProfileSidebarProps> = ({ showNotification }) =>
   }, [profileData]);
 
   const getPhone = useCallback(() => {
-    // Check phone_for_verification first (available for both user and mentor)
     if (profileData && 'phone_for_verification' in profileData && profileData.phone_for_verification) {
       return profileData.phone_for_verification;
     }
-    // Fallback to phone_number for user
     if (profileType === 'user' && profileData && 'phone_number' in profileData && profileData.phone_number) {
       return profileData.phone_number;
     }
@@ -62,11 +56,9 @@ export const ProfileSidebar: FC<ProfileSidebarProps> = ({ showNotification }) =>
   }, [profileType, profileData]);
 
   const getLocation = useCallback(() => {
-    // Check domicile first (available for both user and mentor)
     if (profileData && 'domicile' in profileData && profileData.domicile) {
       return profileData.domicile;
     }
-    // Fallback to location for user
     if (profileType === 'user' && profileData && 'location' in profileData && profileData.location) {
       return profileData.location;
     }
@@ -95,77 +87,78 @@ export const ProfileSidebar: FC<ProfileSidebarProps> = ({ showNotification }) =>
 
   const [skills, setSkills] = useState<string[]>(['HTML', 'CSS', 'Javascript', 'Next.Js', 'React', 'TypeScript']);
 
-  // Initialize career status when profileData is first loaded
   useEffect(() => {
     if (profileData && !isLoading && careerStatus === 'Career Status') {
       const initialCareerStatus = getCareerStatus();
-      console.log('ProfileSidebar: Initial load - setting career status to:', initialCareerStatus);
+
       setCareerStatus(initialCareerStatus);
       setIsInitialized(true);
     }
   }, [profileData, isLoading, careerStatus, getCareerStatus]);
 
-  // Update data when profileData changes
   useEffect(() => {
     if (profileData && !isLoading) {
-      // Only update career status if we're not actively updating it AND it's already been initialized
       if (!isUpdatingCareerStatus && isInitialized) {
         const newCareerStatus = getCareerStatus();
         console.log('ProfileSidebar: Updating career status from API:', newCareerStatus);
         setCareerStatus(newCareerStatus);
       }
 
-      // Update personal info using helper functions
       setPersonalInfo({
         email: getEmail(),
         phone: getPhone(),
         location: getLocation()
       });
 
-      // Update skills using helper function
       setSkills(getSkills());
     }
   }, [profileData, profileType, isLoading, isInitialized, getCareerStatus, getEmail, getPhone, getLocation, getSkills, isUpdatingCareerStatus]);
 
-  // Handle profile updates using the context
+  // Helper function to parse JSON message safely
+  const tryParseJsonMessage = (msg: string): string => {
+    if (msg.trim().startsWith('{') && msg.trim().endsWith('}')) {
+      try {
+        const parsed = JSON.parse(msg);
+        if (parsed && typeof parsed.message === 'string') {
+          return parsed.message;
+        }
+      } catch {
+        return msg;
+      }
+    }
+    return msg;
+  };
+
+  // Helper function to extract API error message
+  const extractApiMessage = (err: unknown): string => {
+    if (typeof err !== 'object' || err === null) return '';
+
+    const maybeAxiosError = err as { response?: { data?: { message?: string } } };
+    if (maybeAxiosError.response?.data?.message) {
+      return maybeAxiosError.response.data.message;
+    }
+
+    if ('message' in err && typeof (err as { message?: string }).message === 'string') {
+      const msg = (err as { message?: string }).message || '';
+      return tryParseJsonMessage(msg);
+    }
+
+    return '';
+  };
+
   const handleProfileUpdate = async (updates: Partial<MentorUpdateRequestDto | UserUpdateRequestDto>) => {
     try {
       await updateProfile(updates);
       showNotification('success', 'Perubahan Berhasil Disimpan');
     } catch (err) {
       console.error('Profile update error:', err);
-      let apiMessage = '';
-      if (typeof err === 'object' && err !== null) {
-        // @ts-expect-error Error object may have response property from Axios or fetch
-        if (err.response?.data?.message) {
-          // @ts-expect-error Error object may have response property from Axios or fetch
-          apiMessage = err.response.data.message;
-        } else if ('message' in err && typeof (err as { message?: string }).message === 'string') {
-          const msg = (err as { message?: string }).message || '';
-          // Try to parse as JSON if looks like JSON
-          if (msg.trim().startsWith('{') && msg.trim().endsWith('}')) {
-            try {
-              const parsed = JSON.parse(msg);
-              if (parsed && typeof parsed.message === 'string') {
-                apiMessage = parsed.message;
-              } else {
-                apiMessage = msg;
-              }
-            } catch {
-              apiMessage = msg;
-            }
-          } else {
-            apiMessage = msg;
-          }
-        }
-      }
+      const apiMessage = extractApiMessage(err);
       showNotification('error', 'Gagal menyimpan perubahan', apiMessage || 'Silakan coba lagi');
     }
   };
 
   return (
     <div className="space-y-6">
-      {/* Career Status - Available for all users */}
       <SectionWrapper title="Career Status">
         <Select
           value={careerStatus}
@@ -177,7 +170,6 @@ export const ProfileSidebar: FC<ProfileSidebarProps> = ({ showNotification }) =>
             try {
               console.log('ProfileSidebar: Updating career status on backend...');
 
-              // Use different field based on profile type
               const updates: Partial<MentorUpdateRequestDto | UserUpdateRequestDto> = {};
               if (profileType === 'mentor') {
                 (updates as MentorUpdateRequestDto).availability_commitment = newStatus;
@@ -186,11 +178,9 @@ export const ProfileSidebar: FC<ProfileSidebarProps> = ({ showNotification }) =>
               }
 
               await handleProfileUpdate(updates);
-              console.log('ProfileSidebar: Career status update successful');
             } catch (error) {
               console.error('ProfileSidebar: Career status update failed:', error);
             } finally {
-              // Allow useEffect to update the career status again after update is complete
               setTimeout(() => setIsUpdatingCareerStatus(false), 1000);
             }
           }}
@@ -210,7 +200,6 @@ export const ProfileSidebar: FC<ProfileSidebarProps> = ({ showNotification }) =>
         initialContactInfo={personalInfo}
         onSave={async (newPersonalInfo) => {
           setPersonalInfo(newPersonalInfo);
-          // Use appropriate fields for both user and mentor
           const updates: Partial<MentorUpdateRequestDto | UserUpdateRequestDto> = {
             phone_for_verification: newPersonalInfo.phone || null,
             domicile: newPersonalInfo.location || null

@@ -34,9 +34,6 @@ export const ExperiencesSection: FC<ExperiencesSectionProps> = ({
   }, [initialExperiences]);
 
   const handleSave = async (newExperiences: Experience[]) => {
-    // Only call backend update, don't update local state
-    // Local state will be updated through useEffect when backend responds
-    // Don't show notification here - ProfileForm will handle it after backend success
     await onSave(newExperiences);
   };
 

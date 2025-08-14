@@ -27,16 +27,14 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
   const [isPersonalInfoModalOpen, setIsPersonalInfoModalOpen] = useState(false);
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo>(initialContactInfo);
 
-  // Sync local state with props when initialContactInfo changes
+
   useEffect(() => {
     setPersonalInfo(initialContactInfo);
   }, [initialContactInfo]);
 
   const handleSave = async (newInfo: { email: string; phone: string; location: string }) => {
     const newPersonalInfo = { email: newInfo.email, phone: newInfo.phone, location: newInfo.location };
-    // Only call backend update, don't update local state
-    // Local state will be updated through useEffect when backend responds
-    // Don't show notification here - ProfileForm will handle it after backend success
+
     await onSave(newPersonalInfo);
   };
 

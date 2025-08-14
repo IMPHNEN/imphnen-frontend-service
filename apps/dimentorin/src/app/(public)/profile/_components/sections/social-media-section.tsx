@@ -26,15 +26,13 @@ export const SocialMediaSection: FC<SocialMediaSectionProps> = ({
   const [isSocialMediaModalOpen, setIsSocialMediaModalOpen] = useState(false);
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>(initialSocialLinks);
 
-  // Sync local state with props when initialSocialLinks changes
+
   useEffect(() => {
     setSocialLinks(initialSocialLinks);
   }, [initialSocialLinks]);
 
   const handleSave = async (newSocialLinks: SocialLink[]) => {
-    // Only call backend update, don't update local state
-    // Local state will be updated through useEffect when backend responds
-    // Don't show notification here - ProfileForm will handle it after backend success
+
     await onSave(newSocialLinks);
   };
 

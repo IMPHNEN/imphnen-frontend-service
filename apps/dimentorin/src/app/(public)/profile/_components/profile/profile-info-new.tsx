@@ -40,59 +40,67 @@ export const ProfileInfo: FC<ProfileInfoProps> = ({ showNotification }) => {
     { platform: 'Twitter', placeholder: 'twitter.com/yourusername', value: '' }
   ]);
 
+  // Helper functions to reduce cognitive complexity
+  const extractContactInfo = (profileData: MentorUpdateRequestDto | UserUpdateRequestDto) => {
+    const email = 'email' in profileData && typeof profileData.email === 'string' ? profileData.email || '' : '';
+    let phone = '';
+    if ('phone_number' in profileData) {
+      phone = profileData.phone_number || '';
+    } else if ('phone_for_verification' in profileData) {
+      phone = profileData.phone_for_verification || '';
+    }
+
+    let location = '';
+    if ('location' in profileData) {
+      location = profileData.location || '';
+    } else if ('domicile' in profileData) {
+      location = profileData.domicile || '';
+    }
+
+    return { email, phone, location };
+  };
+
+  const extractSkills = (profileData: MentorUpdateRequestDto | UserUpdateRequestDto) => {
+    if ('skills' in profileData) {
+      return profileData.skills || [];
+    } else if ('expertise' in profileData) {
+      return profileData.expertise || [];
+    }
+    return [];
+  };
+
+  const extractLanguages = (profileData: MentorUpdateRequestDto | UserUpdateRequestDto): Language[] => {
+    return 'languages' in profileData
+      ? (profileData.languages || []).map((lang: string) => ({ name: lang, level: 'Intermediate' }))
+      : [];
+  };
+
+  const extractSocialLinks = (profileData: MentorUpdateRequestDto | UserUpdateRequestDto, profileType: string): SocialLink[] => {
+    const linkedinUrl = 'linkedin_url' in profileData ? profileData.linkedin_url || '' : '';
+    const githubUrl = 'github_url' in profileData ? profileData.github_url || '' : '';
+    let portfolioUrl = '';
+    if (profileType === 'mentor' && 'portfolio_url' in profileData) {
+      portfolioUrl = profileData.portfolio_url || '';
+    } else if (profileType === 'user' && 'website_url' in profileData) {
+      portfolioUrl = profileData.website_url || '';
+    }
+    const twitterUrl = 'twitter_url' in profileData ? profileData.twitter_url || '' : '';
+
+    return [
+      { platform: 'LinkedIn', placeholder: 'linkedin.com/in/yourprofile', value: linkedinUrl },
+      { platform: 'Github', placeholder: 'github.com/yourusername', value: githubUrl },
+      { platform: 'Portfolio', placeholder: 'yourportfolio.com', value: portfolioUrl },
+      { platform: 'Twitter', placeholder: 'twitter.com/yourusername', value: twitterUrl }
+    ];
+  };
+
   // Update data when profileData changes
   useEffect(() => {
     if (profileData) {
-      // Update contact info
-      const email = 'email' in profileData ? profileData.email || '' : '';
-      let phone = '';
-      if ('phone_number' in profileData) {
-        phone = profileData.phone_number || '';
-      } else if ('phone_for_verification' in profileData) {
-        phone = profileData.phone_for_verification || '';
-      }
-
-      let location = '';
-      if ('location' in profileData) {
-        location = profileData.location || '';
-      } else if ('domicile' in profileData) {
-        location = profileData.domicile || '';
-      }
-
-      setContactInfo({ email, phone, location });
-
-      // Update skills
-      let skills: string[] = [];
-      if ('skills' in profileData) {
-        skills = profileData.skills || [];
-      } else if ('expertise' in profileData) {
-        skills = profileData.expertise || [];
-      }
-      setCurrentSkills(skills);
-
-      // Update languages
-      const languages: Language[] = 'languages' in profileData
-        ? (profileData.languages || []).map(lang => ({ name: lang, level: 'Intermediate' }))
-        : [];
-      setCurrentLanguages(languages);
-
-      // Update social links
-      const linkedinUrl = 'linkedin_url' in profileData ? profileData.linkedin_url || '' : '';
-      const githubUrl = 'github_url' in profileData ? profileData.github_url || '' : '';
-      let portfolioUrl = '';
-      if (profileType === 'mentor' && 'portfolio_url' in profileData) {
-        portfolioUrl = profileData.portfolio_url || '';
-      } else if (profileType === 'user' && 'website_url' in profileData) {
-        portfolioUrl = profileData.website_url || '';
-      }
-      const twitterUrl = 'twitter_url' in profileData ? profileData.twitter_url || '' : '';
-
-      setCurrentSocialLinks([
-        { platform: 'LinkedIn', placeholder: 'linkedin.com/in/yourprofile', value: linkedinUrl },
-        { platform: 'Github', placeholder: 'github.com/yourusername', value: githubUrl },
-        { platform: 'Portfolio', placeholder: 'yourportfolio.com', value: portfolioUrl },
-        { platform: 'Twitter', placeholder: 'twitter.com/yourusername', value: twitterUrl }
-      ]);
+      setContactInfo(extractContactInfo(profileData));
+      setCurrentSkills(extractSkills(profileData));
+      setCurrentLanguages(extractLanguages(profileData));
+      setCurrentSocialLinks(extractSocialLinks(profileData, profileType));
     }
   }, [profileData, profileType]);
 

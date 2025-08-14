@@ -25,16 +25,14 @@ export const SkillsSection: FC<SkillsSectionProps> = ({
   const [isSkillsModalOpen, setIsSkillsModalOpen] = useState(false);
   const [skills, setSkills] = useState<string[]>(initialSkills);
 
-  // Sync local state with props when initialSkills changes
+
   useEffect(() => {
     setSkills(initialSkills);
   }, [initialSkills]);
 
   const handleSave = async (newSkills: Skill[]) => {
     const stringSkills = newSkills.map(skill => skill.name);
-    // Only call backend update, don't update local state
-    // Local state will be updated through useEffect when backend responds
-    // Don't show notification here - ProfileForm will handle it after backend success
+
     await onSave(stringSkills);
   };
 

@@ -34,9 +34,6 @@ export const EducationSection: FC<EducationSectionProps> = ({
   }, [initialEducation]);
 
   const handleSave = async (newEducation: Education[]) => {
-    // Only call backend update, don't update local state
-    // Local state will be updated through useEffect when backend responds
-    // Don't show notification here - ProfileForm will handle it after backend success
     await onSave(newEducation);
   };
 

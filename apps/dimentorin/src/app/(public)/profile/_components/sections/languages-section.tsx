@@ -25,14 +25,13 @@ export const LanguagesSection: FC<LanguagesSectionProps> = ({
   const [isLanguagesModalOpen, setIsLanguagesModalOpen] = useState(false);
   const [languages, setLanguages] = useState<Language[]>(initialLanguages);
 
-  // Sync local state with props when initialLanguages changes
+
   useEffect(() => {
     setLanguages(initialLanguages);
   }, [initialLanguages]);
 
   const handleSave = (newLanguages: Language[]) => {
-    // Only call backend update, don't update local state
-    // Local state will be updated through useEffect when backend responds
+
     // Don't show notification here - ProfileForm will handle it after backend success
     onSave(newLanguages);
   };

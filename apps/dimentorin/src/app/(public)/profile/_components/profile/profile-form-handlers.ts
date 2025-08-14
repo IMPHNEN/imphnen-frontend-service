@@ -1,6 +1,6 @@
 import type { MentorUpdateRequestDto, UserUpdateRequestDto } from '@imphnen-frontend-service/service';
 import { useProfile } from '../contexts/profile-context';
-import type { SocialLink, ProfileUpdateData, Experience, Education, Language } from './profile-form-types';
+import type { SocialLink, ProfileUpdateData, Experience, Education } from './profile-form-types';
 
 export const useProfileHandlers = (
   showNotification: (type: 'success' | 'error', title: string, message?: string) => void
@@ -89,7 +89,7 @@ export const useProfileHandlers = (
     }
   };
 
-  const handleEducationSave = async (newEducations: any[]) => {
+  const handleEducationSave = async (newEducations: Education[]) => {
     try {
       await handleProfileUpdate({
         education: newEducations

@@ -114,45 +114,61 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification }) => {
   }, [profileData]);
 
   // Handle profile updates using the context
+  // Helper function to extract error message
+  function isErrorWithResponse(err: unknown): err is { response: { data: { message: string } } } {
+    return (
+      typeof err === 'object' &&
+      err !== null &&
+      // @ts-expect-error: err may have a response property from API error object
+      typeof err.response?.data?.message === 'string'
+    );
+  }
+
+  function isErrorWithMessage(err: unknown): err is { message: string } {
+    return (
+      typeof err === 'object' &&
+      err !== null &&
+      'message' in err &&
+      typeof (err as { message?: unknown }).message === 'string'
+    );
+  }
+
+  function tryParseJsonMessage(msg: string): string {
+    const trimmed = msg.trim();
+    if (trimmed.startsWith('{') && trimmed.endsWith('}')) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        if (parsed && typeof parsed.message === 'string') {
+          return parsed.message;
+        }
+      } catch {
+        // ignore parse error, return original message
+      }
+    }
+    return msg;
+  }
+
+  function extractApiMessage(err: unknown): string {
+    if (isErrorWithResponse(err)) {
+      return err.response.data.message;
+    }
+    if (isErrorWithMessage(err)) {
+      const msg = err.message || '';
+      return tryParseJsonMessage(msg);
+    }
+    return '';
+  }
+
   const handleProfileUpdate = async (updates: Partial<MentorUpdateRequestDto | UserUpdateRequestDto>) => {
     try {
-      // Wait for the backend update to complete
       const result = await updateProfile(updates);
-
-      // Only show success notification if the backend update was successful
-      // The updateProfile function should throw an error if the backend update fails
       showNotification('success', 'Perubahan Berhasil Disimpan');
-
       return result;
     } catch (err: unknown) {
       console.error('Profile update error:', err);
-      let apiMessage = '';
-      if (typeof err === 'object' && err !== null) {
-        // @ts-expect-error Error object may have response property from Axios or fetch
-        if (err.response?.data?.message) {
-          // @ts-expect-error Error object may have response property from Axios or fetch
-          apiMessage = err.response.data.message;
-        } else if ('message' in err && typeof (err as { message?: string }).message === 'string') {
-          const msg = (err as { message?: string }).message || '';
-          // Try to parse as JSON if looks like JSON
-          if (msg.trim().startsWith('{') && msg.trim().endsWith('}')) {
-            try {
-              const parsed = JSON.parse(msg);
-              if (parsed && typeof parsed.message === 'string') {
-                apiMessage = parsed.message;
-              } else {
-                apiMessage = msg;
-              }
-            } catch {
-              apiMessage = msg;
-            }
-          } else {
-            apiMessage = msg;
-          }
-        }
-      }
+      const apiMessage = extractApiMessage(err);
       showNotification('error', 'Gagal menyimpan perubahan', apiMessage || 'Silakan coba lagi');
-      throw err; // Re-throw the error so calling functions can handle it if needed
+      throw err;
     }
   };
 
@@ -185,15 +201,12 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification }) => {
       <ExperiencesSection
         initialExperiences={experiences}
         onSave={async (newExperiences) => {
-          // Don't update local state, let useEffect handle it after backend responds
           try {
-            // Update backend with new experience data
             await handleProfileUpdate({
               experience: newExperiences
             });
           } catch (error) {
             console.error('Experience update error:', error);
-            // Error notification is already handled in handleProfileUpdate
           }
         }}
         showNotification={showNotification}
@@ -204,15 +217,12 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification }) => {
       <EducationSection
         initialEducation={education}
         onSave={async (newEducations) => {
-          // Don't update local state, let useEffect handle it after backend responds
           try {
-            // Update backend with new education data
             await handleProfileUpdate({
               education: newEducations
             });
           } catch (error) {
             console.error('Education update error:', error);
-            // Error notification is already handled in handleProfileUpdate
           }
         }}
         showNotification={showNotification}
