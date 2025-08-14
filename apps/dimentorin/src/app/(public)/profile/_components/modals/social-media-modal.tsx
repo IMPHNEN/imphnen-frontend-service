@@ -11,7 +11,8 @@ interface SocialMediaModalProps {
   isOpen: boolean;
   onClose: () => void;
   initialValue: SocialLink[];
-  onSave: (value: SocialLink[]) => void;
+  onSave: (value: SocialLink[]) => Promise<void>;
+  isLoading?: boolean;
 }
 
 export const SocialMediaModal: FC<SocialMediaModalProps> = ({
@@ -19,6 +20,7 @@ export const SocialMediaModal: FC<SocialMediaModalProps> = ({
   onClose,
   initialValue,
   onSave,
+  isLoading = false,
 }) => {
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>(initialValue);
 
@@ -27,9 +29,15 @@ export const SocialMediaModal: FC<SocialMediaModalProps> = ({
     setSocialLinks(initialValue);
   }, [initialValue]);
 
-  const handleSave = () => {
-    onSave(socialLinks);
-    onClose();
+  const handleSave = async () => {
+    try {
+      await onSave(socialLinks);
+      // Only close modal after successful backend response
+      onClose();
+    } catch (error) {
+      console.error('Save failed:', error);
+      // Modal stays open on error so user can retry
+    }
   };
 
   const handleCancel = () => {
@@ -89,6 +97,7 @@ export const SocialMediaModal: FC<SocialMediaModalProps> = ({
             variant="secondary"
             onClick={handleCancel}
             className="flex-1"
+            disabled={isLoading}
           >
             Batal
           </ModalButton>
@@ -96,8 +105,10 @@ export const SocialMediaModal: FC<SocialMediaModalProps> = ({
             variant="primary"
             onClick={handleSave}
             className="flex-1"
+            disabled={isLoading}
+            loading={isLoading}
           >
-            Simpan
+            {isLoading ? 'Menyimpan...' : 'Simpan'}
           </ModalButton>
         </div>
       </div>

@@ -5,7 +5,7 @@ interface DescriptionModalProps {
   isOpen: boolean;
   onClose: () => void;
   initialValue: string;
-  onSave: (value: string) => void;
+  onSave: (value: string) => Promise<void>;
   isLoading?: boolean;
 }
 
@@ -23,9 +23,15 @@ export const DescriptionModal: FC<DescriptionModalProps> = ({
     setDescription(initialValue);
   }, [initialValue]);
 
-  const handleSave = () => {
-    onSave(description);
-    onClose();
+  const handleSave = async () => {
+    try {
+      await onSave(description);
+      // Only close modal after successful backend response
+      onClose();
+    } catch (error) {
+      console.error('Save failed:', error);
+      // Modal stays open on error so user can retry
+    }
   };
 
   const handleCancel = () => {

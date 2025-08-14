@@ -12,14 +12,16 @@ interface SocialLink {
 
 interface SocialMediaSectionProps {
   initialSocialLinks: SocialLink[];
-  onSave: (newSocialLinks: SocialLink[]) => void;
+  onSave: (newSocialLinks: SocialLink[]) => Promise<void>;
   showNotification: (type: NotificationType['type'], title: string, message?: string) => void;
+  isLoading?: boolean;
 }
 
 export const SocialMediaSection: FC<SocialMediaSectionProps> = ({
   initialSocialLinks,
   onSave,
   showNotification,
+  isLoading,
 }) => {
   const [isSocialMediaModalOpen, setIsSocialMediaModalOpen] = useState(false);
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>(initialSocialLinks);
@@ -29,11 +31,11 @@ export const SocialMediaSection: FC<SocialMediaSectionProps> = ({
     setSocialLinks(initialSocialLinks);
   }, [initialSocialLinks]);
 
-  const handleSave = (newSocialLinks: SocialLink[]) => {
+  const handleSave = async (newSocialLinks: SocialLink[]) => {
     // Only call backend update, don't update local state
     // Local state will be updated through useEffect when backend responds
     // Don't show notification here - ProfileForm will handle it after backend success
-    onSave(newSocialLinks);
+    await onSave(newSocialLinks);
   };
 
   return (
@@ -60,6 +62,7 @@ export const SocialMediaSection: FC<SocialMediaSectionProps> = ({
         onClose={() => setIsSocialMediaModalOpen(false)}
         initialValue={socialLinks}
         onSave={handleSave}
+        isLoading={isLoading}
       />
     </SectionWrapper>
   );

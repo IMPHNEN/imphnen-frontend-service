@@ -11,7 +11,7 @@ interface CVModalProps {
   isOpen: boolean;
   onClose: () => void;
   initialValue: CVData;
-  onSave: (value: CVData) => void;
+  onSave: (value: CVData) => Promise<void>;
   isLoading?: boolean;
 }
 
@@ -30,9 +30,15 @@ export const CVModal: FC<CVModalProps> = ({
     setCvData(initialValue);
   }, [initialValue]);
 
-  const handleSave = () => {
-    onSave(cvData);
-    onClose();
+  const handleSave = async () => {
+    try {
+      await onSave(cvData);
+      // Only close modal after successful backend response
+      onClose();
+    } catch (error) {
+      console.error('Save failed:', error);
+      // Modal stays open on error so user can retry
+    }
   };
 
   const handleCancel = () => {

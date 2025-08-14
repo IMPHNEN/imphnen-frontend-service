@@ -15,7 +15,7 @@ interface ExperienceModalProps {
   isOpen: boolean;
   onClose: () => void;
   initialValue: Experience[];
-  onSave: (value: Experience[]) => void;
+  onSave: (value: Experience[]) => Promise<void>;
   isLoading?: boolean;
 }
 
@@ -33,9 +33,15 @@ export const ExperienceModal: FC<ExperienceModalProps> = ({
     setExperiences(initialValue);
   }, [initialValue]);
 
-  const handleSave = () => {
-    onSave(experiences);
-    onClose();
+  const handleSave = async () => {
+    try {
+      await onSave(experiences);
+      // Only close modal after successful backend response
+      onClose();
+    } catch (error) {
+      console.error('Save failed:', error);
+      // Modal stays open on error so user can retry
+    }
   };
 
   const handleCancel = () => {

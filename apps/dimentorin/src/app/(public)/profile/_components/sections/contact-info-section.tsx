@@ -13,14 +13,16 @@ interface ContactInfo {
 
 interface ContactInfoSectionProps {
   initialContactInfo: ContactInfo;
-  onSave: (newContactInfo: ContactInfo) => void;
+  onSave: (newContactInfo: ContactInfo) => Promise<void>;
   showNotification: (type: NotificationType['type'], title: string, message?: string) => void;
+  isLoading?: boolean;
 }
 
 export const ContactInfoSection: FC<ContactInfoSectionProps> = ({
   initialContactInfo,
   onSave,
   showNotification,
+  isLoading,
 }) => {
   const [isPersonalInfoModalOpen, setIsPersonalInfoModalOpen] = useState(false);
   const [contactInfo, setContactInfo] = useState<ContactInfo>(initialContactInfo);
@@ -30,13 +32,13 @@ export const ContactInfoSection: FC<ContactInfoSectionProps> = ({
     setContactInfo(initialContactInfo);
   }, [initialContactInfo]);
 
-  const handleSave = (newInfo: { email: string; phone: string; location: string }) => {
+  const handleSave = async (newInfo: { email: string; phone: string; location: string }) => {
     // PersonalInfoModal saves all personal info including location
     const newContactInfo = { email: newInfo.email, phone: newInfo.phone, location: newInfo.location };
     // Only call backend update, don't update local state
     // Local state will be updated through useEffect when backend responds
     // Don't show notification here - ProfileForm will handle it after backend success
-    onSave(newContactInfo);
+    await onSave(newContactInfo);
   };
 
   return (
@@ -84,6 +86,7 @@ export const ContactInfoSection: FC<ContactInfoSectionProps> = ({
         onClose={() => setIsPersonalInfoModalOpen(false)}
         initialValue={contactInfo}
         onSave={handleSave}
+        isLoading={isLoading}
       />
     </SectionWrapper>
   );

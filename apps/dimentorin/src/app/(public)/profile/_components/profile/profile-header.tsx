@@ -39,19 +39,17 @@ export const ProfileHeader: FC<ProfileHeaderProps> = ({ onEditProfileClick, show
       ? profileData.legal_name
       : 'User Name');  // Determine current job/role
   let displayJob = 'Role';
-  if (profileType === 'mentor' && profileData && 'current_role' in profileData) {
-    displayJob = profileData.current_role || 'Mentor';
+  if (profileData) {
+    if (profileType === 'mentor' && 'current_role' in profileData) {
+      displayJob = profileData.current_role || 'Mentor';
+    } else if (profileType === 'user' && 'role' in profileData && profileData.role) {
+      displayJob = profileData.role.name || 'User';
+    } else if ('current_role' in profileData) {
+      // Fallback to current_role if available regardless of profileType
+      displayJob = profileData.current_role || 'Role';
+    }
   }
 
-  // Determine location
-  let displayLocation = 'Location';
-  if (profileType === 'user' && profileData && 'location' in profileData) {
-    displayLocation = profileData.location || 'Location';
-  } else if (profileType === 'mentor' && profileData && 'domicile' in profileData) {
-    displayLocation = profileData.domicile || 'Location';
-  }
-
-  // Determine join date
   // Determine join date
   const joinDate = profileData && 'created_at' in profileData
     ? new Date(profileData.created_at).toLocaleDateString('id-ID', {
@@ -100,7 +98,7 @@ export const ProfileHeader: FC<ProfileHeaderProps> = ({ onEditProfileClick, show
                 {displayFullname}
               </h1>
               <p className="text-neutral-600 mb-1">{displayJob}</p>
-              <p className="text-sm text-neutral-500">{displayLocation}</p>
+              {/* <p className="text-sm text-neutral-500">{displayLocation}</p> */}
               <p className="text-sm text-neutral-500 mt-2">
                 Bergabung sejak {joinDate}
               </p>

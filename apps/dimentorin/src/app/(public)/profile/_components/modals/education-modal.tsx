@@ -15,7 +15,7 @@ interface EducationModalProps {
   isOpen: boolean;
   onClose: () => void;
   initialValue: Education[];
-  onSave: (value: Education[]) => void;
+  onSave: (value: Education[]) => Promise<void>;
   isLoading?: boolean;
 }
 
@@ -33,9 +33,15 @@ export const EducationModal: FC<EducationModalProps> = ({
     setEducations(initialValue);
   }, [initialValue]);
 
-  const handleSave = () => {
-    onSave(educations);
-    onClose();
+  const handleSave = async () => {
+    try {
+      await onSave(educations);
+      // Only close modal after successful backend response
+      onClose();
+    } catch (error) {
+      console.error('Save failed:', error);
+      // Modal stays open on error so user can retry
+    }
   };
 
   const handleCancel = () => {

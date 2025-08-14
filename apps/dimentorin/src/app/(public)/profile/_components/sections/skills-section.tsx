@@ -7,19 +7,20 @@ import { EditSectionButton } from '../buttons/edit-section-button';
 interface Skill {
   id: string;
   name: string;
-  category: string;
 }
 
 interface SkillsSectionProps {
   initialSkills: string[];
-  onSave: (newSkills: string[]) => void;
+  onSave: (newSkills: string[]) => Promise<void>;
   showNotification: (type: NotificationType['type'], title: string, message?: string) => void;
+  isLoading?: boolean;
 }
 
 export const SkillsSection: FC<SkillsSectionProps> = ({
   initialSkills,
   onSave,
   showNotification,
+  isLoading = false,
 }) => {
   const [isSkillsModalOpen, setIsSkillsModalOpen] = useState(false);
   const [skills, setSkills] = useState<string[]>(initialSkills);
@@ -29,19 +30,22 @@ export const SkillsSection: FC<SkillsSectionProps> = ({
     setSkills(initialSkills);
   }, [initialSkills]);
 
-  const handleSave = (newSkills: Skill[]) => {
+  const handleSave = async (newSkills: Skill[]) => {
     const stringSkills = newSkills.map(skill => skill.name);
     // Only call backend update, don't update local state
     // Local state will be updated through useEffect when backend responds
     // Don't show notification here - ProfileForm will handle it after backend success
-    onSave(stringSkills);
+    await onSave(stringSkills);
   };
 
   return (
     <SectionWrapper
       title="Skills"
       editButton={
-        <EditSectionButton onClick={() => setIsSkillsModalOpen(true)} />
+        <EditSectionButton
+          onClick={() => setIsSkillsModalOpen(true)}
+          disabled={isLoading}
+        />
       }
       delay={0.3}
     >
@@ -59,8 +63,9 @@ export const SkillsSection: FC<SkillsSectionProps> = ({
       <SkillsModal
         isOpen={isSkillsModalOpen}
         onClose={() => setIsSkillsModalOpen(false)}
-        initialValue={skills.map(skill => ({ id: skill, name: skill, category: 'unknown' }))}
+        initialValue={skills.map(skill => ({ id: skill, name: skill }))}
         onSave={handleSave}
+        isLoading={isLoading}
       />
     </SectionWrapper>
   );

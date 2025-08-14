@@ -14,7 +14,7 @@ interface Experience {
 
 interface ExperiencesSectionProps {
   initialExperiences: Experience[];
-  onSave: (newExperiences: Experience[]) => void;
+  onSave: (newExperiences: Experience[]) => Promise<void>;
   showNotification: (type: NotificationType['type'], title: string, message?: string) => void;
   isLoading?: boolean;
 }
@@ -33,11 +33,11 @@ export const ExperiencesSection: FC<ExperiencesSectionProps> = ({
     setExperiences(initialExperiences);
   }, [initialExperiences]);
 
-  const handleSave = (newExperiences: Experience[]) => {
+  const handleSave = async (newExperiences: Experience[]) => {
     // Only call backend update, don't update local state
     // Local state will be updated through useEffect when backend responds
     // Don't show notification here - ProfileForm will handle it after backend success
-    onSave(newExperiences);
+    await onSave(newExperiences);
   };
 
   return (

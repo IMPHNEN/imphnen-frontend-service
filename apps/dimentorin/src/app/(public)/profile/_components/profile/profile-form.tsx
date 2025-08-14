@@ -4,7 +4,6 @@ import { ExperiencesSection } from '../sections/experiences-section';
 import { CvResumeSection } from '../sections/cv-resume-section';
 import { DescriptionSection } from '../sections/description-section';
 import { EducationSection } from '../sections/education-section';
-import { LanguagesSection } from '../sections/languages-section';
 import type { MentorUpdateRequestDto, UserUpdateRequestDto } from '@imphnen-frontend-service/service';
 import { useProfile } from '../contexts/profile-context';
 
@@ -24,17 +23,12 @@ interface Education {
   period: string;
 }
 
-interface Language {
-  name: string;
-  level: string;
-}
-
 interface ProfileFormProps {
   showNotification: (type: 'success' | 'error', title: string, message?: string) => void;
 }
 
 export const ProfileForm: FC<ProfileFormProps> = ({ showNotification }) => {
-  const { profileData, updateProfile, profileType, isUpdating } = useProfile();
+  const { profileData, updateProfile, isUpdating } = useProfile();
 
   const [notification, setNotification] = useState<{
     isOpen: boolean;
@@ -50,7 +44,6 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification }) => {
 
   const [experiences, setExperiences] = useState<Experience[]>([]);
   const [education, setEducation] = useState<Education[]>([]);
-  const [languages, setLanguages] = useState<Language[]>([]);
 
   // Additional states for profile data
   const [personalInfo, setPersonalInfo] = useState({
@@ -79,16 +72,6 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification }) => {
     if (profileData) {
       const education = 'education' in profileData ? profileData.education || [] : [];
       setEducation(education);
-    }
-  }, [profileData]);
-
-  // Update languages when profileData changes
-  useEffect(() => {
-    if (profileData) {
-      const languages: Language[] = 'languages' in profileData
-        ? (profileData.languages || []).map(lang => ({ name: lang, level: 'Intermediate' }))
-        : [];
-      setLanguages(languages);
     }
   }, [profileData]);
 
@@ -121,14 +104,14 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification }) => {
   // Update CV/Resume info when profileData changes
   useEffect(() => {
     if (profileData) {
-      const cvUrl = profileType === 'mentor' && 'cv_url' in profileData ? profileData.cv_url || '' : '';
+      const cvUrl = 'cv_url' in profileData ? profileData.cv_url || '' : '';
 
       setCvResume({
         cvUrl,
         resumeUrl: ''
       });
     }
-  }, [profileData, profileType]);
+  }, [profileData]);
 
   // Handle profile updates using the context
   const handleProfileUpdate = async (updates: Partial<MentorUpdateRequestDto | UserUpdateRequestDto>) => {
@@ -157,19 +140,6 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification }) => {
           await handleProfileUpdate({
             bio: newDescription || null
           });
-        }}
-        showNotification={showNotification}
-        isLoading={isUpdating}
-      />
-
-      {/* Languages Section */}
-      <LanguagesSection
-        initialLanguages={languages}
-        onSave={async (newLanguages) => {
-          // Don't update local state, let useEffect handle it after backend responds
-          await handleProfileUpdate({
-            languages: newLanguages.map(lang => lang.name)
-          } as MentorUpdateRequestDto | UserUpdateRequestDto);
         }}
         showNotification={showNotification}
         isLoading={isUpdating}
@@ -213,19 +183,17 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification }) => {
         isLoading={isUpdating}
       />
 
-      {/* CV/Resume Section - Only for mentors */}
-      {profileType === 'mentor' && (
-        <CvResumeSection
-          initialFileName={cvResume.cvUrl}
-          onSave={async (cvData) => {
-            await handleProfileUpdate({
-              cv_url: cvData.fileName || null
-            });
-          }}
-          showNotification={showNotification}
-          isLoading={isUpdating}
-        />
-      )}
+      {/* CV/Resume Section */}
+      <CvResumeSection
+        initialFileName={cvResume.cvUrl}
+        onSave={async (cvData) => {
+          await handleProfileUpdate({
+            cv_url: cvData.fileName || null
+          });
+        }}
+        showNotification={showNotification}
+        isLoading={isUpdating}
+      />
 
       <NotificationModal
         isOpen={notification.isOpen}

@@ -6,7 +6,7 @@ import { EditSectionButton } from '../buttons/edit-section-button';
 
 interface DescriptionSectionProps {
   initialDescription: string;
-  onSave: (newDescription: string) => void;
+  onSave: (newDescription: string) => Promise<void>;
   showNotification: (type: NotificationType['type'], title: string, message?: string) => void;
   isLoading?: boolean;
 }
@@ -25,11 +25,11 @@ export const DescriptionSection: FC<DescriptionSectionProps> = ({
     setDescription(initialDescription);
   }, [initialDescription]);
 
-  const handleSave = (newDescription: string) => {
+  const handleSave = async (newDescription: string) => {
     // Only call backend update, don't update local state
     // Local state will be updated through useEffect when backend responds
     // Don't show notification here - ProfileForm will handle it after backend success
-    onSave(newDescription);
+    await onSave(newDescription);
   };
 
   return (

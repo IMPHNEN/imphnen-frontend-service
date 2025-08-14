@@ -11,7 +11,8 @@ interface PersonalInfoModalProps {
   isOpen: boolean;
   onClose: () => void;
   initialValue: PersonalInfo;
-  onSave: (value: PersonalInfo) => void;
+  onSave: (value: PersonalInfo) => Promise<void>;
+  isLoading?: boolean;
 }
 
 export const PersonalInfoModal: FC<PersonalInfoModalProps> = ({
@@ -19,6 +20,7 @@ export const PersonalInfoModal: FC<PersonalInfoModalProps> = ({
   onClose,
   initialValue,
   onSave,
+  isLoading = false,
 }) => {
   const [personalInfo, setPersonalInfo] = useState(initialValue);
 
@@ -27,9 +29,15 @@ export const PersonalInfoModal: FC<PersonalInfoModalProps> = ({
     setPersonalInfo(initialValue);
   }, [initialValue]);
 
-  const handleSave = () => {
-    onSave(personalInfo);
-    onClose();
+  const handleSave = async () => {
+    try {
+      await onSave(personalInfo);
+      // Only close modal after successful backend response
+      onClose();
+    } catch (error) {
+      console.error('Save failed:', error);
+      // Modal stays open on error so user can retry
+    }
   };
 
   const handleCancel = () => {
@@ -108,14 +116,17 @@ export const PersonalInfoModal: FC<PersonalInfoModalProps> = ({
           <ModalButton variant="secondary"
             onClick={handleCancel}
             className="flex-1 bg-white shadow-md"
+            disabled={isLoading}
           >
             Batal
           </ModalButton>
           <ModalButton variant="primary"
             onClick={handleSave}
             className="flex-1"
+            disabled={isLoading}
+            loading={isLoading}
           >
-            Simpan
+            {isLoading ? 'Menyimpan...' : 'Simpan'}
           </ModalButton>
         </div>
       </div>

@@ -12,7 +12,7 @@ interface ProfileSidebarProps {
 }
 
 export const ProfileSidebar: FC<ProfileSidebarProps> = ({ showNotification }) => {
-  const { profileData, updateProfile, profileType, isLoading } = useProfile();
+  const { profileData, updateProfile, profileType, isLoading, isUpdating } = useProfile();
 
   console.log('ProfileSidebar: Component render - profileData:', profileData, 'profileType:', profileType, 'isLoading:', isLoading);
   console.log('ProfileSidebar: Should show Career Status?', profileType === 'mentor');
@@ -184,6 +184,7 @@ export const ProfileSidebar: FC<ProfileSidebarProps> = ({ showNotification }) =>
           await handleProfileUpdate(updates);
         }}
         showNotification={showNotification}
+        isLoading={isUpdating}
       />
 
       <SkillsSection
@@ -200,6 +201,7 @@ export const ProfileSidebar: FC<ProfileSidebarProps> = ({ showNotification }) =>
           await handleProfileUpdate(updates);
         }}
         showNotification={showNotification}
+        isLoading={isUpdating}
       />
     </div>
   );

@@ -13,14 +13,16 @@ interface PersonalInfo {
 
 interface PersonalInfoSectionProps {
   initialContactInfo: PersonalInfo;
-  onSave: (newContactInfo: PersonalInfo) => void;
+  onSave: (newContactInfo: PersonalInfo) => Promise<void>;
   showNotification: (type: NotificationType['type'], title: string, message?: string) => void;
+  isLoading?: boolean;
 }
 
 export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
   initialContactInfo,
   onSave,
   showNotification,
+  isLoading = false,
 }) => {
   const [isPersonalInfoModalOpen, setIsPersonalInfoModalOpen] = useState(false);
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo>(initialContactInfo);
@@ -30,19 +32,22 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
     setPersonalInfo(initialContactInfo);
   }, [initialContactInfo]);
 
-  const handleSave = (newInfo: { email: string; phone: string; location: string }) => {
+  const handleSave = async (newInfo: { email: string; phone: string; location: string }) => {
     const newPersonalInfo = { email: newInfo.email, phone: newInfo.phone, location: newInfo.location };
     // Only call backend update, don't update local state
     // Local state will be updated through useEffect when backend responds
     // Don't show notification here - ProfileForm will handle it after backend success
-    onSave(newPersonalInfo);
+    await onSave(newPersonalInfo);
   };
 
   return (
     <SectionWrapper
       title="Personal Informations"
       editButton={
-        <EditSectionButton onClick={() => setIsPersonalInfoModalOpen(true)} />
+        <EditSectionButton
+          onClick={() => setIsPersonalInfoModalOpen(true)}
+          disabled={isLoading}
+        />
       }
       delay={0.1}
     >
@@ -83,6 +88,7 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
         onClose={() => setIsPersonalInfoModalOpen(false)}
         initialValue={personalInfo}
         onSave={handleSave}
+        isLoading={isLoading}
       />
     </SectionWrapper>
   );

@@ -6,14 +6,14 @@ import { InputField } from '@imphnen-frontend-service/ui/molecules';
 interface Skill {
   id: string;
   name: string;
-  category: string;
 }
 
 interface SkillsModalProps {
   isOpen: boolean;
   onClose: () => void;
   initialValue: Skill[];
-  onSave: (value: Skill[]) => void;
+  onSave: (value: Skill[]) => Promise<void>;
+  isLoading?: boolean;
 }
 
 export const SkillsModal: FC<SkillsModalProps> = ({
@@ -21,23 +21,30 @@ export const SkillsModal: FC<SkillsModalProps> = ({
   onClose,
   initialValue,
   onSave,
+  isLoading = false,
 }) => {
   const [skills, setSkills] = useState<Skill[]>(initialValue);
-  const [newSkill, setNewSkill] = useState({ name: '', category: 'Technical' });
+  const [newSkill, setNewSkill] = useState({ name: '' });
 
   // Sync local state with backend data
   useEffect(() => {
     setSkills(initialValue);
   }, [initialValue]);
 
-  const handleSave = () => {
-    onSave(skills);
-    onClose();
+  const handleSave = async () => {
+    try {
+      await onSave(skills);
+      // Only close modal after successful backend response
+      onClose();
+    } catch (error) {
+      console.error('Save failed:', error);
+      // Modal stays open on error so user can retry
+    }
   };
 
   const handleCancel = () => {
     setSkills(initialValue);
-    setNewSkill({ name: '', category: 'Technical' });
+    setNewSkill({ name: '' });
     onClose();
   };
 
@@ -46,10 +53,9 @@ export const SkillsModal: FC<SkillsModalProps> = ({
       const skill: Skill = {
         id: Date.now().toString(),
         name: newSkill.name.trim(),
-        category: newSkill.category,
       };
       setSkills([...skills, skill]);
-      setNewSkill({ name: '', category: 'Technical' });
+      setNewSkill({ name: '' });
     }
   };
 
@@ -92,19 +98,6 @@ export const SkillsModal: FC<SkillsModalProps> = ({
                   placeholder="e.g., React, JavaScript, etc."
                 />
               </div>
-              <div className="w-full sm:w-32">
-                <label htmlFor="skill-category-select" className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                <select
-                  id="skill-category-select"
-                  value={newSkill.category}
-                  onChange={(e) => setNewSkill({ ...newSkill, category: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#23A1EB]"
-                >
-                  <option value="Technical">Technical</option>
-                  <option value="Soft Skill">Soft Skill</option>
-                  <option value="Language">Language</option>
-                </select>
-              </div>
               <div className="flex sm:items-end">
                 <ModalButton
                   onClick={addSkill}
@@ -133,9 +126,6 @@ export const SkillsModal: FC<SkillsModalProps> = ({
                   >
                     <div>
                       <span className="font-medium text-gray-900">{skill.name}</span>
-                      <span className="ml-2 text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                        {skill.category}
-                      </span>
                     </div>
                     <ModalButton
                       onClick={() => removeSkill(skill.id)}
@@ -157,14 +147,17 @@ export const SkillsModal: FC<SkillsModalProps> = ({
           <ModalButton variant="secondary"
             onClick={handleCancel}
             className="flex-1"
+            disabled={isLoading}
           >
             Batal
           </ModalButton>
           <ModalButton variant="primary"
             onClick={handleSave}
             className="flex-1"
+            disabled={isLoading}
+            loading={isLoading}
           >
-            Simpan
+            {isLoading ? 'Menyimpan...' : 'Simpan'}
           </ModalButton>
         </div>
       </div>
