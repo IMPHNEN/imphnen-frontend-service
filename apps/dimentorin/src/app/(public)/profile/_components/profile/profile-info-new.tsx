@@ -40,7 +40,7 @@ export const ProfileInfo: FC<ProfileInfoProps> = ({ showNotification }) => {
     { platform: 'Twitter', placeholder: 'twitter.com/yourusername', value: '' }
   ]);
 
-  // Helper functions to reduce cognitive complexity
+
   const extractContactInfo = (profileData: MentorUpdateRequestDto | UserUpdateRequestDto) => {
     const email = 'email' in profileData && typeof profileData.email === 'string' ? profileData.email || '' : '';
     let phone = '';
@@ -94,7 +94,7 @@ export const ProfileInfo: FC<ProfileInfoProps> = ({ showNotification }) => {
     ];
   };
 
-  // Update data when profileData changes
+
   useEffect(() => {
     if (profileData) {
       setContactInfo(extractContactInfo(profileData));
@@ -104,7 +104,7 @@ export const ProfileInfo: FC<ProfileInfoProps> = ({ showNotification }) => {
     }
   }, [profileData, profileType]);
 
-  // Handle profile updates using the context
+
   const handleProfileUpdate = async (updates: Partial<MentorUpdateRequestDto | UserUpdateRequestDto>) => {
     try {
       await updateProfile(updates);

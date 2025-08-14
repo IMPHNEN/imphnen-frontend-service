@@ -53,7 +53,7 @@ export const LanguagesModal: FC<LanguagesModalProps> = ({
   };
 
   const handleSave = () => {
-    // Remove id before saving
+    
     const languagesToSave = languages.map(({ id, ...lang }) => lang);
     onSave(languagesToSave);
     onClose();
@@ -72,7 +72,7 @@ export const LanguagesModal: FC<LanguagesModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
+      {}
       <button
         className="absolute inset-0 bg-black/20 backdrop-blur-sm"
         onClick={handleCancel}
@@ -80,16 +80,16 @@ export const LanguagesModal: FC<LanguagesModalProps> = ({
         aria-label="Close modal"
       />
 
-      {/* Modal Content */}
+      {}
       <div className="relative bg-white rounded-xl shadow-xl w-full max-w-5xl mx-auto max-h-[95vh] overflow-hidden">
-        {/* Header */}
+        {}
         <div className="p-6 pb-4 border-b border-gray-200">
           <div className="flex">
             <h2 className="text-xl font-semibold text-gray-900 px-3 py-1 bg-[#23A1EB]/10 rounded-md flex-1">Edit Languages</h2>
           </div>
         </div>
 
-        {/* Content */}
+        {}
         <div className="p-6 max-h-[60vh] overflow-y-auto">
           <div className="space-y-4">
             {languages.map((language, index) => (
@@ -125,7 +125,7 @@ export const LanguagesModal: FC<LanguagesModalProps> = ({
           </div>
         </div>
 
-        {/* Footer */}
+        {}
         <div className="flex gap-3 p-6 pt-4">
           <ModalButton
             variant="secondary"

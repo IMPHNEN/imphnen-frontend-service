@@ -49,7 +49,7 @@ export const FileUploader: FC<FileUploaderProps> = ({
   const handleFileSelect = (file: File) => {
     const error = validateFile(file);
     if (error) {
-  // removed log
+
       return;
     }
 

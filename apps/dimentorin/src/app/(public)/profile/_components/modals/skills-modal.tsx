@@ -26,7 +26,7 @@ export const SkillsModal: FC<SkillsModalProps> = ({
   const [skills, setSkills] = useState<Skill[]>(initialValue);
   const [newSkill, setNewSkill] = useState({ name: '' });
 
-  // Sync local state with backend data
+  
   useEffect(() => {
     setSkills(initialValue);
   }, [initialValue]);
@@ -34,11 +34,11 @@ export const SkillsModal: FC<SkillsModalProps> = ({
   const handleSave = async () => {
     try {
       await onSave(skills);
-      // Only close modal after successful backend response
+
       onClose();
     } catch (error) {
       console.error('Save failed:', error);
-      // Modal stays open on error so user can retry
+
     }
   };
 

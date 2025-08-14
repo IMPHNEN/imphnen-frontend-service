@@ -32,7 +32,7 @@ export const LanguagesSection: FC<LanguagesSectionProps> = ({
 
   const handleSave = (newLanguages: Language[]) => {
 
-    // Don't show notification here - ProfileForm will handle it after backend success
+
     onSave(newLanguages);
   };
 

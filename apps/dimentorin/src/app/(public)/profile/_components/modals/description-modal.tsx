@@ -18,7 +18,7 @@ export const DescriptionModal: FC<DescriptionModalProps> = ({
 }) => {
   const [description, setDescription] = useState(initialValue);
 
-  // Sync local state with backend data
+  
   useEffect(() => {
     setDescription(initialValue);
   }, [initialValue]);
@@ -26,11 +26,11 @@ export const DescriptionModal: FC<DescriptionModalProps> = ({
   const handleSave = async () => {
     try {
       await onSave(description);
-      // Only close modal after successful backend response
+
       onClose();
     } catch (error) {
       console.error('Save failed:', error);
-      // Modal stays open on error so user can retry
+
     }
   };
 

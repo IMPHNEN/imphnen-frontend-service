@@ -25,19 +25,19 @@ export const CvResumeSection: FC<CvResumeSectionProps> = ({
   const [isCVModalOpen, setIsCVModalOpen] = useState(false);
   const [fileName, setFileName] = useState(initialFileName);
 
-  // Sync local state with props when initialFileName changes
+  
   useEffect(() => {
     setFileName(initialFileName);
   }, [initialFileName]);
 
   const handleSave = async (cvData: { fileName: string; fileUrl?: string }) => {
-    // Only call backend update, don't update local state
-    // Local state will be updated through useEffect when backend responds
-    // Don't show notification here - ProfileForm will handle it after backend success
+
+
+
     await onSave(cvData);
   };
 
-  // Determine display name for the CV
+
   let displayFileName = 'Belum ada CV';
   let fileUrl = '';
   if (fileName) {
@@ -46,7 +46,7 @@ export const CvResumeSection: FC<CvResumeSectionProps> = ({
       fileUrl = fileName;
     } else {
       displayFileName = fileName;
-      // If fileName is not a URL, fileUrl remains empty
+
     }
   }
 
@@ -94,7 +94,7 @@ export const CvResumeSection: FC<CvResumeSectionProps> = ({
       <CVModal
         isOpen={isCVModalOpen}
         onClose={() => setIsCVModalOpen(false)}
-        initialValue={{ fileName, fileUrl: fileName }} // fileName contains URL from profile
+        initialValue={{ fileName, fileUrl: fileName }}
         onSave={handleSave}
         isLoading={isLoading}
       />

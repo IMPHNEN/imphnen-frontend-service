@@ -28,7 +28,7 @@ export const EducationSection: FC<EducationSectionProps> = ({
   const [isEducationModalOpen, setIsEducationModalOpen] = useState(false);
   const [education, setEducation] = useState<Education[]>(initialEducation);
 
-  // Sync local state with props when initialEducation changes
+  
   useEffect(() => {
     setEducation(initialEducation);
   }, [initialEducation]);

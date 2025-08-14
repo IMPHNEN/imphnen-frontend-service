@@ -114,7 +114,7 @@ export const ProfileSidebar: FC<ProfileSidebarProps> = ({ showNotification }) =>
     }
   }, [profileData, profileType, isLoading, isInitialized, getCareerStatus, getEmail, getPhone, getLocation, getSkills, isUpdatingCareerStatus]);
 
-  // Helper function to parse JSON message safely
+  
   const tryParseJsonMessage = (msg: string): string => {
     if (msg.trim().startsWith('{') && msg.trim().endsWith('}')) {
       try {
@@ -129,7 +129,7 @@ export const ProfileSidebar: FC<ProfileSidebarProps> = ({ showNotification }) =>
     return msg;
   };
 
-  // Helper function to extract API error message
+
   const extractApiMessage = (err: unknown): string => {
     if (typeof err !== 'object' || err === null) return '';
 
@@ -214,7 +214,7 @@ export const ProfileSidebar: FC<ProfileSidebarProps> = ({ showNotification }) =>
         initialSkills={skills}
         onSave={async (newSkills) => {
           setSkills(newSkills);
-          // Use different field based on profile type
+
           const updates: Partial<MentorUpdateRequestDto | UserUpdateRequestDto> = {};
           if (profileType === 'mentor') {
             (updates as MentorUpdateRequestDto).expertise = newSkills;

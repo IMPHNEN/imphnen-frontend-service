@@ -30,13 +30,13 @@ export const EducationModal: FC<EducationModalProps> = ({
 }) => {
   const [educations, setEducations] = useState<Education[]>(initialValue);
 
-  // Sync local state with backend data
+  
   useEffect(() => {
     setEducations(initialValue);
   }, [initialValue]);
 
   const handleSave = async () => {
-    // Validation: all fields must be filled
+
     const hasEmpty = educations.some(edu =>
       !edu.institution.trim() || !edu.degree.trim() || !edu.field.trim() || !edu.period.trim()
     );

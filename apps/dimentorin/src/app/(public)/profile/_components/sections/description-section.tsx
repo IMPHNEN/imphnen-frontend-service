@@ -20,15 +20,15 @@ export const DescriptionSection: FC<DescriptionSectionProps> = ({
   const [isDescriptionModalOpen, setIsDescriptionModalOpen] = useState(false);
   const [description, setDescription] = useState(initialDescription);
 
-  // Sync local state with props when initialDescription changes
+  
   useEffect(() => {
     setDescription(initialDescription);
   }, [initialDescription]);
 
   const handleSave = async (newDescription: string) => {
-    // Only call backend update, don't update local state
-    // Local state will be updated through useEffect when backend responds
-    // Don't show notification here - ProfileForm will handle it after backend success
+
+
+
     await onSave(newDescription);
   };
 

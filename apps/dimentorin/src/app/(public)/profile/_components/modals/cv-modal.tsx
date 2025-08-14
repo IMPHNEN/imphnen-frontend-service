@@ -27,7 +27,7 @@ export const CVModal: FC<CVModalProps> = ({
   const [isUploading, setIsUploading] = useState(false);
   const uploadCVMutation = useUploadCV();
 
-  // Sync local state with backend data
+  
   useEffect(() => {
     setCvData(initialValue);
   }, [initialValue]);
@@ -35,11 +35,11 @@ export const CVModal: FC<CVModalProps> = ({
   const handleSave = async () => {
     try {
       await onSave(cvData);
-      // Only close modal after successful backend response
+
       onClose();
     } catch (error) {
       console.error('Save failed:', error);
-      // Modal stays open on error so user can retry
+
     }
   };
 
@@ -52,17 +52,17 @@ export const CVModal: FC<CVModalProps> = ({
     try {
       setIsUploading(true);
 
-      // Validate file type
+
       if (!file.type.includes('pdf')) {
         throw new Error('Please select a PDF file');
       }
 
-      // Upload file to backend
+
       const uploadResult = await uploadCVMutation.mutateAsync(file);
 
       console.log('CV upload response:', uploadResult);
 
-      // Extract data from response structure - handle nested structure from API
+
       interface UploadData {
         original_filename?: string;
         filename?: string;
@@ -79,7 +79,7 @@ export const CVModal: FC<CVModalProps> = ({
       console.log('CV uploaded successfully, URL:', uploadData.url);
     } catch (error) {
       console.error('CV upload error:', error);
-      // Reset file input if upload fails
+
       const fileInput = document.getElementById('cv-upload') as HTMLInputElement;
       if (fileInput) fileInput.value = '';
     } finally {
@@ -110,7 +110,7 @@ export const CVModal: FC<CVModalProps> = ({
 
 
         <div className="px-6 py-6 space-y-6">
-          {/* Upload Section */}
+          {}
           <div className="space-y-4">
             <div>
               <h3 className="text-sm font-medium text-gray-700 mb-2">
@@ -118,7 +118,7 @@ export const CVModal: FC<CVModalProps> = ({
               </h3>
               <FileUploader
                 accept=".pdf"
-                maxSize={10 * 1024 * 1024} // 10MB
+                maxSize={10 * 1024 * 1024}
                 onFileSelect={handleFileSelect}
                 isLoading={isUploading}
                 dragAndDrop={true}
@@ -130,7 +130,7 @@ export const CVModal: FC<CVModalProps> = ({
               </p>
             </div>
 
-            {/* Current File Display */}
+            {}
             {cvData.fileName && (
               <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
                 <h4 className="text-sm font-medium text-blue-900 mb-3">File Terpilih</h4>
@@ -159,7 +159,7 @@ export const CVModal: FC<CVModalProps> = ({
         </div>
 
 
-        {/* Footer */}
+        {}
         <div className="flex gap-3 p-6 pt-4 border-t border-gray-100">
           <ModalButton
             variant="secondary"

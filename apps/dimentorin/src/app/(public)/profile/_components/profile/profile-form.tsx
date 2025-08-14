@@ -45,7 +45,7 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification }) => {
   const [experiences, setExperiences] = useState<Experience[]>([]);
   const [education, setEducation] = useState<Education[]>([]);
 
-  // Additional states for profile data
+  
   const [personalInfo, setPersonalInfo] = useState({
     fullname: '',
     title: '',
@@ -59,7 +59,7 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification }) => {
     resumeUrl: ''
   });
 
-  // Update experiences when profileData changes
+  
   useEffect(() => {
     if (profileData) {
       const experiences = 'experience' in profileData ? profileData.experience || [] : [];
@@ -67,7 +67,7 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification }) => {
     }
   }, [profileData]);
 
-  // Update education when profileData changes
+  
   useEffect(() => {
     if (profileData) {
       const education = 'education' in profileData ? profileData.education || [] : [];
@@ -75,7 +75,7 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification }) => {
     }
   }, [profileData]);
 
-  // Update personal info when profileData changes
+  
   useEffect(() => {
     if (profileData) {
       const bio = 'bio' in profileData ? profileData.bio || '' : '';
@@ -101,7 +101,7 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification }) => {
     }
   }, [profileData]);
 
-  // Update CV/Resume info when profileData changes
+  
   useEffect(() => {
     if (profileData) {
       const cvUrl = 'cv_url' in profileData ? profileData.cv_url || '' : '';
@@ -113,14 +113,14 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification }) => {
     }
   }, [profileData]);
 
-  // Handle profile updates using the context
-  // Helper function to extract error message
+  
+  
   function isErrorWithResponse(err: unknown): err is { response: { data: { message: string } } } {
     return (
       typeof err === 'object' &&
       err !== null &&
-      // @ts-expect-error: err may have a response property from API error object
-      typeof err.response?.data?.message === 'string'
+      
+      typeof (err as { response?: { data?: { message?: unknown } } }).response?.data?.message === 'string'
     );
   }
 
@@ -142,7 +142,7 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification }) => {
           return parsed.message;
         }
       } catch {
-        // ignore parse error, return original message
+        return msg;
       }
     }
     return msg;
@@ -174,7 +174,7 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification }) => {
 
   return (
     <div className="space-y-6">
-      {/* Description/Bio Section */}
+      {}
       <DescriptionSection
         initialDescription={personalInfo.bio}
         onSave={async (newDescription) => {
@@ -185,7 +185,7 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification }) => {
         showNotification={showNotification}
         isLoading={isUpdating}
       />
-      {/* CV/Resume Section */}
+      {}
       <CvResumeSection
         initialFileName={cvResume.cvUrl}
         fullname={personalInfo.fullname}
@@ -197,7 +197,7 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification }) => {
         showNotification={showNotification}
         isLoading={isUpdating}
       />
-      {/* Experience Section */}
+      {}
       <ExperiencesSection
         initialExperiences={experiences}
         onSave={async (newExperiences) => {
@@ -213,7 +213,7 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification }) => {
         isLoading={isUpdating}
       />
 
-      {/* Education Section */}
+      {}
       <EducationSection
         initialEducation={education}
         onSave={async (newEducations) => {

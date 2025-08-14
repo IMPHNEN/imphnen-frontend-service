@@ -24,7 +24,7 @@ export const PersonalInfoModal: FC<PersonalInfoModalProps> = ({
 }) => {
   const [personalInfo, setPersonalInfo] = useState(initialValue);
 
-  // Sync local state with backend data
+  
   useEffect(() => {
     setPersonalInfo(initialValue);
   }, [initialValue]);
@@ -32,11 +32,11 @@ export const PersonalInfoModal: FC<PersonalInfoModalProps> = ({
   const handleSave = async () => {
     try {
       await onSave(personalInfo);
-      // Only close modal after successful backend response
+      
       onClose();
     } catch (error) {
       console.error('Save failed:', error);
-      // Modal stays open on error so user can retry
+      
     }
   };
 

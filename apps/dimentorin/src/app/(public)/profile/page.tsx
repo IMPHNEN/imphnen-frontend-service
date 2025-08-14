@@ -31,7 +31,7 @@ const ProfileContent: FC = (): ReactElement => {
     message: ''
   });
 
-  const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false); // State for edit profile modal
+  const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
 
   const showNotification = (type: NotificationType['type'], title: string, message?: string) => {
     setNotification({
@@ -119,7 +119,7 @@ const ProfileContent: FC = (): ReactElement => {
         message={notification.message}
         header="Profile"
       />
-      {/* Edit Profile Modal */}
+      {}
       <EditProfileModal
         isOpen={isEditProfileModalOpen}
         onClose={closeEditProfileModal}

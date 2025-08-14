@@ -85,7 +85,7 @@ export const useProfileHandlers = (
       });
     } catch (error) {
       console.error('Experience update error:', error);
-      // Error notification is already handled in handleProfileUpdate
+
     }
   };
 
@@ -96,7 +96,7 @@ export const useProfileHandlers = (
       });
     } catch (error) {
       console.error('Education update error:', error);
-      // Error notification is already handled in handleProfileUpdate
+
     }
   };
 

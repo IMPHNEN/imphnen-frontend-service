@@ -106,13 +106,13 @@ export const useProfileDataSync = (state: ReturnType<typeof useProfileFormState>
     setCvResume
   } = state;
 
-  // Update social links when profileData changes
+
   useEffect(() => {
     if (profileData) {
       const linkedinUrl = 'linkedin_url' in profileData ? profileData.linkedin_url || '' : '';
       const githubUrl = 'github_url' in profileData ? profileData.github_url || '' : '';
 
-      // Portfolio URL - different field names for different types
+
       let portfolioUrl = '';
       if (profileType === 'mentor' && 'portfolio_url' in profileData) {
         portfolioUrl = profileData.portfolio_url || '';
@@ -147,7 +147,7 @@ export const useProfileDataSync = (state: ReturnType<typeof useProfileFormState>
     }
   }, [profileData, profileType, setSocialLinks]);
 
-  // Update experiences when profileData changes
+
   useEffect(() => {
     if (profileData) {
       const experiences = 'experience' in profileData ? profileData.experience || [] : [];
@@ -155,7 +155,7 @@ export const useProfileDataSync = (state: ReturnType<typeof useProfileFormState>
     }
   }, [profileData, setExperiences]);
 
-  // Update education when profileData changes
+
   useEffect(() => {
     if (profileData) {
       const education = 'education' in profileData ? profileData.education || [] : [];
@@ -163,7 +163,7 @@ export const useProfileDataSync = (state: ReturnType<typeof useProfileFormState>
     }
   }, [profileData, setEducation]);
 
-  // Update skills when profileData changes
+
   useEffect(() => {
     if (profileData) {
       let skills: string[] = [];
@@ -176,7 +176,7 @@ export const useProfileDataSync = (state: ReturnType<typeof useProfileFormState>
     }
   }, [profileData, setSkills]);
 
-  // Update languages when profileData changes
+
   useEffect(() => {
     if (profileData) {
       const languages: Language[] = 'languages' in profileData
@@ -186,7 +186,7 @@ export const useProfileDataSync = (state: ReturnType<typeof useProfileFormState>
     }
   }, [profileData, setLanguages]);
 
-  // Update personal info when profileData changes
+
   useEffect(() => {
     if (profileData) {
       const bio = 'bio' in profileData ? profileData.bio || '' : '';
@@ -212,7 +212,7 @@ export const useProfileDataSync = (state: ReturnType<typeof useProfileFormState>
     }
   }, [profileData, setPersonalInfo]);
 
-  // Update contact info when profileData changes
+
   useEffect(() => {
     if (profileData) {
       const email = 'email' in profileData ? profileData.email || '' : '';
@@ -239,7 +239,7 @@ export const useProfileDataSync = (state: ReturnType<typeof useProfileFormState>
     }
   }, [profileData, setContactInfo]);
 
-  // Update CV/Resume info when profileData changes
+
   useEffect(() => {
     if (profileData) {
       const cvUrl = profileType === 'mentor' && 'cv_url' in profileData ? profileData.cv_url || '' : '';

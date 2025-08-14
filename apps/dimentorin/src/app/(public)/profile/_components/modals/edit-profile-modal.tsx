@@ -20,14 +20,13 @@ export const EditProfileModal: FC<EditProfileModalProps> = ({ isOpen, onClose, s
   });
   const [previewUrl, setPreviewUrl] = useState<string>('/image/testimonial.webp');
   const [isUploading, setIsUploading] = useState(false);
-  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     if (profileData) {
       const fullname = profileData.fullname ||
         (profileType === 'mentor' && 'legal_name' in profileData ? profileData.legal_name : '') || '';
 
-      // Use the same logic as profile-header for avatar
+
       const avatar = (profileType === 'user' && 'avatar' in profileData)
         ? profileData.avatar || '/image/testimonial.webp'
         : '/image/testimonial.webp';
@@ -40,18 +39,16 @@ export const EditProfileModal: FC<EditProfileModalProps> = ({ isOpen, onClose, s
         avatar: (profileType === 'user' && 'avatar' in profileData) ? profileData.avatar || '' : ''
       });
 
-      // Set preview URL - always set a valid URL
+
       setPreviewUrl(avatar);
-      setImageError(false);
     } else {
-      // If no profile data, use fallback
+
       setPreviewUrl('/image/testimonial.webp');
     }
   }, [profileData, profileType]);
 
   const handleImageError = () => {
     console.log('Image failed to load:', previewUrl);
-    setImageError(true);
     setPreviewUrl('/image/testimonial.webp');
   };
 
@@ -63,37 +60,36 @@ export const EditProfileModal: FC<EditProfileModalProps> = ({ isOpen, onClose, s
     try {
       setIsUploading(true);
 
-      // Create preview URL immediately for better UX
+
       const reader = new FileReader();
       reader.onload = () => {
         const result = reader.result as string;
         setPreviewUrl(result);
-        setImageError(false);
       };
       reader.readAsDataURL(file);
 
-      // Upload file to backend
+
       const uploadResult = await uploadAvatarMutation.mutateAsync(file);
 
       console.log('Avatar upload response:', uploadResult);
 
-      // Extract data from response structure - handle nested structure from API
+
       interface UploadData {
         url?: string;
       }
 
       const uploadData = ('data' in uploadResult ? (uploadResult as { data: UploadData }).data : uploadResult as UploadData);
 
-      // Update form data with the uploaded URL
+
       setFormData(prev => ({ ...prev, avatar: uploadData.url || '' }));
 
-      // Set the final URL dari server
+
       setPreviewUrl(uploadData.url || '/image/testimonial.webp');
 
     } catch (error) {
       console.error('Avatar upload error:', error);
       showNotification('error', 'Upload Failed', 'Failed to upload avatar image');
-      // Reset to original preview if upload fails
+
       const originalAvatar = (profileType === 'user' && profileData && 'avatar' in profileData) ? profileData.avatar : '';
       setPreviewUrl(originalAvatar || '/image/testimonial.webp');
     } finally {
@@ -105,7 +101,7 @@ export const EditProfileModal: FC<EditProfileModalProps> = ({ isOpen, onClose, s
     try {
       const updates: Record<string, string> = {};
 
-      // Only update fullname/legal_name
+
       if (formData.fullname.trim() !== '') {
         if (profileType === 'user') {
           updates.fullname = formData.fullname;
@@ -114,7 +110,7 @@ export const EditProfileModal: FC<EditProfileModalProps> = ({ isOpen, onClose, s
         }
       }
 
-      // Add avatar URL if it was updated
+
       if (formData.avatar && formData.avatar !== (profileData && 'avatar' in profileData ? profileData.avatar : '')) {
         updates.avatar = formData.avatar;
       }
@@ -137,14 +133,16 @@ export const EditProfileModal: FC<EditProfileModalProps> = ({ isOpen, onClose, s
         let msg = '';
         if ('message' in err && typeof (err as { message?: string }).message === 'string') {
           msg = (err as { message?: string }).message || '';
-          // Try to parse as JSON if looks like JSON
+
           if (msg.trim().startsWith('{') && msg.trim().endsWith('}')) {
             try {
               const parsed = JSON.parse(msg);
               if (parsed && typeof parsed.message === 'string') {
-                msg = parsed.message;
+              msg = parsed.message;
               }
-            } catch { /* ignore JSON parse error */ }
+            } catch {
+                // Ignore JSON parse errors
+            }
           }
         }
         if (backendMsg && msg && backendMsg !== msg) {
@@ -163,10 +161,10 @@ export const EditProfileModal: FC<EditProfileModalProps> = ({ isOpen, onClose, s
         <Modal.Title>Edit Profile</Modal.Title>
       </Modal.Header>
       <Modal.Content>
-        {/* Avatar at the very top */}
+        {}
         <div className="flex justify-center pt-6 pb-4">
           <div className="relative">
-            {/* File Input wrapped with label */}
+            {}
             <input
               id="avatar-upload"
               type="file"
@@ -185,10 +183,6 @@ export const EditProfileModal: FC<EditProfileModalProps> = ({ isOpen, onClose, s
                 alt="Profile"
                 className="w-24 h-24 rounded-full object-cover border-4 border-blue-100 shadow-lg transition-all duration-300 group-hover:border-blue-200"
                 onError={handleImageError}
-                onLoad={() => {
-                  setImageError(false);
-                  console.log('Image loaded successfully:', previewUrl);
-                }}
               />
 
               {/* Hover overlay */}
@@ -199,7 +193,7 @@ export const EditProfileModal: FC<EditProfileModalProps> = ({ isOpen, onClose, s
               </div>
             </label>
 
-            {/* Camera Button */}
+            {}
             <label htmlFor="avatar-upload" className="cursor-pointer">
               <div className="absolute bottom-0 right-0 w-8 h-8 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center transition-all duration-300 shadow-lg border-2 border-white">
                 {isUploading ? (
@@ -211,7 +205,7 @@ export const EditProfileModal: FC<EditProfileModalProps> = ({ isOpen, onClose, s
             </label>
           </div>
         </div>        <div className="px-6 pb-6 space-y-6">
-          {/* Name Field */}
+          {}
           <div className="space-y-2">
             <InputField
               label="Full Name"

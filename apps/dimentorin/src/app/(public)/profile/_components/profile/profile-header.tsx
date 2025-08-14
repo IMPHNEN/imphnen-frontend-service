@@ -11,16 +11,16 @@ interface ProfileHeaderProps {
 export const ProfileHeader: FC<ProfileHeaderProps> = ({ onEditProfileClick }) => {
   const { profileData, profileType } = useProfile();
 
-  // Determine the avatar source
+  
   const avatarSrc = (profileType === 'user' && profileData && 'avatar' in profileData)
     ? profileData.avatar || "/image/testimonial.webp"
     : "/image/testimonial.webp";
 
-  // Determine fullname with fallback
+
   const displayFullname = profileData?.fullname ||
     (profileType === 'mentor' && profileData && 'legal_name' in profileData
       ? profileData.legal_name
-      : 'User Name');  // Determine current job/role
+      : 'User Name');
   let displayJob = 'Role';
   if (profileData) {
     if (profileType === 'mentor' && 'current_role' in profileData) {
@@ -28,12 +28,12 @@ export const ProfileHeader: FC<ProfileHeaderProps> = ({ onEditProfileClick }) =>
     } else if (profileType === 'user' && 'role' in profileData && profileData.role) {
       displayJob = profileData.role.name || 'User';
     } else if ('current_role' in profileData) {
-      // Fallback to current_role if available regardless of profileType
+
       displayJob = profileData.current_role || 'Role';
     }
   }
 
-  // Determine join date
+
   const joinDate = profileData && 'created_at' in profileData
     ? new Date(profileData.created_at).toLocaleDateString('id-ID', {
         year: 'numeric',
@@ -66,7 +66,7 @@ export const ProfileHeader: FC<ProfileHeaderProps> = ({ onEditProfileClick }) =>
                 {displayFullname}
               </h1>
               <p className="text-neutral-600 mb-1">{displayJob}</p>
-              {/* <p className="text-sm text-neutral-500">{displayLocation}</p> */}
+              {}
               <p className="text-sm text-neutral-500 mt-2">
                 Bergabung sejak {joinDate}
               </p>

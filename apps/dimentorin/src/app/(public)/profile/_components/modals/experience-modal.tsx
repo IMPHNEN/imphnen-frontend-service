@@ -31,13 +31,13 @@ export const ExperienceModal: FC<ExperienceModalProps> = ({
 }) => {
   const [experiences, setExperiences] = useState<Experience[]>(initialValue);
 
-  // Sync local state with backend data
+
   useEffect(() => {
     setExperiences(initialValue);
   }, [initialValue]);
 
   const handleSave = async () => {
-    // Validation: all fields must be filled
+
     const hasEmpty = experiences.some(exp =>
       !exp.company.trim() || !exp.position.trim() || !exp.duration.trim() || !exp.period.trim()
     );

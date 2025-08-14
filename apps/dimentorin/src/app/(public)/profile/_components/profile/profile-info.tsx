@@ -40,7 +40,7 @@ export const ProfileInfo: FC<ProfileInfoProps> = ({ showNotification }) => {
     { platform: 'Twitter', placeholder: 'twitter.com/yourusername', value: '' }
   ]);
 
-  // Update contact info when profileData changes
+  
   useEffect(() => {
     if (profileData) {
       const email = 'email' in profileData ? profileData.email || '' : '';
@@ -62,7 +62,7 @@ export const ProfileInfo: FC<ProfileInfoProps> = ({ showNotification }) => {
     }
   }, [profileData]);
 
-  // Update skills when profileData changes
+
   useEffect(() => {
     if (profileData) {
       let skills: string[] = [];
@@ -75,7 +75,7 @@ export const ProfileInfo: FC<ProfileInfoProps> = ({ showNotification }) => {
     }
   }, [profileData]);
 
-  // Update languages when profileData changes
+
   useEffect(() => {
     if (profileData) {
       const languages: Language[] = 'languages' in profileData
@@ -85,7 +85,7 @@ export const ProfileInfo: FC<ProfileInfoProps> = ({ showNotification }) => {
     }
   }, [profileData]);
 
-  // Update social links when profileData changes
+
   useEffect(() => {
     if (profileData) {
       const linkedinUrl = 'linkedin_url' in profileData ? profileData.linkedin_url || '' : '';
@@ -107,7 +107,7 @@ export const ProfileInfo: FC<ProfileInfoProps> = ({ showNotification }) => {
     }
   }, [profileData, profileType]);
 
-  // Handle profile updates using the context
+
   const handleProfileUpdate = async (updates: Partial<MentorUpdateRequestDto | UserUpdateRequestDto>) => {
     try {
       await updateProfile(updates);

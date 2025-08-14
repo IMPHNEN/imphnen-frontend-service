@@ -24,7 +24,7 @@ export const SocialMediaModal: FC<SocialMediaModalProps> = ({
 }) => {
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>(initialValue);
 
-  // Sync local state with backend data
+  
   useEffect(() => {
     setSocialLinks(initialValue);
   }, [initialValue]);
@@ -32,11 +32,11 @@ export const SocialMediaModal: FC<SocialMediaModalProps> = ({
   const handleSave = async () => {
     try {
       await onSave(socialLinks);
-      // Only close modal after successful backend response
+
       onClose();
     } catch (error) {
       console.error('Save failed:', error);
-      // Modal stays open on error so user can retry
+
     }
   };
 

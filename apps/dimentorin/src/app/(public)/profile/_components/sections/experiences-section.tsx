@@ -28,7 +28,7 @@ export const ExperiencesSection: FC<ExperiencesSectionProps> = ({
   const [isExperienceModalOpen, setIsExperienceModalOpen] = useState(false);
   const [experiences, setExperiences] = useState<Experience[]>(initialExperiences);
 
-  // Sync local state with props when initialExperiences changes
+  
   useEffect(() => {
     setExperiences(initialExperiences);
   }, [initialExperiences]);
