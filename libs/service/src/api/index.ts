@@ -4,6 +4,7 @@ export * from './auth';
 export * from './gacha';
 export * from './users';
 export * from './mentors';
+export * from './upload';
 
 // Common API response wrapper interface
 export interface ApiResponse<T> {
@@ -77,6 +78,12 @@ api.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       return handleTokenRefresh(originalRequest);
+    }
+
+    // If backend sends a message, use it
+    const backendMsg = error?.response?.data?.message;
+    if (backendMsg && typeof backendMsg === 'string') {
+      return Promise.reject(new Error(backendMsg));
     }
 
     return Promise.reject(new Error(error.message || 'Request failed'));

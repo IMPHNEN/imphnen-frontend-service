@@ -6,15 +6,18 @@ import { SectionWrapper } from '../shared/section-wrapper';
 import { NotificationType } from '../modals/notification-modal';
 import { EditSectionButton } from '../buttons/edit-section-button';
 
+
 interface CvResumeSectionProps {
   initialFileName: string;
-  onSave: (cvData: { fileName: string }) => Promise<void>;
+  fullname: string;
+  onSave: (cvData: { fileName: string; fileUrl?: string }) => Promise<void>;
   showNotification: (type: NotificationType['type'], title: string, message?: string) => void;
   isLoading?: boolean;
 }
 
 export const CvResumeSection: FC<CvResumeSectionProps> = ({
   initialFileName,
+  fullname,
   onSave,
   showNotification,
   isLoading = false,
@@ -27,11 +30,35 @@ export const CvResumeSection: FC<CvResumeSectionProps> = ({
     setFileName(initialFileName);
   }, [initialFileName]);
 
-  const handleSave = async (cvData: { fileName: string }) => {
+  const handleSave = async (cvData: { fileName: string; fileUrl?: string }) => {
     // Only call backend update, don't update local state
     // Local state will be updated through useEffect when backend responds
     // Don't show notification here - ProfileForm will handle it after backend success
     await onSave(cvData);
+  };
+
+  // Determine display name for the CV
+  let displayFileName = 'Belum ada CV';
+  let fileUrl = '';
+  if (fileName) {
+    if (fileName.startsWith('http') && fullname) {
+      displayFileName = `${fullname}.pdf`;
+      fileUrl = fileName;
+    } else {
+      displayFileName = fileName;
+      // If fileName is not a URL, fileUrl remains empty
+    }
+  }
+
+  const handleDownload = () => {
+    if (fileUrl) {
+      const link = document.createElement('a');
+      link.href = fileUrl;
+      link.download = displayFileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
   };
 
   return (
@@ -50,9 +77,15 @@ export const CvResumeSection: FC<CvResumeSectionProps> = ({
           <span className="text-gray-600 text-xs font-medium">PDF</span>
         </div>
         <div className="flex-1">
-          <p className="font-medium text-gray-900">{fileName}</p>
+          <p className="font-medium text-gray-900">{displayFileName}</p>
         </div>
-        <Button variant="primary" size="sm" className="flex items-center gap-2">
+        <Button
+          variant="primary"
+          size="sm"
+          className="flex items-center gap-2"
+          disabled={!fileUrl}
+          onClick={handleDownload}
+        >
           <DownloadOutlined />
           Download
         </Button>
@@ -61,7 +94,7 @@ export const CvResumeSection: FC<CvResumeSectionProps> = ({
       <CVModal
         isOpen={isCVModalOpen}
         onClose={() => setIsCVModalOpen(false)}
-        initialValue={{ fileName }}
+        initialValue={{ fileName, fileUrl: fileName }} // fileName contains URL from profile
         onSave={handleSave}
         isLoading={isLoading}
       />

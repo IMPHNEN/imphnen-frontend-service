@@ -1,32 +1,15 @@
-import { FC, useRef } from 'react';
+import { FC } from 'react';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
-import { EditOutlined, CameraOutlined } from '@ant-design/icons';
+import { EditOutlined } from '@ant-design/icons';
 import { motion } from 'framer-motion';
 import { useProfile } from '../contexts/profile-context';
 
 interface ProfileHeaderProps {
   onEditProfileClick: () => void;
-  showNotification?: (type: 'success' | 'error', title: string, message?: string) => void;
 }
 
-export const ProfileHeader: FC<ProfileHeaderProps> = ({ onEditProfileClick, showNotification }) => {
-  const { profileData, profileType, updateProfile } = useProfile();
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // Handle avatar upload
-  const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file || !updateProfile) return;
-
-    try {
-      // TODO: Implement actual avatar upload to backend
-      // For now, we'll just show success message
-      showNotification?.('success', 'Foto profil berhasil diperbarui');
-    } catch (error) {
-      console.error('Avatar upload error:', error);
-      showNotification?.('error', 'Gagal memperbarui foto profil', 'Silakan coba lagi');
-    }
-  };
+export const ProfileHeader: FC<ProfileHeaderProps> = ({ onEditProfileClick }) => {
+  const { profileData, profileType } = useProfile();
 
   // Determine the avatar source
   const avatarSrc = (profileType === 'user' && profileData && 'avatar' in profileData)
@@ -74,21 +57,6 @@ export const ProfileHeader: FC<ProfileHeaderProps> = ({ onEditProfileClick, show
               className="w-full h-full object-cover"
             />
           </div>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            onChange={handleAvatarUpload}
-            className="hidden"
-          />
-          <Button
-            variant="primary"
-            size="sm"
-            className="absolute bottom-0 right-0 w-8 h-8 rounded-full p-0 min-w-0"
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <CameraOutlined className="text-sm" />
-          </Button>
         </div>
 
         <div className="flex-1">

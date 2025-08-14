@@ -124,9 +124,34 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification }) => {
       showNotification('success', 'Perubahan Berhasil Disimpan');
 
       return result;
-    } catch (err) {
+    } catch (err: unknown) {
       console.error('Profile update error:', err);
-      showNotification('error', 'Gagal menyimpan perubahan', 'Silakan coba lagi');
+      let apiMessage = '';
+      if (typeof err === 'object' && err !== null) {
+        // @ts-expect-error Error object may have response property from Axios or fetch
+        if (err.response?.data?.message) {
+          // @ts-expect-error Error object may have response property from Axios or fetch
+          apiMessage = err.response.data.message;
+        } else if ('message' in err && typeof (err as { message?: string }).message === 'string') {
+          const msg = (err as { message?: string }).message || '';
+          // Try to parse as JSON if looks like JSON
+          if (msg.trim().startsWith('{') && msg.trim().endsWith('}')) {
+            try {
+              const parsed = JSON.parse(msg);
+              if (parsed && typeof parsed.message === 'string') {
+                apiMessage = parsed.message;
+              } else {
+                apiMessage = msg;
+              }
+            } catch {
+              apiMessage = msg;
+            }
+          } else {
+            apiMessage = msg;
+          }
+        }
+      }
+      showNotification('error', 'Gagal menyimpan perubahan', apiMessage || 'Silakan coba lagi');
       throw err; // Re-throw the error so calling functions can handle it if needed
     }
   };
@@ -144,7 +169,18 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification }) => {
         showNotification={showNotification}
         isLoading={isUpdating}
       />
-
+      {/* CV/Resume Section */}
+      <CvResumeSection
+        initialFileName={cvResume.cvUrl}
+        fullname={personalInfo.fullname}
+        onSave={async (cvData) => {
+          await handleProfileUpdate({
+            cv_url: cvData.fileUrl || null
+          });
+        }}
+        showNotification={showNotification}
+        isLoading={isUpdating}
+      />
       {/* Experience Section */}
       <ExperiencesSection
         initialExperiences={experiences}
@@ -178,18 +214,6 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification }) => {
             console.error('Education update error:', error);
             // Error notification is already handled in handleProfileUpdate
           }
-        }}
-        showNotification={showNotification}
-        isLoading={isUpdating}
-      />
-
-      {/* CV/Resume Section */}
-      <CvResumeSection
-        initialFileName={cvResume.cvUrl}
-        onSave={async (cvData) => {
-          await handleProfileUpdate({
-            cv_url: cvData.fileName || null
-          });
         }}
         showNotification={showNotification}
         isLoading={isUpdating}

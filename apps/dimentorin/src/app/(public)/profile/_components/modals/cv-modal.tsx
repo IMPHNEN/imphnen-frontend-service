@@ -1,6 +1,7 @@
 import { FC, useState, useEffect } from 'react';
-import { UploadOutlined } from '@ant-design/icons';
 import { ModalButton } from '../buttons/modal-button';
+import { useUploadCV } from '@imphnen-frontend-service/service';
+import { FileUploader } from '../shared/file-uploader';
 
 interface CVData {
   fileName: string;
@@ -23,7 +24,8 @@ export const CVModal: FC<CVModalProps> = ({
   isLoading = false,
 }) => {
   const [cvData, setCvData] = useState(initialValue);
-  const [isDragging, setIsDragging] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const uploadCVMutation = useUploadCV();
 
   // Sync local state with backend data
   useEffect(() => {
@@ -46,36 +48,42 @@ export const CVModal: FC<CVModalProps> = ({
     onClose();
   };
 
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file && file.type === 'application/pdf') {
+  const handleFileSelect = async (file: File) => {
+    try {
+      setIsUploading(true);
+
+      // Validate file type
+      if (!file.type.includes('pdf')) {
+        throw new Error('Please select a PDF file');
+      }
+
+      // Upload file to backend
+      const uploadResult = await uploadCVMutation.mutateAsync(file);
+
+      console.log('CV upload response:', uploadResult);
+
+      // Extract data from response structure - handle nested structure from API
+      interface UploadData {
+        original_filename?: string;
+        filename?: string;
+        url?: string;
+      }
+
+      const uploadData = ('data' in uploadResult ? (uploadResult as { data: UploadData }).data : uploadResult as UploadData);
+
       setCvData({
-        fileName: file.name,
-        fileUrl: URL.createObjectURL(file),
+        fileName: uploadData.original_filename || uploadData.filename || file.name,
+        fileUrl: uploadData.url || '',
       });
-    }
-  };
 
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(true);
-  };
-
-  const handleDragLeave = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-
-    const file = e.dataTransfer.files[0];
-    if (file && file.type === 'application/pdf') {
-      setCvData({
-        fileName: file.name,
-        fileUrl: URL.createObjectURL(file),
-      });
+      console.log('CV uploaded successfully, URL:', uploadData.url);
+    } catch (error) {
+      console.error('CV upload error:', error);
+      // Reset file input if upload fails
+      const fileInput = document.getElementById('cv-upload') as HTMLInputElement;
+      if (fileInput) fileInput.value = '';
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -101,68 +109,63 @@ export const CVModal: FC<CVModalProps> = ({
         </div>
 
 
-        <div className="px-6 py-4 space-y-4">
+        <div className="px-6 py-6 space-y-6">
+          {/* Upload Section */}
+          <div className="space-y-4">
             <div>
-              <button
-                type="button"
-                className={`w-full border-2 border-dashed rounded-lg p-6 text-center transition-colors ${isDragging
-                ? 'border-[#23A1EB] bg-[#23A1EB]/20'
-                : 'border-[#23A1EB] bg-[#23A1EB]/5 hover:bg-[#23A1EB]/10'
-              }`}
-              onDragOver={handleDragOver}
-              onDragLeave={handleDragLeave}
-              onDrop={handleDrop}
-              onClick={() => {
-              // Trigger file input click
-              document.getElementById('cv-upload-input')?.click();
-              }}
-              onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                document.getElementById('cv-upload-input')?.click();
-              }
-              }}
-              aria-label="Upload CV/Resume"
-            >
-              <UploadOutlined className="w-8 h-8 text-[#23A1EB] mx-auto mb-2" />
-              <p className="text-sm text-[#23A1EB] mb-2">
-              Klik atau tarik file yang ingin di upload{' '}
-              <label className="text-[#23A1EB] hover:text-[#1e90d6] cursor-pointer font-medium">
-                <input
-                id="cv-upload-input"
-                type="file"
+              <h3 className="text-sm font-medium text-gray-700 mb-2">
+                Upload CV/Resume
+              </h3>
+              <FileUploader
                 accept=".pdf"
-                onChange={handleFileSelect}
-                className="hidden" />
-                <span className="sr-only">Browse for CV/Resume PDF file</span>
-              </label>
+                maxSize={10 * 1024 * 1024} // 10MB
+                onFileSelect={handleFileSelect}
+                isLoading={isUploading}
+                dragAndDrop={true}
+                description="Klik atau tarik file PDF yang ingin di upload"
+                className="w-full"
+              />
+              <p className="text-xs text-gray-500 mt-2">
+                Format yang didukung: PDF • Maksimal ukuran: 10MB
               </p>
-              <p className="text-xs text-gray-500">(Format .pdf, max 10mb)</p>
-            </button>
             </div>
 
-          {cvData.fileName && (
-            <div className="p-4 bg-gray-50 rounded-lg">
-              <h4 className="text-sm font-medium text-gray-700 mb-2">Current File</h4>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gray-300 rounded flex items-center justify-center">
-                  <span className="text-gray-600 text-xs font-medium">PDF</span>
-                </div>
-                <div className="flex-1">
-                  <p className="font-medium text-gray-900 text-sm">{cvData.fileName}</p>
+            {/* Current File Display */}
+            {cvData.fileName && (
+              <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <h4 className="text-sm font-medium text-blue-900 mb-3">File Terpilih</h4>
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
+                    <span className="text-white text-xs font-bold">PDF</span>
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-medium text-blue-900 text-sm">{cvData.fileName}</p>
+                    <p className="text-xs text-blue-600">Siap untuk disimpan</p>
+                  </div>
+                  {cvData.fileUrl && (
+                    <a
+                      href={cvData.fileUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 text-sm font-medium underline"
+                    >
+                      Preview
+                    </a>
+                  )}
                 </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
 
-        <div className="flex gap-3 p-6 pt-4">
+        {/* Footer */}
+        <div className="flex gap-3 p-6 pt-4 border-t border-gray-100">
           <ModalButton
             variant="secondary"
             onClick={handleCancel}
-            className="flex-1 bg-white shadow-md"
-            disabled={isLoading}
+            className="flex-1"
+            disabled={isLoading || isUploading}
           >
             Batal
           </ModalButton>
@@ -170,10 +173,10 @@ export const CVModal: FC<CVModalProps> = ({
             variant="primary"
             onClick={handleSave}
             className="flex-1"
-            disabled={isLoading}
+            disabled={isLoading || isUploading || !cvData.fileName}
             loading={isLoading}
           >
-            {isLoading ? 'Menyimpan...' : 'Simpan'}
+            {isLoading ? 'Menyimpan...' : 'Simpan CV'}
           </ModalButton>
         </div>
       </div>

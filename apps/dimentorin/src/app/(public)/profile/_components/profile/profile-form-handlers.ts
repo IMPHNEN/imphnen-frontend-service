@@ -100,9 +100,9 @@ export const useProfileHandlers = (
     }
   };
 
-  const handleCvResumeSave = async (cvData: { fileName?: string }) => {
+  const handleCvResumeSave = async (cvData: { fileName?: string; fileUrl?: string }) => {
     await handleProfileUpdate({
-      cv_url: cvData.fileName || null
+      cv_url: cvData.fileUrl || cvData.fileName || null
     });
   };
 

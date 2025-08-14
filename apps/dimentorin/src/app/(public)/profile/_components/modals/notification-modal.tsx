@@ -48,6 +48,7 @@ export const NotificationModal: FC<NotificationModalProps> = ({
         </div>
 
         <div className="p-8 text-center">
+
           <div className="mb-6">
             {isSuccess ? (
               <div className="w-30 h-30 mx-auto mb-4">
@@ -68,6 +69,9 @@ export const NotificationModal: FC<NotificationModalProps> = ({
             <h2 className={`text-lg font-medium ${isSuccess ? 'text-green-600' : 'text-red-600'}`}>
               {title}
             </h2>
+            {!isSuccess && message && (
+              <div className="mt-2 text-sm text-red-500 whitespace-pre-line">{message}</div>
+            )}
           </div>
 
           <ModalButton

@@ -884,6 +884,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/users/upload": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["upload_file"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -984,6 +1000,14 @@ export interface components {
             id: string;
             period: string;
             position: string;
+        };
+        /** @description File upload form data for multipart/form-data */
+        FileUploadSchema: {
+            /**
+             * Format: binary
+             * @description Binary file data to upload
+             */
+            file: string;
         };
         GachaClaimItemDto: {
             created_at?: string | null;
@@ -1410,6 +1434,7 @@ export interface components {
                 avatar?: string | null;
                 bio?: string | null;
                 birthdate?: string | null;
+                career_status?: string | null;
                 created_at: string;
                 cv_url?: string | null;
                 domicile?: string | null;
@@ -1434,6 +1459,9 @@ export interface components {
                 updated_at: string;
                 website_url?: string | null;
             };
+        };
+        ResponseSuccessDto_Value: {
+            data: unknown;
         };
         RolesDetailItemDto: {
             created_at?: string | null;
@@ -1505,6 +1533,7 @@ export interface components {
             avatar?: string | null;
             bio?: string | null;
             birthdate?: string | null;
+            career_status?: string | null;
             created_at: string;
             cv_url?: string | null;
             domicile?: string | null;
@@ -1544,6 +1573,7 @@ export interface components {
             avatar?: string | null;
             bio?: string | null;
             birthdate?: string | null;
+            career_status?: string | null;
             cv_url?: string | null;
             domicile?: string | null;
             education?: components["schemas"]["EducationDto"][] | null;
@@ -3041,6 +3071,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
+                /** @description User ID */
                 id: string;
             };
             cookie?: never;
@@ -3051,7 +3082,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Set user active/inactive */
+            /** @description Set user active status */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -3076,12 +3107,12 @@ export interface operations {
         };
         responses: {
             /** @description Create new user */
-            201: {
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["MessageResponseDto"];
+                    "application/json": components["schemas"]["ResponseSuccessDto_UsersDetailItemDto"];
                 };
             };
         };
@@ -3164,13 +3195,13 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Update user me */
+            /** @description Update current user */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["MessageResponseDto"];
+                    "application/json": components["schemas"]["ResponseSuccessDto_UsersDetailItemDto"];
                 };
             };
         };
@@ -3180,6 +3211,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
+                /** @description User ID */
                 id: string;
             };
             cookie?: never;
@@ -3196,8 +3228,54 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["MessageResponseDto"];
+                    "application/json": components["schemas"]["ResponseSuccessDto_UsersDetailItemDto"];
                 };
+            };
+        };
+    };
+    upload_file: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Upload file with multipart form data. Only 'file' field is required - file type will be detected automatically from the uploaded file. */
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["FileUploadSchema"];
+            };
+        };
+        responses: {
+            /** @description Upload file successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseSuccessDto_Value"];
+                };
+            };
+            /** @description Bad request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

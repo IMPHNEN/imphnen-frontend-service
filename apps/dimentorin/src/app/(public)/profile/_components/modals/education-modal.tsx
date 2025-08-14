@@ -17,6 +17,7 @@ interface EducationModalProps {
   initialValue: Education[];
   onSave: (value: Education[]) => Promise<void>;
   isLoading?: boolean;
+  showNotification?: (type: 'success' | 'error', title: string, message?: string) => void;
 }
 
 export const EducationModal: FC<EducationModalProps> = ({
@@ -25,6 +26,7 @@ export const EducationModal: FC<EducationModalProps> = ({
   initialValue,
   onSave,
   isLoading = false,
+  showNotification,
 }) => {
   const [educations, setEducations] = useState<Education[]>(initialValue);
 
@@ -34,13 +36,23 @@ export const EducationModal: FC<EducationModalProps> = ({
   }, [initialValue]);
 
   const handleSave = async () => {
+    // Validation: all fields must be filled
+    const hasEmpty = educations.some(edu =>
+      !edu.institution.trim() || !edu.degree.trim() || !edu.field.trim() || !edu.period.trim()
+    );
+    if (hasEmpty) {
+      if (showNotification) {
+        showNotification('error', 'Data Tidak Lengkap', 'Semua field harus diisi pada setiap pendidikan.');
+      } else {
+        alert('Semua field harus diisi pada setiap pendidikan.');
+      }
+      return;
+    }
     try {
       await onSave(educations);
-      // Only close modal after successful backend response
       onClose();
     } catch (error) {
       console.error('Save failed:', error);
-      // Modal stays open on error so user can retry
     }
   };
 

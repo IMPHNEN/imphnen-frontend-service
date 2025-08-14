@@ -9,6 +9,7 @@ export interface UserDetailResponseDto extends TUserItem {
   github_url?: string;
   twitter_url?: string;
   skills?: string[];
+  career_status?: string;
   experience?: Array<{
     id: string;
     company: string;
@@ -37,6 +38,11 @@ export interface UserUpdateRequestDto {
   phone_number?: string;
   birthdate?: string;
   gender?: string;
+  career_status?: string;
+  avatar?: string;
+  cv_url?: string;
+  phone_for_verification?: string;
+  domicile?: string;
   experience?: Array<{
     id: string;
     company: string;

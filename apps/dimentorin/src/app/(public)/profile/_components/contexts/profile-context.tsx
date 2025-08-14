@@ -182,8 +182,27 @@ export const ProfileProvider: React.FC<ProfileProviderProps> = ({
         // Invalidate user by id queries - React Query will automatically refetch
         await queryClient.invalidateQueries({ queryKey: ['user-by-id', id] });
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Failed to update profile:', error);
+      // Try to extract backend error message if available
+      let apiMessage = '';
+      if (typeof error === 'object' && error !== null) {
+  const errObj = error as { response?: { data?: unknown } };
+  const data = errObj.response?.data;
+        if (data) {
+          try {
+            const parsed = typeof data === 'string' ? JSON.parse(data) : data;
+            if (parsed && typeof parsed.message === 'string') {
+              apiMessage = parsed.message;
+            }
+          } catch {
+            // ignore JSON parse error
+          }
+        }
+      }
+      if (apiMessage) {
+        throw new Error(apiMessage);
+      }
       throw error;
     }
   }, [

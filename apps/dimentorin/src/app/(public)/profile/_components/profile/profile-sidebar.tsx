@@ -18,23 +18,27 @@ export const ProfileSidebar: FC<ProfileSidebarProps> = ({ showNotification }) =>
   console.log('ProfileSidebar: Should show Career Status?', profileType === 'mentor');
 
   // Helper functions to safely access profile data
-  const getAvailabilityCommitment = useCallback(() => {
-    console.log('ProfileSidebar: getAvailabilityCommitment called with:', {
-      profileType,
-      profileData,
-      hasAvailabilityCommitment: profileData && 'availability_commitment' in profileData,
-      availabilityCommitmentValue: profileData && 'availability_commitment' in profileData ? profileData.availability_commitment : 'NOT_FOUND'
-    });
+  const getCareerStatus = useCallback(() => {
+    if (!profileData) {
+      return 'Career Status';
+    }
 
-    if (profileType === 'mentor' && profileData && 'availability_commitment' in profileData) {
+    // For users, check career_status field
+    if (profileType === 'user' && 'career_status' in profileData) {
+      const status = profileData.career_status;
+      if (status && typeof status === 'string' && status.trim() !== '') {
+        return status;
+      }
+    }
+
+    // For mentors, check availability_commitment field (legacy)
+    if (profileType === 'mentor' && 'availability_commitment' in profileData) {
       const commitment = profileData.availability_commitment;
-      console.log('ProfileSidebar: getAvailabilityCommitment from API:', commitment, 'type:', typeof commitment);
-      // Only return default if the field is explicitly null/undefined/empty
-      if (commitment && commitment.trim() !== '') {
+      if (commitment && typeof commitment === 'string' && commitment.trim() !== '') {
         return commitment;
       }
     }
-    console.log('ProfileSidebar: getAvailabilityCommitment fallback: Career Status');
+
     return 'Career Status';
   }, [profileType, profileData]);
 
@@ -94,19 +98,19 @@ export const ProfileSidebar: FC<ProfileSidebarProps> = ({ showNotification }) =>
   // Initialize career status when profileData is first loaded
   useEffect(() => {
     if (profileData && !isLoading && careerStatus === 'Career Status') {
-      const initialCareerStatus = getAvailabilityCommitment();
+      const initialCareerStatus = getCareerStatus();
       console.log('ProfileSidebar: Initial load - setting career status to:', initialCareerStatus);
       setCareerStatus(initialCareerStatus);
       setIsInitialized(true);
     }
-  }, [profileData, isLoading, careerStatus, getAvailabilityCommitment]);
+  }, [profileData, isLoading, careerStatus, getCareerStatus]);
 
   // Update data when profileData changes
   useEffect(() => {
     if (profileData && !isLoading) {
       // Only update career status if we're not actively updating it AND it's already been initialized
       if (!isUpdatingCareerStatus && isInitialized) {
-        const newCareerStatus = getAvailabilityCommitment();
+        const newCareerStatus = getCareerStatus();
         console.log('ProfileSidebar: Updating career status from API:', newCareerStatus);
         setCareerStatus(newCareerStatus);
       }
@@ -121,7 +125,7 @@ export const ProfileSidebar: FC<ProfileSidebarProps> = ({ showNotification }) =>
       // Update skills using helper function
       setSkills(getSkills());
     }
-  }, [profileData, profileType, isLoading, isInitialized, getAvailabilityCommitment, getEmail, getPhone, getLocation, getSkills, isUpdatingCareerStatus]);
+  }, [profileData, profileType, isLoading, isInitialized, getCareerStatus, getEmail, getPhone, getLocation, getSkills, isUpdatingCareerStatus]);
 
   // Handle profile updates using the context
   const handleProfileUpdate = async (updates: Partial<MentorUpdateRequestDto | UserUpdateRequestDto>) => {
@@ -130,47 +134,77 @@ export const ProfileSidebar: FC<ProfileSidebarProps> = ({ showNotification }) =>
       showNotification('success', 'Perubahan Berhasil Disimpan');
     } catch (err) {
       console.error('Profile update error:', err);
-      showNotification('error', 'Gagal menyimpan perubahan', 'Silakan coba lagi');
+      let apiMessage = '';
+      if (typeof err === 'object' && err !== null) {
+        // @ts-expect-error Error object may have response property from Axios or fetch
+        if (err.response?.data?.message) {
+          // @ts-expect-error Error object may have response property from Axios or fetch
+          apiMessage = err.response.data.message;
+        } else if ('message' in err && typeof (err as { message?: string }).message === 'string') {
+          const msg = (err as { message?: string }).message || '';
+          // Try to parse as JSON if looks like JSON
+          if (msg.trim().startsWith('{') && msg.trim().endsWith('}')) {
+            try {
+              const parsed = JSON.parse(msg);
+              if (parsed && typeof parsed.message === 'string') {
+                apiMessage = parsed.message;
+              } else {
+                apiMessage = msg;
+              }
+            } catch {
+              apiMessage = msg;
+            }
+          } else {
+            apiMessage = msg;
+          }
+        }
+      }
+      showNotification('error', 'Gagal menyimpan perubahan', apiMessage || 'Silakan coba lagi');
     }
   };
 
   return (
     <div className="space-y-6">
-      {/* Career Status - Only show for mentors */}
-      {profileType === 'mentor' && (
-        <SectionWrapper title="Career Status">
-          <Select
-            value={careerStatus}
-            onChange={async (e) => {
-              const newStatus = e.target.value;
-              console.log('ProfileSidebar: User selected career status:', newStatus);
-              setCareerStatus(newStatus);
-              setIsUpdatingCareerStatus(true);
-              try {
-                console.log('ProfileSidebar: Updating career status on backend...');
-                await handleProfileUpdate({
-                  availability_commitment: newStatus
-                });
-                console.log('ProfileSidebar: Career status update successful');
-              } catch (error) {
-                console.error('ProfileSidebar: Career status update failed:', error);
-              } finally {
-                // Allow useEffect to update the career status again after update is complete
-                setTimeout(() => setIsUpdatingCareerStatus(false), 1000);
+      {/* Career Status - Available for all users */}
+      <SectionWrapper title="Career Status">
+        <Select
+          value={careerStatus}
+          onChange={async (e) => {
+            const newStatus = e.target.value;
+            console.log('ProfileSidebar: User selected career status:', newStatus);
+            setCareerStatus(newStatus);
+            setIsUpdatingCareerStatus(true);
+            try {
+              console.log('ProfileSidebar: Updating career status on backend...');
+
+              // Use different field based on profile type
+              const updates: Partial<MentorUpdateRequestDto | UserUpdateRequestDto> = {};
+              if (profileType === 'mentor') {
+                (updates as MentorUpdateRequestDto).availability_commitment = newStatus;
+              } else {
+                (updates as UserUpdateRequestDto).career_status = newStatus;
               }
-            }}
-            className="w-full min-w-[200px]"
-          >
-            <option value="Career Status">Career Status</option>
-            <option value="Student">Student</option>
-            <option value="Fresh Graduate">Fresh Graduate</option>
-            <option value="Junior Developer">Junior Developer</option>
-            <option value="Senior Developer">Senior Developer</option>
-            <option value="Team Lead">Team Lead</option>
-            <option value="Freelancer">Freelancer</option>
-          </Select>
-        </SectionWrapper>
-      )}
+
+              await handleProfileUpdate(updates);
+              console.log('ProfileSidebar: Career status update successful');
+            } catch (error) {
+              console.error('ProfileSidebar: Career status update failed:', error);
+            } finally {
+              // Allow useEffect to update the career status again after update is complete
+              setTimeout(() => setIsUpdatingCareerStatus(false), 1000);
+            }
+          }}
+          className="w-full min-w-[200px]"
+        >
+          <option value="Career Status">Career Status</option>
+          <option value="Student">Student</option>
+          <option value="Fresh Graduate">Fresh Graduate</option>
+          <option value="Junior Developer">Junior Developer</option>
+          <option value="Senior Developer">Senior Developer</option>
+          <option value="Team Lead">Team Lead</option>
+          <option value="Freelancer">Freelancer</option>
+        </Select>
+      </SectionWrapper>
 
       <PersonalInfoSection
         initialContactInfo={personalInfo}

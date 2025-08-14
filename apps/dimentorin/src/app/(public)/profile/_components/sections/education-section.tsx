@@ -76,6 +76,7 @@ export const EducationSection: FC<EducationSectionProps> = ({
         initialValue={education}
         onSave={handleSave}
         isLoading={isLoading}
+        showNotification={showNotification}
       />
     </SectionWrapper>
   );

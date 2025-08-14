@@ -3,6 +3,7 @@ import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import { ModalButton } from '../buttons/modal-button';
 import { InputField } from '@imphnen-frontend-service/ui/molecules';
 
+
 interface Experience {
   id: string;
   company: string;
@@ -17,6 +18,7 @@ interface ExperienceModalProps {
   initialValue: Experience[];
   onSave: (value: Experience[]) => Promise<void>;
   isLoading?: boolean;
+  showNotification?: (type: 'success' | 'error', title: string, message?: string) => void;
 }
 
 export const ExperienceModal: FC<ExperienceModalProps> = ({
@@ -25,6 +27,7 @@ export const ExperienceModal: FC<ExperienceModalProps> = ({
   initialValue,
   onSave,
   isLoading = false,
+  showNotification,
 }) => {
   const [experiences, setExperiences] = useState<Experience[]>(initialValue);
 
@@ -34,13 +37,23 @@ export const ExperienceModal: FC<ExperienceModalProps> = ({
   }, [initialValue]);
 
   const handleSave = async () => {
+    // Validation: all fields must be filled
+    const hasEmpty = experiences.some(exp =>
+      !exp.company.trim() || !exp.position.trim() || !exp.duration.trim() || !exp.period.trim()
+    );
+    if (hasEmpty) {
+      if (showNotification) {
+        showNotification('error', 'Data Tidak Lengkap', 'Semua field harus diisi pada setiap pengalaman kerja.');
+      } else {
+        alert('Semua field harus diisi pada setiap pengalaman kerja.');
+      }
+      return;
+    }
     try {
       await onSave(experiences);
-      // Only close modal after successful backend response
       onClose();
     } catch (error) {
       console.error('Save failed:', error);
-      // Modal stays open on error so user can retry
     }
   };
 

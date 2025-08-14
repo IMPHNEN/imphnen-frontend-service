@@ -76,6 +76,7 @@ export const ExperiencesSection: FC<ExperiencesSectionProps> = ({
         initialValue={experiences}
         onSave={handleSave}
         isLoading={isLoading}
+        showNotification={showNotification}
       />
     </SectionWrapper>
   );
