@@ -1,16 +1,27 @@
 'use client';
 
 import { FC, ReactElement, useState } from 'react';
-import { useParams } from 'next/navigation';
-import { ProfileForm, ProfileSidebar } from '../_components';
+import { useParams } from 'react-router-dom';
+import { ProfileForm, ProfileSidebar, ProfileHeader } from '../_components';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { NotificationModal, NotificationType } from '../_components/modals/notification-modal';
 import { ProfileProvider, useProfile } from '../_components/contexts/profile-context';
+import { EditProfileModal } from '../_components/modals/edit-profile-modal';
 
 const ProfileByIdPage: FC = (): ReactElement => {
   const params = useParams();
-  const id = params.id as string;
+  const id = (params && params.id) ? params.id as string : undefined;
+
+  if (!id) {
+    return (
+      <main className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 text-lg">Profile ID not found.</p>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <ProfileProvider profileId={id} profileType="user">
@@ -34,6 +45,8 @@ const ProfileByIdContent: FC = (): ReactElement => {
     message: ''
   });
 
+  const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
+
   const getProfileTitle = () => {
     if (profileData?.fullname) {
       return `${profileData.fullname}'s Profile`;
@@ -53,6 +66,17 @@ const ProfileByIdContent: FC = (): ReactElement => {
   const hideNotification = () => {
     setNotification(prev => ({ ...prev, isOpen: false }));
   };
+
+  const openEditProfileModal = () => {
+    setIsEditProfileModalOpen(true);
+  };
+
+  const closeEditProfileModal = () => {
+    setIsEditProfileModalOpen(false);
+  };
+
+  // Set isViewOnly to true for this page
+  const isViewOnly = true;
 
   if (isLoading) {
     return (
@@ -100,15 +124,20 @@ const ProfileByIdContent: FC = (): ReactElement => {
       <div className="w-full px-8 md:px-[60px] lg:px-20 pb-12">
         <div className="max-w-7xl mx-auto">
           <div className="grid gap-8 lg:grid-cols-12">
+            <div className="lg:col-span-12">
+              <ProfileHeader onEditProfileClick={openEditProfileModal} isViewOnly={isViewOnly} />
+            </div>
             <div className="lg:col-span-8 order-1">
               <ProfileForm
                 showNotification={showNotification}
+                isViewOnly={isViewOnly}
               />
             </div>
 
             <div className="lg:col-span-4 order-2">
               <ProfileSidebar
                 showNotification={showNotification}
+                isViewOnly={isViewOnly}
               />
             </div>
           </div>
@@ -122,6 +151,14 @@ const ProfileByIdContent: FC = (): ReactElement => {
         message={notification.message}
         header="Profile"
       />
+      {/* Only render EditProfileModal if not in view-only mode */}
+      {!isViewOnly && (
+        <EditProfileModal
+          isOpen={isEditProfileModalOpen}
+          onClose={closeEditProfileModal}
+          showNotification={showNotification}
+        />
+      )}
     </main>
   );
 };

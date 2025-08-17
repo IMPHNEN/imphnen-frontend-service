@@ -9,6 +9,7 @@ interface DescriptionSectionProps {
   onSave: (newDescription: string) => Promise<void>;
   showNotification: (type: NotificationType['type'], title: string, message?: string) => void;
   isLoading?: boolean;
+  isViewOnly?: boolean; // Add isViewOnly prop
 }
 
 export const DescriptionSection: FC<DescriptionSectionProps> = ({
@@ -16,6 +17,7 @@ export const DescriptionSection: FC<DescriptionSectionProps> = ({
   onSave,
   showNotification,
   isLoading = false,
+  isViewOnly = false, // Default to false
 }) => {
   const [isDescriptionModalOpen, setIsDescriptionModalOpen] = useState(false);
   const [description, setDescription] = useState(initialDescription);
@@ -26,9 +28,7 @@ export const DescriptionSection: FC<DescriptionSectionProps> = ({
   }, [initialDescription]);
 
   const handleSave = async (newDescription: string) => {
-
-
-
+    if (isViewOnly) return; // Prevent save if in view-only mode
     await onSave(newDescription);
   };
 
@@ -36,10 +36,12 @@ export const DescriptionSection: FC<DescriptionSectionProps> = ({
     <SectionWrapper
       title="Description"
       editButton={
-        <EditSectionButton
-          onClick={() => setIsDescriptionModalOpen(true)}
-          disabled={isLoading}
-        />
+        !isViewOnly ? ( // Conditionally render the edit button
+          <EditSectionButton
+            onClick={() => setIsDescriptionModalOpen(true)}
+            disabled={isLoading}
+          />
+        ) : null
       }
       delay={0.2}
     >
@@ -48,7 +50,7 @@ export const DescriptionSection: FC<DescriptionSectionProps> = ({
       </div>
 
       <DescriptionModal
-        isOpen={isDescriptionModalOpen}
+        isOpen={isDescriptionModalOpen && !isViewOnly} // Only open if not in view-only mode
         onClose={() => setIsDescriptionModalOpen(false)}
         initialValue={description}
         onSave={handleSave}
@@ -57,5 +59,3 @@ export const DescriptionSection: FC<DescriptionSectionProps> = ({
     </SectionWrapper>
   );
 };
-
-

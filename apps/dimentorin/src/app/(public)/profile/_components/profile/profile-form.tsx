@@ -25,9 +25,10 @@ interface Education {
 
 interface ProfileFormProps {
   showNotification: (type: 'success' | 'error', title: string, message?: string) => void;
+  isViewOnly?: boolean; // Add isViewOnly prop
 }
 
-export const ProfileForm: FC<ProfileFormProps> = ({ showNotification }) => {
+export const ProfileForm: FC<ProfileFormProps> = ({ showNotification, isViewOnly = false }) => {
   const { profileData, updateProfile, isUpdating } = useProfile();
 
   const [notification, setNotification] = useState<{
@@ -160,6 +161,10 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification }) => {
   }
 
   const handleProfileUpdate = async (updates: Partial<MentorUpdateRequestDto | UserUpdateRequestDto>) => {
+    if (isViewOnly) { // Prevent updates if in view-only mode
+      showNotification('error', 'Akses Ditolak', 'Anda tidak memiliki izin untuk mengedit profil ini.');
+      return;
+    }
     try {
       const result = await updateProfile(updates);
       showNotification('success', 'Perubahan Berhasil Disimpan');
@@ -184,6 +189,7 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification }) => {
         }}
         showNotification={showNotification}
         isLoading={isUpdating}
+        isViewOnly={isViewOnly} // Pass isViewOnly
       />
       {}
       <CvResumeSection
@@ -196,6 +202,7 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification }) => {
         }}
         showNotification={showNotification}
         isLoading={isUpdating}
+        isViewOnly={isViewOnly} // Pass isViewOnly
       />
       {}
       <ExperiencesSection
@@ -211,6 +218,7 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification }) => {
         }}
         showNotification={showNotification}
         isLoading={isUpdating}
+        isViewOnly={isViewOnly} // Pass isViewOnly
       />
 
       {}
@@ -227,6 +235,7 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification }) => {
         }}
         showNotification={showNotification}
         isLoading={isUpdating}
+        isViewOnly={isViewOnly} // Pass isViewOnly
       />
 
       <NotificationModal

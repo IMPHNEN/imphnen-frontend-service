@@ -9,11 +9,11 @@ import { useProfile } from '../contexts/profile-context';
 
 interface ProfileSidebarProps {
   showNotification: (type: NotificationType['type'], title: string, message?: string) => void;
+  isViewOnly?: boolean; // Add isViewOnly prop
 }
 
-export const ProfileSidebar: FC<ProfileSidebarProps> = ({ showNotification }) => {
+export const ProfileSidebar: FC<ProfileSidebarProps> = ({ showNotification, isViewOnly = false }) => {
   const { profileData, updateProfile, profileType, isLoading, isUpdating } = useProfile();
-
 
 
   const getCareerStatus = useCallback(() => {
@@ -72,7 +72,7 @@ export const ProfileSidebar: FC<ProfileSidebarProps> = ({ showNotification }) =>
     if (profileType === 'user' && profileData && 'skills' in profileData && profileData.skills) {
       return Array.isArray(profileData.skills) ? profileData.skills : [];
     }
-    return ['HTML', 'CSS', 'Javascript', 'Next.Js', 'React', 'TypeScript'];
+    return [''];
   }, [profileType, profileData]);
 
   const [careerStatus, setCareerStatus] = useState<string>('Career Status');
@@ -85,7 +85,7 @@ export const ProfileSidebar: FC<ProfileSidebarProps> = ({ showNotification }) =>
     location: 'Location'
   });
 
-  const [skills, setSkills] = useState<string[]>(['HTML', 'CSS', 'Javascript', 'Next.Js', 'React', 'TypeScript']);
+  const [skills, setSkills] = useState<string[]>(['']);
 
   useEffect(() => {
     if (profileData && !isLoading && careerStatus === 'Career Status') {
@@ -114,11 +114,11 @@ export const ProfileSidebar: FC<ProfileSidebarProps> = ({ showNotification }) =>
     }
   }, [profileData, profileType, isLoading, isInitialized, getCareerStatus, getEmail, getPhone, getLocation, getSkills, isUpdatingCareerStatus]);
 
-  
+
   const tryParseJsonMessage = (msg: string): string => {
     if (msg.trim().startsWith('{') && msg.trim().endsWith('}')) {
       try {
-        const parsed = JSON.parse(msg);
+        const parsed = JSON.parse(trimmed);
         if (parsed && typeof parsed.message === 'string') {
           return parsed.message;
         }
@@ -147,6 +147,10 @@ export const ProfileSidebar: FC<ProfileSidebarProps> = ({ showNotification }) =>
   };
 
   const handleProfileUpdate = async (updates: Partial<MentorUpdateRequestDto | UserUpdateRequestDto>) => {
+    if (isViewOnly) { // Prevent updates if in view-only mode
+      showNotification('error', 'Akses Ditolak', 'Anda tidak memiliki izin untuk mengedit profil ini.');
+      return;
+    }
     try {
       await updateProfile(updates);
       showNotification('success', 'Perubahan Berhasil Disimpan');
@@ -163,6 +167,7 @@ export const ProfileSidebar: FC<ProfileSidebarProps> = ({ showNotification }) =>
         <Select
           value={careerStatus}
           onChange={async (e) => {
+            if (isUpdatingCareerStatus) return; // Prevent multiple clicks
             const newStatus = e.target.value;
             console.log('ProfileSidebar: User selected career status:', newStatus);
             setCareerStatus(newStatus);
@@ -181,10 +186,11 @@ export const ProfileSidebar: FC<ProfileSidebarProps> = ({ showNotification }) =>
             } catch (error) {
               console.error('ProfileSidebar: Career status update failed:', error);
             } finally {
-              setTimeout(() => setIsUpdatingCareerStatus(false), 1000);
+              setIsUpdatingCareerStatus(false);
             }
           }}
           className="w-full min-w-[200px]"
+          disabled={isUpdatingCareerStatus || isViewOnly} // Disable if in view-only mode
         >
           <option value="Career Status">Career Status</option>
           <option value="Student">Student</option>
@@ -208,6 +214,7 @@ export const ProfileSidebar: FC<ProfileSidebarProps> = ({ showNotification }) =>
         }}
         showNotification={showNotification}
         isLoading={isUpdating}
+        isViewOnly={isViewOnly} // Pass isViewOnly
       />
 
       <SkillsSection
@@ -225,6 +232,7 @@ export const ProfileSidebar: FC<ProfileSidebarProps> = ({ showNotification }) =>
         }}
         showNotification={showNotification}
         isLoading={isUpdating}
+        isViewOnly={isViewOnly} // Pass isViewOnly
       />
     </div>
   );

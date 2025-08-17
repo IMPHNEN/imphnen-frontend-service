@@ -17,6 +17,7 @@ interface ExperiencesSectionProps {
   onSave: (newExperiences: Experience[]) => Promise<void>;
   showNotification: (type: NotificationType['type'], title: string, message?: string) => void;
   isLoading?: boolean;
+  isViewOnly?: boolean; // Add isViewOnly prop
 }
 
 export const ExperiencesSection: FC<ExperiencesSectionProps> = ({
@@ -24,6 +25,7 @@ export const ExperiencesSection: FC<ExperiencesSectionProps> = ({
   onSave,
   showNotification,
   isLoading = false,
+  isViewOnly = false, // Default to false
 }) => {
   const [isExperienceModalOpen, setIsExperienceModalOpen] = useState(false);
   const [experiences, setExperiences] = useState<Experience[]>(initialExperiences);
@@ -34,6 +36,7 @@ export const ExperiencesSection: FC<ExperiencesSectionProps> = ({
   }, [initialExperiences]);
 
   const handleSave = async (newExperiences: Experience[]) => {
+    if (isViewOnly) return; // Prevent save if in view-only mode
     await onSave(newExperiences);
   };
 
@@ -41,12 +44,14 @@ export const ExperiencesSection: FC<ExperiencesSectionProps> = ({
     <SectionWrapper
       title="Experiences"
       editButton={
-        <div className="flex gap-2">
-          <EditSectionButton
-            onClick={() => setIsExperienceModalOpen(true)}
-            disabled={isLoading}
-          />
-        </div>
+        !isViewOnly ? ( // Conditionally render the edit button
+          <div className="flex gap-2">
+            <EditSectionButton
+              onClick={() => setIsExperienceModalOpen(true)}
+              disabled={isLoading}
+            />
+          </div>
+        ) : null
       }
       delay={0.4}
     >
@@ -68,7 +73,7 @@ export const ExperiencesSection: FC<ExperiencesSectionProps> = ({
       </div>
 
       <ExperienceModal
-        isOpen={isExperienceModalOpen}
+        isOpen={isExperienceModalOpen && !isViewOnly} // Only open if not in view-only mode
         onClose={() => setIsExperienceModalOpen(false)}
         initialValue={experiences}
         onSave={handleSave}
@@ -78,5 +83,3 @@ export const ExperiencesSection: FC<ExperiencesSectionProps> = ({
     </SectionWrapper>
   );
 };
-
-

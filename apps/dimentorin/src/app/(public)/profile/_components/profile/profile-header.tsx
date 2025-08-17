@@ -6,9 +6,10 @@ import { useProfile } from '../contexts/profile-context';
 
 interface ProfileHeaderProps {
   onEditProfileClick: () => void;
+  isViewOnly?: boolean; // Add isViewOnly prop
 }
 
-export const ProfileHeader: FC<ProfileHeaderProps> = ({ onEditProfileClick }) => {
+export const ProfileHeader: FC<ProfileHeaderProps> = ({ onEditProfileClick, isViewOnly = false }) => {
   const { profileData, profileType } = useProfile();
 
   
@@ -72,15 +73,17 @@ export const ProfileHeader: FC<ProfileHeaderProps> = ({ onEditProfileClick }) =>
               </p>
             </div>
 
-            <Button
-              variant="secondary"
-              size="sm"
-              className="flex items-center gap-2 self-start"
-              onClick={onEditProfileClick}
-            >
-              <EditOutlined className="text-sm" />
-              Edit Profile
-            </Button>
+            {!isViewOnly && ( // Conditionally render the button
+              <Button
+                variant="secondary"
+                size="sm"
+                className="flex items-center gap-2 self-start"
+                onClick={onEditProfileClick}
+              >
+                <EditOutlined className="text-sm" />
+                Edit Profile
+              </Button>
+            )}
           </div>
         </div>
       </div>

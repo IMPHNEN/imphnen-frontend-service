@@ -17,6 +17,7 @@ interface EducationSectionProps {
   onSave: (newEducation: Education[]) => Promise<void>;
   showNotification: (type: NotificationType['type'], title: string, message?: string) => void;
   isLoading?: boolean;
+  isViewOnly?: boolean; // Add isViewOnly prop
 }
 
 export const EducationSection: FC<EducationSectionProps> = ({
@@ -24,6 +25,7 @@ export const EducationSection: FC<EducationSectionProps> = ({
   onSave,
   showNotification,
   isLoading = false,
+  isViewOnly = false, // Default to false
 }) => {
   const [isEducationModalOpen, setIsEducationModalOpen] = useState(false);
   const [education, setEducation] = useState<Education[]>(initialEducation);
@@ -34,6 +36,7 @@ export const EducationSection: FC<EducationSectionProps> = ({
   }, [initialEducation]);
 
   const handleSave = async (newEducation: Education[]) => {
+    if (isViewOnly) return; // Prevent save if in view-only mode
     await onSave(newEducation);
   };
 
@@ -41,12 +44,14 @@ export const EducationSection: FC<EducationSectionProps> = ({
     <SectionWrapper
       title="Education"
       editButton={
-        <div className="flex gap-2">
-          <EditSectionButton
-            onClick={() => setIsEducationModalOpen(true)}
-            disabled={isLoading}
-          />
-        </div>
+        !isViewOnly ? ( // Conditionally render the edit button
+          <div className="flex gap-2">
+            <EditSectionButton
+              onClick={() => setIsEducationModalOpen(true)}
+              disabled={isLoading}
+            />
+          </div>
+        ) : null
       }
       delay={0.5}
     >
@@ -68,7 +73,7 @@ export const EducationSection: FC<EducationSectionProps> = ({
       </div>
 
       <EducationModal
-        isOpen={isEducationModalOpen}
+        isOpen={isEducationModalOpen && !isViewOnly} // Only open if not in view-only mode
         onClose={() => setIsEducationModalOpen(false)}
         initialValue={education}
         onSave={handleSave}
@@ -78,5 +83,3 @@ export const EducationSection: FC<EducationSectionProps> = ({
     </SectionWrapper>
   );
 };
-
-

@@ -29,7 +29,7 @@ export const GoogleOAuthPopupPage: FC = (): ReactElement => {
         const url = new URL(callbackUrl);
         url.searchParams.append('code', code);
         url.searchParams.append('state', state);
-        url.searchParams.append('redirect_uri', window.location.href.split('?')[0]);
+        url.searchParams.append('redirect_uri', `${window.location.origin}/auth/google-oauth-popup`);
 
         const response = await fetch(url.toString(), {
           method: 'GET',

@@ -73,7 +73,7 @@ export const userService: UserService = {
   },
 
   async getUserById(id: string) {
-    const response = await api.get<ApiResponse<UserDetailResponseDto>>(`/users/${id}`);
+    const response = await api.get<ApiResponse<UserDetailResponseDto>>(`/users/detail/${id}`);
     return response.data.data;
   },
 

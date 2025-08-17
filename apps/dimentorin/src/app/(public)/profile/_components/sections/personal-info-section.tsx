@@ -16,6 +16,7 @@ interface PersonalInfoSectionProps {
   onSave: (newContactInfo: PersonalInfo) => Promise<void>;
   showNotification: (type: NotificationType['type'], title: string, message?: string) => void;
   isLoading?: boolean;
+  isViewOnly?: boolean; // Add isViewOnly prop
 }
 
 export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
@@ -23,6 +24,7 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
   onSave,
   showNotification,
   isLoading = false,
+  isViewOnly = false, // Default to false
 }) => {
   const [isPersonalInfoModalOpen, setIsPersonalInfoModalOpen] = useState(false);
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo>(initialContactInfo);
@@ -33,6 +35,7 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
   }, [initialContactInfo]);
 
   const handleSave = async (newInfo: { email: string; phone: string; location: string }) => {
+    if (isViewOnly) return; // Prevent save if in view-only mode
     const newPersonalInfo = { email: newInfo.email, phone: newInfo.phone, location: newInfo.location };
 
     await onSave(newPersonalInfo);
@@ -42,10 +45,12 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
     <SectionWrapper
       title="Personal Informations"
       editButton={
-        <EditSectionButton
-          onClick={() => setIsPersonalInfoModalOpen(true)}
-          disabled={isLoading}
-        />
+        !isViewOnly ? ( // Conditionally render the edit button
+          <EditSectionButton
+            onClick={() => setIsPersonalInfoModalOpen(true)}
+            disabled={isLoading}
+          />
+        ) : null
       }
       delay={0.1}
     >
@@ -82,7 +87,7 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
       </div>
 
       <PersonalInfoModal
-        isOpen={isPersonalInfoModalOpen}
+        isOpen={isPersonalInfoModalOpen && !isViewOnly} // Only open if not in view-only mode
         onClose={() => setIsPersonalInfoModalOpen(false)}
         initialValue={personalInfo}
         onSave={handleSave}
@@ -91,5 +96,3 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
     </SectionWrapper>
   );
 };
-
-

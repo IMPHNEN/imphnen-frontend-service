@@ -13,6 +13,7 @@ interface CvResumeSectionProps {
   onSave: (cvData: { fileName: string; fileUrl?: string }) => Promise<void>;
   showNotification: (type: NotificationType['type'], title: string, message?: string) => void;
   isLoading?: boolean;
+  isViewOnly?: boolean; // Add isViewOnly prop
 }
 
 export const CvResumeSection: FC<CvResumeSectionProps> = ({
@@ -21,6 +22,7 @@ export const CvResumeSection: FC<CvResumeSectionProps> = ({
   onSave,
   showNotification,
   isLoading = false,
+  isViewOnly = false, // Default to false
 }) => {
   const [isCVModalOpen, setIsCVModalOpen] = useState(false);
   const [fileName, setFileName] = useState(initialFileName);
@@ -31,9 +33,7 @@ export const CvResumeSection: FC<CvResumeSectionProps> = ({
   }, [initialFileName]);
 
   const handleSave = async (cvData: { fileName: string; fileUrl?: string }) => {
-
-
-
+    if (isViewOnly) return; // Prevent save if in view-only mode
     await onSave(cvData);
   };
 
@@ -65,10 +65,12 @@ export const CvResumeSection: FC<CvResumeSectionProps> = ({
     <SectionWrapper
       title="CV/Resume"
       editButton={
-        <EditSectionButton
-          onClick={() => setIsCVModalOpen(true)}
-          disabled={isLoading}
-        />
+        !isViewOnly ? ( // Conditionally render the edit button
+          <EditSectionButton
+            onClick={() => setIsCVModalOpen(true)}
+            disabled={isLoading}
+          />
+        ) : null
       }
       delay={0.3}
     >
@@ -92,7 +94,7 @@ export const CvResumeSection: FC<CvResumeSectionProps> = ({
       </div>
 
       <CVModal
-        isOpen={isCVModalOpen}
+        isOpen={isCVModalOpen && !isViewOnly} // Only open if not in view-only mode
         onClose={() => setIsCVModalOpen(false)}
         initialValue={{ fileName, fileUrl: fileName }}
         onSave={handleSave}
@@ -101,5 +103,3 @@ export const CvResumeSection: FC<CvResumeSectionProps> = ({
     </SectionWrapper>
   );
 };
-
-
