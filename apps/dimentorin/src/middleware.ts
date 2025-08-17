@@ -10,17 +10,17 @@ const mappingPublicRoutes = [
   '/auth/login',
   '/auth/forgot',
   '/auth/forgot/otp',
-  '/auth/register', 
+  '/auth/register',
   '/auth/register/otp',
   '/auth/register/success',
   '/auth/new-password',
   '/auth/register-mentor',
   '/auth/register-mentor/pending',
   '/auth/register-mentor/success',
+  '/auth/google-callback',
+  '/auth/google-oauth-popup',
   '/resources',
-];
-
-const mappingRoutePermissions = [
+];const mappingRoutePermissions = [
   {
     path: '/dashboard',
     permissions: [],
@@ -96,7 +96,7 @@ export const middleware = async ({ request }: LoaderFunctionArgs) => {
   const token = session_token?.token?.access_token;
   const userPermissions =
     session?.role?.permissions?.map?.((perm) => perm?.name) ?? [];
-  
+
   // Allow to access the landing page without authentication
   // So, if the route prefix is in the mappingPublicPrefixRoutes, we return null
   // to indicate that we don't need to authenticate the user

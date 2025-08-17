@@ -11,3 +11,6 @@ export type TUserItem = {
   phone_number: string;
   role: TRoleDetailItem;
 };
+
+// Re-export types from API for convenience
+export type { UserDetailResponseDto, UserUpdateRequestDto } from '../../api/users';

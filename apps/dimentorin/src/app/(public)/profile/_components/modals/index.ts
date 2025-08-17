@@ -1,0 +1,10 @@
+export { NotificationModal } from './notification-modal';
+export { CVModal } from './cv-modal';
+export { DescriptionModal } from './description-modal';
+export { EducationModal } from './education-modal';
+export { ExperienceModal } from './experience-modal';
+export { SocialMediaModal } from './social-media-modal';
+export { SkillsModal } from './skills-modal';
+export { EditProfileModal } from './edit-profile-modal';
+export { LanguagesModal } from './languages-modal';
+export { PersonalInfoModal } from './personal-info-modal';

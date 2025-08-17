@@ -5,6 +5,7 @@ import {
   TRegisterRequest,
   TSendOTPRequest,
   TVerifyEmailRequest,
+  TGoogleCallbackResponse,
 } from '../../types/auth';
 import { TResponseMessage } from '../../types/common';
 
@@ -48,6 +49,19 @@ export const postSendOtp = async (
     method: 'POST',
     url: '/auth/send-otp',
     data: payload,
+  });
+  return data;
+};
+
+export const getGoogleAuthUrl = async (): Promise<string> => {
+  const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+  return `${baseUrl}/auth/google/login`;
+};
+
+export const postGoogleCallback = async (code: string, state: string): Promise<TGoogleCallbackResponse> => {
+  const { data } = await api({
+    method: 'GET',
+    url: `/auth/google/callback?code=${code}&state=${state}`,
   });
   return data;
 };
