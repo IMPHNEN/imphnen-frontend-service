@@ -25,7 +25,7 @@ const mockData: SessionType[] = Array.from({ length: 90 }, (_, i) => ({
 }))
 
 export default function Components(): ReactElement {
-  const [openDetail, setOpenDetail] = useState(true);
+  const [openDetail, setOpenDetail] = useState(false);
 
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
   const [pagination, setPagination] = useState<PaginationState>({
