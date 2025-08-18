@@ -4,6 +4,7 @@ import { BackofficeWrapper, DataTable } from "@imphnen-frontend-service/ui/organ
 import { cn, For } from "@imphnen-frontend-service/utils";
 import { ColumnDef, getCoreRowModel, getPaginationRowModel, PaginationState, RowSelectionState, useReactTable } from "@tanstack/react-table";
 import { ReactElement, useState } from "react";
+import { ModalDetailUser } from "./_components/modal/detail";
 
 type UserStatus = 'active' | 'inactive';
 
@@ -24,7 +25,12 @@ const mockData: UserType[] = Array.from({ length: 90 }, (_, i) => ({
 }))
 
 export default function Components(): ReactElement {
-  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+  const TABS = ['mentor', 'mentee'] as const
+  const [activeTab, setActiveTab] = useState<'mentor' | 'mentee'>('mentor')
+  const [showDetail, setShowDetail] = useState(false)
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null)
+
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 9,
@@ -33,6 +39,7 @@ export default function Components(): ReactElement {
   const columns: ColumnDef<UserType>[] = [
     {
       id: 'select',
+      meta: { cellClassName: cn("w-20") },
       header: ({ table }) => (
         <input
           type="checkbox"
@@ -90,13 +97,15 @@ export default function Components(): ReactElement {
     },
     {
       header: 'Action',
+      meta: { cellClassName: cn("w-72") },
       cell: ({ row }) => (
         <Button
           variant="primary"
           size="sm"
           onClick={(e) => {
             e.stopPropagation();
-            // setShowModalValidate(true);
+            setSelectedUserId(row.original.id);
+            setShowDetail(true);
           }}
           className="flex items-center gap-2 w-max"
         >
@@ -122,9 +131,6 @@ export default function Components(): ReactElement {
     manualPagination: false,
   });
 
-  const TABS = ['mentor', 'mentee'] as const
-  const [activeTab, setActiveTab] = useState<'mentor' | 'mentee'>('mentor')
-
   return (
     <BackofficeWrapper title="Dimentorin.dev">
       <div className="mb-8 flex justify-between items-center">
@@ -135,8 +141,7 @@ export default function Components(): ReactElement {
               <Button
                 key={tab}
                 variant="text"
-                size="sm"
-                className={cn("px-3 py-2", activeTab === tab && "bg-white")}
+                className={cn("px-3 py-2 capitalize", activeTab === tab && "bg-white")}
                 onClick={() => setActiveTab(tab)}
               >
                 {tab}
@@ -171,6 +176,12 @@ export default function Components(): ReactElement {
 
         <DataTable data={mockData} columns={columns} table={table} />
       </section>
+
+      <ModalDetailUser
+        open={showDetail}
+        setOpen={setShowDetail}
+        userId={selectedUserId}
+      />
     </BackofficeWrapper>
   );
 }
