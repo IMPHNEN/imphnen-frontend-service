@@ -4,6 +4,7 @@ import { BackofficeWrapper, DataTable } from "@imphnen-frontend-service/ui/organ
 import { cn } from "@imphnen-frontend-service/utils";
 import { ColumnDef, getCoreRowModel, getPaginationRowModel, PaginationState, RowSelectionState, useReactTable } from "@tanstack/react-table";
 import { ReactElement, useState } from "react";
+import { ModalDetailSession } from "./_components/modal/detail";
 
 type SessionStatus = 'ongoing' | 'finished';
 
@@ -24,6 +25,8 @@ const mockData: SessionType[] = Array.from({ length: 90 }, (_, i) => ({
 }))
 
 export default function Components(): ReactElement {
+  const [openDetail, setOpenDetail] = useState(true);
+
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -103,6 +106,7 @@ export default function Components(): ReactElement {
           size="sm"
           onClick={(e) => {
             e.stopPropagation();
+            setOpenDetail(true);
           }}
           className="flex items-center gap-2 w-max"
         >
@@ -113,20 +117,20 @@ export default function Components(): ReactElement {
   ]
 
   const table = useReactTable({
-      data: mockData,
-      columns,
-      state: {
-        pagination,
-        rowSelection,
-      },
-      enableRowSelection: true,
-      onRowSelectionChange: setRowSelection,
-      getCoreRowModel: getCoreRowModel(),
-      getPaginationRowModel: getPaginationRowModel(),
-      onPaginationChange: setPagination,
-      pageCount: Math.ceil(mockData.length / pagination.pageSize),
-      manualPagination: false,
-    });
+    data: mockData,
+    columns,
+    state: {
+      pagination,
+      rowSelection,
+    },
+    enableRowSelection: true,
+    onRowSelectionChange: setRowSelection,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    onPaginationChange: setPagination,
+    pageCount: Math.ceil(mockData.length / pagination.pageSize),
+    manualPagination: false,
+  });
 
   return (
     <BackofficeWrapper title="Dimentorin.dev">
@@ -157,6 +161,8 @@ export default function Components(): ReactElement {
 
         <DataTable data={mockData} columns={columns} table={table} />
       </section>
+
+      <ModalDetailSession open={openDetail} setOpen={setOpenDetail} />
     </BackofficeWrapper>
   )
 }
