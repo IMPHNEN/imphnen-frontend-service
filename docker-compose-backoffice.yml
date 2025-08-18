@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  backoffice:
+    build:
+      context: .
+      dockerfile: docker/backoffice.Dockerfile
+    ports:
+      - "3001:80"
+    restart: unless-stopped
+    container_name: backoffice
