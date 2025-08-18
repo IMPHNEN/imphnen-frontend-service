@@ -31,3 +31,8 @@ export type TVerifyEmailRequest = {
 export type TSendOTPRequest = {
   email: string
 };
+
+export type TGoogleCallbackResponse = {
+  token: TTokenItem;
+  user: TUserItem;
+};

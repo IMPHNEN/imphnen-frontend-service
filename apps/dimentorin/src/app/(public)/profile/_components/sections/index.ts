@@ -1,0 +1,8 @@
+export { SocialMediaSection } from './social-media-section';
+export { DescriptionSection } from './description-section';
+export { CvResumeSection } from './cv-resume-section';
+export { ExperiencesSection } from './experiences-section';
+export { EducationSection } from './education-section';
+export { PersonalInfoSection } from './personal-info-section';
+export { SkillsSection } from './skills-section';
+export { LanguagesSection } from './languages-section';

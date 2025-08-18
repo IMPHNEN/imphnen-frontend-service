@@ -1,0 +1,61 @@
+import { FC, useState, useEffect } from 'react';
+import { DescriptionModal } from '../modals';
+import { SectionWrapper } from '../shared/section-wrapper';
+import { NotificationType } from '../modals/notification-modal';
+import { EditSectionButton } from '../buttons/edit-section-button';
+
+interface DescriptionSectionProps {
+  initialDescription: string;
+  onSave: (newDescription: string) => Promise<void>;
+  showNotification: (type: NotificationType['type'], title: string, message?: string) => void;
+  isLoading?: boolean;
+  isViewOnly?: boolean; // Add isViewOnly prop
+}
+
+export const DescriptionSection: FC<DescriptionSectionProps> = ({
+  initialDescription,
+  onSave,
+  showNotification,
+  isLoading = false,
+  isViewOnly = false, // Default to false
+}) => {
+  const [isDescriptionModalOpen, setIsDescriptionModalOpen] = useState(false);
+  const [description, setDescription] = useState(initialDescription);
+
+  
+  useEffect(() => {
+    setDescription(initialDescription);
+  }, [initialDescription]);
+
+  const handleSave = async (newDescription: string) => {
+    if (isViewOnly) return; // Prevent save if in view-only mode
+    await onSave(newDescription);
+  };
+
+  return (
+    <SectionWrapper
+      title="Description"
+      editButton={
+        !isViewOnly ? ( // Conditionally render the edit button
+          <EditSectionButton
+            onClick={() => setIsDescriptionModalOpen(true)}
+            disabled={isLoading}
+          />
+        ) : null
+      }
+      delay={0.2}
+    >
+      <div className="text-gray-700 leading-relaxed whitespace-pre-wrap min-h-[150px] p-4 border border-gray-200 rounded-md bg-gray-50">
+        {description}
+      </div>
+
+      <DescriptionModal
+        isOpen={isDescriptionModalOpen && !isViewOnly} // Only open if not in view-only mode
+        onClose={() => setIsDescriptionModalOpen(false)}
+        initialValue={description}
+        onSave={handleSave}
+        isLoading={isLoading}
+      />
+    </SectionWrapper>
+  );
+};

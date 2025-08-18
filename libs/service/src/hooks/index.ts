@@ -1,3 +1,5 @@
 export * from './auth';
 export * from './gacha';
 export * from './users';
+export * from './mentors';
+export * from './upload';
