@@ -23,6 +23,7 @@ const MENUS = [
   { label: 'Validasi Transaksi', href: '/transactions', icon: <AuditOutlined className="text-[20px]" /> },
   { label: 'Data Pengiriman Hadiah', href: '/prizes', icon: <InboxOutlined className="text-[20px]" /> },
   { label: 'User - Dimentorin', href: '/users-dimentorin', icon: <UserSwitchOutlined className="text-[20px]" /> },
+  { label: 'Session - Dimentorin', href: '/session-dimentorin', icon: <UserSwitchOutlined className="text-[20px]" /> },
 ]
 
 export const BackofficeSidebar: FC = (): ReactElement => {
