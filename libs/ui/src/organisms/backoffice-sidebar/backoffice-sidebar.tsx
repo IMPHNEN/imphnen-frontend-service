@@ -1,6 +1,7 @@
 import {
   AppstoreOutlined,
   AuditOutlined,
+  BookOutlined,
   InboxOutlined,
   LogoutOutlined,
   ReloadOutlined,
@@ -26,6 +27,7 @@ const MENUS = [
   { label: 'Data Pengiriman Hadiah', href: '/prizes', icon: <InboxOutlined className="text-[20px]" /> },
   { label: 'User - Dimentorin', href: '/users-dimentorin', icon: <UserSwitchOutlined className="text-[20px]" /> },
   { label: 'Session - Dimentorin', href: '/session-dimentorin', icon: <ScheduleOutlined className="text-[20px]" /> },
+  { label: 'Content & Roadmap', href: '/roadmap-dimentorin', icon: <BookOutlined className="text-[20px]" /> },
   { label: 'Settings - Dimentorin', href: '/settings-dimentorin', icon: <SettingOutlined className="text-[20px]" /> },
 ]
 
