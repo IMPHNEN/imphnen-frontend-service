@@ -6,10 +6,12 @@ import {
   flexRender,
   ColumnDef,
   Table,
+  RowData,
 } from '@tanstack/react-table';
 import { Pagination } from '../../molecules';
 
 import React from 'react';
+import { cn } from '@imphnen-frontend-service/utils';
 
 interface DataTableProps<T> {
   data: T[];
@@ -18,7 +20,7 @@ interface DataTableProps<T> {
   pageSize?: number;
 }
 
-export const DataTable = <T,>({
+export const DataTable = <T extends RowData>({
   data,
   columns,
   pageSize = 9,
@@ -49,7 +51,7 @@ export const DataTable = <T,>({
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    className="py-4 px-5 font-normal first:rounded-l-lg last:rounded-r-lg"
+                    className={cn("py-4 px-5 font-normal first:rounded-l-lg last:rounded-r-lg", header?.column?.columnDef?.meta?.headerClassName)}
                   >
                     {header.isPlaceholder
                       ? null
@@ -68,7 +70,7 @@ export const DataTable = <T,>({
                 {row.getVisibleCells().map((cell, index) => (
                   <td
                     key={cell.id}
-                    className="py-3 px-5 first:rounded-l-lg last:rounded-r-lg"
+                    className={cn("py-3 px-5 first:rounded-l-lg last:rounded-r-lg", cell?.column?.columnDef?.meta?.cellClassName)}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
