@@ -5,6 +5,7 @@ import { buttonVariants } from '@components';
 import { cn } from '@utils';
 import Image from 'next/image';
 import { HiOutlineCode } from 'react-icons/hi';
+import { motion } from 'framer-motion';
 
 export default function HackathonsPage() {
   const sortedHackathons = [...hackathons];
@@ -19,22 +20,33 @@ export default function HackathonsPage() {
 
   return (
     <section className="min-h-screen bg-background container py-10">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {sortedHackathons.map((hackathon) => (
-          <div
+      <motion.div
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        initial="hidden"
+        animate="visible"
+        variants={{
+          visible: { transition: { staggerChildren: 0.12 } },
+        }}
+      >
+        {sortedHackathons.map((hackathon, idx) => (
+          <motion.div
             key={hackathon.project_title}
-            className="rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 bg-card"
+            className="rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 bg-card group"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: idx * 0.08, type: 'spring', stiffness: 60 }}
+            whileHover={{ scale: 1.03, boxShadow: '0 8px 32px rgba(0,0,0,0.10)' }}
           >
-            <div className="h-48 bg-muted relative">
+            <motion.div className="h-48 bg-muted relative overflow-hidden rounded-t-xl">
               <Image
                 src={hackathon.screenshot}
                 alt={hackathon.project_title}
                 fill
-                className="object-cover object-top rounded-t-xl"
+                className="object-cover object-top group-hover:scale-105 transition-transform duration-500"
                 sizes="(max-width: 768px) 100vw, 33vw"
                 unoptimized
               />
-            </div>
+            </motion.div>
             <div className="p-6">
               <h3 className="text-lg font-semibold mb-3 text-foreground">
                 {hackathon.project_title}
@@ -59,9 +71,9 @@ export default function HackathonsPage() {
                 Lihat Proyek
               </a>
             </div>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </section>
   );
 }
