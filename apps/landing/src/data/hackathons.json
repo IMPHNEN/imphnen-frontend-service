@@ -1,0 +1,23 @@
+[
+  {
+    "team_name": "Alpha Innovators",
+    "project_title": "Smart Waste Tracker",
+    "description": "A web app to monitor and optimize household waste management using IoT sensors.",
+    "repo_link": "https://github.com/alphainnovators/smart-waste-tracker",
+    "screenshot": "https://example.com/screenshots/smart-waste.png"
+  },
+  {
+    "team_name": "Beta Builders",
+    "project_title": "EduConnect",
+    "description": "A platform that connects students with mentors through video calls and resource sharing.",
+    "repo_link": "https://gitlab.com/betabuilders/educonnect",
+    "screenshot": "https://example.com/screenshots/educonnect.png"
+  },
+  {
+    "team_name": "Gamma Squad",
+    "project_title": "HealthEase",
+    "description": "A mobile app that tracks daily nutrition and integrates with wearables for personalized health insights.",
+    "repo_link": "https://github.com/gammasquad/healthease",
+    "screenshot": "https://example.com/screenshots/healthease.png"
+  }
+]
