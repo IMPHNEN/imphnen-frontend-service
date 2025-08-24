@@ -39,7 +39,7 @@ export default function HackathonsPage() {
           >
             <motion.div className="h-48 bg-muted relative overflow-hidden rounded-t-xl">
               <Image
-                src={hackathon.screenshot}
+                src={`https://cdn.asepharyana.tech/imphnen/hackatons/${hackathon.file_name}`}
                 alt={hackathon.project_title}
                 fill
                 className="object-cover object-top group-hover:scale-105 transition-transform duration-500"

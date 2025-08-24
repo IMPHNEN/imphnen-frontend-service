@@ -1,23 +1,58 @@
 [
   {
-    "team_name": "Alpha Innovators",
-    "project_title": "Smart Waste Tracker",
-    "description": "A web app to monitor and optimize household waste management using IoT sensors.",
-    "repo_link": "https://github.com/alphainnovators/smart-waste-tracker",
-    "screenshot": "https://example.com/screenshots/smart-waste.png"
+    "team_name": "Lineproject",
+    "project_title": "LaporMerdeka",
+    "description": "Platform pelaporan infrastruktur publik Indonesia yang memungkinkan warga melaporkan masalah dengan cepat dan mudah untuk Indonesia yang lebih baik.",
+    "repo_link": "https://github.com/MANFIT7/lapormerdeka",
+    "screenshot": "https://drive.google.com/open?id=1tbOJKacQGsfldr5TsWtzNKL65iCpADz2",
+    "file_name": "Screenshot 2025-08-22 062036 - Fafnir.png"
   },
   {
-    "team_name": "Beta Builders",
-    "project_title": "EduConnect",
-    "description": "A platform that connects students with mentors through video calls and resource sharing.",
-    "repo_link": "https://gitlab.com/betabuilders/educonnect",
-    "screenshot": "https://example.com/screenshots/educonnect.png"
+    "team_name": "Aliansi switch",
+    "project_title": "News-ai",
+    "description": "ai agent untuk memilah beritah hoax dengan asli",
+    "repo_link": "https://github.com/7FIl/News-AI",
+    "screenshot": "https://drive.google.com/open?id=1IYoOB1zqL70tpxaeopdS6VtuL8hoqpPn",
+    "file_name": "Screenshot 2025-08-22 223626 - 7Fil.png"
   },
   {
-    "team_name": "Gamma Squad",
-    "project_title": "HealthEase",
-    "description": "A mobile app that tracks daily nutrition and integrates with wearables for personalized health insights.",
-    "repo_link": "https://github.com/gammasquad/healthease",
-    "screenshot": "https://example.com/screenshots/healthease.png"
+    "team_name": "Sodev Sedap",
+    "project_title": "Sejarah Alternatif ID",
+    "description": "Website AI Agent yang dapat memberikan user pov bagaimana jika user ada di situasi tersebut menggunakan reka adegan dengan pendekatan teks dengan gaya novel",
+    "repo_link": "https://github.com/rizalkr/sejarah-alternatif-id/tree/main",
+    "screenshot": "https://drive.google.com/open?id=1TMUgayvtI45gU79I-0SokQnPJP6LHQaC",
+    "file_name": "Screenshot 2025-08-23 115137 - Rizal Kurnia.png"
+  },
+  {
+    "team_name": "Muhammad Harafsan Alhad",
+    "project_title": "Elysia AI Kemerdekaan Indonesia",
+    "description": "“Sebuah chatbot AI interaktif yang menampilkan Elysia (dari Honkai Impact) yang menjawab pertanyaan tentang Kemerdekaan Indonesia dengan gaya khas Elysia, lengkap dengan fitur kuis interaktif.",
+    "repo_link": "https://github.com/rafsanalhad/elysia-ai-kemerdekaan",
+    "screenshot": "https://drive.google.com/open?id=1_QE59lgHNbJfuVikJ5KT0_85tbJc6pMo",
+    "file_name": "Screenshot 2025-08-23 131756 - Ralhad Alhad.png"
+  },
+  {
+    "team_name": "RaflanGT",
+    "project_title": "Ecobot",
+    "description": "EcoBot adalah AI Agent yang hadir untuk menjawab tantangan pengelolaan sampah dan keterbatasan digitalisasi di masyarakat. Melalui WhatsApp yang akrab bagi warga, EcoBot memandu pemilahan sampah dengan analisis gambar berbasis AI sekaligus menumbuhkan kesadaran lingkungan. Kemerdekaan bukan hanya bebas dari penjajahan, tetapi juga kesadaran kolektif untuk mengelola hal-hal sederhana yang berdampak besar. Dengan langkah kecil seperti ini, desa dan masyarakat dapat mandiri secara digital, menjaga lingkungan, dan bersama-sama membawa Indonesia terus maju.",
+    "repo_link": "https://github.com/mycoderisyad/raflangt-ecobot",
+    "screenshot": "https://drive.google.com/open?id=1lj5DMJfxSrCwyNSLIlq-GQohJHCUDU1-",
+    "file_name" : "Screenshot 2025-08-23 223413 - MRisyad Raflan.png"
+  },
+  {
+    "team_name": "Tchh Tidak Akan",
+    "project_title": "Merdeka Quiziz",
+    "description": "Merdeka Quiziz merupakan web kuis yang menggunakan tema Kemerdekaan Indonesia dengan fitur gamifikasi yang membuat kuis menjadi menyenangkan, dimana setiap kuis dibuat oleh Mera (AI) dan dipersonalisasi untuk pengguna. Selain itu  di Merdeka Quiziz pengguna juga dapat membahas sejarah Indonesia bersama Mera (AI).",
+    "repo_link": "https://gitlab.com/personal-projects9094234/merdeka-quiziz",
+    "screenshot": "https://drive.google.com/open?id=1U_UMaYABLjbO38GA9DopXebDWznFKQcI",
+    "file_name" : "Screenshot 2025-08-24 at 09.15.06 - Khen Cahyo.png"
+  },
+  {
+    "team_name": "Pengen Ikut tapi Bingung Mau Buat Apa",
+    "project_title": "IMMPHNEN (Ingin Menjadi Mesin Pencari Handal Namun Enggan Ngecrawl)",
+    "description": "Mesin pencari yang didesain untuk memerdekakan para pencari informasi dari tracker-tracker yang berlebihan (lelah bukan habis mencari A, nongol iklan A dimana-mana?). Memiliki fitur ringkasan pencarian, serta filter negatif penelusuran (judi & pornografi). Dibuat dengan LangSearch dan Lunos(ChatGPT 5.0).",
+    "repo_link": "https://gitlab.com/myracledev/py-search-engine",
+    "screenshot": "https://drive.google.com/open?id=1xNFtvGSLfWwdA4Mx46S7bx2nmwpt5CXA",
+    "file_name" : "{CBBB6849-BC8E-4435-9C6A-8C88C83287DF} - Mohamad Yusuf Rizaldi.png"
   }
 ]
