@@ -2,6 +2,7 @@
 
 import { LogoSimple } from '@/app/_components/logo';
 import NAVIGATIONS from '@/data/navigations.json';
+import { useAuth } from '@/hooks/use-auth';
 import { Button } from '@components';
 import { cn } from '@utils';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -13,6 +14,7 @@ import { LuMenu, LuX } from 'react-icons/lu';
 export function Header() {
   const router = useRouter();
   const pathname = usePathname();
+  const { isAuthenticated } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -29,6 +31,13 @@ export function Header() {
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [pathname]);
+
+  const handleLogout = () => {
+    document.cookie = '__imphnen_access_token__=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    document.cookie = '__imphnen_refresh_token__=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    router.push('/');
+    window.location.reload();
+  };
 
   return (
     <header className="sticky top-0 w-full z-50 bg-background/70">
@@ -62,19 +71,31 @@ export function Header() {
         </nav>
 
         <div className="hidden md:flex items-center gap-x-3">
-          <Button
-            onClick={() => router.push('/signin')}
-            className="px-5 py-2 text-sm font-medium"
-          >
-            Masuk
-          </Button>
-          <Button
-            variant="bordered"
-            onClick={() => router.push('/signup')}
-            className="px-5 py-2 text-sm font-medium shadow-lg shadow-primary/20 hover:shadow-primary/30"
-          >
-            Daftar
-          </Button>
+          {isAuthenticated ? (
+            <Button
+              onClick={handleLogout}
+              variant="bordered"
+              className="px-5 py-2 text-sm font-medium"
+            >
+              Keluar
+            </Button>
+          ) : (
+            <>
+              <Button
+                onClick={() => router.push('/signin')}
+                className="px-5 py-2 text-sm font-medium"
+              >
+                Masuk
+              </Button>
+              <Button
+                variant="bordered"
+                onClick={() => router.push('/signup')}
+                className="px-5 py-2 text-sm font-medium shadow-lg shadow-primary/20 hover:shadow-primary/30"
+              >
+                Daftar
+              </Button>
+            </>
+          )}
         </div>
 
         <button
@@ -144,25 +165,40 @@ export function Header() {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.2 }}
               >
-                <Button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    router.push('/signin');
-                  }}
-                  className="w-full py-4 text-base"
-                >
-                  Masuk
-                </Button>
-                <Button
-                  variant="bordered"
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    router.push('/signup');
-                  }}
-                  className="w-full py-4 text-base shadow-lg shadow-primary/20"
-                >
-                  Daftar
-                </Button>
+                {isAuthenticated ? (
+                  <Button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      handleLogout();
+                    }}
+                    variant="bordered"
+                    className="w-full py-4 text-base"
+                  >
+                    Keluar
+                  </Button>
+                ) : (
+                  <>
+                    <Button
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        router.push('/signin');
+                      }}
+                      className="w-full py-4 text-base"
+                    >
+                      Masuk
+                    </Button>
+                    <Button
+                      variant="bordered"
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        router.push('/signup');
+                      }}
+                      className="w-full py-4 text-base shadow-lg shadow-primary/20"
+                    >
+                      Daftar
+                    </Button>
+                  </>
+                )}
               </motion.div>
             </motion.div>
           )}
