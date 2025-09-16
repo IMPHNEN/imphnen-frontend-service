@@ -1,0 +1,61 @@
+{
+  "slug": "ai-agent-hackathon-2025",
+  "name": "AI Agent Hackathon",
+  "cover": "https://cdn.andka.my.id/imphnen/534798944_122241336080178516_4647521272813012181_n.jpg",
+  "description": "Hackathon dalam rangka AI Agent Kemerdekaan Indonesia. Selama satu minggu, para peserta akan diminta untuk membuat proyek mereka sendiri secara online dengan bantuan lunos.tech, mailry.co, dan unli.dev.",
+  "theme": "AI Agent untuk Kemerdekaan Indonesia",
+  "status": "ended",
+  "prize": "Rp. 5.000.000",
+  "prizes": [
+    {
+      "position": "Juara 1",
+      "amount": "Rp. 5.000.000",
+      "description": "Hadiah utama untuk tim terbaik"
+    }
+  ],
+  "tags": ["AI Agent"],
+  "difficulty": "intermediate",
+  "submissionWindow": {
+    "start": "2025-08-15T00:00:00.000Z",
+    "end": "2025-08-22T23:59:59.999Z"
+  },
+  "minTeamSize": 1,
+  "maxTeamSize": 3,
+  "partnersCount": 2,
+  "submissionsCount": 22,
+  "partners": [
+    {
+      "name": "GitHub",
+      "logo": "https://example.com/github-logo.png",
+      "link": "https://github.com"
+    },
+    {
+      "name": "Microsoft",
+      "logo": "https://example.com/microsoft-logo.png",
+      "link": "https://microsoft.com"
+    }
+  ],
+  "requirements": [
+    {
+      "id": "lunos-tech",
+      "name": "lunos.tech",
+      "description": "Wajib menggunakan platform lunos.tech dalam proyek",
+      "mandatory": true
+    },
+    {
+      "id": "mailry-co",
+      "name": "mailry.co",
+      "description": "Wajib menggunakan platform mailry.co dalam proyek",
+      "mandatory": true
+    },
+    {
+      "id": "unli-dev",
+      "name": "unli.dev",
+      "description": "Wajib menggunakan platform unli.dev dalam proyek",
+      "mandatory": true
+    }
+  ],
+  "seoTitle": "AI Agent Hackathon 2025 - IMPHNEN",
+  "seoDescription": "Hackathon AI Agent untuk Kemerdekaan Indonesia. Bergabunglah dengan pengembang dari seluruh Indonesia untuk membangun solusi AI yang inovatif.",
+  "socialImage": "https://cdn.andka.my.id/imphnen/534798944_122241336080178516_4647521272813012181_n.jpg"
+}
