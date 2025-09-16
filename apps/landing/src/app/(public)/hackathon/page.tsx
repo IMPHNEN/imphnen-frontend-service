@@ -6,11 +6,11 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { HackathonSummary } from '@/content/hackathons/types';
 import { hackathonSummaries } from '@/content/hackathons/index';
-import { 
-  getDaysLeftText, 
-  getProgressPercent, 
-  filterHackathons,
-  sortHackathons
+import {
+    getDaysLeftText,
+    getProgressPercent,
+    filterHackathons,
+    sortHackathons
 } from '@/content/hackathons/utils';
 
 const HackathonTags: React.FC<{ tags?: string[] }> = ({ tags }) => {
@@ -98,34 +98,29 @@ const HackathonCard: React.FC<{ hackathon: HackathonSummary; idx: number }> = ({
 };
 
 export default function HackathonsPage() {
-    // Use static data instead of API calls
     const [filteredItems, setFilteredItems] = React.useState<HackathonSummary[]>(hackathonSummaries);
     const [searchTerm, setSearchTerm] = React.useState('');
     const [statusFilter, setStatusFilter] = React.useState<string>('all');
 
-    // Filter and sort hackathons
+    
     React.useEffect(() => {
         let filtered = [...hackathonSummaries];
-
-        // Apply search filter
         if (searchTerm) {
             filtered = filterHackathons(filtered, { search: searchTerm });
         }
 
-        // Apply status filter
         if (statusFilter !== 'all') {
             filtered = filterHackathons(filtered, { status: [statusFilter] });
         }
-
-        // Sort by registration start date (newest first)
+        
         filtered = sortHackathons(filtered, 'registrationStart', 'desc');
-
         setFilteredItems(filtered);
     }, [searchTerm, statusFilter]);
 
     return (
         <section className="min-h-screen bg-background container py-10">
             {/* Search and Filter Controls */}
+            {/*             
             <div className="mb-8 space-y-4">
                 <div className="flex flex-col md:flex-row gap-4">
                     <input
@@ -133,7 +128,7 @@ export default function HackathonsPage() {
                         placeholder="Search hackathons..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="flex-1 px-4 py-2 border border-muted rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                        className="flex-1 px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                     />
                     <select
                         value={statusFilter}
@@ -146,12 +141,8 @@ export default function HackathonsPage() {
                         <option value="ended">Ended</option>
                     </select>
                 </div>
-                
-                {/* Results summary */}
-                <div className="text-sm text-muted-foreground">
-                    Showing {filteredItems.length} of {hackathonSummaries.length} hackathons
-                </div>
-            </div>
+            
+            </div> */}
 
             <motion.div
                 className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
@@ -165,7 +156,7 @@ export default function HackathonsPage() {
                     <HackathonCard key={hackathon.slug || hackathon.name} hackathon={hackathon} idx={idx} />
                 ))}
             </motion.div>
-            
+
             {/* No results message */}
             {filteredItems.length === 0 && (
                 <div className="text-center py-12">
