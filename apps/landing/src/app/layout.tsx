@@ -6,8 +6,27 @@ import { Providers } from './_components/providers';
 import { Toaster } from './_components/toaster';
 
 export const metadata: Metadata = {
-  title: 'IMPHNEN - Ingin Menjadi Programmer Handal?',
+  title: 'IMPHNEN - Ingin Menjadi Programmer Handal Namun Enggan Ngoding',
   description: 'Komunitas belajar programming untuk semua level',
+  openGraph: {
+    title: 'IMPHNEN - Ingin Menjadi Programmer Handal Namun Enggan Ngoding',
+    description: 'Komunitas belajar programming untuk semua level',
+    url: 'https://imphnen.dev',
+    images: [
+      {
+        url: 'https://imphnen.dev/imphnen-group-cover.webp',
+        alt: 'IMPHNEN - Ingin Menjadi Programmer Handal Namun Enggan Ngoding',
+        width: 2550,
+        height: 945,
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'IMPHNEN - Ingin Menjadi Programmer Handal Namun Enggan Ngoding',
+    description: 'Komunitas belajar programming untuk semua level',
+    images: ['https://imphnen.dev/imphnen-group-cover.webp'],
+  },
 };
 
 export default function RootLayout({

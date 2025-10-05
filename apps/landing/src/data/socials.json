@@ -4,34 +4,34 @@
     "icon": "FaFacebook",
     "color": "#1877F2",
     "description": "Join discussions and share knowledge",
-    "link": "#"
+    "link": "https://fb.com/groups/programmerhandal"
   },
   {
     "name": "Discord",
     "icon": "FaDiscord",
     "color": "#5865F2",
     "description": "Real-time collaboration chat",
-    "link": "#"
+    "link": "https://discord.gg/imphnen"
   },
   {
     "name": "Instagram",
     "icon": "FaInstagram",
     "color": "#E4405F",
     "description": "Daily coding tips & showcases",
-    "link": "#"
+    "link": "https://www.instagram.com/imphnen.dev"
   },
   {
     "name": "TikTok",
     "icon": "FaTiktok",
     "color": "#000000",
     "description": "Short coding tutorials",
-    "link": "#"
+    "link": "https://www.tiktok.com/@imphnen"
   },
   {
     "name": "LinkedIn",
     "icon": "FaLinkedin",
     "color": "#0A66C2",
     "description": "Professional networking",
-    "link": "#"
+    "link": "https://www.linkedin.com/company/imphnen"
   }
 ]
