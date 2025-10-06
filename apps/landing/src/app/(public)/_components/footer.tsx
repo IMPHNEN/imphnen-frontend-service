@@ -24,32 +24,37 @@ export default function Footer() {
             </p>
             <div className="flex space-x-4">
               <Link
-                href="#"
+                href="https://fb.com/groups/programmerhandal"
                 className="text-muted-foreground hover:text-foreground"
+                target="_blank"
               >
                 <FaFacebook className="size-6" />
               </Link>
               <Link
-                href="#"
+                href="https://discord.gg/imphnen"
                 className="text-muted-foreground hover:text-foreground"
+                target="_blank"
               >
                 <FaDiscord className="size-6" />
               </Link>
               <Link
-                href="#"
+                href="https://www.instagram.com/imphnen.dev"
                 className="text-muted-foreground hover:text-foreground"
+                target="_blank"
               >
                 <FaInstagram className="size-6" />
               </Link>
               <Link
-                href="#"
+                href="https://www.tiktok.com/@imphnen"
                 className="text-muted-foreground hover:text-foreground"
+                target="_blank"
               >
                 <FaTiktok className="size-6" />
               </Link>
               <Link
-                href="#"
+                href="https://www.linkedin.com/company/imphnen"
                 className="text-muted-foreground hover:text-foreground"
+                target="_blank"
               >
                 <FaLinkedinIn className="size-6" />
               </Link>
@@ -78,6 +83,7 @@ export default function Footer() {
                   <Link
                     href={link}
                     className="text-sm text-muted-foreground hover:text-foreground"
+                    target="_blank"
                   >
                     {name}
                   </Link>
