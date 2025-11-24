@@ -1,0 +1,9 @@
+services:
+  hackathon:
+    build:
+      context: .
+      dockerfile: docker/hackathon.Dockerfile
+    ports:
+      - '127.0.0.1:3004:80'
+    restart: unless-stopped
+    container_name: hackathon
