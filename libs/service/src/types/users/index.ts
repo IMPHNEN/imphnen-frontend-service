@@ -10,6 +10,9 @@ export type TUserItem = {
   is_active: boolean;
   phone_number: string;
   role: TRoleDetailItem;
+  location?: string;
+  bio?: string;
+  skills?: string[];
 };
 
 // Re-export types from API for convenience

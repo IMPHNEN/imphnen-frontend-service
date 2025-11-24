@@ -1,29 +1,10 @@
-import { TVerifyOtpRequest, usePostVerifyEmail } from '@imphnen-frontend-service/service';
-import { toast } from 'sonner';
-import { useNavigate, useSearchParams } from 'react-router';
-
+// OTP verification is not used with GitHub OAuth authentication
+// This hook is kept for backward compatibility but is not used
 export const useOtp = () => {
-  const navigate = useNavigate();
-  const { mutate, isPending } = usePostVerifyEmail();
-  const [ searchParams ] = useSearchParams();
-  
-  const otp = (payload: TVerifyOtpRequest) => {
-    mutate({ ...payload, email: searchParams.get("email") || "" }, {
-      onSuccess: (data) => {
-        toast.success('Berhasil Registrasi');
-        navigate("/auth/register/success");
-      },
-      onError: (err) => {
-        toast.error(
-          err?.response?.data?.message ??
-            'Terjadi Kesalahan yang tidak diketahui'
-        );
-      },
-    });
-  };
-
   return {
-    otp,
-    isLoading: isPending,
+    otp: () => {
+      console.warn('OTP verification is not used with GitHub OAuth authentication');
+    },
+    isLoading: false,
   };
 };

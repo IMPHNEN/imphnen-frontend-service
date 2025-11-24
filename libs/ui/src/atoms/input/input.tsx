@@ -9,9 +9,16 @@ import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons'; // Import
 import { cn } from '@imphnen-frontend-service/utils';
 import { Button } from '../button';
 
-type TInputType = 'text' | 'email' | 'number' | 'password' | 'file' | 'date' | 'time';
+type TInputType =
+  | 'text'
+  | 'email'
+  | 'number'
+  | 'password'
+  | 'file'
+  | 'date'
+  | 'time';
 type TInputSize = 'sm' | 'md' | 'lg';
-type Width = 'standard' | 'custom'
+type Width = 'standard' | 'custom';
 
 type TInputProps = Omit<
   DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>,
@@ -36,7 +43,7 @@ export const Input: FC<TInputProps> = ({
   type = 'text',
   size = 'md',
   placeholder = 'Placeholder',
-  widthform='standard',
+  widthform = 'standard',
   disabled,
   className,
   ...rest
@@ -49,7 +56,9 @@ export const Input: FC<TInputProps> = ({
   };
 
   const mergedClassName = cn(
-    `px-[12px] py-[8px] text-neutral-800 bg-white placeholder:text-neutral-300 border border-neutral-200 hover:border-blue-300 focus:outline-1 focus:outline-blue-500 rounded-md font-bai-jamjuree ${widthform === "standard" ? "min-w-70" : ""}`,
+    `px-[12px] py-[8px] text-neutral-800 bg-white placeholder:text-neutral-300 border border-neutral-200 hover:border-blue-300 focus:outline-1 focus:outline-blue-500 rounded-md font-bai-jamjuree w-full ${
+      widthform === 'standard' ? 'min-w-70' : ''
+    }`,
     sizeClasses[size].textSize,
     disabled && disabledClass,
     className
@@ -65,14 +74,14 @@ export const Input: FC<TInputProps> = ({
         {...rest}
       />
       {type === 'password' && (
-        <div className="absolute end-0 px-[12px] h-full flex items-center">
+        <div className="absolute end-0 px-3 h-full flex items-center">
           <Button
             type="button"
             variant="text"
             size={size}
             onClick={togglePasswordVisibility}
             className={cn(
-              'relative aspect-square -me-[8px] p-[6px]',
+              'relative aspect-square -me-2 p-1.5',
               sizeClasses[size].iconSize,
               disabled && 'cursor-not-allowed'
             )}

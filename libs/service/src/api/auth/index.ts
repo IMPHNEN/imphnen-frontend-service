@@ -65,3 +65,16 @@ export const postGoogleCallback = async (code: string, state: string): Promise<T
   });
   return data;
 };
+
+export const getGitHubAuthUrl = async (): Promise<string> => {
+  const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+  return `${baseUrl}/auth/github/login`;
+};
+
+export const postGitHubCallback = async (code: string, state: string): Promise<TGoogleCallbackResponse> => {
+  const { data } = await api({
+    method: 'GET',
+    url: `/auth/github/callback?code=${code}&state=${state}`,
+  });
+  return data;
+};

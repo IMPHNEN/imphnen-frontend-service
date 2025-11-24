@@ -1,25 +1,10 @@
-import { TSendOTPRequest, usePostSendOTP } from '@imphnen-frontend-service/service';
-import { toast } from 'sonner';
-
+// OTP is not used with GitHub OAuth authentication
+// This hook is kept for backward compatibility but is not used
 export const useSendOTP = () => {
-  const { mutate, isPending } = usePostSendOTP();
-  
-  const resendOTP = (payload: TSendOTPRequest) => {
-    mutate(payload, {
-      onSuccess: (data) => {
-        toast.success('Berhasil Mengirim Ulang OTP');
-      },
-      onError: (err) => {
-        toast.error(
-          err?.response?.data?.message ??
-            'Terjadi Kesalahan yang tidak diketahui'
-        );
-      },
-    });
-  };
-
   return {
-    resendOTP,
-    isLoading: isPending,
+    resendOTP: () => {
+      console.warn('OTP is not used with GitHub OAuth authentication');
+    },
+    isLoading: false,
   };
 };

@@ -23,6 +23,9 @@ type TUserItem = {
   is_active: boolean;
   phone_number: string;
   role: TRoleItem;
+  bio?: string;
+  location?: string;
+  skills?: string[];
 };
 
 export const SessionUser = {

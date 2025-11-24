@@ -1,5 +1,4 @@
 import { createRoot } from 'react-dom/client';
-import { middleware } from './middleware';
 import { StrictMode } from 'react';
 import { createBrowserRouter, RouteObject, RouterProvider } from 'react-router';
 import {
@@ -24,8 +23,10 @@ add404PageToRoutesChildren(notFoundFiles, routes);
 const router = createBrowserRouter([
   {
     ...routes,
-    loader: middleware,
-    shouldRevalidate: () => true,
+    // MIDDLEWARE TEMPORARILY DISABLED - causing infinite loops with React Router v7
+    // TODO: Implement auth checks at component level or use different pattern
+    // loader: middleware,
+    // shouldRevalidate: () => false,
   },
 ]);
 

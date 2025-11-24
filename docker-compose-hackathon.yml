@@ -3,7 +3,15 @@ services:
     build:
       context: .
       dockerfile: docker/hackathon.Dockerfile
+      args:
+        - VITE_SUPABASE_URL=${VITE_SUPABASE_URL}
+        - VITE_SUPABASE_ANON_KEY=${VITE_SUPABASE_ANON_KEY}
     ports:
       - '127.0.0.1:3004:80'
     restart: unless-stopped
     container_name: hackathon
+    env_file:
+      - .env.local
+    environment:
+      - VITE_SUPABASE_URL=${VITE_SUPABASE_URL}
+      - VITE_SUPABASE_ANON_KEY=${VITE_SUPABASE_ANON_KEY}
