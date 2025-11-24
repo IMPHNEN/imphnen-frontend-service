@@ -1,8 +1,7 @@
 import { FC, ReactElement, useState } from 'react';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { Link, useParams, useNavigate } from 'react-router';
-import { useTeamById, useTeamMembers, useInviteMember, useTeamJoinRequests, useRespondToJoinRequest, ETeamMemberRole } from '@imphnen-frontend-service/service';
-import { useAuthStore } from '@imphnen-frontend-service/utils';
+import { useTeamById, useTeamMembers, useInviteMember, useTeamJoinRequests, useRespondToJoinRequest, ETeamMemberRole, useAuthStore } from '@imphnen-frontend-service/service';
 import { toast } from 'sonner';
 
 const MAX_TEAM_MEMBERS = 5;

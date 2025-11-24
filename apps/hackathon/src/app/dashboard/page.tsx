@@ -1,8 +1,7 @@
 import { FC, ReactElement } from 'react';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { Link, useNavigate } from 'react-router';
-import { useMyTeams, useMyInvitations, useRespondToInvitation, supabase } from '@imphnen-frontend-service/service';
-import { useAuthStore } from '@imphnen-frontend-service/utils';
+import { useMyTeams, useMyInvitations, useRespondToInvitation, supabase, useAuthStore } from '@imphnen-frontend-service/service';
 import { toast } from 'sonner';
 
 const DashboardPage: FC = (): ReactElement => {

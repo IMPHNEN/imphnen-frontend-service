@@ -3,9 +3,8 @@
 import React, { createContext, useContext, useMemo, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { useAuthStore } from '@imphnen-frontend-service/utils';
 import {
-
+  useAuthStore,
   useUserMe,
   useUserById,
   useUpdateUserMe,

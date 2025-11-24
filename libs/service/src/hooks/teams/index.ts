@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import * as teamsApi from '../../api/teams';
 import { supabase, getAuthenticatedClient } from '../../supabase';
-import { useAuthStore } from '@imphnen-frontend-service/utils';
+import { useAuthStore } from '../auth';
 import type {
   TCreateTeamRequest,
   TUpdateTeamRequest,

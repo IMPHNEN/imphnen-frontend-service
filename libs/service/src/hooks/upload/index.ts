@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { supabase, getAuthenticatedClient } from '../../supabase';
-import { useAuthStore } from '@imphnen-frontend-service/utils';
+import { useAuthStore } from '../auth';
 
 // Supabase Storage-based upload hooks
 

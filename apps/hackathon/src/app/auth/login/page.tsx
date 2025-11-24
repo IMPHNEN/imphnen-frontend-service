@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { useGitHubAuth, useEmailAuth, supabase } from '@imphnen-frontend-service/service';
+import { useGitHubAuth, useEmailAuth, supabase, useAuthStore } from '@imphnen-frontend-service/service';
 import { GithubOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router';
-import { useAuthStore } from '@imphnen-frontend-service/utils';
+import { useNavigate, Link } from 'react-router';
 import { toast } from 'sonner';
 
 export default function LoginPage() {
@@ -143,9 +142,14 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-              Password
-            </label>
+            <div className="flex items-center justify-between mb-1">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                Password
+              </label>
+              <Link to="/auth/forgot-password" className="text-sm text-primary-600 hover:text-primary-700">
+                Forgot password?
+              </Link>
+            </div>
             <input
               id="password"
               type="password"

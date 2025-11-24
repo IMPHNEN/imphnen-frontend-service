@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
-import { useAuthStore } from '@imphnen-frontend-service/utils';
+import { useAuthStore } from '@imphnen-frontend-service/service';
 
 export interface GoogleLoginResponse {
   access_token?: string;

@@ -37,12 +37,12 @@ export default function RootLayout() {
         console.error('[Layout] Session error:', error);
       }
 
-      // Public auth pages (login, signup) - allow unauthenticated access
-      const isPublicAuthPage = pathname === '/auth/login' || pathname === '/auth/signup';
+      // Public auth pages (login, signup, forgot-password, reset-password) - allow unauthenticated access
+      const isPublicAuthPage = pathname === '/auth/login' || pathname === '/auth/signup' || pathname === '/auth/forgot-password' || pathname === '/auth/reset-password';
 
       if (isPublicAuthPage) {
-        // If already authenticated, redirect to dashboard
-        if (session) {
+        // If already authenticated and not on password reset pages, redirect to dashboard
+        if (session && pathname !== '/auth/reset-password') {
           console.log('[Layout] Already authenticated, redirecting to dashboard');
           navigate('/dashboard', { replace: true });
           setIsChecking(false);

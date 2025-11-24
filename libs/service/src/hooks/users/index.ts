@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { userService } from '../../api/users';
 import { supabase, getAuthenticatedClient } from '../../supabase';
-import { useAuthStore } from '@imphnen-frontend-service/utils';
+import { useAuthStore } from '../auth';
 
 // Supabase-based user hooks
 

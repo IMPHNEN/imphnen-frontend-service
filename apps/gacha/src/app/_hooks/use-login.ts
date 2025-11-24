@@ -3,9 +3,9 @@ import {
   authLoginSchema,
   TLoginRequest,
   usePostLogin,
+  useAuthStore,
 } from '@imphnen-frontend-service/service';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useAuthStore } from '@imphnen-frontend-service/utils';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router';
 import { useVerifyEmail } from './use-verify-email';

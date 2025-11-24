@@ -1,7 +1,6 @@
 import { FC, ReactElement, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { useAuthStore } from '@imphnen-frontend-service/utils';
-import { useGoogleCallback } from '@imphnen-frontend-service/service';
+import { useGoogleCallback, useAuthStore } from '@imphnen-frontend-service/service';
 import { toast } from 'sonner';
 
 export const GoogleCallbackPage: FC = (): ReactElement => {

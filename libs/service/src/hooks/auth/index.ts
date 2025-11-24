@@ -1,5 +1,7 @@
 import { supabase } from '../../supabase';
 
+export * from './use-auth-store';
+
 // Supabase GitHub OAuth hook
 export const useGitHubAuth = () => {
   const signInWithGitHub = async () => {

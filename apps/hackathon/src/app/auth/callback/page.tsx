@@ -1,7 +1,6 @@
 import { FC, ReactElement, useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router';
-import { useAuthStore } from '@imphnen-frontend-service/utils';
-import { supabase } from '@imphnen-frontend-service/service';
+import { useAuthStore, supabase } from '@imphnen-frontend-service/service';
 import { toast } from 'sonner';
 
 const CallbackPage: FC = (): ReactElement => {

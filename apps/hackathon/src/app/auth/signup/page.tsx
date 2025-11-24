@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { useGitHubAuth, useEmailAuth, supabase } from '@imphnen-frontend-service/service';
+import { useGitHubAuth, useEmailAuth, supabase, useAuthStore } from '@imphnen-frontend-service/service';
 import { GithubOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router';
-import { useAuthStore } from '@imphnen-frontend-service/utils';
 import { toast } from 'sonner';
 
 export default function SignupPage() {

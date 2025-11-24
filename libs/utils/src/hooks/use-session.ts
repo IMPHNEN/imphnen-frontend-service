@@ -1,5 +1,4 @@
-import { supabase } from '@imphnen-frontend-service/service';
-import { useAuthStore } from './';
+import { supabase, useAuthStore } from '@imphnen-frontend-service/service';
 import { useNavigate } from 'react-router';
 
 export const useSession = () => {

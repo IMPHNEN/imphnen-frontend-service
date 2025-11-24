@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../../supabase';
-import { useAuthStore } from '@imphnen-frontend-service/utils';
+import { useAuthStore } from '../auth';
 import { useEffect } from 'react';
 
 export type Message = {

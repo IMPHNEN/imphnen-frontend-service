@@ -3,10 +3,8 @@ import { ControlledInputField } from '@imphnen-frontend-service/ui/organisms';
 import { Button, Textarea } from '@imphnen-frontend-service/ui/atoms';
 import { useNavigate } from 'react-router';
 import { useForm, Controller } from 'react-hook-form';
-import { userOnboardingSchema, TUserOnboardingForm, useUpdateUserMe, useUploadAvatar } from '@imphnen-frontend-service/service';
+import { userOnboardingSchema, TUserOnboardingForm, useUpdateUserMe, useUploadAvatar, useUserMe, useAuthStore } from '@imphnen-frontend-service/service';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useUserMe } from '@imphnen-frontend-service/service';
-import { useAuthStore } from '@imphnen-frontend-service/utils';
 
 const ROLE_OPTIONS = [
   'Frontend Developer',

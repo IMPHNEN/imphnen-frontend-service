@@ -11,8 +11,8 @@ import {
   ETeamMemberStatus,
   inviteMemberSchema,
   TInviteMemberForm,
+  useAuthStore,
 } from '@imphnen-frontend-service/service';
-import { useAuthStore } from '@imphnen-frontend-service/utils';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 

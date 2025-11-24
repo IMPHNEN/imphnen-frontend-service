@@ -10,8 +10,8 @@ import {
   useTeamById,
   useTeamSubmission,
   useUploadFile,
+  useAuthStore,
 } from '@imphnen-frontend-service/service';
-import { useAuthStore } from '@imphnen-frontend-service/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 const SubmitProjectPage: FC = (): ReactElement => {

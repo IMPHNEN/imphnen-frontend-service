@@ -1,8 +1,7 @@
 import { FC, ReactElement, useState, useRef, useEffect } from 'react';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { useNavigate, useParams } from 'react-router';
-import { useTeamById, useTeamMessages, useSendMessage, useDeleteMessage } from '@imphnen-frontend-service/service';
-import { useAuthStore } from '@imphnen-frontend-service/utils';
+import { useTeamById, useTeamMessages, useSendMessage, useDeleteMessage, useAuthStore } from '@imphnen-frontend-service/service';
 import { toast } from 'sonner';
 
 const TeamChatPage: FC = (): ReactElement => {
