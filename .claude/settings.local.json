@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npx nx run-many:*)"
+      "Bash(npx nx run-many:*)",
+      "Bash(npm install:*)",
+      "Bash(npm view:*)",
+      "Bash(npx nx build landing)"
     ],
     "deny": [],
     "ask": []
