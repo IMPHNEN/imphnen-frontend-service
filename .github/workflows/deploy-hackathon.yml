@@ -1,0 +1,35 @@
+name: Deploy Hackathon
+
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - 'apps/hackathon/**' # Auto deploy when changes pushed to apps/hackathon
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            set -e
+            if [ ! -d ~/imphnen-frontend-service-hackathon ]; then
+              git clone https://github.com/IMPHNEN/imphnen-frontend-service.git ~/imphnen-frontend-service-hackathon
+            else
+              cd ~/imphnen-frontend-service-hackathon && git pull
+            fi
+            echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" > ~/imphnen-frontend-service-hackathon/apps/hackathon/.env
+            docker compose -f ~/imphnen-frontend-service-hackathon/docker-compose-hackathon.yml down || true
+            docker compose -f ~/imphnen-frontend-service-hackathon/docker-compose-hackathon.yml build
+            docker compose -f ~/imphnen-frontend-service-hackathon/docker-compose-hackathon.yml up -d
+            docker image prune -af
