@@ -1,8 +1,9 @@
 FROM node:22-alpine AS builder
 WORKDIR /app
 
+COPY package.json package-lock.json ./
+RUN npm ci --prefer-offline --no-audit --no-fund
 COPY  . .
-RUN npm install
 RUN npm run landing:build
 
 FROM node:22-alpine AS runner
