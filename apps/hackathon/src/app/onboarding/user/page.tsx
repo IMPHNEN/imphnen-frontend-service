@@ -13,7 +13,7 @@ import {
 } from '@imphnen-frontend-service/service';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import INDONESIAN_CITIES from '../../../constants/cities';
+import { CitySelect } from '../../../components/city-select';
 
 const ROLE_OPTIONS = [
   'Frontend Developer',
@@ -172,24 +172,12 @@ const UserOnboardingPage: FC = (): ReactElement => {
               control={form.control}
               name="location"
               render={({ field, fieldState }) => (
-                <div>
-                  <select
-                    {...field}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  >
-                    <option value="">Select your city</option>
-                    {INDONESIAN_CITIES.map((city) => (
-                      <option key={city} value={city}>
-                        {city}
-                      </option>
-                    ))}
-                  </select>
-                  {fieldState.error && (
-                    <p className="text-sm text-red-500 mt-1">
-                      {fieldState.error.message}
-                    </p>
-                  )}
-                </div>
+                <CitySelect
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={fieldState.error?.message}
+                  placeholder="Search your city..."
+                />
               )}
             />
           </div>
