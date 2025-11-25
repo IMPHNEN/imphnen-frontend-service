@@ -28,7 +28,11 @@ jobs:
             else
               cd ~/imphnen-frontend-service-gacha && git fetch origin && git reset --hard origin/develop && git pull
             fi
-            echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" > ~/imphnen-frontend-service-gacha/apps/gacha/.env
+            cat > ~/imphnen-frontend-service-gacha/apps/gacha/.env << EOF
+            VITE_API_URL=${{ secrets.VITE_API_URL }}
+            VITE_SUPABASE_URL=${{ secrets.VITE_SUPABASE_URL }}
+            VITE_SUPABASE_ANON_KEY=${{ secrets.VITE_SUPABASE_ANON_KEY }}
+            EOF
             docker compose -f ~/imphnen-frontend-service-gacha/docker-compose-gacha.yml down || true
             docker compose -f ~/imphnen-frontend-service-gacha/docker-compose-gacha.yml build
             docker compose -f ~/imphnen-frontend-service-gacha/docker-compose-gacha.yml up -d

@@ -28,7 +28,11 @@ jobs:
             else
               cd ~/imphnen-frontend-service && git fetch origin && git reset --hard origin/develop && git pull
             fi
-            echo "NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}" > ~/imphnen-frontend-service/apps/landing/.env
+            cat > ~/imphnen-frontend-service/apps/landing/.env << EOF
+            NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
+            NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+            NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+            EOF
             docker compose -f ~/imphnen-frontend-service/docker-compose-landing.yml down || true
             docker compose -f ~/imphnen-frontend-service/docker-compose-landing.yml build
             docker compose -f ~/imphnen-frontend-service/docker-compose-landing.yml up -d
