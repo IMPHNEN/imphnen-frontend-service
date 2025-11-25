@@ -4,6 +4,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --prefer-offline --no-audit --no-fund
 COPY  . .
+ENV NX_DAEMON=false
 RUN npm run landing:build
 
 FROM node:22-alpine AS runner

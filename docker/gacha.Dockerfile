@@ -7,6 +7,7 @@ FROM node:22-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+ENV NX_DAEMON=false
 RUN npm run gacha:build
 
 FROM nginx:alpine AS runner

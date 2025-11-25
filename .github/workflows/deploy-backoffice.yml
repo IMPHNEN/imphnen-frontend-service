@@ -7,6 +7,10 @@ on:
     paths:
       - 'apps/backoffice/**' # INI BASED ON PATH CHANGES JADI NTAR KALAU ADA PUSH DIISNI OTOMATIS DEPLOY
 
+concurrency:
+  group: deploy-vps
+  cancel-in-progress: false
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -21,6 +25,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
+          command_timeout: 30m
           script: |
             set -e
             if [ ! -d ~/imphnen-frontend-service-backoffice ]; then
@@ -34,6 +39,6 @@ jobs:
             VITE_SUPABASE_ANON_KEY=${{ secrets.VITE_SUPABASE_ANON_KEY }}
             EOF
             docker compose -f ~/imphnen-frontend-service-backoffice/docker-compose-backoffice.yml down || true
-            docker compose -f ~/imphnen-frontend-service-backoffice/docker-compose-backoffice.yml build
+            DOCKER_BUILDKIT=1 docker compose -f ~/imphnen-frontend-service-backoffice/docker-compose-backoffice.yml build --progress=plain
             docker compose -f ~/imphnen-frontend-service-backoffice/docker-compose-backoffice.yml up -d
             docker image prune -af

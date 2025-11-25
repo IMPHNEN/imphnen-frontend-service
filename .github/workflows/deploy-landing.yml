@@ -7,6 +7,10 @@ on:
     paths:
       - 'apps/landing/**' # INI BASED ON PATH CHANGES JADI NTAR KALAU ADA PUSH DIISNI OTOMATIS DEPLOY
 
+concurrency:
+  group: deploy-vps
+  cancel-in-progress: false
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -21,6 +25,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
+          command_timeout: 30m
           script: |
             set -e
             if [ ! -d ~/imphnen-frontend-service ]; then
@@ -34,6 +39,6 @@ jobs:
             NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
             EOF
             docker compose -f ~/imphnen-frontend-service/docker-compose-landing.yml down || true
-            docker compose -f ~/imphnen-frontend-service/docker-compose-landing.yml build
+            DOCKER_BUILDKIT=1 docker compose -f ~/imphnen-frontend-service/docker-compose-landing.yml build --progress=plain
             docker compose -f ~/imphnen-frontend-service/docker-compose-landing.yml up -d
             docker image prune -af
