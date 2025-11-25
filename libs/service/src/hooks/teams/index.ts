@@ -372,6 +372,7 @@ export const useTeamJoinRequests = (teamId: string, enabled = true) => {
           user:users(id, email, fullname, avatar)
         `)
         .eq('team_id', teamId)
+        .eq('status', 'pending')
         .order('created_at', { ascending: false });
 
       if (error) {
