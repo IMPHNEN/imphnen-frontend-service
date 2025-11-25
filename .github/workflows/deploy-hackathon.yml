@@ -28,7 +28,7 @@ jobs:
             else
               cd ~/imphnen-frontend-service-hackathon && git fetch origin && git reset --hard origin/develop && git pull
             fi
-            cat > ~/imphnen-frontend-service-hackathon/apps/hackathon/.env << EOF
+            cat > ~/imphnen-frontend-service-hackathon/.env.local << EOF
             VITE_API_URL=${{ secrets.VITE_API_URL }}
             VITE_SUPABASE_URL=${{ secrets.VITE_SUPABASE_URL }}
             VITE_SUPABASE_ANON_KEY=${{ secrets.VITE_SUPABASE_ANON_KEY }}
