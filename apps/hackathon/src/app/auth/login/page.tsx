@@ -1,11 +1,17 @@
 import { useState } from 'react';
-import { useGitHubAuth, useEmailAuth, supabase, useAuthStore } from '@imphnen-frontend-service/service';
+import {
+  useGitHubAuth,
+  useEmailAuth,
+  supabase,
+  useAuthStore,
+} from '@imphnen-frontend-service/service';
 import { GithubOutlined } from '@ant-design/icons';
 import { useNavigate, Link } from 'react-router';
 import { toast } from 'sonner';
+import { Icon } from '@iconify/react';
 
 export default function LoginPage() {
-  console.log('[LoginPage] Rendering...');
+  // console.log('[LoginPage] Rendering...');
 
   const navigate = useNavigate();
   const { setSession } = useAuthStore();
@@ -28,10 +34,10 @@ export default function LoginPage() {
 
     try {
       setIsEmailLoading(true);
-      console.log('[Login] Attempting email login...');
+      // console.log('[Login] Attempting email login...');
 
       const result = await signInWithEmail(email, password);
-      console.log('[Login] Email login successful:', result);
+      // console.log('[Login] Email login successful:', result);
 
       // Get user data from database
       const { data: userData } = await supabase
@@ -49,7 +55,8 @@ export default function LoginPage() {
         user: {
           id: result.user.id,
           email: result.user.email || '',
-          fullname: userData?.fullname || result.user.user_metadata?.full_name || '',
+          fullname:
+            userData?.fullname || result.user.user_metadata?.full_name || '',
           phone_number: userData?.phone_number || '',
           avatar: userData?.avatar || '',
           birthdate: userData?.birthdate || '',
@@ -86,22 +93,22 @@ export default function LoginPage() {
   const handleGithubLogin = async () => {
     try {
       setIsGithubLoading(true);
-      console.log('[Login] Initiating GitHub OAuth...');
+      // console.log('[Login] Initiating GitHub OAuth...');
 
       const result = await signInWithGitHub();
-      console.log('[Login] OAuth result:', result);
+      // console.log('[Login] OAuth result:', result);
 
       // Check if we got a redirect URL
       if (result?.url) {
-        console.log('[Login] Redirecting to GitHub OAuth:', result.url);
+        // console.log('[Login] Redirecting to GitHub OAuth:', result.url);
         // Manually redirect immediately
         globalThis.location.href = result.url;
       } else {
-        console.error('[Login] No OAuth URL returned');
+        // console.error('[Login] No OAuth URL returned');
         setIsGithubLoading(false);
       }
     } catch (error) {
-      console.error('[Login] GitHub login failed:', error);
+      // console.error('[Login] GitHub login failed');
       setIsGithubLoading(false);
     }
   };
@@ -109,11 +116,19 @@ export default function LoginPage() {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-50 p-4">
       <div className="bg-white w-full max-w-md p-8 rounded-2xl shadow-lg border border-gray-200">
+        <button
+          onClick={() => navigate('/')}
+          className="cursor-pointer text-primary-500 hover:text-primary-600 text-base font-sans flex items-center mb-6"
+        >
+          <Icon icon="ic:baseline-chevron-left" width="24" height="24" />
+          Back to Homepage
+        </button>
+
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-gray-900 mb-2">
             Welcome Back
           </h2>
-          <p className="text-gray-600">
+          <p className="text-gray-600 font-sans">
             Sign in to join or create your hackathon team
           </p>
         </div>
@@ -126,7 +141,10 @@ export default function LoginPage() {
 
         <form onSubmit={handleEmailLogin} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Email
             </label>
             <input
@@ -143,10 +161,16 @@ export default function LoginPage() {
 
           <div>
             <div className="flex items-center justify-between mb-1">
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Password
               </label>
-              <Link to="/auth/forgot-password" className="text-sm text-primary-600 hover:text-primary-700">
+              <Link
+                to="/auth/forgot-password"
+                className="text-sm text-primary-600 hover:text-primary-700"
+              >
                 Forgot password?
               </Link>
             </div>
@@ -165,7 +189,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={isEmailLoading}
-            className="w-full py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+            className="w-full py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors cursor-pointer"
           >
             {isEmailLoading ? 'Signing in...' : 'Sign in with Email'}
           </button>
@@ -181,7 +205,7 @@ export default function LoginPage() {
           onClick={handleGithubLogin}
           disabled={isGithubLoading}
           type="button"
-          className="w-full py-3 flex items-center justify-center gap-2 bg-gray-100 border border-gray-300 rounded-lg font-semibold hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors"
+          className="w-full py-3 flex items-center justify-center gap-2 bg-gray-100 border border-gray-300 rounded-lg font-semibold hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors cursor-pointer"
         >
           <GithubOutlined className="text-xl" />
           <span>
@@ -192,7 +216,10 @@ export default function LoginPage() {
         <div className="mt-6 text-center">
           <p className="text-gray-600 text-sm">
             Don't have an account?{' '}
-            <a href="/auth/signup" className="text-primary-600 hover:text-primary-700 font-semibold">
+            <a
+              href="/auth/signup"
+              className="text-primary-600 hover:text-primary-700 font-semibold"
+            >
               Sign up
             </a>
           </p>

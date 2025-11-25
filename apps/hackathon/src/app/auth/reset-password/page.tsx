@@ -39,7 +39,7 @@ export default function ResetPasswordPage() {
       setIsLoading(true);
 
       const { error } = await supabase.auth.updateUser({
-        password: password
+        password: password,
       });
 
       if (error) {
@@ -52,7 +52,7 @@ export default function ResetPasswordPage() {
       await supabase.auth.signOut();
       navigate('/auth/login');
     } catch (err) {
-      console.error('Failed to reset password:', err);
+      // console.error('Failed to reset password:', err);
       toast.error((err as Error).message || 'Failed to reset password');
     } finally {
       setIsLoading(false);
@@ -77,14 +77,15 @@ export default function ResetPasswordPage() {
           <h2 className="text-3xl font-bold text-gray-900 mb-2">
             Set New Password
           </h2>
-          <p className="text-gray-600">
-            Enter your new password below
-          </p>
+          <p className="text-gray-600">Enter your new password below</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               New Password
             </label>
             <input
@@ -101,7 +102,10 @@ export default function ResetPasswordPage() {
           </div>
 
           <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="confirmPassword"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Confirm New Password
             </label>
             <input

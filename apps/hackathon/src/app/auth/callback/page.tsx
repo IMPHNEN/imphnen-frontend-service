@@ -13,62 +13,72 @@ const CallbackPage: FC = (): ReactElement => {
   useEffect(() => {
     const handleCallback = async () => {
       if (hasRunRef.current) {
-        console.log('[Callback] Already processed, skipping...');
+        // console.log('[Callback] Already processed, skipping...');
         return;
       }
       hasRunRef.current = true;
       try {
-        console.log('[Callback] Processing OAuth callback...');
-        console.log('[Callback] Current URL:', globalThis.location.href);
+        // console.log('[Callback] Processing OAuth callback...');
+        // console.log('[Callback] Current URL:', globalThis.location.href);
 
         // Supabase client is configured with detectSessionInUrl: true
         // This means Supabase automatically detects and processes OAuth tokens from the URL hash
         // We just need to wait a moment for it to complete, then check for the session
 
-        console.log('[Callback] Waiting for Supabase to process OAuth callback...');
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        // console.log('[Callback] Waiting for Supabase to process OAuth callback...');
+        await new Promise((resolve) => setTimeout(resolve, 1000));
 
         // Get the session that Supabase automatically created from the URL hash
-        const { data: { session: sessionData }, error: sessionError } = await supabase.auth.getSession();
+        const {
+          data: { session: sessionData },
+          error: sessionError,
+        } = await supabase.auth.getSession();
 
         if (sessionError) {
-          console.error('[Callback] Session error:', sessionError);
+          // console.error('[Callback] Session error:', sessionError);
           throw new Error(sessionError.message || 'Failed to get session');
         }
 
         if (!sessionData || !sessionData.user) {
-          throw new Error('No session found after OAuth callback. Please try logging in again.');
+          throw new Error(
+            'No session found after OAuth callback. Please try logging in again.'
+          );
         }
 
-        console.log('[Callback] Supabase session established:', {
-          userId: sessionData.user.id,
-          email: sessionData.user.email,
-        });
+        // console.log('[Callback] Supabase session established:', {
+        //   userId: sessionData.user.id,
+        //   email: sessionData.user.email,
+        // });
 
         // Create/update user in the users table (for foreign key constraints)
-        console.log('[Callback] Creating/updating user record...');
+        // console.log('[Callback] Creating/updating user record...');
         const { data: userData, error: upsertError } = await supabase
           .from('users')
-          .upsert({
-            id: sessionData.user.id,
-            email: sessionData.user.email || '',
-            fullname: sessionData.user.user_metadata?.full_name ||
-                     sessionData.user.user_metadata?.name ||
-                     sessionData.user.email?.split('@')[0] || '',
-            avatar: sessionData.user.user_metadata?.avatar_url || '',
-            is_active: true,
-            updated_at: new Date().toISOString(),
-          }, {
-            onConflict: 'id',
-          })
+          .upsert(
+            {
+              id: sessionData.user.id,
+              email: sessionData.user.email || '',
+              fullname:
+                sessionData.user.user_metadata?.full_name ||
+                sessionData.user.user_metadata?.name ||
+                sessionData.user.email?.split('@')[0] ||
+                '',
+              avatar: sessionData.user.user_metadata?.avatar_url || '',
+              is_active: true,
+              updated_at: new Date().toISOString(),
+            },
+            {
+              onConflict: 'id',
+            }
+          )
           .select()
           .single();
 
         if (upsertError) {
-          console.warn('[Callback] Failed to create user record:', upsertError);
+          // console.warn('[Callback] Failed to create user record:', upsertError);
           // Don't throw - continue with login even if user record creation fails
         } else {
-          console.log('[Callback] User record created/updated successfully');
+          // console.log('[Callback] User record created/updated successfully');
         }
 
         // Store user-friendly data in Zustand for UI purposes
@@ -77,9 +87,11 @@ const CallbackPage: FC = (): ReactElement => {
         const userRecord = userData || {
           id: sessionData.user.id,
           email: sessionData.user.email || '',
-          fullname: sessionData.user.user_metadata?.full_name ||
-                   sessionData.user.user_metadata?.name ||
-                   sessionData.user.email?.split('@')[0] || '',
+          fullname:
+            sessionData.user.user_metadata?.full_name ||
+            sessionData.user.user_metadata?.name ||
+            sessionData.user.email?.split('@')[0] ||
+            '',
           avatar: sessionData.user.user_metadata?.avatar_url || '',
           phone_number: '',
           birthdate: '',
@@ -114,21 +126,21 @@ const CallbackPage: FC = (): ReactElement => {
           },
         });
 
-        console.log('[Callback] Session stored successfully');
+        // console.log('[Callback] Session stored successfully');
         toast.success('Login successful!');
         setIsProcessing(false);
 
         // Check if user has completed onboarding (has location)
         // Use globalThis.location.replace for hard redirect to prevent history issues
         if (userRecord.location) {
-          console.log('[Callback] User has completed onboarding, redirecting to dashboard...');
+          // console.log('[Callback] User has completed onboarding, redirecting to dashboard...');
           globalThis.location.replace('/dashboard');
         } else {
-          console.log('[Callback] User needs onboarding, redirecting...');
+          // console.log('[Callback] User needs onboarding, redirecting...');
           globalThis.location.replace('/onboarding/user');
         }
       } catch (err) {
-        console.error('[Callback] Error:', err);
+        // console.error('[Callback] Error:', err);
         setError((err as Error).message);
         setIsProcessing(false);
         toast.error('An error occurred during login');
