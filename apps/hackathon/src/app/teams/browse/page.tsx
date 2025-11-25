@@ -119,15 +119,13 @@ const BrowseTeamsPage: FC = (): ReactElement => {
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {teams.map((team) => (
-              <div key={team.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-                {team.banner && (
-                  <img
-                    src={team.banner}
-                    alt={team.name}
-                    className="w-full h-32 object-cover"
-                  />
-                )}
-                <div className="p-6">
+              <div key={team.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow flex flex-col">
+                <img
+                  src={team.banner || '/images/banner-imphnen.png'}
+                  alt={team.name}
+                  className="w-full h-32 object-cover"
+                />
+                <div className="p-6 flex flex-col flex-1">
                   <div className="flex items-center space-x-3 mb-3">
                     {team.logo ? (
                       <img
@@ -151,7 +149,7 @@ const BrowseTeamsPage: FC = (): ReactElement => {
                   <p className="text-gray-600 text-sm mb-4 line-clamp-3">
                     {team.description}
                   </p>
-                  <div className="space-y-3">
+                  <div className="space-y-3 mt-auto">
                     {isMyTeam(team.id) ? (
                       <Button
                         className="w-full"
