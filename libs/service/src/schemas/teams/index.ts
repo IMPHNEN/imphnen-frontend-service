@@ -73,9 +73,15 @@ export const userOnboardingSchema = z.object({
   skills: z.array(z.string()).optional(),
 });
 
+export const userEditProfileSchema = z.object({
+  fullname: z.string().min(3, 'Nama lengkap minimal 3 karakter'),
+  avatar: z.string().url('Avatar harus berupa URL yang valid').nullable().optional(),
+});
+
 export type TTeamCreateForm = z.infer<typeof teamCreateSchema>;
 export type TTeamUpdateForm = z.infer<typeof teamUpdateSchema>;
 export type TInviteMemberForm = z.infer<typeof inviteMemberSchema>;
 export type TJoinTeamForm = z.infer<typeof joinTeamSchema>;
 export type TProjectSubmissionForm = z.infer<typeof projectSubmissionSchema>;
 export type TUserOnboardingForm = z.infer<typeof userOnboardingSchema>;
+export type TUserEditProfileForm = z.infer<typeof userEditProfileSchema>;
