@@ -26,7 +26,7 @@ jobs:
             if [ ! -d ~/imphnen-frontend-service ]; then
               git clone https://github.com/IMPHNEN/imphnen-frontend-service.git ~/imphnen-frontend-service
             else
-              cd ~/imphnen-frontend-service && git pull
+              cd ~/imphnen-frontend-service && git fetch origin && git reset --hard origin/develop && git pull
             fi
             echo "NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}" > ~/imphnen-frontend-service/apps/landing/.env
             docker compose -f ~/imphnen-frontend-service/docker-compose-landing.yml down || true

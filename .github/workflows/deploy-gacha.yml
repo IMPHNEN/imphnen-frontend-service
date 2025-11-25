@@ -26,7 +26,7 @@ jobs:
             if [ ! -d ~/imphnen-frontend-service-gacha ]; then
               git clone https://github.com/IMPHNEN/imphnen-frontend-service.git ~/imphnen-frontend-service-gacha
             else
-              cd ~/imphnen-frontend-service-gacha && git pull
+              cd ~/imphnen-frontend-service-gacha && git fetch origin && git reset --hard origin/develop && git pull
             fi
             echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" > ~/imphnen-frontend-service-gacha/apps/gacha/.env
             docker compose -f ~/imphnen-frontend-service-gacha/docker-compose-gacha.yml down || true

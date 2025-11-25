@@ -26,7 +26,7 @@ jobs:
             if [ ! -d ~/imphnen-frontend-service-backoffice ]; then
               git clone https://github.com/IMPHNEN/imphnen-frontend-service.git ~/imphnen-frontend-service-backoffice
             else
-              cd ~/imphnen-frontend-service-backoffice && git pull
+              cd ~/imphnen-frontend-service-backoffice && git fetch origin && git reset --hard origin/develop && git pull
             fi
             echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" > ~/imphnen-frontend-service-backoffice/apps/backoffice/.env
             docker compose -f ~/imphnen-frontend-service-backoffice/docker-compose-backoffice.yml down || true

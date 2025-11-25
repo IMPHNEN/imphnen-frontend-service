@@ -26,7 +26,7 @@ jobs:
             if [ ! -d ~/imphnen-frontend-service-hackathon ]; then
               git clone https://github.com/IMPHNEN/imphnen-frontend-service.git ~/imphnen-frontend-service-hackathon
             else
-              cd ~/imphnen-frontend-service-hackathon && git pull
+              cd ~/imphnen-frontend-service-hackathon && git fetch origin && git reset --hard origin/develop && git pull
             fi
             echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" > ~/imphnen-frontend-service-hackathon/apps/hackathon/.env
             docker compose -f ~/imphnen-frontend-service-hackathon/docker-compose-hackathon.yml down || true

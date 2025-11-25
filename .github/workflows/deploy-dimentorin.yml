@@ -26,7 +26,7 @@ jobs:
             if [ ! -d ~/imphnen-frontend-service-dimentorin ]; then
               git clone https://github.com/IMPHNEN/imphnen-frontend-service.git ~/imphnen-frontend-service-dimentorin
             else
-              cd ~/imphnen-frontend-service-dimentorin && git pull
+              cd ~/imphnen-frontend-service-dimentorin && git fetch origin && git reset --hard origin/develop && git pull
             fi
             echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" > ~/imphnen-frontend-service-dimentorin/apps/dimentorin/.env
             docker compose -f ~/imphnen-frontend-service-dimentorin/docker-compose-dimentorin.yml down || true
