@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { supabase } from '@imphnen-frontend-service/service';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { toast } from 'sonner';
+import { Icon } from '@iconify/react';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,7 +32,7 @@ export default function ForgotPasswordPage() {
       setEmailSent(true);
       toast.success('Password reset email sent! Check your inbox.');
     } catch (err) {
-      console.error('Failed to send reset email:', err);
+      // console.error('Failed to send reset email:', err);
       toast.error((err as Error).message || 'Failed to send reset email');
     } finally {
       setIsLoading(false);
@@ -55,7 +57,8 @@ export default function ForgotPasswordPage() {
 
           <div className="space-y-4">
             <p className="text-sm text-gray-600">
-              Click the link in the email to reset your password. The link will expire in 1 hour.
+              Click the link in the email to reset your password. The link will
+              expire in 1 hour.
             </p>
 
             <Link to="/auth/login">
@@ -90,7 +93,10 @@ export default function ForgotPasswordPage() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Email Address
             </label>
             <input
@@ -114,9 +120,13 @@ export default function ForgotPasswordPage() {
           </button>
         </form>
 
-        <div className="mt-6 text-center">
-          <Link to="/auth/login" className="text-primary-600 hover:text-primary-700 font-semibold">
-            ← Back to Login
+        <div className="mt-8">
+          <Link
+            to="/auth/login"
+            className="text-primary-500 hover:text-primary-600 flex items-center"
+          >
+            <Icon icon="ic:baseline-chevron-left" width="24" height="24" />
+            <span> Back to Login</span>
           </Link>
         </div>
       </div>

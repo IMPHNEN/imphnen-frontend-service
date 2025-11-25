@@ -1,8 +1,14 @@
 import { useState } from 'react';
-import { useGitHubAuth, useEmailAuth, supabase, useAuthStore } from '@imphnen-frontend-service/service';
+import {
+  useGitHubAuth,
+  useEmailAuth,
+  supabase,
+  useAuthStore,
+} from '@imphnen-frontend-service/service';
 import { GithubOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
+import { Icon } from '@iconify/react';
 
 export default function SignupPage() {
   const navigate = useNavigate();
@@ -38,30 +44,31 @@ export default function SignupPage() {
 
     try {
       setIsEmailLoading(true);
-      console.log('[Signup] Attempting email signup...');
+      // console.log('[Signup] Attempting email signup...');
 
       const result = await signUpWithEmail(email, password, fullname);
-      console.log('[Signup] Email signup successful:', result);
+      // console.log('[Signup] Email signup successful:', result);
 
       if (!result.user) {
         throw new Error('Signup failed - no user returned');
       }
 
       // Create user record in database
-      const { error: upsertError } = await supabase
-        .from('users')
-        .upsert({
+      const { error: upsertError } = await supabase.from('users').upsert(
+        {
           id: result.user.id,
           email: result.user.email || '',
           fullname: fullname,
           is_active: true,
           updated_at: new Date().toISOString(),
-        }, {
+        },
+        {
           onConflict: 'id',
-        });
+        }
+      );
 
       if (upsertError) {
-        console.warn('[Signup] Failed to create user record:', upsertError);
+        console.warn('[Signup] Failed to create user record');
       }
 
       // If session is available (email confirmation disabled), store it
@@ -94,13 +101,15 @@ export default function SignupPage() {
         navigate('/onboarding/user');
       } else {
         // Email confirmation is enabled
-        toast.success('Account created! Please check your email to verify your account.');
+        toast.success(
+          'Account created! Please check your email to verify your account.'
+        );
         setTimeout(() => {
           navigate('/auth/login');
         }, 2000);
       }
     } catch (err) {
-      console.error('[Signup] Email signup failed:', err);
+      // console.error('[Signup] Email signup failed:', err);
       setError((err as Error).message || 'Signup failed');
       setIsEmailLoading(false);
     }
@@ -109,20 +118,20 @@ export default function SignupPage() {
   const handleGithubLogin = async () => {
     try {
       setIsGithubLoading(true);
-      console.log('[Signup] Initiating GitHub OAuth...');
+      // console.log('[Signup] Initiating GitHub OAuth...');
 
       const result = await signInWithGitHub();
-      console.log('[Signup] OAuth result:', result);
+      // console.log('[Signup] OAuth result:', result);
 
       if (result?.url) {
-        console.log('[Signup] Redirecting to GitHub OAuth:', result.url);
+        // console.log('[Signup] Redirecting to GitHub OAuth:', result.url);
         globalThis.location.href = result.url;
       } else {
-        console.error('[Signup] No OAuth URL returned');
+        // console.error('[Signup] No OAuth URL returned');
         setIsGithubLoading(false);
       }
     } catch (error) {
-      console.error('[Signup] GitHub login failed:', error);
+      // console.error('[Signup] GitHub login failed:', error);
       setIsGithubLoading(false);
     }
   };
@@ -130,13 +139,19 @@ export default function SignupPage() {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-50 p-4">
       <div className="bg-white w-full max-w-md p-8 rounded-2xl shadow-lg border border-gray-200">
+        <button
+          onClick={() => navigate('/')}
+          className="cursor-pointer text-primary-500 hover:text-primary-600 text-base font-sans flex items-center mb-6"
+        >
+          <Icon icon="ic:baseline-chevron-left" width="24" height="24" />
+          Back to Homepage
+        </button>
+
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-gray-900 mb-2">
             Create Account
           </h2>
-          <p className="text-gray-600">
-            Join the hackathon community
-          </p>
+          <p className="text-gray-600">Join the hackathon community</p>
         </div>
 
         {error && (
@@ -147,7 +162,10 @@ export default function SignupPage() {
 
         <form onSubmit={handleEmailSignup} className="space-y-4">
           <div>
-            <label htmlFor="fullname" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="fullname"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Full Name
             </label>
             <input
@@ -163,7 +181,10 @@ export default function SignupPage() {
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Email
             </label>
             <input
@@ -179,7 +200,10 @@ export default function SignupPage() {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Password
             </label>
             <input
@@ -195,7 +219,10 @@ export default function SignupPage() {
           </div>
 
           <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="confirmPassword"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Confirm Password
             </label>
             <input
@@ -213,7 +240,7 @@ export default function SignupPage() {
           <button
             type="submit"
             disabled={isEmailLoading}
-            className="w-full py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+            className="w-full py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors cursor-pointer"
           >
             {isEmailLoading ? 'Creating account...' : 'Create Account'}
           </button>
@@ -229,7 +256,7 @@ export default function SignupPage() {
           onClick={handleGithubLogin}
           disabled={isGithubLoading}
           type="button"
-          className="w-full py-3 flex items-center justify-center gap-2 bg-gray-100 border border-gray-300 rounded-lg font-semibold hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors"
+          className="w-full py-3 flex items-center justify-center gap-2 bg-gray-100 border border-gray-300 rounded-lg font-semibold hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors cursor-pointer"
         >
           <GithubOutlined className="text-xl" />
           <span>
@@ -240,7 +267,10 @@ export default function SignupPage() {
         <div className="mt-6 text-center">
           <p className="text-gray-600 text-sm">
             Already have an account?{' '}
-            <a href="/auth/login" className="text-primary-600 hover:text-primary-700 font-semibold">
+            <a
+              href="/auth/login"
+              className="text-primary-600 hover:text-primary-700 font-semibold"
+            >
               Sign in
             </a>
           </p>
