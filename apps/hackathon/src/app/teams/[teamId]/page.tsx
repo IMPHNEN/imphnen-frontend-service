@@ -1,10 +1,37 @@
-import { FC, ReactElement, useState } from 'react';
+import { FC, ReactElement, useState, useEffect } from 'react';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { Link, useParams, useNavigate } from 'react-router';
 import { useTeamById, useTeamMembers, useInviteMember, useTeamJoinRequests, useRespondToJoinRequest, ETeamMemberRole, useAuthStore } from '@imphnen-frontend-service/service';
 import { toast } from 'sonner';
 
 const MAX_TEAM_MEMBERS = 5;
+
+// Image component with loading state
+const ImageWithLoader: FC<{
+  src: string;
+  alt: string;
+  className?: string;
+  onLoad?: () => void;
+}> = ({ src, alt, className, onLoad }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  return (
+    <div className="relative">
+      {!isLoaded && (
+        <div className={`absolute inset-0 bg-gray-200 animate-pulse ${className}`} />
+      )}
+      <img
+        src={src}
+        alt={alt}
+        className={`${className} ${isLoaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}
+        onLoad={() => {
+          setIsLoaded(true);
+          onLoad?.();
+        }}
+      />
+    </div>
+  );
+};
 
 const TeamDashboardPage: FC = (): ReactElement => {
   const { teamId } = useParams<{ teamId: string }>();
@@ -13,6 +40,8 @@ const TeamDashboardPage: FC = (): ReactElement => {
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [showJoinRequestsModal, setShowJoinRequestsModal] = useState(false);
   const [inviteEmail, setInviteEmail] = useState('');
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [imageLoadCount, setImageLoadCount] = useState(0);
 
   const { data: teamData, isLoading: isLoadingTeam } = useTeamById(teamId || '');
   const { data: membersData, isLoading: isLoadingMembers } = useTeamMembers(teamId || '');
@@ -28,6 +57,41 @@ const TeamDashboardPage: FC = (): ReactElement => {
 
   const isLeader = currentUserId === team?.leader_id;
   const canInvite = isLeader && members.length < MAX_TEAM_MEMBERS;
+
+  // Calculate total images to load
+  const totalImagesToLoad = (team?.banner ? 1 : 0) +
+    (team?.logo ? 1 : 0) +
+    members.filter((m: any) => m.user?.avatar).length;
+
+  // Track image loading with timeout fallback
+  useEffect(() => {
+    if (!isLoadingTeam && !isLoadingMembers && team) {
+      if (totalImagesToLoad === 0) {
+        setImagesLoaded(true);
+      } else if (imageLoadCount >= totalImagesToLoad) {
+        setImagesLoaded(true);
+      }
+    }
+  }, [isLoadingTeam, isLoadingMembers, team, imageLoadCount, totalImagesToLoad]);
+
+  // Fallback timeout - if images take too long, show content anyway
+  useEffect(() => {
+    if (!isLoadingTeam && !isLoadingMembers && team && !imagesLoaded) {
+      const timeout = setTimeout(() => {
+        setImagesLoaded(true);
+      }, 3000); // 3 second timeout
+      return () => clearTimeout(timeout);
+    }
+  }, [isLoadingTeam, isLoadingMembers, team, imagesLoaded]);
+
+  const handleImageLoad = () => {
+    setImageLoadCount((prev) => prev + 1);
+  };
+
+  // Also count error as loaded to prevent stuck
+  const handleImageError = () => {
+    setImageLoadCount((prev) => prev + 1);
+  };
 
   console.log('Leader check:', { currentUserId, leaderId: team?.leader_id, isLeader });
 
@@ -58,8 +122,65 @@ const TeamDashboardPage: FC = (): ReactElement => {
 
   if (isLoadingTeam || isLoadingMembers) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-gray-600">Loading team...</div>
+      <div className="min-h-screen bg-gray-50">
+        {/* Skeleton Header */}
+        <div className="bg-white border-b">
+          <div className="w-full h-48 bg-gray-200 animate-pulse" />
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div className="flex items-start justify-between">
+              <div className="flex items-center space-x-4">
+                <div className="w-20 h-20 rounded-full bg-gray-300 animate-pulse -mt-10" />
+                <div>
+                  <div className="h-8 w-48 bg-gray-300 rounded animate-pulse" />
+                  <div className="h-4 w-32 bg-gray-200 rounded animate-pulse mt-2" />
+                  <div className="h-4 w-24 bg-gray-200 rounded animate-pulse mt-2" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="grid gap-6 lg:grid-cols-3">
+            {/* Main Content Skeleton */}
+            <div className="lg:col-span-2 space-y-6">
+              <div className="bg-white rounded-lg shadow-md p-6">
+                <div className="h-6 w-32 bg-gray-300 rounded animate-pulse mb-4" />
+                <div className="space-y-2">
+                  <div className="h-4 w-full bg-gray-200 rounded animate-pulse" />
+                  <div className="h-4 w-3/4 bg-gray-200 rounded animate-pulse" />
+                  <div className="h-4 w-5/6 bg-gray-200 rounded animate-pulse" />
+                </div>
+              </div>
+            </div>
+
+            {/* Sidebar Skeleton */}
+            <div className="space-y-6">
+              <div className="bg-white rounded-lg shadow-md p-6">
+                <div className="h-6 w-40 bg-gray-300 rounded animate-pulse mb-4" />
+                <div className="space-y-4">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="flex items-center space-x-3">
+                      <div className="w-12 h-12 rounded-full bg-gray-300 animate-pulse" />
+                      <div>
+                        <div className="h-4 w-24 bg-gray-300 rounded animate-pulse" />
+                        <div className="h-3 w-16 bg-gray-200 rounded animate-pulse mt-1" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Loading Overlay */}
+        <div className="fixed inset-0 bg-white/60 flex items-center justify-center z-50">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent"></div>
+            <p className="mt-4 text-gray-600 font-medium">Loading team data...</p>
+          </div>
+        </div>
       </div>
     );
   }
@@ -74,15 +195,29 @@ const TeamDashboardPage: FC = (): ReactElement => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 relative">
+      {/* Loading overlay while images are loading */}
+      {!imagesLoaded && totalImagesToLoad > 0 && (
+        <div className="fixed inset-0 bg-white/80 flex items-center justify-center z-50">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent"></div>
+            <p className="mt-4 text-gray-600 font-medium">Loading images...</p>
+            <p className="text-sm text-gray-400 mt-1">{imageLoadCount} / {totalImagesToLoad}</p>
+          </div>
+        </div>
+      )}
+
       {/* Header with Banner */}
       <div className="bg-white border-b">
         {team.banner && (
-          <div className="w-full h-48 overflow-hidden">
+          <div className="w-full h-48 overflow-hidden relative">
+            <div className={`absolute inset-0 bg-gray-200 animate-pulse ${imagesLoaded ? 'hidden' : ''}`} />
             <img
               src={team.banner}
               alt={team.name}
-              className="w-full h-full object-cover"
+              className={`w-full h-full object-cover transition-opacity duration-300 ${imagesLoaded ? 'opacity-100' : 'opacity-0'}`}
+              onLoad={handleImageLoad}
+              onError={handleImageError}
             />
           </div>
         )}
@@ -90,11 +225,18 @@ const TeamDashboardPage: FC = (): ReactElement => {
           <div className="flex items-start justify-between">
             <div className="flex items-center space-x-4">
               {team.logo && (
-                <img
-                  src={team.logo}
-                  alt={team.name}
-                  className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-lg -mt-10"
-                />
+                <div className="relative">
+                  {!imagesLoaded && (
+                    <div className="absolute inset-0 w-20 h-20 rounded-full bg-gray-300 animate-pulse -mt-10" />
+                  )}
+                  <img
+                    src={team.logo}
+                    alt={team.name}
+                    className={`w-20 h-20 rounded-full object-cover border-4 border-white shadow-lg -mt-10 transition-opacity duration-300 ${imagesLoaded ? 'opacity-100' : 'opacity-0'}`}
+                    onLoad={handleImageLoad}
+                    onError={handleImageError}
+                  />
+                </div>
               )}
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">{team.name}</h1>
@@ -259,13 +401,15 @@ const TeamDashboardPage: FC = (): ReactElement => {
                 Members ({members.length})
               </h3>
               <div className="space-y-3">
-                {members.map((member) => (
+                {members.map((member: any) => (
                   <div key={member.id} className="flex items-center space-x-3">
-                    {member.user.avatar ? (
+                    {member.user?.avatar ? (
                       <img
                         src={member.user.avatar}
-                        alt={member.user.fullname}
+                        alt={member.user.fullname || 'Member'}
                         className="w-10 h-10 rounded-full object-cover"
+                        onLoad={handleImageLoad}
+                        onError={handleImageError}
                       />
                     ) : (
                       <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
@@ -274,7 +418,7 @@ const TeamDashboardPage: FC = (): ReactElement => {
                     )}
                     <div className="flex-1 min-w-0">
                       <p className="font-medium text-gray-900 truncate">
-                        {member.user.fullname}
+                        {member.user?.fullname || 'Unknown'}
                       </p>
                       <p className="text-xs text-gray-500">
                         {member.role === ETeamMemberRole.LEADER ? 'Leader' : 'Member'}
