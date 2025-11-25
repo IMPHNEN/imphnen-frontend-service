@@ -1,6 +1,40 @@
 import { supabase } from '../../supabase';
+import { useMutation } from '@tanstack/react-query';
+import * as authApi from '../../api/auth';
 
 export * from './use-auth-store';
+
+// React Query hooks for auth API
+export const usePostLogin = () => {
+  return useMutation({
+    mutationFn: authApi.postLogin,
+  });
+};
+
+export const usePostRegister = () => {
+  return useMutation({
+    mutationFn: authApi.postRegister,
+  });
+};
+
+export const usePostVerifyEmail = () => {
+  return useMutation({
+    mutationFn: authApi.postVerifyEmail,
+  });
+};
+
+export const usePostSendOtp = () => {
+  return useMutation({
+    mutationFn: authApi.postSendOtp,
+  });
+};
+
+export const useGoogleCallback = () => {
+  return useMutation({
+    mutationFn: ({ code, state }: { code: string; state: string }) =>
+      authApi.postGoogleCallback(code, state),
+  });
+};
 
 // Supabase GitHub OAuth hook
 export const useGitHubAuth = () => {
