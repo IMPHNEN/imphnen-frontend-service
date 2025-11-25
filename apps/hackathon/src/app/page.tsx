@@ -2,11 +2,47 @@ import { useNavigate } from 'react-router';
 import { useState } from 'react';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { Icon } from '@iconify/react';
+import { Helmet } from '@imphnen-frontend-service/utils';
 
 export default function HomePage() {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Hackathon',
+    name: 'IMPHNEN x Kolosal.ai Hackathon 2025',
+    description:
+      'Inovasi AI: Mendorong Usaha Lokal dengan AI Inklusif. Kompetisi pengembangan teknologi untuk menciptakan solusi inovatif yang menghadirkan dampak nyata.',
+    startDate: '2025-11-30',
+    endDate: '2025-12-15',
+    eventAttendanceMode: 'https://schema.org/OnlineEventAttendanceMode',
+    eventStatus: 'https://schema.org/EventScheduled',
+    location: {
+      '@type': 'VirtualLocation',
+      url: 'https://hackathon.imphnen.dev',
+    },
+    image: ['https://hackathon.imphnen.dev/images/imphnen-logo.svg'],
+    organizer: {
+      '@type': 'Organization',
+      name: 'IMPHNEN',
+      url: 'https://imphnen.dev',
+    },
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'IDR',
+      availability: 'https://schema.org/InStock',
+      validFrom: '2025-10-01',
+      url: 'https://hackathon.imphnen.dev/auth/signup',
+    },
+    sponsor: {
+      '@type': 'Organization',
+      name: 'Kolosal.ai',
+      url: 'https://kolosal.ai',
+    },
+  };
 
   const faqs = [
     {
@@ -63,6 +99,43 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-white">
+      <Helmet>
+        <title>IMPHNEN x Kolosal.ai Hackathon 2025</title>
+        <meta
+          name="description"
+          content="Ikuti IMPHNEN x Kolosal.ai Hackathon 2025! Kompetisi coding online gratis dengan total hadiah Rp14.500.000. Tema: Inovasi AI: Mendorong Usaha Lokal dengan AI Inklusif."
+        />
+        <meta
+          name="keywords"
+          content="hackathon, lomba coding, kompetisi it, imphnen, kolosal.ai, ai hackathon, lomba programming 2025"
+        />
+
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://hackathon.imphnen.dev/" />
+        <meta
+          property="og:title"
+          content="IMPHNEN x Kolosal.ai Hackathon 2025"
+        />
+        <meta
+          property="og:description"
+          content="Total hadiah Rp14.500.000! Daftar sekarang dan wujudkan inovasi AI-mu untuk membantu usaha lokal."
+        />
+
+        {/* Twitter */}
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content="https://hackathon.imphnen.dev/" />
+        <meta
+          property="twitter:title"
+          content="IMPHNEN x Kolosal.ai Hackathon 2025"
+        />
+        <meta
+          property="twitter:description"
+          content="Total hadiah Rp14.500.000! Daftar sekarang dan wujudkan inovasi AI-mu untuk membantu usaha lokal."
+        />
+
+        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+      </Helmet>
       {/* Navigation */}
       <nav className="flex items-center justify-between px-4 md:px-8 py-4 border-b border-gray-200 bg-white sticky top-0 z-50 max-w-7xl mx-auto">
         <div className="flex items-center gap-2">
