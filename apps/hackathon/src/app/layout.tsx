@@ -54,15 +54,9 @@ export default function RootLayout() {
         return;
       }
 
-      // Home page - redirect based on auth status
+      // Home page - allow everyone to view the landing page
       if (pathname === '/') {
-        if (session) {
-          console.log('[Layout] Already authenticated, redirecting to dashboard');
-          navigate('/dashboard', { replace: true });
-        } else {
-          console.log('[Layout] Not authenticated, redirecting to login');
-          navigate('/auth/login', { replace: true });
-        }
+        console.log('[Layout] Landing page, allowing access');
         setIsChecking(false);
         return;
       }

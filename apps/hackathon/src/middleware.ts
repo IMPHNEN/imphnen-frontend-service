@@ -53,9 +53,8 @@ export const middleware = async ({ request }: LoaderFunctionArgs) => {
     return null;
   }
 
-  // Public routes - redirect to dashboard if already authenticated
+  // Public routes - allow everyone to view the landing page
   if (mappingPublicRoutes.includes(pathname)) {
-    if (supabaseSession) return redirect('/dashboard');
     return null;
   }
 
