@@ -5,12 +5,7 @@ import { useNavigate } from 'react-router';
 import { useForm, Controller } from 'react-hook-form';
 import { teamCreateSchema, TTeamCreateForm, useCreateTeam, ETeamVisibility, useUploadFile } from '@imphnen-frontend-service/service';
 import { zodResolver } from '@hookform/resolvers/zod';
-
-const INDONESIAN_CITIES = [
-  'Jakarta', 'Surabaya', 'Bandung', 'Medan', 'Semarang',
-  'Makassar', 'Palembang', 'Tangerang', 'Depok', 'Bekasi',
-  'Yogyakarta', 'Malang', 'Bogor', 'Batam', 'Pekanbaru',
-];
+import INDONESIAN_CITIES from '../../../constants/cities';
 
 const CreateTeamPage: FC = (): ReactElement => {
   const navigate = useNavigate();

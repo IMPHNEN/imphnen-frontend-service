@@ -3,8 +3,17 @@ import { ControlledInputField } from '@imphnen-frontend-service/ui/organisms';
 import { Button, Textarea } from '@imphnen-frontend-service/ui/atoms';
 import { useNavigate } from 'react-router';
 import { useForm, Controller } from 'react-hook-form';
-import { userOnboardingSchema, TUserOnboardingForm, useUpdateUserMe, useUploadAvatar, useUserMe, useAuthStore } from '@imphnen-frontend-service/service';
+import {
+  userOnboardingSchema,
+  TUserOnboardingForm,
+  useUpdateUserMe,
+  useUploadAvatar,
+  useUserMe,
+  useAuthStore,
+} from '@imphnen-frontend-service/service';
 import { zodResolver } from '@hookform/resolvers/zod';
+
+import INDONESIAN_CITIES from '../../../constants/cities';
 
 const ROLE_OPTIONS = [
   'Frontend Developer',
@@ -17,12 +26,6 @@ const ROLE_OPTIONS = [
   'Mobile Developer',
 ];
 
-const INDONESIAN_CITIES = [
-  'Jakarta', 'Surabaya', 'Bandung', 'Medan', 'Semarang',
-  'Makassar', 'Palembang', 'Tangerang', 'Depok', 'Bekasi',
-  'Yogyakarta', 'Malang', 'Bogor', 'Batam', 'Pekanbaru',
-];
-
 const UserOnboardingPage: FC = (): ReactElement => {
   const navigate = useNavigate();
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
@@ -30,7 +33,8 @@ const UserOnboardingPage: FC = (): ReactElement => {
 
   const { data: userData } = useUserMe();
   const { mutateAsync: updateUser, isPending: isUpdating } = useUpdateUserMe();
-  const { mutateAsync: uploadAvatar, isPending: isUploading } = useUploadAvatar();
+  const { mutateAsync: uploadAvatar, isPending: isUploading } =
+    useUploadAvatar();
   const { session } = useAuthStore();
 
   const form = useForm<TUserOnboardingForm>({
@@ -89,14 +93,18 @@ const UserOnboardingPage: FC = (): ReactElement => {
 
       // Wait a bit for the onSuccess handler to update localStorage
       // The updateUser mutation's onSuccess handler updates the Zustand store and localStorage
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
       console.log('[Onboarding] Navigating to dashboard...');
       // Use window.location for a full page reload to ensure middleware sees updated localStorage
       globalThis.location.href = '/dashboard';
     } catch (error) {
       console.error('[Onboarding] Onboarding failed:', error);
-      alert(`Onboarding failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      alert(
+        `Onboarding failed: ${
+          error instanceof Error ? error.message : 'Unknown error'
+        }`
+      );
     }
   });
 
@@ -141,7 +149,9 @@ const UserOnboardingPage: FC = (): ReactElement => {
                   onChange={handleAvatarChange}
                 />
               </label>
-              <p className="text-xs text-gray-500 mt-2 text-center">Optional, but highly recommended</p>
+              <p className="text-xs text-gray-500 mt-2 text-center">
+                Optional, but highly recommended
+              </p>
             </div>
           </div>
 
@@ -175,7 +185,9 @@ const UserOnboardingPage: FC = (): ReactElement => {
                     ))}
                   </select>
                   {fieldState.error && (
-                    <p className="text-sm text-red-500 mt-1">{fieldState.error.message}</p>
+                    <p className="text-sm text-red-500 mt-1">
+                      {fieldState.error.message}
+                    </p>
                   )}
                 </div>
               )}
@@ -194,7 +206,10 @@ const UserOnboardingPage: FC = (): ReactElement => {
                 <div className="space-y-2">
                   <div className="grid grid-cols-2 gap-2">
                     {ROLE_OPTIONS.map((role) => (
-                      <label key={role} className="flex items-center space-x-2 cursor-pointer">
+                      <label
+                        key={role}
+                        className="flex items-center space-x-2 cursor-pointer"
+                      >
                         <input
                           type="checkbox"
                           checked={field.value?.includes(role)}
@@ -232,7 +247,9 @@ const UserOnboardingPage: FC = (): ReactElement => {
                     className="w-full"
                   />
                   {fieldState.error && (
-                    <p className="text-sm text-red-500 mt-1">{fieldState.error.message}</p>
+                    <p className="text-sm text-red-500 mt-1">
+                      {fieldState.error.message}
+                    </p>
                   )}
                 </div>
               )}
