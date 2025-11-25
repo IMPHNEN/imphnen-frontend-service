@@ -233,7 +233,10 @@ const TeamDashboardPage: FC = (): ReactElement => {
             <div className="bg-white rounded-lg shadow-md p-6">
               <h3 className="font-bold text-gray-900 mb-4">Team Leader</h3>
               {team.leader && (
-                <div className="flex items-center space-x-3">
+                <button
+                  onClick={() => navigate(`/users/${team.leader.id}`)}
+                  className="w-full flex items-center space-x-3 hover:bg-gray-100 rounded-lg p-2 transition-colors text-left cursor-pointer"
+                >
                   {team.leader.avatar ? (
                     <img
                       src={team.leader.avatar}
@@ -249,7 +252,7 @@ const TeamDashboardPage: FC = (): ReactElement => {
                     <p className="font-medium text-gray-900">{team.leader.fullname}</p>
                     <p className="text-sm text-gray-600">{team.leader.email}</p>
                   </div>
-                </div>
+                </button>
               )}
             </div>
 
@@ -260,7 +263,11 @@ const TeamDashboardPage: FC = (): ReactElement => {
               </h3>
               <div className="space-y-3">
                 {members.map((member) => (
-                  <div key={member.id} className="flex items-center space-x-3">
+                  <button
+                    key={member.id}
+                    onClick={() => navigate(`/users/${member.user.id}`)}
+                    className="w-full flex items-center space-x-3 hover:bg-gray-100 rounded-lg p-2 transition-colors text-left cursor-pointer"
+                  >
                     {member.user.avatar ? (
                       <img
                         src={member.user.avatar}
@@ -280,7 +287,7 @@ const TeamDashboardPage: FC = (): ReactElement => {
                         {member.role === ETeamMemberRole.LEADER ? 'Leader' : 'Member'}
                       </p>
                     </div>
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>
