@@ -7,7 +7,6 @@ import {
   convertPagesToRoute,
   ModalLoginProvider,
   QueryProvider,
-  HelmetProvider,
 } from '@imphnen-frontend-service/utils';
 import { Toaster } from 'sonner';
 import './index.css';
@@ -37,13 +36,11 @@ if (!rootElement) throw new Error('Failed to find the root element');
 
 createRoot(rootElement).render(
   <StrictMode>
-    <HelmetProvider>
-      <QueryProvider>
-        <ModalLoginProvider>
-          <Toaster position="top-right" />
-          <RouterProvider router={router} />
-        </ModalLoginProvider>
-      </QueryProvider>
-    </HelmetProvider>
+    <QueryProvider>
+      <ModalLoginProvider>
+        <Toaster position="top-right" />
+        <RouterProvider router={router} />
+      </ModalLoginProvider>
+    </QueryProvider>
   </StrictMode>
 );
