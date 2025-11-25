@@ -1,9 +1,4 @@
-export type TPermissionItem = {
-  id: string;
-  name: string;
-  created_at: string;
-  updated_at: string;
-};
+import type { TPermissionItem } from '../types/permissions';
 
 type TRoleItem = {
   id: string;
