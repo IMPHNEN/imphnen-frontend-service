@@ -39,6 +39,6 @@ jobs:
             VITE_SUPABASE_ANON_KEY=${{ secrets.VITE_SUPABASE_ANON_KEY }}
             EOF
             docker compose -f ~/imphnen-frontend-service-dimentorin/docker-compose-dimentorin.yml down || true
-            docker compose -f ~/imphnen-frontend-service-dimentorin/docker-compose-dimentorin.yml build
+            DOCKER_BUILDKIT=1 docker compose -f ~/imphnen-frontend-service-dimentorin/docker-compose-dimentorin.yml build --progress=plain
             docker compose -f ~/imphnen-frontend-service-dimentorin/docker-compose-dimentorin.yml up -d
             docker image prune -af

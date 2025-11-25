@@ -39,6 +39,6 @@ jobs:
             NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
             EOF
             docker compose -f ~/imphnen-frontend-service/docker-compose-landing.yml down || true
-            docker compose -f ~/imphnen-frontend-service/docker-compose-landing.yml build
+            DOCKER_BUILDKIT=1 docker compose -f ~/imphnen-frontend-service/docker-compose-landing.yml build --progress=plain
             docker compose -f ~/imphnen-frontend-service/docker-compose-landing.yml up -d
             docker image prune -af

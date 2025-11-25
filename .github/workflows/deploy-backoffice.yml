@@ -39,6 +39,6 @@ jobs:
             VITE_SUPABASE_ANON_KEY=${{ secrets.VITE_SUPABASE_ANON_KEY }}
             EOF
             docker compose -f ~/imphnen-frontend-service-backoffice/docker-compose-backoffice.yml down || true
-            docker compose -f ~/imphnen-frontend-service-backoffice/docker-compose-backoffice.yml build
+            DOCKER_BUILDKIT=1 docker compose -f ~/imphnen-frontend-service-backoffice/docker-compose-backoffice.yml build --progress=plain
             docker compose -f ~/imphnen-frontend-service-backoffice/docker-compose-backoffice.yml up -d
             docker image prune -af
