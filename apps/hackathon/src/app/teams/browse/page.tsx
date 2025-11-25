@@ -160,12 +160,14 @@ const BrowseTeamsPage: FC = (): ReactElement => {
                       </Button>
                     ) : (
                       <>
-                        <Button
-                          className="w-full"
-                          onClick={() => handleJoinRequest(team.id)}
-                        >
-                          Request to Join
-                        </Button>
+                        {(team.members?.length || 0) < 5 && (
+                          <Button
+                            className="w-full"
+                            onClick={() => handleJoinRequest(team.id)}
+                          >
+                            Request to Join
+                          </Button>
+                        )}
                         <Button
                           className="w-full"
                           variant="secondary"
