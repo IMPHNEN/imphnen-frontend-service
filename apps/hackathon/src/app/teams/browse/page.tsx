@@ -142,28 +142,42 @@ const BrowseTeamsPage: FC = (): ReactElement => {
                     )}
                     <div className="flex-1">
                       <h3 className="text-lg font-bold text-gray-900">{team.name}</h3>
-                      <p className="text-sm text-gray-600">📍 {team.city}</p>
+                      <p className="text-sm text-gray-600">
+                        <span>📍 {team.city}</span>
+                        <span> 👥 {team.members?.length || 0} members</span>
+                      </p>
                     </div>
                   </div>
                   <p className="text-gray-600 text-sm mb-4 line-clamp-3">
                     {team.description}
                   </p>
-                  {isMyTeam(team.id) ? (
-                    <Button
-                      className="w-full"
-                      variant="secondary"
-                      onClick={() => navigate(`/teams/${team.id}`)}
-                    >
-                      Your Team
-                    </Button>
-                  ) : (
-                    <Button
-                      className="w-full"
-                      onClick={() => handleJoinRequest(team.id)}
-                    >
-                      Request to Join
-                    </Button>
-                  )}
+                  <div className="space-y-3">
+                    {isMyTeam(team.id) ? (
+                      <Button
+                        className="w-full"
+                        variant="secondary"
+                        onClick={() => navigate(`/teams/${team.id}`)}
+                      >
+                        Your Team
+                      </Button>
+                    ) : (
+                      <>
+                        <Button
+                          className="w-full"
+                          onClick={() => handleJoinRequest(team.id)}
+                        >
+                          Request to Join
+                        </Button>
+                        <Button
+                          className="w-full"
+                          variant="secondary"
+                          onClick={() => navigate(`/teams/${team.id}`)}
+                        >
+                          View Team
+                        </Button>
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}

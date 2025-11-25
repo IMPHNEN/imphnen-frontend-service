@@ -37,7 +37,10 @@ export const useTeams = (params?: {
     queryFn: async () => {
       try {
         // Supabase client now has auth context from setSession()
-        let query = supabase.from('teams').select('*');
+        let query = supabase.from('teams').select(`
+          *,
+          members:team_members(id)
+        `);
 
         // Filter by visibility
         if (params?.visibility) {
