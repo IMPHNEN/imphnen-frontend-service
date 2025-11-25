@@ -161,7 +161,7 @@ const BrowseTeamsPage: FC = (): ReactElement => {
                       </Button>
                     ) : (
                       <>
-                        {(team.members?.length || 0) < 5 && (
+                        {myTeams.length === 0 && (team.members?.length || 0) < 5 && (
                           <Button
                             className="w-full"
                             onClick={() => handleJoinRequest(team.id)}
