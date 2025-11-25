@@ -1,18 +1,10 @@
 import { lazy, LazyExoticComponent, ReactNode } from 'react';
 import { ActionFunction, LoaderFunction, RouteObject } from 'react-router';
 
-type TPermissionItem = {
-  id: string;
-  name: string;
-  created_at: string;
-  updated_at: string;
-};
-
 interface PageModuleExports {
   default: () => ReactNode;
   loader?: LoaderFunction;
   action?: ActionFunction;
-  permissions?: Array<string>;
 }
 
 interface LoadingModuleExports {
@@ -58,18 +50,8 @@ export function convertPagesToRoute(
         return 'loader' in result ? result.loader?.(args) : null;
       },
       async guard() {
-        const result = (await importer()) as PageModuleExports;
-        const localStoragePermission = localStorage.getItem('permissions');
-        const permissions: TPermissionItem[] | undefined =
-          localStoragePermission
-            ? JSON.parse(localStoragePermission)
-            : undefined;
-        return 'permissions' in result
-          ? result.permissions?.every(
-              (permission) =>
-                permissions?.some((item) => permission === item.name) || false
-            ) || false
-          : true;
+        // Permission checking removed - always allow access
+        return true;
       },
     });
     routes = mergeRoutes(routes, route);
