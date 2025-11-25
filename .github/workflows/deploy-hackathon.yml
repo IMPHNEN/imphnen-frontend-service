@@ -7,6 +7,10 @@ on:
     paths:
       - 'apps/hackathon/**' # Auto deploy when changes pushed to apps/hackathon
 
+concurrency:
+  group: deploy-vps
+  cancel-in-progress: false
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
