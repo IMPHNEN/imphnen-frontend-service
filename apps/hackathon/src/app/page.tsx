@@ -64,71 +64,74 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation */}
-      <nav className="flex items-center justify-between px-4 md:px-8 py-4 border-b border-gray-200 bg-white sticky top-0 z-50 max-w-7xl mx-auto">
-        <div className="flex items-center gap-2">
-          <span className="text-lg md:text-xl font-bold">IMPHNEN</span>
-          <span className="text-lg md:text-xl font-bold text-primary-500">
-            Hackathon
-          </span>
+      <div id="#top" className="hidden"></div>
+      <nav className="border-b border-gray-200 bg-white sticky top-0 z-50">
+        <div className="flex items-center justify-between max-w-7xl mx-auto px-4 md:px-8 py-4">
+          <div className="flex items-center gap-2">
+            <span className="text-lg md:text-xl font-bold">IMPHNEN</span>
+            <a
+              href="#top"
+              className="text-lg md:text-xl font-bold text-primary-500 hover:cursor-pointer"
+            >
+              Hackathon
+            </a>
+          </div>
+          {/* Desktop Menu */}
+          <div className="hidden md:flex text-label1 items-center gap-4 lg:gap-8">
+            <a
+              href="#timeline"
+              className="text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              Timeline
+            </a>
+            <a
+              href="#hadiah"
+              className="text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              Hadiah
+            </a>
+            <a
+              href="#faq"
+              className="text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              FAQ
+            </a>
+            <Button
+              onClick={() => navigate('/auth/login')}
+              size="sm"
+              variant="bordered"
+              className="rounded-lg text-base"
+            >
+              Masuk
+            </Button>
+            <Button
+              onClick={() => navigate('/auth/signup')}
+              size="sm"
+              className="rounded-lg text-base"
+            >
+              Daftar Sekarang
+            </Button>
+          </div>
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2 cursor-pointer"
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
         </div>
-
-        {/* Desktop Menu */}
-        <div className="hidden md:flex text-label1 items-center gap-4 lg:gap-8">
-          <a
-            href="#timeline"
-            className="text-gray-600 hover:text-gray-900 transition-colors"
-          >
-            Timeline
-          </a>
-          <a
-            href="#hadiah"
-            className="text-gray-600 hover:text-gray-900 transition-colors"
-          >
-            Hadiah
-          </a>
-          <a
-            href="#faq"
-            className="text-gray-600 hover:text-gray-900 transition-colors"
-          >
-            FAQ
-          </a>
-
-          <Button
-            onClick={() => navigate('/auth/login')}
-            size="sm"
-            variant="bordered"
-            className="rounded-lg text-base"
-          >
-            Masuk
-          </Button>
-          <Button
-            onClick={() => navigate('/auth/signup')}
-            size="sm"
-            className="rounded-lg text-base"
-          >
-            Daftar Sekarang
-          </Button>
-        </div>
-
-        {/* Mobile Menu Button */}
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden p-2 cursor-pointer"
-        >
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 6h16M4 12h16M4 18h16"
-            />
-          </svg>
-        </button>
       </nav>
 
       {/* Mobile Menu */}
@@ -164,90 +167,96 @@ export default function HomePage() {
       )}
 
       {/* Hero Section */}
-      <section className="flex flex-col items-center justify-center px-4 md:px-8 py-20 md:py-20 bg-linear-to-b from-white to-gray-50">
-        {/* Logos */}
-        <div className="flex items-center gap-4 md:gap-8 lg:gap-12 mb-8 md:mb-12 lg:mb-16 flex-wrap justify-center">
-          <div className="flex items-center">
-            <img
-              src="images/imphnen-logo.svg"
-              alt="IMPHNEN"
-              className="h-12 md:h-16"
-            />
-          </div>
-          <span className="text-3xl md:text-5xl lg:text-6xl font-bold text-gray-400">
-            ×
-          </span>
-          <div className="flex items-center">
-            <img
-              src="images/sponsors/kolosal-logo_rlxbck.svg"
-              alt="Kolosal.ai"
-              className="h-8 md:h-12"
-            />
-          </div>
+      <section className="relative w-full overflow-hidden py-20">
+        <div className="absolute inset-0 overflow-hidden">
+          <div
+            className="absolute top-1/4 -left-20 w-100 h-100 rounded-full bg-linear-to-r from-primary/20 to-blue-400/20 blur-3xl"
+            style={{ transform: 'translate(10px, -5px)', opacity: 0.9 }}
+          ></div>
+          <div
+            className="absolute bottom-1/3 -right-20 w-100 h-100 rounded-full bg-linear-to-r from-blue-400/20 to-primary/20 blur-3xl"
+            style={{ transform: 'translate(0px, 0px)', opacity: 1 }}
+          ></div>
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.05)_1px,transparent_1px),linear-gradient(to_right,rgba(59,130,246,0.05)_1px,transparent_1px)] bg-size-[40px_40px]"></div>
         </div>
-
-        {/* Title */}
-        <h1 className="text-h1 font-bold text-gray-900 mb-4 text-center">
-          Hackathon
-        </h1>
-
-        {/* Subtitle */}
-        <p className="text-p1 text-primary-500 font-semibold mb-6 md:mb-8 text-center px-4">
-          "Inovasi AI: Mendorong Usaha Lokal dengan AI Inklusif"
-        </p>
-
-        {/* Description */}
-        <p className="text-p3 text-gray-600 max-w-lg text-center mb-8 md:mb-12 px-4">
-          Kompetisi pengembangan teknologi untuk menciptakan
-          <br className="hidden md:block" /> solusi inovatif yang menghadirkan
-          dampak nyata
-        </p>
-
-        {/* Status */}
-        <div className="flex items-center gap-4 md:gap-8 mb-10 md:mb-16 text-base text-gray-600">
-          <div className="flex items-center gap-2 md:gap-3">
-            <Icon icon="streamline-plump:web" width="16" height="16" />
-            <span>Online</span>
+        <div className="mx-auto container px-4 relative flex flex-col items-center">
+          {/* Logos */}
+          <div className="flex items-center gap-4 md:gap-8 lg:gap-12 mb-8 md:mb-12 lg:mb-16 flex-wrap justify-center">
+            <div className="flex items-center">
+              <img
+                src="images/imphnen-logo.svg"
+                alt="IMPHNEN"
+                className="h-12 md:h-16"
+              />
+            </div>
+            <span className="text-3xl md:text-5xl font-bold text-gray-400">
+              ×
+            </span>
+            <div className="flex items-center">
+              <img
+                src="images/sponsors/kolosal-logo_rlxbck.svg"
+                alt="Kolosal.ai"
+                className="h-8 md:h-12"
+              />
+            </div>
           </div>
-          <div className="flex items-center gap-2 md:gap-3 text-center">
-            <Icon icon="heroicons:clock" width="16" height="16" />
-            <span>Pendaftaran hingga 30 November 2025</span>
+          {/* Title */}
+          <h1 className="text-h1 font-bold text-gray-900 mb-4 text-center">
+            Hackathon
+          </h1>
+          {/* Subtitle */}
+          <p className="text-p1 text-primary-500 font-semibold mb-6 md:mb-8 text-center px-4">
+            "Inovasi AI: Mendorong Usaha Lokal dengan AI Inklusif"
+          </p>
+          {/* Description */}
+          <p className="text-p3 text-gray-600 max-w-lg md:max-w-xl text-center mb-8 md:mb-12 px-4 font-sans">
+            Kompetisi pengembangan teknologi untuk menciptakan solusi inovatif
+            yang menghadirkan dampak nyata
+          </p>
+          {/* Status */}
+          <div className="flex items-center gap-4 md:gap-8 mb-10 md:mb-16 text-base text-gray-600">
+            <div className="flex items-center gap-2 md:gap-3">
+              <Icon icon="streamline-plump:web" width="16" height="16" />
+              <span>Online</span>
+            </div>
+            <div className="flex items-center gap-2 md:gap-3 text-center">
+              <Icon icon="heroicons:clock" width="16" height="16" />
+              <span>Pendaftaran hingga 30 November 2025</span>
+            </div>
           </div>
-        </div>
-
-        {/* CTA Buttons */}
-        <div className="flex items-center gap-4 px-4">
-          <Button
-            onClick={() => navigate('/auth/signup')}
-            className="rounded-lg text-base max-h-auto"
-          >
-            Daftar Sekarang
-          </Button>
-          <a
-            href="https://chat.whatsapp.com/BlxrYh9uSC37d7VPhJslGL"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center px-4 py-2.5 border-2 border-gray-300 hover:border-gray-400 transition-colors text-center bg-transparent hover:text-gray-900 hover:bg-gray-50 text-base text-gray-600 rounded-lg font-bai-jamjuree font-semibold"
-          >
-            Gabung Grup WA Hackathon
-          </a>
-        </div>
-
-        {/* Scroll indicator */}
-        <div className="mt-12 md:mt-20">
-          <svg
-            className="w-6 h-6 text-gray-400 animate-bounce"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M19 14l-7 7m0 0l-7-7m7 7V3"
-            />
-          </svg>
+          {/* CTA Buttons */}
+          <div className="flex items-center gap-4 px-4">
+            <Button
+              onClick={() => navigate('/auth/signup')}
+              className="rounded-lg text-base max-h-auto"
+            >
+              Daftar Sekarang
+            </Button>
+            <a
+              href="https://chat.whatsapp.com/BlxrYh9uSC37d7VPhJslGL"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center px-4 py-2.5 border-2 border-gray-300 hover:border-gray-400 transition-colors text-center bg-transparent hover:text-gray-900 hover:bg-gray-50 text-base text-gray-600 rounded-lg font-bai-jamjuree font-semibold"
+            >
+              Gabung Grup WA Hackathon
+            </a>
+          </div>
+          {/* Scroll indicator */}
+          <div className="mt-12 md:mt-20">
+            <svg
+              className="w-6 h-6 text-gray-400 animate-bounce"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 14l-7 7m0 0l-7-7m7 7V3"
+              />
+            </svg>
+          </div>
         </div>
       </section>
 
@@ -257,12 +266,12 @@ export default function HomePage() {
           <h2 className="text-3xl md:text-5xl font-bold mb-10">
             Tentang <span className="text-primary-500">Hackathon</span>
           </h2>
-          <p className="text-lg md:text-xl text-left md:text-center text-gray-600 mb-6">
+          <p className="font-sans text-lg md:text-xl text-left md:text-center text-gray-600 mb-6">
             <span className="font-semibold text-gray-900">Hackathon</span>{' '}
             adalah kompetisi pengembangan teknologi yang mengajak talenta muda
             untuk berkolaborasi dalam menciptakan solusi inovatif.
           </p>
-          <p className="text-lg md:text-xl text-left md:text-center text-gray-600">
+          <p className="font-sans text-lg md:text-xl text-left md:text-center text-gray-600">
             IMPHNEN bersama Kolosal.ai mengadakan Hackathon dengan tema lomba{' '}
             <span className="font-semibold text-primary-500">
               "Inovasi AI: Mendorong Usaha Lokal dengan AI Inklusif"
@@ -276,17 +285,17 @@ export default function HomePage() {
       <section id="hadiah" className="py-16 md:py-24 px-4 md:px-8 bg-gray-50">
         <div className="max-w-lg md:max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-5xl font-bold mb-4">
+            <h2 className="text-3xl md:text-5xl font-bold mb-4 font-bai-jamjuree">
               Hadiah <span className="text-primary-500">Menarik</span>
             </h2>
-            <p className="text-xl md:text-2xl text-primary-500 font-semibold">
+            <p className="text-xl md:text-2xl text-primary-500 font-semibold font-sans">
               Total Prize Pool Rp14.500.000
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Prize 1 */}
-            <div className="bg-white rounded-xl p-8 shadow-lg border-2 border-gray-300 hover:border-primary-500 transition-colors">
+            <div className="bg-white rounded-xl px-4 py-8 shadow-lg border-2 border-gray-300 hover:border-primary-500 transition-colors">
               <div className="flex justify-center mb-4">
                 <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center">
                   <Icon
@@ -295,14 +304,14 @@ export default function HomePage() {
                   />
                 </div>
               </div>
-              <h3 className="text-2xl font-bold text-center mb-2">Juara 1</h3>
-              <p className="text-3xl font-bold text-primary-500 text-center">
+              <h3 className="text-xl font-bold text-center mb-2">Juara 1</h3>
+              <p className="text-2xl font-bold text-primary-500 text-center font-sans">
                 Rp6.000.000
               </p>
             </div>
 
             {/* Prize 2 */}
-            <div className="bg-white rounded-xl p-8 shadow-lg border-2 border-gray-300 hover:border-gray-500 transition-colors">
+            <div className="bg-white rounded-xl px-4 py-8 shadow-lg border-2 border-gray-300 hover:border-gray-500 transition-colors">
               <div className="flex justify-center mb-4">
                 <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
                   <Icon
@@ -311,14 +320,14 @@ export default function HomePage() {
                   />
                 </div>
               </div>
-              <h3 className="text-2xl font-bold text-center mb-2">Juara 2</h3>
-              <p className="text-3xl font-bold text-primary-500 text-center">
+              <h3 className="text-xl font-bold text-center mb-2">Juara 2</h3>
+              <p className="text-2xl font-bold text-primary-500 text-center font-sans">
                 Rp4.000.000
               </p>
             </div>
 
             {/* Prize 3 */}
-            <div className="bg-white rounded-xl p-8 shadow-lg border-2 border-gray-300 hover:border-orange-300 transition-colors">
+            <div className="bg-white rounded-xl px-4 py-8 shadow-lg border-2 border-gray-300 hover:border-orange-300 transition-colors">
               <div className="flex justify-center mb-4">
                 <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center">
                   <Icon
@@ -327,14 +336,14 @@ export default function HomePage() {
                   />
                 </div>
               </div>
-              <h3 className="text-2xl font-bold text-center mb-2">Juara 3</h3>
-              <p className="text-3xl font-bold text-orange-600 text-center">
+              <h3 className="text-xl font-bold text-center mb-2">Juara 3</h3>
+              <p className="text-2xl font-bold text-orange-600 text-center font-sans">
                 Rp2.500.000
               </p>
             </div>
 
             {/* Special Prize */}
-            <div className="bg-white rounded-xl p-8 shadow-lg border-2 border-gray-300 hover:border-purple-300 transition-colors">
+            <div className="bg-white rounded-xl px-4 py-8 shadow-lg border-2 border-gray-300 hover:border-purple-300 transition-colors">
               <div className="flex justify-center mb-4">
                 <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center">
                   <Icon
@@ -343,10 +352,10 @@ export default function HomePage() {
                   />
                 </div>
               </div>
-              <h3 className="text-2xl font-bold text-center mb-2">
+              <h3 className="text-xl font-bold text-center mb-2">
                 Juara Kategori Lainnya
               </h3>
-              <p className="text-3xl font-bold text-purple-600 text-center">
+              <p className="text-2xl font-bold text-purple-600 text-center font-sans">
                 Rp2.000.000
               </p>
             </div>
@@ -356,8 +365,8 @@ export default function HomePage() {
 
       {/* Timeline Section */}
       <section id="timeline" className="py-16 md:py-24 px-4 md:px-8 bg-white">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
+        <div className="max-w-4xl mx-auto font-sans">
+          <div className="text-center mb-12 font-bai-jamjuree">
             <h2 className="text-3xl md:text-5xl font-bold mb-4">
               Timeline <span className="text-primary-500">Acara</span>
             </h2>
@@ -456,9 +465,9 @@ export default function HomePage() {
       </section>
 
       {/* Judges Section */}
-      <section className="py-16 md:py-24 px-4 md:px-8 bg-gray-50">
+      <section className="py-16 md:py-24 px-4 md:px-8 bg-gray-50 font-sans">
         <div className="md:max-w-6xl mx-auto">
-          <div className="text-center mb-12">
+          <div className="text-center mb-12 font-bai-jamjuree">
             <h2 className="text-3xl md:text-5xl font-bold mb-4">
               Dewan <span className="text-primary-500">Juri</span>
             </h2>
@@ -469,7 +478,7 @@ export default function HomePage() {
 
           <div className="w-full max-w-md md:max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Judge 1 */}
-            <div className="flex flex-col justify-between bg-white rounded-xl p-8 shadow-lg text-center">
+            <div className="flex flex-col justify-between bg-white rounded-xl px-4 py-8 shadow-lg text-center">
               {/* <div className="w-24 h-24 bg-gray-200 rounded-full mx-auto mb-4"></div> */}
               <h3 className="text-p3 font-bold mb-1">
                 Alifais Farrel Ramdhani
@@ -481,7 +490,7 @@ export default function HomePage() {
             </div>
 
             {/* Judge 2 */}
-            <div className="flex flex-col justify-between bg-white rounded-xl p-8 shadow-lg text-center">
+            <div className="flex flex-col justify-between bg-white rounded-xl px-4 py-8 shadow-lg text-center">
               {/* <div className="w-24 h-24 bg-gray-200 rounded-full mx-auto mb-4"></div> */}
               <h3 className="text-p3 font-bold mb-1">Anka Tama</h3>
               <div>
@@ -491,7 +500,7 @@ export default function HomePage() {
             </div>
 
             {/* Judge 3 */}
-            <div className="flex flex-col justify-between bg-white rounded-xl p-8 shadow-lg text-center">
+            <div className="flex flex-col justify-between bg-white rounded-xl px-4 py-8 shadow-lg text-center">
               {/* <div className="w-24 h-24 bg-gray-200 rounded-full mx-auto mb-4"></div> */}
               <h3 className="text-p3 font-bold mb-1">Hafid Nur</h3>
               <div>
@@ -515,7 +524,7 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-4 font-sans">
             {faqs.map((faq, index) => (
               <div key={index} className="border border-gray-200 rounded-lg">
                 <button
@@ -551,7 +560,7 @@ export default function HomePage() {
       </section>
 
       {/* Sponsors Section */}
-      <section className="py-16 md:py-24 px-4 md:px-8 bg-gray-50">
+      <section className="py-20 md:py-28 px-4 md:px-8 bg-gray-50">
         <div className="max-w-6xl mx-auto text-center">
           <h2 className="text-3xl md:text-5xl font-bold mb-4">
             Sponsor & <span className="text-primary-500">Partner</span>
@@ -580,10 +589,10 @@ export default function HomePage() {
       {/* CTA Section */}
       <section
         id="masuk"
-        className="py-16 md:py-24 px-4 md:px-8 bg-linear-to-b from-white to-blue-50"
+        className="py-20 md:py-28 px-4 md:px-8 bg-linear-to-b from-white to-blue-50"
       >
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-5xl font-bold mb-6">
+        <div className="max-w-4xl mx-auto text-center font-sans">
+          <h2 className="text-3xl md:text-5xl font-bold mb-6 font-bai-jamjuree">
             Segera Daftarkan <span className="text-primary-500">Timmu!</span>
           </h2>
           <p className="text-lg md:text-xl text-left md:text-center text-gray-600 mb-8">
@@ -620,12 +629,12 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12 px-4 md:px-8">
+      <footer className="bg-gray-900 text-white py-12 px-4 md:px-8 font-sans">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
             {/* Brand */}
             <div>
-              <div className="flex items-center gap-2 mb-4">
+              <div className="flex items-center gap-2 mb-4 font-bai-jamjuree">
                 <span className="text-2xl font-bold">IMPHNEN</span>
                 <span className="text-2xl font-bold text-blue-500">
                   Hackathon
@@ -689,7 +698,9 @@ export default function HomePage() {
 
             {/* Quick Links */}
             <div>
-              <h3 className="font-bold text-lg mb-4">Quick Links</h3>
+              <h3 className="font-bold text-lg mb-4 font-bai-jamjuree">
+                Quick Links
+              </h3>
               <ul className="space-y-2 text-gray-400">
                 <li>
                   <a
@@ -725,7 +736,9 @@ export default function HomePage() {
 
             {/* Contact */}
             <div>
-              <h3 className="font-bold text-lg mb-4">Contact</h3>
+              <h3 className="font-bold text-lg mb-4 font-bai-jamjuree">
+                Contact
+              </h3>
               <ul className="space-y-2 text-gray-400 text-sm">
                 <li className="flex items-start gap-2">
                   <Icon
