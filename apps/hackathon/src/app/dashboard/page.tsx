@@ -105,29 +105,30 @@ const DashboardPage: FC = (): ReactElement => {
 
       <div className="mt-8 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl shadow-lg">
         <div className="bg-gradient-to-r from-blue-600 to-indigo-600 h-24 rounded-t-xl"></div>
-        <div className="px-8 pb-8">
-          <div className="flex items-start -mt-12 mb-6">
-            {user?.avatar ? (
-              <img src={user.avatar} alt={user.fullname || 'User'} className="w-24 h-24 rounded-full border-4 border-white shadow-lg object-cover" />
-            ) : (
-              <div className="w-24 h-24 rounded-full border-4 border-white shadow-lg bg-gray-200 flex items-center justify-center">
-                <span className="text-gray-400 text-4xl">User</span>
-              </div>
-            )}
-            <div className="ml-6 mt-14">
-              {/* User Name and Edit profile button in one line */}
-              <div className="flex items-center space-x-4">
-                <h2 className="text-2xl font-bold text-gray-900">{user?.fullname || user?.email?.split('@')[0] || 'Unnamed User'}</h2>
-                <Link to="/profile" className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium shadow-sm hover:bg-blue-700 transition-colors">Edit Profile</Link>
-              </div>
-              {user?.location ? (
-                <p className="text-gray-600 flex items-center mt-1">{user.location}</p>
+        <div className="px-4 md:px-8 pb-4 md:pb-8">
+          <div className="flex flex-col md:flex-row md:items-start -mt-12 mb-4 md:mb-6">
+            <div className="flex items-start">
+              {user?.avatar ? (
+                <img src={user.avatar} alt={user.fullname || 'User'} className="w-20 h-20 md:w-24 md:h-24 rounded-full border-4 border-white shadow-lg object-cover" />
               ) : (
-                <Link to="/onboarding/user" className="text-blue-600 hover:text-blue-700 text-sm mt-1 inline-block">Complete your profile</Link>
+                <div className="w-20 h-20 md:w-24 md:h-24 rounded-full border-4 border-white shadow-lg bg-gray-200 flex items-center justify-center">
+                  <span className="text-gray-400 text-3xl md:text-4xl">User</span>
+                </div>
               )}
+              <div className="ml-4 md:ml-6 mt-12 md:mt-14">
+                <h2 className="text-xl md:text-2xl font-bold text-gray-900">{user?.fullname || user?.email?.split('@')[0] || 'Unnamed User'}</h2>
+                {user?.location ? (
+                  <p className="text-gray-600 flex items-center mt-1 text-sm md:text-base">{user.location}</p>
+                ) : (
+                  <Link to="/onboarding/user" className="text-blue-600 hover:text-blue-700 text-xs md:text-sm mt-1 inline-block">Complete your profile</Link>
+                )}
+              </div>
             </div>
+            {user?.location && (
+              <Link to="/profile" className="mt-3 md:mt-14 md:ml-auto inline-flex items-center justify-center px-3 py-1.5 md:px-4 md:py-2 bg-blue-600 text-white rounded-lg text-xs md:text-sm font-medium shadow-sm hover:bg-blue-700 transition-colors w-full md:w-auto">Edit Profile</Link>
+            )}
           </div>
-          <div className="space-y-6">
+          <div className="space-y-4 md:space-y-6">
             {user?.bio && (
               <div className="bg-white rounded-lg p-4 shadow-sm">
                 <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-2">About</h3>

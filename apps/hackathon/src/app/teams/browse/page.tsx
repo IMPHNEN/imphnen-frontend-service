@@ -65,7 +65,7 @@ const BrowseTeamsPage: FC = (): ReactElement => {
               <h1 className="text-3xl font-bold text-gray-900">Browse Teams</h1>
               <p className="text-gray-600 mt-1">Find and join teams looking for members</p>
             </div>
-            <Link to="/dashboard">
+            <Link to="/dashboard" className="hidden md:block">
               <Button variant="secondary">Back to Dashboard</Button>
             </Link>
           </div>
@@ -76,7 +76,7 @@ const BrowseTeamsPage: FC = (): ReactElement => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="bg-white p-6 rounded-lg shadow-sm mb-6">
           <div className="grid gap-4 md:grid-cols-2">
-            <div className="flex flex-col justify-between">
+            <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Search Teams
               </label>
@@ -85,9 +85,10 @@ const BrowseTeamsPage: FC = (): ReactElement => {
                 placeholder="Search by team name..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
+                className="h-12"
               />
             </div>
-            <div className="flex flex-col justify-between">
+            <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Filter by City
               </label>

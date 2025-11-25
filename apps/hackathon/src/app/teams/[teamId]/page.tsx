@@ -78,7 +78,7 @@ const TeamDashboardPage: FC = (): ReactElement => {
       {/* Header with Banner */}
       <div className="bg-white border-b">
         {team.banner && (
-          <div className="w-full h-48 overflow-hidden">
+          <div className="w-full h-32 md:h-48 overflow-hidden">
             <img
               src={team.banner}
               alt={team.name}
@@ -86,20 +86,20 @@ const TeamDashboardPage: FC = (): ReactElement => {
             />
           </div>
         )}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-6">
           <div className="flex items-start justify-between">
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-3 md:space-x-4">
               {team.logo && (
                 <img
                   src={team.logo}
                   alt={team.name}
-                  className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-lg -mt-10"
+                  className="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover border-4 border-white shadow-lg -mt-8 md:-mt-10"
                 />
               )}
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">{team.name}</h1>
-                <p className="text-gray-600 mt-1">📍 {team.city}</p>
-                <div className="flex items-center space-x-4 mt-2">
+                <h1 className="text-xl md:text-3xl font-bold text-gray-900">{team.name}</h1>
+                <p className="text-sm md:text-base text-gray-600 mt-1">📍 {team.city}</p>
+                <div className="flex flex-wrap items-center gap-2 md:space-x-4 mt-2">
                   <span className="text-sm text-gray-500">
                     {members.length} {members.length === 1 ? 'Member' : 'Members'}
                   </span>
@@ -107,34 +107,34 @@ const TeamDashboardPage: FC = (): ReactElement => {
                     {team.visibility === 'public' ? '🌐 Public' : '🔒 Private'}
                   </span>
                   {isLeader && (
-                    <span className="px-3 py-1 bg-blue-600 text-white rounded-md text-sm font-semibold shadow-sm">
+                    <span className="hidden md:inline-flex px-3 py-1 bg-blue-600 text-white rounded-md text-sm font-semibold shadow-sm">
                       👑 Team Leader
                     </span>
                   )}
                 </div>
               </div>
             </div>
-            <Link to="/dashboard">
+            <Link to="/dashboard" className="hidden md:block">
               <Button variant="secondary">Back to Dashboard</Button>
             </Link>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid gap-6 lg:grid-cols-3">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8">
+        <div className="grid gap-4 md:gap-6 lg:grid-cols-3">
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-4 md:space-y-6">
             {/* Team Description */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-bold text-gray-900 mb-4">About Team</h2>
+            <div className="bg-white rounded-lg shadow-md p-4 md:p-6">
+              <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-3 md:mb-4">About Team</h2>
               <p className="text-gray-700 whitespace-pre-wrap">{team.description}</p>
             </div>
 
             {/* Team Actions - Only for Leader */}
             {isLeader && (
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">Team Management</h2>
+              <div className="bg-white rounded-lg shadow-md p-4 md:p-6">
+                <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-3 md:mb-4">Team Management</h2>
                 <div className="grid gap-3 sm:grid-cols-2">
                   <Button
                     className="w-full"
@@ -187,8 +187,8 @@ const TeamDashboardPage: FC = (): ReactElement => {
 
             {/* Quick Actions for Members */}
             {!isLeader && (
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">Quick Actions</h2>
+              <div className="bg-white rounded-lg shadow-md p-4 md:p-6">
+                <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-3 md:mb-4">Quick Actions</h2>
                 <div className="grid gap-3 sm:grid-cols-2">
                   <Link to={`/teams/${teamId}/chat`}>
                     <Button className="w-full" variant="secondary">
@@ -208,7 +208,7 @@ const TeamDashboardPage: FC = (): ReactElement => {
 
             {/* Submission Status */}
             {team.has_submission && (
-              <div className="bg-green-50 border border-green-200 rounded-lg p-6">
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4 md:p-6">
                 <div className="flex items-center space-x-3">
                   <span className="text-3xl">✅</span>
                   <div>
@@ -228,10 +228,10 @@ const TeamDashboardPage: FC = (): ReactElement => {
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
+          <div className="space-y-4 md:space-y-6">
             {/* Team Leader */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="font-bold text-gray-900 mb-4">Team Leader</h3>
+            <div className="bg-white rounded-lg shadow-md p-4 md:p-6">
+              <h3 className="text-base md:text-lg font-bold text-gray-900 mb-3 md:mb-4">Team Leader</h3>
               {team.leader && (
                 <button
                   onClick={() => navigate(`/users/${team.leader.id}`)}
@@ -257,8 +257,8 @@ const TeamDashboardPage: FC = (): ReactElement => {
             </div>
 
             {/* Team Members */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="font-bold text-gray-900 mb-4">
+            <div className="bg-white rounded-lg shadow-md p-4 md:p-6">
+              <h3 className="text-base md:text-lg font-bold text-gray-900 mb-3 md:mb-4">
                 Members ({members.length})
               </h3>
               <div className="space-y-3">
