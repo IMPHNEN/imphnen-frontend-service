@@ -5,12 +5,7 @@ import { useNavigate, useParams } from 'react-router';
 import { useForm, Controller } from 'react-hook-form';
 import { teamUpdateSchema, TTeamUpdateForm, useUpdateTeam, useTeamById, ETeamVisibility, useUploadFile, useAuthStore } from '@imphnen-frontend-service/service';
 import { zodResolver } from '@hookform/resolvers/zod';
-
-const INDONESIAN_CITIES = [
-  'Jakarta', 'Surabaya', 'Bandung', 'Medan', 'Semarang',
-  'Makassar', 'Palembang', 'Tangerang', 'Depok', 'Bekasi',
-  'Yogyakarta', 'Malang', 'Bogor', 'Batam', 'Pekanbaru',
-];
+import INDONESIAN_CITIES from '../../../../constants/cities';
 
 const EditTeamPage: FC = (): ReactElement => {
   const { teamId } = useParams<{ teamId: string }>();
