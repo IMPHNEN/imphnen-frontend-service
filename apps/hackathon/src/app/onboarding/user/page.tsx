@@ -133,7 +133,6 @@ const UserOnboardingPage: FC = (): ReactElement => {
                 />
               ) : (
                 <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center">
-                  {/* <span className="text-gray-400 text-4xl">👤</span> */}
                   <Icon
                     icon="ic:baseline-person"
                     width="48"

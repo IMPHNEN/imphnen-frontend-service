@@ -1,8 +1,13 @@
 import { FC, useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router';
-import { useMyTeams, useAuthStore, supabase } from '@imphnen-frontend-service/service';
+import {
+  useMyTeams,
+  useAuthStore,
+  supabase,
+} from '@imphnen-frontend-service/service';
 import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
+import { Icon } from '@iconify/react';
 
 interface NavItem {
   name: string;
@@ -52,39 +57,37 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen = true, onClose }) => {
     {
       name: 'Dashboard',
       path: '/dashboard',
-      icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-        </svg>
-      ),
+      icon: <Icon icon="heroicons:home" className="w-5 h-5" />,
       show: true,
     },
     {
       name: 'Browse Teams',
       path: '/teams/browse',
-      icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-      ),
+      icon: <Icon icon="heroicons-outline:search" className="w-5 h-5" />,
       show: true,
     },
     {
       name: 'Create Team',
       path: '/teams/create',
-      icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-        </svg>
-      ),
+      icon: <Icon icon="heroicons:plus" className="h-5 w-5" />,
       show: !hasTeam,
     },
     {
       name: 'Edit Profile',
       path: '/profile',
       icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+        <svg
+          className="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+          />
         </svg>
       ),
       show: false,
@@ -94,22 +97,32 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen = true, onClose }) => {
   const sidebarContent = (
     <div className="w-64 bg-white border-r min-h-screen flex flex-col">
       {/* Logo / Brand with Close Button */}
-      <div className="p-6 border-b flex items-center justify-between">
-        <h1 className="text-xl font-bold text-gray-900">🏆 Hackathon</h1>
+      <div className="p-6 flex items-center justify-between">
+        <h1 className="text-xl font-bold text-gray-900">Hackathon</h1>
         {onClose && (
           <button
             onClick={onClose}
             className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
           >
-            <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg
+              className="w-5 h-5 text-gray-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         )}
       </div>
 
       {/* User Info */}
-      <div className="p-4 border-b">
+      <div className="p-4 border-y">
         <div className="flex items-center space-x-3">
           {user?.avatar ? (
             <img
@@ -119,7 +132,12 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen = true, onClose }) => {
             />
           ) : (
             <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
-              <span className="text-gray-500 text-lg">👤</span>
+              <Icon
+                icon="ic:baseline-person"
+                width="24"
+                height="24"
+                className="text-gray-400"
+              />
             </div>
           )}
           <div className="flex-1 min-w-0">
@@ -144,7 +162,7 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen = true, onClose }) => {
                     to={item.path}
                     className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
                       isActive
-                        ? 'bg-blue-50 text-blue-700 font-medium'
+                        ? 'bg-primary-50 text-primary-600 font-medium'
                         : 'text-gray-700 hover:bg-gray-100'
                     }`}
                   >
@@ -161,11 +179,12 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen = true, onClose }) => {
       <div className="p-4 border-t">
         <button
           onClick={handleLogout}
-          className="flex items-center space-x-3 px-4 py-3 w-full rounded-lg text-red-600 hover:bg-red-50 transition-colors"
+          className="flex items-center space-x-3 px-4 py-3 w-full rounded-lg text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-          </svg>
+          <Icon
+            icon="heroicons:arrow-right-end-on-rectangle"
+            className="w-5 h-5"
+          />
           <span>Logout</span>
         </button>
       </div>

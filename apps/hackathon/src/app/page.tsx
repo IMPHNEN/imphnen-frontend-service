@@ -153,7 +153,10 @@ export default function HomePage() {
             <a href="#faq" className="ms-3 text-gray-600 hover:text-gray-900">
               FAQ
             </a>
-            <a href="#masuk" className="ms-3 text-gray-600 hover:text-gray-900">
+            <a
+              href="/auth/login"
+              className="ms-3 text-gray-600 hover:text-gray-900"
+            >
               Masuk
             </a>
             <button

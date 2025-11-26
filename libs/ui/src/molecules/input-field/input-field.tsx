@@ -25,15 +25,15 @@ export type TInputFieldProps = Omit<
 
 const sizeClasses: Record<TInputSize, { label: string; helperText: string }> = {
   lg: {
-    label: 'text-p3 font-medium',
+    label: 'text-label1 font-medium',
     helperText: 'text-label3 font-normal',
   },
   md: {
-    label: 'text-label1 font-medium',
+    label: 'text-label2 font-medium',
     helperText: 'text-label2 font-normal',
   },
   sm: {
-    label: 'text-label2 font-medium',
+    label: 'text-label3 font-medium',
     helperText: 'text-label2 font-normal',
   },
 };

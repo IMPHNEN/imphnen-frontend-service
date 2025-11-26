@@ -40,6 +40,7 @@ export const ControlledInputField = <T extends FieldValues>(
       {...inputProps}
       onChange={handleChange}
       isRequired={props.isRequired}
+      size={props.size}
     />
   );
 };
