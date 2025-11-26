@@ -15,6 +15,7 @@ import {
 } from '@imphnen-frontend-service/service';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from 'sonner';
 
 const ManageMembersPage: FC = (): ReactElement => {
   const { teamId } = useParams<{ teamId: string }>();
@@ -75,16 +76,20 @@ const ManageMembersPage: FC = (): ReactElement => {
   const handleApproveRequest = async (requestId: string) => {
     try {
       await respondToRequest({ requestId, action: 'approve' });
+      toast.success('Member added successfully!');
     } catch (error) {
       console.error('Failed to approve request:', error);
+      toast.error((error as Error).message || 'Failed to approve request');
     }
   };
 
   const handleRejectRequest = async (requestId: string) => {
     try {
       await respondToRequest({ requestId, action: 'reject' });
+      toast.success('Request rejected');
     } catch (error) {
       console.error('Failed to reject request:', error);
+      toast.error((error as Error).message || 'Failed to reject request');
     }
   };
 

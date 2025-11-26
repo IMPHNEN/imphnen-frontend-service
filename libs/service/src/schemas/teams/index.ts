@@ -76,6 +76,9 @@ export const userOnboardingSchema = z.object({
 export const userEditProfileSchema = z.object({
   fullname: z.string().min(3, 'Nama lengkap minimal 3 karakter'),
   avatar: z.string().url('Avatar harus berupa URL yang valid').nullable().optional(),
+  location: z.string().optional(),
+  bio: z.string().max(500, 'Bio maksimal 500 karakter').optional(),
+  skills: z.array(z.string()).optional(),
 });
 
 export type TTeamCreateForm = z.infer<typeof teamCreateSchema>;

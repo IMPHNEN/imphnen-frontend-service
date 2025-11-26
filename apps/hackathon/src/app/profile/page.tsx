@@ -1,8 +1,8 @@
 import { FC, ReactElement, useState, useEffect } from 'react';
 import { ControlledInputField } from '@imphnen-frontend-service/ui/organisms';
-import { Button } from '@imphnen-frontend-service/ui/atoms';
+import { Button, Textarea } from '@imphnen-frontend-service/ui/atoms';
 import { useNavigate, Link } from 'react-router';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import {
   userEditProfileSchema,
   TUserEditProfileForm,
@@ -12,6 +12,18 @@ import {
 } from '@imphnen-frontend-service/service';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
+import { CitySelect } from '../../components/city-select';
+
+const ROLE_OPTIONS = [
+  'Frontend Developer',
+  'Backend Developer',
+  'Full Stack Developer',
+  'DevOps Engineer',
+  'UI/UX Designer',
+  'Product Manager',
+  'Data Scientist',
+  'Mobile Developer',
+];
 
 const ProfilePage: FC = (): ReactElement => {
   const navigate = useNavigate();
@@ -28,6 +40,9 @@ const ProfilePage: FC = (): ReactElement => {
     defaultValues: {
       fullname: session?.user?.fullname || '',
       avatar: session?.user?.avatar || null,
+      location: session?.user?.location || '',
+      bio: session?.user?.bio || '',
+      skills: session?.user?.skills || [],
     },
   });
 
@@ -39,7 +54,16 @@ const ProfilePage: FC = (): ReactElement => {
     if (session?.user?.fullname) {
       form.setValue('fullname', session.user.fullname);
     }
-  }, [session?.user?.avatar, session?.user?.fullname, avatarPreview, form]);
+    if (session?.user?.location) {
+      form.setValue('location', session.user.location);
+    }
+    if (session?.user?.bio) {
+      form.setValue('bio', session.user.bio);
+    }
+    if (session?.user?.skills) {
+      form.setValue('skills', session.user.skills);
+    }
+  }, [session?.user?.avatar, session?.user?.fullname, session?.user?.location, session?.user?.bio, session?.user?.skills, avatarPreview, form]);
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -79,6 +103,9 @@ const ProfilePage: FC = (): ReactElement => {
       await updateUser({
         fullname: data.fullname,
         avatar: avatarUrl,
+        location: data.location,
+        bio: data.bio,
+        skills: data.skills,
       });
 
       toast.success('Profile updated successfully!');
@@ -191,6 +218,87 @@ const ProfilePage: FC = (): ReactElement => {
             placeholder="Enter your full name"
             name="fullname"
           />
+
+          {/* City */}
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700">
+              City
+            </label>
+            <Controller
+              control={form.control}
+              name="location"
+              render={({ field, fieldState }) => (
+                <CitySelect
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={fieldState.error?.message}
+                  placeholder="Search your city..."
+                />
+              )}
+            />
+          </div>
+
+          {/* Role/Skills */}
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700">
+              Role / Skills
+            </label>
+            <Controller
+              control={form.control}
+              name="skills"
+              render={({ field }) => (
+                <div className="space-y-2">
+                  <div className="grid grid-cols-2 gap-2">
+                    {ROLE_OPTIONS.map((role) => (
+                      <label
+                        key={role}
+                        className="flex items-center space-x-2 cursor-pointer"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={field.value?.includes(role)}
+                          onChange={(e) => {
+                            const newValue = e.target.checked
+                              ? [...(field.value || []), role]
+                              : (field.value || []).filter((v) => v !== role);
+                            field.onChange(newValue);
+                          }}
+                          className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                        />
+                        <span className="text-sm">{role}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              )}
+            />
+          </div>
+
+          {/* Bio */}
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700">
+              Bio <span className="text-gray-400">(Optional)</span>
+            </label>
+            <Controller
+              control={form.control}
+              name="bio"
+              render={({ field, fieldState }) => (
+                <div>
+                  <Textarea
+                    {...field}
+                    placeholder="Tell us about yourself..."
+                    rows={4}
+                    className="w-full"
+                  />
+                  {fieldState.error && (
+                    <p className="text-sm text-red-500 mt-1">
+                      {fieldState.error.message}
+                    </p>
+                  )}
+                </div>
+              )}
+            />
+          </div>
 
           {/* Action Buttons */}
           <div className="flex space-x-3 pt-4">

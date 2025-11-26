@@ -37,7 +37,10 @@ export const useTeams = (params?: {
     queryFn: async () => {
       try {
         // Supabase client now has auth context from setSession()
-        let query = supabase.from('teams').select('*');
+        let query = supabase.from('teams').select(`
+          *,
+          members:team_members(id)
+        `);
 
         // Filter by visibility
         if (params?.visibility) {
@@ -372,6 +375,7 @@ export const useTeamJoinRequests = (teamId: string, enabled = true) => {
           user:users(id, email, fullname, avatar)
         `)
         .eq('team_id', teamId)
+        .eq('status', 'pending')
         .order('created_at', { ascending: false });
 
       if (error) {
@@ -438,7 +442,17 @@ export const useRespondToJoinRequest = (teamId: string) => {
             .update({ status: 'pending' })
             .eq('id', requestId);
 
-          throw new Error('Failed to add member to team: ' + memberError.message);
+          // Parse Supabase error for user-friendly message
+          let errorMsg = memberError.message;
+          if (errorMsg.includes('Team already has 5 members') || errorMsg.includes('Team cannot have more than 5 members')) {
+            errorMsg = 'Team is full! Maximum 5 members allowed.';
+          } else if (errorMsg.includes('already in a team') || errorMsg.includes('User is already in a team')) {
+            errorMsg = 'This user is already in another team.';
+          } else if (errorMsg.includes('Bulk insert')) {
+            errorMsg = 'Invalid operation detected.';
+          }
+
+          throw new Error(errorMsg);
         }
 
         return { success: true, action: 'accepted' };
@@ -688,5 +702,48 @@ export const useLeaveTeam = () => {
       queryClient.invalidateQueries({ queryKey: teamKeys.myTeams() });
       queryClient.invalidateQueries({ queryKey: teamKeys.lists() });
     },
+  });
+};
+
+// Get Teams by User ID
+export const useTeamsByUserId = (userId: string) => {
+  return useQuery({
+    queryKey: ['teams-by-user', userId],
+    queryFn: async () => {
+      if (!userId) {
+        return { data: [] };
+      }
+
+      // Query team_members to find teams where user is a member
+      const { data: memberships, error: membershipsError } = await supabase
+        .from('team_members')
+        .select(`
+          team_id,
+          team:teams(
+            id,
+            name,
+            logo,
+            banner,
+            description,
+            city,
+            visibility,
+            leader_id,
+            created_at
+          )
+        `)
+        .eq('user_id', userId)
+        .eq('status', 'active');
+
+      if (membershipsError) {
+        console.error('Failed to fetch user teams:', membershipsError);
+        return { data: [] };
+      }
+
+      // Extract teams from memberships
+      const teams = memberships?.map((m: any) => m.team).filter(Boolean) || [];
+
+      return { data: teams };
+    },
+    enabled: !!userId,
   });
 };
