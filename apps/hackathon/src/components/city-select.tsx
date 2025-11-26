@@ -78,7 +78,7 @@ export const CitySelect: FC<CitySelectProps> = ({
           <button
             type="button"
             onClick={handleClearSelection}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer"
           >
             ✕
           </button>
@@ -88,7 +88,7 @@ export const CitySelect: FC<CitySelectProps> = ({
       {error && <p className="text-sm text-red-500 mt-1">{error}</p>}
 
       {isOpen && (
-        <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+        <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto text-label2">
           {filteredCities.length > 0 ? (
             <ul className="py-1">
               {filteredCities.map((city) => (

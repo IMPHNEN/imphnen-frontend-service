@@ -62,7 +62,7 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <main className="min-h-screen bg-white">
       {/* Navigation */}
       <div id="#top" className="hidden"></div>
       <nav className="border-b border-gray-200 bg-white sticky top-0 z-50">
@@ -136,7 +136,7 @@ export default function HomePage() {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-b border-gray-200 bg-white">
+        <nav className="md:hidden sticky top-18 border-b border-gray-200 bg-white z-40">
           <div className="flex flex-col items-start gap-4 px-4 py-4">
             <a
               href="#timeline"
@@ -163,7 +163,7 @@ export default function HomePage() {
               Daftar Sekarang
             </button>
           </div>
-        </div>
+        </nav>
       )}
 
       {/* Hero Section */}
@@ -792,6 +792,6 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
-    </div>
+    </main>
   );
 }

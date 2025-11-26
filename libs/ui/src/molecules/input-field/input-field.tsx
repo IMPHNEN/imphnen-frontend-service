@@ -20,6 +20,7 @@ export type TInputFieldProps = Omit<
   disabled?: boolean;
   helperText?: string;
   htmlFor?: string;
+  isRequired?: boolean;
 };
 
 const sizeClasses: Record<TInputSize, { label: string; helperText: string }> = {
@@ -47,6 +48,7 @@ export const InputField: FC<TInputFieldProps> = ({
   htmlFor,
   className,
   disabled,
+  isRequired = false,
   ...rest
 }): ReactElement => {
   return (
@@ -58,7 +60,7 @@ export const InputField: FC<TInputFieldProps> = ({
           sizeClasses[size].label
         )}
       >
-        {label}
+        {label} {isRequired ? <span className="text-red-500">*</span> : null}
       </label>
       <Input
         {...(htmlFor && { id: htmlFor })}
@@ -75,7 +77,7 @@ export const InputField: FC<TInputFieldProps> = ({
         {...rest}
       />
       {error ? (
-        <p className="text-danger-500 text-label1 text-left">{error}</p>
+        <p className="text-danger-500 text-label2 text-left">{error}</p>
       ) : (
         helperText && (
           <p
