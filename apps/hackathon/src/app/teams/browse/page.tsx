@@ -139,12 +139,12 @@ const BrowseTeamsPage: FC = (): ReactElement => {
                         <span className="text-gray-500 text-xl">👥</span>
                       </div>
                     )}
-                    <div className="flex-1">
-                      <h3 className="text-lg font-bold text-gray-900">{team.name}</h3>
-                      <p className="text-sm text-gray-600">
-                        <span>📍 {team.city}</span>
-                        <span> 👥 {team.members?.length || 0} members</span>
-                      </p>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-lg font-bold text-gray-900 line-clamp-2">{team.name}</h3>
+                      <div className="text-sm text-gray-600 flex gap-2">
+                        <p className="truncate flex-1 min-w-0">📍 {team.city}</p>
+                        <p className="whitespace-nowrap shrink-0">👥 {team.members?.length || 0} members</p>
+                      </div>
                     </div>
                   </div>
                   <p className="text-gray-600 text-sm mb-4 line-clamp-3">

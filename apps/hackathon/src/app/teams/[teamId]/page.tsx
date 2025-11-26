@@ -97,8 +97,8 @@ const TeamDashboardPage: FC = (): ReactElement => {
                 />
               )}
               <div>
-                <h1 className="text-xl md:text-3xl font-bold text-gray-900">{team.name}</h1>
-                <p className="text-sm md:text-base text-gray-600 mt-1">📍 {team.city}</p>
+                <h1 className="text-xl md:text-3xl font-bold text-gray-900 line-clamp-2">{team.name}</h1>
+                <p className="text-sm md:text-base text-gray-600 mt-1 line-clamp-1">📍 {team.city}</p>
                 <div className="flex flex-wrap items-center gap-2 md:space-x-4 mt-2">
                   <span className="text-sm text-gray-500">
                     {members.length} {members.length === 1 ? 'Member' : 'Members'}

@@ -101,13 +101,16 @@ const UserProfilePage: FC = (): ReactElement => {
                 <div className="grid gap-4 md:grid-cols-2">
                   {userTeams.map((team: any) => (
                     <Link key={team.id} to={'/teams/' + team.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-                      {team.banner && <img src={team.banner} alt={team.name} className="w-full h-24 object-cover" />}
+                      <img src={team.banner || '/images/banner-imphnen.png'} alt={team.name} className="w-full h-24 object-cover" />
                       <div className="p-4">
                         <div className="flex items-center space-x-3 mb-2">
                           {team.logo && <img src={team.logo} alt={team.name} className="w-10 h-10 rounded-full object-cover" />}
-                          <div>
-                            <h3 className="font-bold text-gray-900">{team.name}</h3>
-                            <p className="text-xs text-gray-600">📍 {team.city}</p>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-bold text-gray-900 line-clamp-2">{team.name}</h3>
+                            <div className="text-sm text-gray-600 flex gap-2">
+                              <p className="truncate flex-1 min-w-0">📍 {team.city}</p>
+                              <p className="whitespace-nowrap shrink-0">👥 {team.members?.length || 0} members</p>
+                            </div>
                           </div>
                         </div>
                         <p className="text-gray-600 text-sm line-clamp-2">{team.description}</p>
