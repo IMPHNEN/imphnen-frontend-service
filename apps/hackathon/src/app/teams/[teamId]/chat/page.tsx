@@ -63,14 +63,14 @@ const TeamChatPage: FC = (): ReactElement => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
+    <div className="flex flex-col h-screen bg-gray-50 dark:bg-neutral-950">
       {/* Header */}
-      <div className="bg-white border-b shadow-sm">
+      <div className="bg-white dark:bg-neutral-900 border-b dark:border-neutral-700 shadow-sm dark:shadow-neutral-950/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Team Chat</h1>
-              <p className="text-gray-600 text-sm mt-0.5">{team?.name}</p>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Team Chat</h1>
+              <p className="text-gray-600 dark:text-neutral-400 text-sm mt-0.5">{team?.name}</p>
             </div>
             <Button variant="secondary" onClick={() => navigate(`/teams/${teamId}`)}>
               Back to Team
@@ -84,7 +84,7 @@ const TeamChatPage: FC = (): ReactElement => {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           {isLoading ? (
             <div className="flex items-center justify-center h-64">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-primary-400"></div>
             </div>
           ) : messages && messages.length > 0 ? (
             <div className="space-y-4">
@@ -118,18 +118,18 @@ const TeamChatPage: FC = (): ReactElement => {
                       <div className={`flex-1 ${isOwnMessage ? 'text-right' : 'text-left'}`}>
                         <div className={`inline-block ${isOwnMessage ? 'items-end' : 'items-start'}`}>
                           <div className="flex items-baseline gap-2 mb-1">
-                            <span className="font-semibold text-sm text-gray-900">
+                            <span className="font-semibold text-sm text-gray-900 dark:text-white">
                               {isOwnMessage ? 'You' : msg.user?.fullname}
                             </span>
-                            <span className="text-xs text-gray-500">
+                            <span className="text-xs text-gray-500 dark:text-neutral-500">
                               {formatTime(msg.created_at)}
                             </span>
                           </div>
                           <div
                             className={`relative group rounded-2xl px-4 py-2.5 ${
                               isOwnMessage
-                                ? 'bg-blue-600 text-white'
-                                : 'bg-white text-gray-900 border border-gray-200'
+                                ? 'bg-blue-600 dark:bg-primary-600 text-white'
+                                : 'bg-white dark:bg-neutral-800 text-gray-900 dark:text-white border border-gray-200 dark:border-neutral-700'
                             }`}
                           >
                             <p className="text-sm whitespace-pre-wrap break-words">{msg.message}</p>
@@ -138,7 +138,7 @@ const TeamChatPage: FC = (): ReactElement => {
                             {canDelete && (
                               <button
                                 onClick={() => handleDeleteMessage(msg.id)}
-                                className={`absolute top-1 ${isOwnMessage ? 'left-1' : 'right-1'} opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-gray-200 ${isOwnMessage ? 'hover:bg-blue-700' : ''}`}
+                                className={`absolute top-1 ${isOwnMessage ? 'left-1' : 'right-1'} opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-gray-200 dark:hover:bg-neutral-700 ${isOwnMessage ? 'hover:bg-blue-700 dark:hover:bg-primary-700' : ''}`}
                                 title="Delete message"
                               >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -158,10 +158,10 @@ const TeamChatPage: FC = (): ReactElement => {
           ) : (
             <div className="flex flex-col items-center justify-center h-64 text-center">
               <div className="text-6xl mb-4">💬</div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                 No messages yet
               </h3>
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-neutral-400">
                 Be the first to start the conversation!
               </p>
             </div>
@@ -170,7 +170,7 @@ const TeamChatPage: FC = (): ReactElement => {
       </div>
 
       {/* Message Input */}
-      <div className="bg-white border-t shadow-lg">
+      <div className="bg-white dark:bg-neutral-900 border-t dark:border-neutral-700 shadow-lg dark:shadow-neutral-950/50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <form onSubmit={handleSendMessage} className="flex gap-3">
             <input
@@ -178,7 +178,7 @@ const TeamChatPage: FC = (): ReactElement => {
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Type your message..."
-              className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="flex-1 px-4 py-3 border border-gray-300 dark:border-neutral-600 dark:bg-neutral-800 dark:text-white dark:placeholder-neutral-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-primary-500 focus:border-transparent"
               disabled={isSending}
             />
             <Button

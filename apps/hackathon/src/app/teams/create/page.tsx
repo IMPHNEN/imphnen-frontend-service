@@ -5,7 +5,8 @@ import { useNavigate } from 'react-router';
 import { useForm, Controller } from 'react-hook-form';
 import { teamCreateSchema, TTeamCreateForm, useCreateTeam, ETeamVisibility, useUploadFile } from '@imphnen-frontend-service/service';
 import { zodResolver } from '@hookform/resolvers/zod';
-import INDONESIAN_CITIES from '../../../constants/cities';
+
+import { CitySelect } from '../../../components/city-select';
 
 const CreateTeamPage: FC = (): ReactElement => {
   const navigate = useNavigate();
@@ -79,29 +80,29 @@ const CreateTeamPage: FC = (): ReactElement => {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-neutral-950">
       {/* Header */}
-      <div className="bg-white border-b">
+      <div className="bg-white dark:bg-neutral-900 border-b dark:border-neutral-700">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <h1 className="text-3xl font-bold text-gray-900">Create Your Team</h1>
-          <p className="text-gray-600 mt-1">Build your hackathon dream team</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Create Your Team</h1>
+          <p className="text-gray-600 dark:text-neutral-400 mt-1">Build your hackathon dream team</p>
         </div>
       </div>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white rounded-lg shadow-md p-8">
+        <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md dark:shadow-neutral-900/50 p-8">
           <form onSubmit={onSubmit} className="space-y-6">
             {/* Banner Upload */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Team Banner <span className="text-gray-400">(Optional)</span>
+              <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-2">
+                Team Banner <span className="text-gray-400 dark:text-neutral-500">(Optional)</span>
               </label>
               {bannerPreview ? (
                 <div className="relative">
                   <img
                     src={bannerPreview}
                     alt="Banner preview"
-                    className="w-full h-48 object-cover rounded-lg border-2 border-gray-200"
+                    className="w-full h-48 object-cover rounded-lg border-2 border-gray-200 dark:border-neutral-700"
                   />
                   <button
                     type="button"
@@ -115,10 +116,10 @@ const CreateTeamPage: FC = (): ReactElement => {
                   </button>
                 </div>
               ) : (
-                <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+                <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-gray-300 dark:border-neutral-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-neutral-800">
                   <div className="text-center">
-                    <p className="text-gray-500">Click to upload banner</p>
-                    <p className="text-xs text-gray-400 mt-1">1200x400 recommended</p>
+                    <p className="text-gray-500 dark:text-neutral-400">Click to upload banner</p>
+                    <p className="text-xs text-gray-400 dark:text-neutral-500 mt-1">1200x400 recommended</p>
                   </div>
                   <input
                     type="file"
@@ -132,19 +133,19 @@ const CreateTeamPage: FC = (): ReactElement => {
 
             {/* Logo Upload */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Team Logo <span className="text-gray-400">(Optional, but highly recommended)</span>
+              <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-2">
+                Team Logo <span className="text-gray-400 dark:text-neutral-500">(Optional, but highly recommended)</span>
               </label>
               <div className="flex items-center space-x-4">
                 {logoPreview ? (
                   <img
                     src={logoPreview}
                     alt="Logo preview"
-                    className="w-24 h-24 rounded-full object-cover border-2 border-gray-200"
+                    className="w-24 h-24 rounded-full object-cover border-2 border-gray-200 dark:border-neutral-700"
                   />
                 ) : (
-                  <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center">
-                    <span className="text-gray-400 text-3xl">👥</span>
+                  <div className="w-24 h-24 rounded-full bg-gray-200 dark:bg-neutral-700 flex items-center justify-center">
+                    <span className="text-gray-400 dark:text-neutral-500 text-3xl">👥</span>
                   </div>
                 )}
                 <div>
@@ -186,36 +187,26 @@ const CreateTeamPage: FC = (): ReactElement => {
 
             {/* City */}
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300">
                 City <span className="text-red-500">*</span>
               </label>
               <Controller
                 control={form.control}
                 name="city"
                 render={({ field, fieldState }) => (
-                  <div>
-                    <select
-                      {...field}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    >
-                      <option value="">Select city</option>
-                      {INDONESIAN_CITIES.map((city) => (
-                        <option key={city} value={city}>
-                          {city}
-                        </option>
-                      ))}
-                    </select>
-                    {fieldState.error && (
-                      <p className="text-sm text-red-500 mt-1">{fieldState.error.message}</p>
-                    )}
-                  </div>
+                  <CitySelect
+                    value={field.value}
+                    onChange={field.onChange}
+                    error={fieldState.error?.message}
+                    placeholder="Search your city..."
+                  />
                 )}
               />
             </div>
 
             {/* Description */}
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300">
                 Description <span className="text-red-500">*</span>
               </label>
               <Controller
@@ -239,7 +230,7 @@ const CreateTeamPage: FC = (): ReactElement => {
 
             {/* Visibility */}
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300">
                 Team Visibility <span className="text-red-500">*</span>
               </label>
               <Controller
@@ -247,7 +238,7 @@ const CreateTeamPage: FC = (): ReactElement => {
                 name="visibility"
                 render={({ field }) => (
                   <div className="space-y-3">
-                    <label className="flex items-start space-x-3 cursor-pointer border rounded-lg p-4 hover:bg-gray-50">
+                    <label className="flex items-start space-x-3 cursor-pointer border dark:border-neutral-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-neutral-800">
                       <input
                         type="radio"
                         {...field}
@@ -256,13 +247,13 @@ const CreateTeamPage: FC = (): ReactElement => {
                         className="mt-1"
                       />
                       <div>
-                        <p className="font-medium text-gray-900">Public</p>
-                        <p className="text-sm text-gray-600">
+                        <p className="font-medium text-gray-900 dark:text-white">Public</p>
+                        <p className="text-sm text-gray-600 dark:text-neutral-400">
                           Team will be visible in Browse Teams. Anyone can request to join.
                         </p>
                       </div>
                     </label>
-                    <label className="flex items-start space-x-3 cursor-pointer border rounded-lg p-4 hover:bg-gray-50">
+                    <label className="flex items-start space-x-3 cursor-pointer border dark:border-neutral-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-neutral-800">
                       <input
                         type="radio"
                         {...field}
@@ -271,8 +262,8 @@ const CreateTeamPage: FC = (): ReactElement => {
                         className="mt-1"
                       />
                       <div>
-                        <p className="font-medium text-gray-900">Private</p>
-                        <p className="text-sm text-gray-600">
+                        <p className="font-medium text-gray-900 dark:text-white">Private</p>
+                        <p className="text-sm text-gray-600 dark:text-neutral-400">
                           Team is hidden from Browse Teams. Members can only join via invitation.
                         </p>
                       </div>
@@ -283,8 +274,8 @@ const CreateTeamPage: FC = (): ReactElement => {
             </div>
 
             {/* Warning */}
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-              <p className="text-sm text-yellow-800">
+            <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+              <p className="text-sm text-yellow-800 dark:text-yellow-200">
                 <strong>Note:</strong> As team leader, you cannot leave or join another team after creating this team.
               </p>
             </div>

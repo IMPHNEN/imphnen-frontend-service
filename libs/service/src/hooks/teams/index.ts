@@ -312,9 +312,48 @@ export const useManageMember = (teamId: string) => {
 
 export const useRemoveMember = (teamId: string) => {
   const queryClient = useQueryClient();
+  const { session } = useAuthStore();
 
   return useMutation({
-    mutationFn: (userId: string) => teamsApi.removeMember(teamId, userId),
+    mutationFn: async (userId: string) => {
+      if (!session?.user?.id) {
+        throw new Error('You must be logged in to remove a member');
+      }
+
+      // Verify the current user is the team leader
+      const { data: team, error: teamError } = await supabase
+        .from('teams')
+        .select('leader_id')
+        .eq('id', teamId)
+        .single();
+
+      if (teamError || !team) {
+        throw new Error('Team not found');
+      }
+
+      if (team.leader_id !== session.user.id) {
+        throw new Error('Only the team leader can remove members');
+      }
+
+      // Cannot remove the leader
+      if (userId === team.leader_id) {
+        throw new Error('Cannot remove the team leader');
+      }
+
+      // Delete the team member record
+      const { error: deleteError } = await supabase
+        .from('team_members')
+        .delete()
+        .eq('team_id', teamId)
+        .eq('user_id', userId);
+
+      if (deleteError) {
+        console.error('Failed to remove member:', deleteError);
+        throw new Error(deleteError.message || 'Failed to remove member');
+      }
+
+      return { success: true };
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: teamKeys.members(teamId) });
       queryClient.invalidateQueries({ queryKey: teamKeys.detail(teamId) });

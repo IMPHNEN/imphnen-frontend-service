@@ -2,6 +2,9 @@
 @import 'tailwindcss';
 @source "../../../libs/ui/**/*.{ts,tsx}";
 
+/* Enable class-based dark mode (using .dark class on html element) */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-primary-50: #f0f8ff;
   --color-primary-100: #e1f0fd;
@@ -20,12 +23,12 @@
   --color-neutral-200: #d1d1d1;
   --color-neutral-300: #b0b0b0;
   --color-neutral-400: #888888;
-  --color-neutral-500: #6d6d6d;
-  --color-neutral-600: #5d5d5d;
-  --color-neutral-700: #4f4f4f;
-  --color-neutral-800: #454545;
-  --color-neutral-900: #3d3d3d;
-  --color-neutral-950: #2b2b2b;
+  --color-neutral-500: #6e6a86;
+  --color-neutral-600: #56526e;
+  --color-neutral-700: #44415a;
+  --color-neutral-800: #393552;
+  --color-neutral-900: #2a273f;
+  --color-neutral-950: #232136;
 
   --color-success-100: #e0fbd8;
   --color-success-200: #bcf8b0;
@@ -108,6 +111,14 @@
     border-color: var(--color-neutral-200, currentColor);
   }
 
+  .dark *,
+  .dark ::after,
+  .dark ::before,
+  .dark ::backdrop,
+  .dark ::file-selector-button {
+    border-color: var(--color-neutral-700, currentColor);
+  }
+
   /* Custom scrollbar */
   ::-webkit-scrollbar {
     width: 6px;
@@ -118,13 +129,25 @@
     background: var(--color-neutral-50);
   }
 
+  .dark ::-webkit-scrollbar-track {
+    background: var(--color-neutral-900);
+  }
+
   ::-webkit-scrollbar-thumb {
     background: #cccccc;
     border-radius: 3px;
   }
 
+  .dark ::-webkit-scrollbar-thumb {
+    background: var(--color-neutral-600);
+  }
+
   ::-webkit-scrollbar-thumb:hover {
     background: var(--color-neutral-300);
+  }
+
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-neutral-500);
   }
 
   html {
@@ -132,5 +155,15 @@
     font-weight: 400;
     font-size: 16px;
     line-height: 1.2;
+  }
+
+  /* Dark mode base styles */
+  .dark {
+    color-scheme: dark;
+  }
+
+  .dark body {
+    background-color: var(--color-neutral-950);
+    color: var(--color-neutral-100);
   }
 }

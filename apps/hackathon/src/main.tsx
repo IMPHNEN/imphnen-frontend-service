@@ -9,6 +9,7 @@ import {
   QueryProvider,
 } from '@imphnen-frontend-service/utils';
 import { Toaster } from 'sonner';
+import { ThemeProvider } from './components/theme-provider';
 import './index.css';
 
 const files = import.meta.glob('./app/**/*(page|layout).tsx');
@@ -36,11 +37,13 @@ if (!rootElement) throw new Error('Failed to find the root element');
 
 createRoot(rootElement).render(
   <StrictMode>
-    <QueryProvider>
-      <ModalLoginProvider>
-        <Toaster position="top-right" />
-        <RouterProvider router={router} />
-      </ModalLoginProvider>
-    </QueryProvider>
+    <ThemeProvider defaultTheme="system">
+      <QueryProvider>
+        <ModalLoginProvider>
+          <Toaster position="top-right" richColors />
+          <RouterProvider router={router} />
+        </ModalLoginProvider>
+      </QueryProvider>
+    </ThemeProvider>
   </StrictMode>
 );

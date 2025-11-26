@@ -38,9 +38,9 @@ const SubmitProjectPage: FC = (): ReactElement => {
 
   if (!isLeader) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Access Denied</h2>
-        <p className="text-gray-600 mb-4">Only the team leader can submit projects</p>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 dark:bg-neutral-950">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Access Denied</h2>
+        <p className="text-gray-600 dark:text-neutral-400 mb-4">Only the team leader can submit projects</p>
         <Button onClick={() => navigate(`/teams/${teamId}`)}>Back to Team</Button>
       </div>
     );
@@ -48,10 +48,10 @@ const SubmitProjectPage: FC = (): ReactElement => {
 
   if (hasSubmission) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 dark:bg-neutral-950">
         <div className="text-6xl mb-4">✅</div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Project Already Submitted</h2>
-        <p className="text-gray-600 mb-4">Your team has already submitted a project</p>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Project Already Submitted</h2>
+        <p className="text-gray-600 dark:text-neutral-400 mb-4">Your team has already submitted a project</p>
         <div className="flex space-x-3">
           <Button onClick={() => navigate(`/teams/${teamId}/submission`)}>
             View Submission
@@ -95,22 +95,22 @@ const SubmitProjectPage: FC = (): ReactElement => {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-white border-b">
+    <div className="min-h-screen bg-gray-50 dark:bg-neutral-950">
+      <div className="bg-white dark:bg-neutral-900 border-b dark:border-neutral-700">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <h1 className="text-3xl font-bold text-gray-900">Submit Project</h1>
-          <p className="text-gray-600 mt-1">{team?.name}</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Submit Project</h1>
+          <p className="text-gray-600 dark:text-neutral-400 mt-1">{team?.name}</p>
         </div>
       </div>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Warning Banner */}
-        <div className="bg-red-50 border-2 border-red-500 rounded-lg p-6 mb-6">
+        <div className="bg-red-50 dark:bg-red-900/20 border-2 border-red-500 rounded-lg p-6 mb-6">
           <div className="flex items-start space-x-3">
             <span className="text-3xl">⚠️</span>
             <div>
-              <h3 className="font-bold text-red-900 text-lg">IMPORTANT WARNING</h3>
-              <ul className="text-red-800 mt-2 space-y-1 text-sm">
+              <h3 className="font-bold text-red-900 dark:text-red-100 text-lg">IMPORTANT WARNING</h3>
+              <ul className="text-red-800 dark:text-red-200 mt-2 space-y-1 text-sm">
                 <li>• You can only submit your project ONCE</li>
                 <li>• After submission, you CANNOT edit or change anything</li>
                 <li>• Make sure all information is correct before submitting</li>
@@ -120,7 +120,7 @@ const SubmitProjectPage: FC = (): ReactElement => {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-md p-8">
+        <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md dark:shadow-neutral-950/50 p-8">
           <form onSubmit={(e) => {
             e.preventDefault();
             setShowConfirmModal(true);
@@ -135,7 +135,7 @@ const SubmitProjectPage: FC = (): ReactElement => {
 
             {/* Description */}
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300">
                 Project Description <span className="text-red-500">*</span>
               </label>
               <Controller
@@ -186,8 +186,8 @@ const SubmitProjectPage: FC = (): ReactElement => {
 
             {/* Screenshots */}
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                Project Screenshots <span className="text-gray-400">(Optional)</span>
+              <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300">
+                Project Screenshots <span className="text-gray-400 dark:text-neutral-500">(Optional)</span>
               </label>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
                 {screenshots.map((url, index) => (
@@ -195,7 +195,7 @@ const SubmitProjectPage: FC = (): ReactElement => {
                     <img
                       src={url}
                       alt={`Screenshot ${index + 1}`}
-                      className="w-full h-32 object-cover rounded-lg border-2 border-gray-200"
+                      className="w-full h-32 object-cover rounded-lg border-2 border-gray-200 dark:border-neutral-700"
                     />
                     <button
                       type="button"
@@ -207,10 +207,10 @@ const SubmitProjectPage: FC = (): ReactElement => {
                   </div>
                 ))}
               </div>
-              <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+              <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 dark:border-neutral-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-neutral-800">
                 <div className="text-center">
-                  <p className="text-gray-500">Click to upload screenshots</p>
-                  <p className="text-xs text-gray-400 mt-1">PNG, JPG up to 5MB each</p>
+                  <p className="text-gray-500 dark:text-neutral-400">Click to upload screenshots</p>
+                  <p className="text-xs text-gray-400 dark:text-neutral-500 mt-1">PNG, JPG up to 5MB each</p>
                 </div>
                 <input
                   type="file"
@@ -247,22 +247,22 @@ const SubmitProjectPage: FC = (): ReactElement => {
 
       {/* Confirmation Modal */}
       {showConfirmModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+        <div className="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-xl dark:shadow-neutral-950/50 max-w-md w-full p-6">
             <div className="text-center mb-6">
               <div className="text-5xl mb-4">⚠️</div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
                 Final Confirmation
               </h2>
-              <p className="text-red-600 font-medium">
+              <p className="text-red-600 dark:text-red-400 font-medium">
                 This action is IRREVERSIBLE!
               </p>
             </div>
-            <div className="bg-gray-50 rounded-lg p-4 mb-6">
-              <p className="text-sm text-gray-700 mb-3">
+            <div className="bg-gray-50 dark:bg-neutral-800 rounded-lg p-4 mb-6">
+              <p className="text-sm text-gray-700 dark:text-neutral-300 mb-3">
                 By clicking "Submit Project", you confirm that:
               </p>
-              <ul className="text-sm text-gray-600 space-y-2">
+              <ul className="text-sm text-gray-600 dark:text-neutral-400 space-y-2">
                 <li>✓ All information is correct and complete</li>
                 <li>✓ You understand this can only be done once</li>
                 <li>✓ You cannot edit after submission</li>

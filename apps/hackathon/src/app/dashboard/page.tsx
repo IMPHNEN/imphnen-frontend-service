@@ -43,11 +43,11 @@ const DashboardPage: FC = (): ReactElement => {
   return (
     <div className="p-8 max-w-7xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
           Welcome, {user?.fullname || user?.email?.split('@')[0] || 'User'}!
         </h1>
         {user?.location && (
-          <p className="text-gray-600 mt-1 font-sans flex items-center space-x-1">
+          <p className="text-gray-600 dark:text-neutral-400 mt-1 font-sans flex items-center space-x-1">
             <Icon icon="heroicons:map-pin-16-solid" width="24" height="24" />
             <span>{user.location}</span>
           </p>
@@ -55,21 +55,21 @@ const DashboardPage: FC = (): ReactElement => {
       </div>
 
       {invitations.length > 0 && (
-        <div className="mb-8 bg-primary-50 border border-primary-200 rounded-lg p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">
+        <div className="mb-8 bg-primary-50 dark:bg-blue-900/20 border border-primary-200 dark:border-blue-800 rounded-lg p-6">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
             Team Invitations ({invitations.length})
           </h2>
           <div className="space-y-3 font-sans">
             {invitations.map((invitation) => (
               <div
                 key={invitation.id}
-                className="bg-white p-4 rounded-lg shadow-sm flex items-center justify-between"
+                className="bg-white dark:bg-neutral-800 p-4 rounded-lg shadow-sm flex items-center justify-between"
               >
                 <div>
-                  <p className="font-medium text-gray-900">
+                  <p className="font-medium text-gray-900 dark:text-white">
                     {invitation.team.name}
                   </p>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-gray-600 dark:text-neutral-400">
                     Invited by {invitation.inviter.fullname}
                   </p>
                 </div>
@@ -96,7 +96,7 @@ const DashboardPage: FC = (): ReactElement => {
 
       {myTeams.length > 0 ? (
         <div className="mb-6 md:mb-8">
-          <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-3 md:mb-4">
+          <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
             My Team
           </h2>
           <div className="grid gap-4 md:gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -104,7 +104,7 @@ const DashboardPage: FC = (): ReactElement => {
               <Link
                 key={team.id}
                 to={'/teams/' + team.id}
-                className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                className="bg-white dark:bg-neutral-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
               >
                 {team.banner && (
                   <img
@@ -123,15 +123,15 @@ const DashboardPage: FC = (): ReactElement => {
                       />
                     )}
                     <div>
-                      <h3 className="text-base md:text-lg font-bold text-gray-900">
+                      <h3 className="text-base md:text-lg font-bold text-gray-900 dark:text-white">
                         {team.name}
                       </h3>
-                      <p className="text-xs md:text-sm text-gray-600">
+                      <p className="text-xs md:text-sm text-gray-600 dark:text-neutral-400">
                         City: {team.city}
                       </p>
                     </div>
                   </div>
-                  <p className="text-gray-600 text-xs md:text-sm line-clamp-2">
+                  <p className="text-gray-600 dark:text-neutral-400 text-xs md:text-sm line-clamp-2">
                     {team.description}
                   </p>
                 </div>
@@ -140,20 +140,20 @@ const DashboardPage: FC = (): ReactElement => {
           </div>
         </div>
       ) : (
-        <div className="mb-6 md:mb-8 bg-white rounded-lg shadow-md p-6 md:p-8">
+        <div className="mb-6 md:mb-8 bg-white dark:bg-neutral-800 rounded-lg shadow-md p-6 md:p-8">
           <div className="text-center">
             <div className="text-3xl md:text-4xl mb-2 md:mb-3">👋</div>
-            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-1 md:mb-2">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-1 md:mb-2">
               You are not in a team yet
             </h2>
-            <p className="text-sm md:text-base text-gray-600 font-sans">
+            <p className="text-sm md:text-base text-gray-600 dark:text-neutral-400 font-sans">
               Use the sidebar to browse teams or create your own
             </p>
           </div>
         </div>
       )}
 
-      <div className="mt-8 bg-linear-to-br from-white-50 to-primary-50 rounded-xl shadow-lg">
+      <div className="mt-8 bg-linear-to-br from-white-50 to-primary-50 dark:from-neutral-800 dark:to-neutral-900 rounded-xl shadow-lg">
         <div className="bg-linear-to-r from-primary-600 to-indigo-600 h-24 rounded-t-xl"></div>
         <div className="px-4 md:px-8 pb-4 md:pb-8">
           <div className="flex flex-col md:flex-row md:items-start -mt-12 mb-4 md:mb-6">
@@ -162,30 +162,30 @@ const DashboardPage: FC = (): ReactElement => {
                 <img
                   src={user.avatar}
                   alt={user.fullname || 'User'}
-                  className="w-20 h-20 md:w-24 md:h-24 rounded-full border-4 border-white shadow-lg object-cover"
+                  className="w-20 h-20 md:w-24 md:h-24 rounded-full border-4 border-white dark:border-neutral-700 shadow-lg object-cover"
                 />
               ) : (
-                <div className="w-20 h-20 md:w-24 md:h-24 rounded-full border-4 border-white shadow-lg bg-gray-200 flex items-center justify-center">
-                  <span className="text-gray-400 text-3xl md:text-4xl font-sans">
+                <div className="w-20 h-20 md:w-24 md:h-24 rounded-full border-4 border-white dark:border-neutral-700 shadow-lg bg-gray-200 dark:bg-neutral-700 flex items-center justify-center">
+                  <span className="text-gray-400 dark:text-neutral-500 text-3xl md:text-4xl font-sans">
                     U
                   </span>
                 </div>
               )}
               <div className="md:ml-6 mt-4 md:mt-14">
-                <h2 className="text-xl md:text-2xl font-bold text-gray-900">
+                <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
                   {user?.fullname ||
                     user?.email?.split('@')[0] ||
                     'Unnamed User'}
                 </h2>
 
                 {user?.location ? (
-                  <p className="text-gray-600 flex items-center mt-1 text-sm md:text-base font-sans">
+                  <p className="text-gray-600 dark:text-neutral-400 flex items-center mt-1 text-sm md:text-base font-sans">
                     {user.location}
                   </p>
                 ) : (
                   <Link
                     to="/onboarding/user"
-                    className="text-primary-500 hover:text-primary-600 text-sm md:text-sm mt-1 flex items-center"
+                    className="text-primary-500 dark:text-blue-400 hover:text-primary-600 dark:hover:text-blue-300 text-sm md:text-sm mt-1 flex items-center"
                   >
                     <span className="font-sans">Complete your profile</span>
                     <Icon
@@ -208,24 +208,28 @@ const DashboardPage: FC = (): ReactElement => {
           </div>
           <div className="space-y-4 md:space-y-6">
             {user?.bio && (
-              <div className="bg-white rounded-lg p-4 shadow-sm">
-                <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-2">
+              <div className="bg-white dark:bg-neutral-800 rounded-lg p-4 shadow-sm">
+                <h3 className="text-sm font-semibold text-gray-700 dark:text-neutral-300 uppercase tracking-wide mb-2">
                   About
                 </h3>
-                <p className="text-gray-800 leading-relaxed">{user.bio}</p>
+                <p className="text-gray-800 dark:text-neutral-200 leading-relaxed">
+                  {user.bio}
+                </p>
               </div>
             )}
-            <div className="bg-white rounded-lg p-4 shadow-sm">
-              <h3 className="font-semibold text-gray-700 tracking-wide mb-3">
+            <div className="bg-white dark:bg-neutral-800 rounded-lg p-4 shadow-sm">
+              <h3 className="font-semibold text-gray-700 dark:text-neutral-300 tracking-wide mb-3">
                 Contact
               </h3>
-              <div className="flex items-center text-gray-700">
-                <span className="text-gray-900">{user?.email}</span>
+              <div className="flex items-center text-gray-700 dark:text-neutral-300">
+                <span className="text-gray-900 dark:text-white">
+                  {user?.email}
+                </span>
               </div>
             </div>
             {user?.skills && user.skills.length > 0 && (
-              <div className="bg-white rounded-lg p-4 shadow-sm">
-                <h3 className="font-semibold text-gray-700 tracking-wide mb-3">
+              <div className="bg-white dark:bg-neutral-800 rounded-lg p-4 shadow-sm">
+                <h3 className="font-semibold text-gray-700 dark:text-neutral-300 tracking-wide mb-3">
                   Skills
                 </h3>
                 <div className="flex flex-wrap gap-2">
