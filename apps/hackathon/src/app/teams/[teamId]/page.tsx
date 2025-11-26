@@ -55,6 +55,29 @@ const TeamDashboardPage: FC = (): ReactElement => {
   const [imagesLoaded, setImagesLoaded] = useState(false);
   const [imageLoadCount, setImageLoadCount] = useState(0);
 
+  // Calculate total images to load (banner + logo + member avatars)
+  const totalImagesToLoad = 0; // Simplified - disable image loading overlay
+
+  const handleImageLoad = () => {
+    setImageLoadCount((prev) => {
+      const newCount = prev + 1;
+      if (newCount >= totalImagesToLoad) {
+        setImagesLoaded(true);
+      }
+      return newCount;
+    });
+  };
+
+  const handleImageError = () => {
+    // Treat error as loaded to not block the UI
+    handleImageLoad();
+  };
+
+  // Set images as loaded immediately since we disabled the loading overlay
+  useEffect(() => {
+    setImagesLoaded(true);
+  }, []);
+
   const { data: teamData, isLoading: isLoadingTeam } = useTeamById(
     teamId || ''
   );
