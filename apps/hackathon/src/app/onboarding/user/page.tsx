@@ -12,6 +12,7 @@ import {
   useAuthStore,
 } from '@imphnen-frontend-service/service';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from 'sonner';
 
 import { CitySelect } from '../../../components/city-select';
 import { Icon } from '@iconify/react';
@@ -70,41 +71,34 @@ const UserOnboardingPage: FC = (): ReactElement => {
 
   const onSubmit = form.handleSubmit(async (data) => {
     try {
-      // console.log('[Onboarding] Starting submission...', data);
       let avatarUrl = session?.user?.avatar || null;
 
       // Upload avatar if a new file was selected
       if (avatarFile) {
-        // console.log('[Onboarding] Uploading avatar...');
         const uploadResult = await uploadAvatar(avatarFile);
         avatarUrl = uploadResult.data.url;
-        // console.log('[Onboarding] Avatar uploaded:', avatarUrl);
       }
 
       // Update user in Supabase
-      // console.log('[Onboarding] Updating user in Supabase...');
-      const result = await updateUser({
+      await updateUser({
         fullname: data.fullname,
         avatar: avatarUrl,
         location: data.location,
         bio: data.bio,
         skills: data.skills,
       });
-      // console.log('[Onboarding] User updated successfully:', result);
 
       // Wait a bit for the onSuccess handler to update localStorage
       // The updateUser mutation's onSuccess handler updates the Zustand store and localStorage
       await new Promise((resolve) => setTimeout(resolve, 100));
 
-      // console.log('[Onboarding] Navigating to dashboard...');
       // Use window.location for a full page reload to ensure middleware sees updated localStorage
       globalThis.location.href = '/dashboard';
     } catch (error) {
-      // console.error('[Onboarding] Onboarding failed:', error);
-      alert(
-        `Onboarding failed: ${
-          error instanceof Error ? error.message : 'Unknown error'
-        }`
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : 'Onboarding failed. Please try again.'
       );
     }
   });

@@ -5,7 +5,8 @@ import { useNavigate, useParams } from 'react-router';
 import { useForm, Controller } from 'react-hook-form';
 import { teamUpdateSchema, TTeamUpdateForm, useUpdateTeam, useTeamById, ETeamVisibility, useUploadFile, useAuthStore } from '@imphnen-frontend-service/service';
 import { zodResolver } from '@hookform/resolvers/zod';
-import INDONESIAN_CITIES from '../../../../constants/cities';
+
+import { CitySelect } from '../../../../components/city-select';
 
 const EditTeamPage: FC = (): ReactElement => {
   const { teamId } = useParams<{ teamId: string }>();
@@ -229,22 +230,12 @@ const EditTeamPage: FC = (): ReactElement => {
                 control={form.control}
                 name="city"
                 render={({ field, fieldState }) => (
-                  <div>
-                    <select
-                      {...field}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-neutral-600 dark:bg-neutral-800 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    >
-                      <option value="">Select city</option>
-                      {INDONESIAN_CITIES.map((city) => (
-                        <option key={city} value={city}>
-                          {city}
-                        </option>
-                      ))}
-                    </select>
-                    {fieldState.error && (
-                      <p className="text-sm text-red-500 mt-1">{fieldState.error.message}</p>
-                    )}
-                  </div>
+                  <CitySelect
+                    value={field.value || ''}
+                    onChange={field.onChange}
+                    error={fieldState.error?.message}
+                    placeholder="Search your city..."
+                  />
                 )}
               />
             </div>

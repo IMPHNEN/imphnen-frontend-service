@@ -138,8 +138,8 @@ const ProfilePage: FC = (): ReactElement => {
   const isLoading = isUpdating || isUploading;
 
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen bg-gray-50 dark:bg-neutral-950 px-4 py-8">
-      <div className="bg-white dark:bg-neutral-900 w-full max-w-md p-8 rounded-xl shadow-lg">
+    <div className="fixed inset-0 bg-black/30 dark:bg-black/50 backdrop-blur-sm flex flex-col justify-center items-center px-4 py-8 z-50 overflow-y-auto">
+      <div className="bg-white dark:bg-neutral-900 w-full max-w-md p-8 rounded-xl shadow-xl dark:shadow-neutral-950/50">
         <div className="mb-6">
           <div className="flex items-center justify-between mb-2">
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">

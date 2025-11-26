@@ -85,54 +85,6 @@ const TeamDashboardPage: FC = (): ReactElement => {
   );
   const canInvite = isLeader && members.length < MAX_TEAM_MEMBERS;
 
-  // Calculate total images to load
-  const totalImagesToLoad =
-    (team?.banner ? 1 : 0) +
-    (team?.logo ? 1 : 0) +
-    members.filter((m: any) => m.user?.avatar).length;
-
-  // Track image loading with timeout fallback
-  useEffect(() => {
-    if (!isLoadingTeam && !isLoadingMembers && team) {
-      if (totalImagesToLoad === 0) {
-        setImagesLoaded(true);
-      } else if (imageLoadCount >= totalImagesToLoad) {
-        setImagesLoaded(true);
-      }
-    }
-  }, [
-    isLoadingTeam,
-    isLoadingMembers,
-    team,
-    imageLoadCount,
-    totalImagesToLoad,
-  ]);
-
-  // Fallback timeout - if images take too long, show content anyway
-  useEffect(() => {
-    if (!isLoadingTeam && !isLoadingMembers && team && !imagesLoaded) {
-      const timeout = setTimeout(() => {
-        setImagesLoaded(true);
-      }, 3000); // 3 second timeout
-      return () => clearTimeout(timeout);
-    }
-  }, [isLoadingTeam, isLoadingMembers, team, imagesLoaded]);
-
-  const handleImageLoad = () => {
-    setImageLoadCount((prev) => prev + 1);
-  };
-
-  // Also count error as loaded to prevent stuck
-  const handleImageError = () => {
-    setImageLoadCount((prev) => prev + 1);
-  };
-
-  console.log('Leader check:', {
-    currentUserId,
-    leaderId: team?.leader_id,
-    isLeader,
-  });
-
   const handleInviteMember = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!inviteEmail.trim() || isInviting) return;

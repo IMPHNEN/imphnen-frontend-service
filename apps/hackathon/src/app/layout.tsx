@@ -14,18 +14,14 @@ export default function RootLayout() {
     const checkAuth = async () => {
       const pathname = location.pathname;
 
-      console.log('[Layout] Checking auth for route:', pathname);
-
       // Allow hackathon pages without checks
       if (pathname.startsWith('/hackathons')) {
-        console.log('[Layout] Public route, allowing access');
         setIsChecking(false);
         return;
       }
 
       // Allow auth callback without checks
       if (pathname === '/auth/callback') {
-        console.log('[Layout] Auth callback, allowing access');
         setIsChecking(false);
         return;
       }
@@ -43,27 +39,23 @@ export default function RootLayout() {
       if (isPublicAuthPage) {
         // If already authenticated and not on password reset pages, redirect to dashboard
         if (session && pathname !== '/auth/reset-password') {
-          console.log('[Layout] Already authenticated, redirecting to dashboard');
           navigate('/dashboard', { replace: true });
           setIsChecking(false);
           return;
         }
         // Allow unauthenticated access
-        console.log('[Layout] Public auth page, allowing access');
         setIsChecking(false);
         return;
       }
 
       // Home page - allow everyone to view the landing page
       if (pathname === '/') {
-        console.log('[Layout] Landing page, allowing access');
         setIsChecking(false);
         return;
       }
 
       // Require authentication for all other routes
       if (!session) {
-        console.log('[Layout] No session, redirecting to login');
         navigate('/auth/login', { replace: true });
         setIsChecking(false);
         return;
@@ -87,17 +79,15 @@ export default function RootLayout() {
           const hasLocation = !!userData?.location;
 
           if (!hasLocation) {
-            console.log('[Layout] User needs onboarding, redirecting');
             navigate('/onboarding/user', { replace: true });
             setIsChecking(false);
             return;
           }
         } catch (error) {
-          console.error('[Layout] Unexpected error checking onboarding:', error);
+          // Silently handle error
         }
       }
 
-      console.log('[Layout] Auth check passed');
       setIsChecking(false);
     };
 
