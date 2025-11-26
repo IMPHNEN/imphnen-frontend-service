@@ -442,7 +442,17 @@ export const useRespondToJoinRequest = (teamId: string) => {
             .update({ status: 'pending' })
             .eq('id', requestId);
 
-          throw new Error('Failed to add member to team: ' + memberError.message);
+          // Parse Supabase error for user-friendly message
+          let errorMsg = memberError.message;
+          if (errorMsg.includes('Team already has 5 members') || errorMsg.includes('Team cannot have more than 5 members')) {
+            errorMsg = 'Team is full! Maximum 5 members allowed.';
+          } else if (errorMsg.includes('already in a team') || errorMsg.includes('User is already in a team')) {
+            errorMsg = 'This user is already in another team.';
+          } else if (errorMsg.includes('Bulk insert')) {
+            errorMsg = 'Invalid operation detected.';
+          }
+
+          throw new Error(errorMsg);
         }
 
         return { success: true, action: 'accepted' };
