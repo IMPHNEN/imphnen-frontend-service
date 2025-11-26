@@ -27,6 +27,7 @@ const TeamDashboardPage: FC = (): ReactElement => {
   const currentUserId = session?.user?.id;
 
   const isLeader = currentUserId === team?.leader_id;
+  const isMember = members.some((member: any) => member.user_id === currentUserId);
   const canInvite = isLeader && members.length < MAX_TEAM_MEMBERS;
 
   console.log('Leader check:', { currentUserId, leaderId: team?.leader_id, isLeader });
@@ -182,8 +183,8 @@ const TeamDashboardPage: FC = (): ReactElement => {
               </div>
             )}
 
-            {/* Quick Actions for Members */}
-            {!isLeader && (
+            {/* Quick Actions for Members (non-leaders) */}
+            {!isLeader && isMember && (
               <div className="bg-white rounded-lg shadow-md p-4 md:p-6">
                 <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-3 md:mb-4">Quick Actions</h2>
                 <div className="grid gap-3 sm:grid-cols-2">
@@ -203,8 +204,8 @@ const TeamDashboardPage: FC = (): ReactElement => {
               </div>
             )}
 
-            {/* Submission Status */}
-            {team.has_submission && (
+            {/* Submission Status - Only show to members */}
+            {team.has_submission && isMember && (
               <div className="bg-green-50 border border-green-200 rounded-lg p-4 md:p-6">
                 <div className="flex items-center space-x-3">
                   <span className="text-3xl">✅</span>
