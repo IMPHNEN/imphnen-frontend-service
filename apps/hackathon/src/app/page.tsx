@@ -3,11 +3,14 @@ import { useState } from 'react';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { Icon } from '@iconify/react';
 import { ThemeToggle } from '../components/theme-toggle';
+import { useAuthStore } from '@imphnen-frontend-service/service';
 
 export default function HomePage() {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const { session } = useAuthStore();
+  const isAuthenticated = !!session?.token;
 
   const faqs = [
     {
@@ -98,21 +101,33 @@ export default function HomePage() {
               FAQ
             </a>
             <ThemeToggle />
-            <Button
-              onClick={() => navigate('/auth/login')}
-              size="sm"
-              variant="bordered"
-              className="rounded-lg text-base"
-            >
-              Masuk
-            </Button>
-            <Button
-              onClick={() => navigate('/auth/signup')}
-              size="sm"
-              className="rounded-lg text-base"
-            >
-              Daftar Sekarang
-            </Button>
+            {isAuthenticated ? (
+              <Button
+                onClick={() => navigate('/dashboard')}
+                size="sm"
+                className="rounded-lg text-base"
+              >
+                Dashboard
+              </Button>
+            ) : (
+              <>
+                <Button
+                  onClick={() => navigate('/auth/login')}
+                  size="sm"
+                  variant="bordered"
+                  className="rounded-lg text-base"
+                >
+                  Masuk
+                </Button>
+                <Button
+                  onClick={() => navigate('/auth/signup')}
+                  size="sm"
+                  className="rounded-lg text-base"
+                >
+                  Daftar Sekarang
+                </Button>
+              </>
+            )}
           </div>
           {/* Mobile Menu Button */}
           <div className="flex items-center gap-2 md:hidden">
@@ -158,15 +173,26 @@ export default function HomePage() {
             <a href="#faq" className="ms-3 text-gray-600 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-white">
               FAQ
             </a>
-            <a href="#masuk" className="ms-3 text-gray-600 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-white">
-              Masuk
-            </a>
-            <button
-              onClick={() => navigate('/auth/login')}
-              className="px-4 py-2 bg-primary-500 text-white text-base rounded-lg hover:bg-primary-600 transition-colors text-center cursor-pointer"
-            >
-              Daftar Sekarang
-            </button>
+            {isAuthenticated ? (
+              <button
+                onClick={() => navigate('/dashboard')}
+                className="px-4 py-2 bg-primary-500 text-white text-base rounded-lg hover:bg-primary-600 transition-colors text-center cursor-pointer"
+              >
+                Dashboard
+              </button>
+            ) : (
+              <>
+                <a href="#masuk" className="ms-3 text-gray-600 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-white">
+                  Masuk
+                </a>
+                <button
+                  onClick={() => navigate('/auth/login')}
+                  className="px-4 py-2 bg-primary-500 text-white text-base rounded-lg hover:bg-primary-600 transition-colors text-center cursor-pointer"
+                >
+                  Daftar Sekarang
+                </button>
+              </>
+            )}
           </div>
         </div>
       )}

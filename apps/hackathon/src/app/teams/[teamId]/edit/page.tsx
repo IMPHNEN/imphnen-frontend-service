@@ -46,17 +46,17 @@ const EditTeamPage: FC = (): ReactElement => {
 
   if (isLoadingTeam) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-gray-600">Loading team...</div>
+      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-neutral-950">
+        <div className="text-gray-600 dark:text-neutral-400">Loading team...</div>
       </div>
     );
   }
 
   if (!isLeader) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Access Denied</h2>
-        <p className="text-gray-600 mb-4">Only the team leader can edit team information</p>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 dark:bg-neutral-950">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Access Denied</h2>
+        <p className="text-gray-600 dark:text-neutral-400 mb-4">Only the team leader can edit team information</p>
         <Button onClick={() => navigate(`/teams/${teamId}`)}>Back to Team</Button>
       </div>
     );
@@ -114,20 +114,20 @@ const EditTeamPage: FC = (): ReactElement => {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-white border-b">
+    <div className="min-h-screen bg-gray-50 dark:bg-neutral-950">
+      <div className="bg-white dark:bg-neutral-900 border-b dark:border-neutral-700">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <h1 className="text-3xl font-bold text-gray-900">Edit Team Info</h1>
-          <p className="text-gray-600 mt-1">Update your team details</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Edit Team Info</h1>
+          <p className="text-gray-600 dark:text-neutral-400 mt-1">Update your team details</p>
         </div>
       </div>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white rounded-lg shadow-md p-8">
+        <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md dark:shadow-neutral-950/50 p-8">
           <form onSubmit={onSubmit} className="space-y-6">
             {/* Banner Upload */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-2">
                 Team Banner
               </label>
               {bannerPreview ? (
@@ -135,7 +135,7 @@ const EditTeamPage: FC = (): ReactElement => {
                   <img
                     src={bannerPreview}
                     alt="Banner preview"
-                    className="w-full h-48 object-cover rounded-lg border-2 border-gray-200"
+                    className="w-full h-48 object-cover rounded-lg border-2 border-gray-200 dark:border-neutral-700"
                   />
                   <button
                     type="button"
@@ -150,10 +150,10 @@ const EditTeamPage: FC = (): ReactElement => {
                   </button>
                 </div>
               ) : (
-                <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+                <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-gray-300 dark:border-neutral-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-neutral-800">
                   <div className="text-center">
-                    <p className="text-gray-500">Click to upload banner</p>
-                    <p className="text-xs text-gray-400 mt-1">1200x400 recommended</p>
+                    <p className="text-gray-500 dark:text-neutral-400">Click to upload banner</p>
+                    <p className="text-xs text-gray-400 dark:text-neutral-500 mt-1">1200x400 recommended</p>
                   </div>
                   <input
                     type="file"
@@ -167,7 +167,7 @@ const EditTeamPage: FC = (): ReactElement => {
 
             {/* Logo Upload */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-2">
                 Team Logo
               </label>
               <div className="flex items-center space-x-4">
@@ -175,11 +175,11 @@ const EditTeamPage: FC = (): ReactElement => {
                   <img
                     src={logoPreview}
                     alt="Logo preview"
-                    className="w-24 h-24 rounded-full object-cover border-2 border-gray-200"
+                    className="w-24 h-24 rounded-full object-cover border-2 border-gray-200 dark:border-neutral-700"
                   />
                 ) : (
-                  <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center">
-                    <span className="text-gray-400 text-3xl">👥</span>
+                  <div className="w-24 h-24 rounded-full bg-gray-200 dark:bg-neutral-700 flex items-center justify-center">
+                    <span className="text-gray-400 dark:text-neutral-500 text-3xl">👥</span>
                   </div>
                 )}
                 <div>
@@ -222,7 +222,7 @@ const EditTeamPage: FC = (): ReactElement => {
 
             {/* City */}
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300">
                 City
               </label>
               <Controller
@@ -232,7 +232,7 @@ const EditTeamPage: FC = (): ReactElement => {
                   <div>
                     <select
                       {...field}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-neutral-600 dark:bg-neutral-800 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
                       <option value="">Select city</option>
                       {INDONESIAN_CITIES.map((city) => (
@@ -251,7 +251,7 @@ const EditTeamPage: FC = (): ReactElement => {
 
             {/* Description */}
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300">
                 Description
               </label>
               <Controller
@@ -276,7 +276,7 @@ const EditTeamPage: FC = (): ReactElement => {
 
             {/* Visibility */}
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300">
                 Team Visibility
               </label>
               <Controller
@@ -284,7 +284,7 @@ const EditTeamPage: FC = (): ReactElement => {
                 name="visibility"
                 render={({ field }) => (
                   <div className="space-y-3">
-                    <label className="flex items-start space-x-3 cursor-pointer border rounded-lg p-4 hover:bg-gray-50">
+                    <label className="flex items-start space-x-3 cursor-pointer border dark:border-neutral-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-neutral-800">
                       <input
                         type="radio"
                         {...field}
@@ -293,13 +293,13 @@ const EditTeamPage: FC = (): ReactElement => {
                         className="mt-1"
                       />
                       <div>
-                        <p className="font-medium text-gray-900">Public</p>
-                        <p className="text-sm text-gray-600">
+                        <p className="font-medium text-gray-900 dark:text-white">Public</p>
+                        <p className="text-sm text-gray-600 dark:text-neutral-400">
                           Team will be visible in Browse Teams
                         </p>
                       </div>
                     </label>
-                    <label className="flex items-start space-x-3 cursor-pointer border rounded-lg p-4 hover:bg-gray-50">
+                    <label className="flex items-start space-x-3 cursor-pointer border dark:border-neutral-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-neutral-800">
                       <input
                         type="radio"
                         {...field}
@@ -308,8 +308,8 @@ const EditTeamPage: FC = (): ReactElement => {
                         className="mt-1"
                       />
                       <div>
-                        <p className="font-medium text-gray-900">Private</p>
-                        <p className="text-sm text-gray-600">
+                        <p className="font-medium text-gray-900 dark:text-white">Private</p>
+                        <p className="text-sm text-gray-600 dark:text-neutral-400">
                           Team hidden, invite-only
                         </p>
                       </div>
