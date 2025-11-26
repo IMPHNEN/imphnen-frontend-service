@@ -114,9 +114,6 @@ const TeamDashboardPage: FC = (): ReactElement => {
                 </div>
               </div>
             </div>
-            <Link to="/dashboard" className="hidden md:block">
-              <Button variant="secondary">Back to Dashboard</Button>
-            </Link>
           </div>
         </div>
       </div>

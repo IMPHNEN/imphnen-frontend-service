@@ -1,23 +1,21 @@
 import { FC, ReactElement, useState } from 'react';
-import { Button, Input, Select } from '@imphnen-frontend-service/ui/atoms';
+import { Button, Input } from '@imphnen-frontend-service/ui/atoms';
 import { Link, useNavigate } from 'react-router';
 import { useTeams, useJoinTeam, useMyTeams, ETeamVisibility, joinTeamSchema, TJoinTeamForm } from '@imphnen-frontend-service/service';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import INDONESIAN_CITIES_DATA from '../../../constants/cities';
-
-const INDONESIAN_CITIES = ['All Cities', ...INDONESIAN_CITIES_DATA];
+import { CitySelect } from '../../../components/city-select';
 
 const BrowseTeamsPage: FC = (): ReactElement => {
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
-  const [selectedCity, setSelectedCity] = useState('All Cities');
+  const [selectedCity, setSelectedCity] = useState('');
   const [selectedTeamId, setSelectedTeamId] = useState<string | null>(null);
   const [showJoinModal, setShowJoinModal] = useState(false);
 
   const { data: teamsData, isLoading } = useTeams({
     search,
-    city: selectedCity === 'All Cities' ? undefined : selectedCity,
+    city: selectedCity || undefined,
     visibility: ETeamVisibility.PUBLIC,
   });
 
@@ -92,17 +90,11 @@ const BrowseTeamsPage: FC = (): ReactElement => {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Filter by City
               </label>
-              <Select
+              <CitySelect
                 value={selectedCity}
-                onChange={(e) => setSelectedCity(e.target.value)}
-                className="w-full"
-              >
-                {INDONESIAN_CITIES.map((city) => (
-                  <option key={city} value={city}>
-                    {city}
-                  </option>
-                ))}
-              </Select>
+                onChange={setSelectedCity}
+                placeholder="All Cities (search to filter...)"
+              />
             </div>
           </div>
         </div>
