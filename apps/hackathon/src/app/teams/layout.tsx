@@ -31,7 +31,9 @@ const TeamsLayout: FC = (): ReactElement => {
                 />
               </svg>
             </button>
-            <h1 className="ml-3 text-lg font-bold text-gray-900">Hackathon</h1>
+            <h1 className="ml-3 text-lg font-bold text-gray-900 dark:text-white">
+              Hackathon
+            </h1>
           </div>
         </div>
 

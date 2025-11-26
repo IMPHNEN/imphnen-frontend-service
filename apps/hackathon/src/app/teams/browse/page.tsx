@@ -1,7 +1,14 @@
 import { FC, ReactElement, useState, useEffect } from 'react';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { Link, useNavigate } from 'react-router';
-import { useTeams, useJoinTeam, useMyTeams, ETeamVisibility, joinTeamSchema, TJoinTeamForm } from '@imphnen-frontend-service/service';
+import {
+  useTeams,
+  useJoinTeam,
+  useMyTeams,
+  ETeamVisibility,
+  joinTeamSchema,
+  TJoinTeamForm,
+} from '@imphnen-frontend-service/service';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CitySelect } from '../../../components/city-select';
@@ -69,8 +76,12 @@ const BrowseTeamsPage: FC = (): ReactElement => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Browse Teams</h1>
-              <p className="text-gray-600 dark:text-neutral-400 mt-1">Find and join teams looking for members</p>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                Browse Teams
+              </h1>
+              <p className="text-gray-600 dark:text-neutral-400 mt-1">
+                Find and join teams looking for members
+              </p>
             </div>
             <Link to="/dashboard" className="hidden md:block">
               <Button variant="secondary">Back to Dashboard</Button>
@@ -111,19 +122,28 @@ const BrowseTeamsPage: FC = (): ReactElement => {
         {/* Teams List */}
         {isLoading ? (
           <div className="text-center py-12">
-            <p className="text-gray-600 dark:text-neutral-400">Loading teams...</p>
+            <p className="text-gray-600 dark:text-neutral-400">
+              Loading teams...
+            </p>
           </div>
         ) : teams.length === 0 ? (
           <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-sm p-12 text-center">
-            <p className="text-gray-600 dark:text-neutral-400 text-lg">No teams found</p>
-            <p className="text-gray-500 dark:text-neutral-500 mt-2">Try adjusting your filters</p>
+            <p className="text-gray-600 dark:text-neutral-400 text-lg">
+              No teams found
+            </p>
+            <p className="text-gray-500 dark:text-neutral-500 mt-2">
+              Try adjusting your filters
+            </p>
           </div>
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {teams.map((team) => (
-              <div key={team.id} className="bg-white dark:bg-neutral-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow flex flex-col">
+              <div
+                key={team.id}
+                className="bg-white dark:bg-neutral-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow flex flex-col"
+              >
                 <img
-                  src={team.banner || '/images/banner-imphnen.png'}
+                  src={team.banner || '/images/banner-imphnen.webp'}
                   alt={team.name}
                   className="w-full h-32 object-cover"
                 />
@@ -137,14 +157,22 @@ const BrowseTeamsPage: FC = (): ReactElement => {
                       />
                     ) : (
                       <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-neutral-700 flex items-center justify-center">
-                        <span className="text-gray-500 dark:text-neutral-400 text-xl">👥</span>
+                        <span className="text-gray-500 dark:text-neutral-400 text-xl">
+                          👥
+                        </span>
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-lg font-bold text-gray-900 dark:text-white line-clamp-2">{team.name}</h3>
+                      <h3 className="text-lg font-bold text-gray-900 dark:text-white line-clamp-2">
+                        {team.name}
+                      </h3>
                       <div className="text-sm text-gray-600 dark:text-neutral-400 flex gap-2">
-                        <p className="truncate flex-1 min-w-0">📍 {team.city}</p>
-                        <p className="whitespace-nowrap shrink-0">👥 {team.members?.length || 0} members</p>
+                        <p className="truncate flex-1 min-w-0">
+                          📍 {team.city}
+                        </p>
+                        <p className="whitespace-nowrap shrink-0">
+                          👥 {team.members?.length || 0} members
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -162,14 +190,15 @@ const BrowseTeamsPage: FC = (): ReactElement => {
                       </Button>
                     ) : (
                       <>
-                        {myTeams.length === 0 && (team.members?.length || 0) < 5 && (
-                          <Button
-                            className="w-full"
-                            onClick={() => handleJoinRequest(team.id)}
-                          >
-                            Request to Join
-                          </Button>
-                        )}
+                        {myTeams.length === 0 &&
+                          (team.members?.length || 0) < 5 && (
+                            <Button
+                              className="w-full"
+                              onClick={() => handleJoinRequest(team.id)}
+                            >
+                              Request to Join
+                            </Button>
+                          )}
                         <Button
                           className="w-full"
                           variant="secondary"
