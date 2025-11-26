@@ -15,6 +15,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 
 import { CitySelect } from '../../../components/city-select';
+import { Icon } from '@iconify/react';
 
 const ROLE_OPTIONS = [
   'Frontend Developer',
@@ -95,7 +96,9 @@ const UserOnboardingPage: FC = (): ReactElement => {
       globalThis.location.href = '/dashboard';
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : 'Onboarding failed. Please try again.'
+        error instanceof Error
+          ? error.message
+          : 'Onboarding failed. Please try again.'
       );
     }
   });
@@ -107,7 +110,7 @@ const UserOnboardingPage: FC = (): ReactElement => {
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
             Complete Your Profile
           </h1>
-          <p className="text-gray-600 dark:text-neutral-400">
+          <p className="text-gray-600 font-sans dark:text-neutral-400">
             Tell us more about yourself to get started
           </p>
         </div>
@@ -124,13 +127,18 @@ const UserOnboardingPage: FC = (): ReactElement => {
                 />
               ) : (
                 <div className="w-32 h-32 rounded-full bg-gray-200 dark:bg-neutral-700 flex items-center justify-center">
-                  <span className="text-gray-400 dark:text-neutral-500 text-4xl">👤</span>
+                  <Icon
+                    icon="ic:baseline-person"
+                    width="48"
+                    height="48"
+                    className="text-gray-400 dark:text-neutral-500"
+                  />
                 </div>
               )}
             </div>
-            <div>
+            <div className="flex flex-col items-center">
               <label htmlFor="avatar" className="cursor-pointer">
-                <span className="px-4 py-2 bg-blue-600 dark:bg-primary-600 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-primary-700 inline-block">
+                <span className="px-4 py-2 bg-primary-500 dark:bg-primary-600 text-white rounded-lg hover:bg-primary-600 dark:hover:bg-primary-700 inline-block">
                   {avatarPreview ? 'Change Photo' : 'Upload Photo'}
                 </span>
                 <input
@@ -153,11 +161,14 @@ const UserOnboardingPage: FC = (): ReactElement => {
             label="Full Name"
             placeholder="Enter your full name"
             name="fullname"
+            className="px-3 py-2 text-label2 rounded-lg max-h-auto text-base"
+            size="md"
+            isRequired={true}
           />
 
           {/* City */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300">
+            <label className="block text-base font-medium text-gray-700 dark:text-neutral-300">
               City <span className="text-red-500">*</span>
             </label>
             <Controller
@@ -176,7 +187,7 @@ const UserOnboardingPage: FC = (): ReactElement => {
 
           {/* Role/Skills */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300">
+            <label className="block text-base font-medium text-gray-700 dark:text-neutral-300">
               Role / Skills
             </label>
             <Controller
@@ -201,7 +212,9 @@ const UserOnboardingPage: FC = (): ReactElement => {
                           }}
                           className="rounded border-gray-300 dark:border-neutral-600 text-blue-600 dark:text-primary-500 focus:ring-blue-500 dark:focus:ring-primary-500 dark:bg-neutral-800"
                         />
-                        <span className="text-sm dark:text-neutral-300">{role}</span>
+                        <span className="text-sm dark:text-neutral-300">
+                          {role}
+                        </span>
                       </label>
                     ))}
                   </div>
@@ -212,19 +225,23 @@ const UserOnboardingPage: FC = (): ReactElement => {
 
           {/* Bio */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300">
-              Bio <span className="text-gray-400 dark:text-neutral-500">(Optional)</span>
+            <label className="block text-base font-medium text-gray-700 dark:text-neutral-300">
+              Bio{' '}
+              <span className="text-gray-400 dark:text-neutral-500">
+                (Optional)
+              </span>
             </label>
             <Controller
               control={form.control}
               name="bio"
               render={({ field, fieldState }) => (
-                <div>
+                <div className="flex">
                   <Textarea
                     {...field}
                     placeholder="Tell us about yourself..."
                     rows={4}
-                    className="w-full"
+                    className="w-full rounded-lg text-sm"
+                    style={{ resize: 'vertical' }}
                   />
                   {fieldState.error && (
                     <p className="text-sm text-red-500 mt-1">

@@ -1,10 +1,49 @@
-import { FC, ReactElement, useState } from 'react';
+import { FC, ReactElement, useState, useEffect } from 'react';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { Link, useParams, useNavigate } from 'react-router';
-import { useTeamById, useTeamMembers, useInviteMember, useTeamJoinRequests, useRespondToJoinRequest, ETeamMemberRole, useAuthStore } from '@imphnen-frontend-service/service';
+import {
+  useTeamById,
+  useTeamMembers,
+  useInviteMember,
+  useTeamJoinRequests,
+  useRespondToJoinRequest,
+  ETeamMemberRole,
+  useAuthStore,
+} from '@imphnen-frontend-service/service';
 import { toast } from 'sonner';
 
 const MAX_TEAM_MEMBERS = 5;
+
+// Image component with loading state
+const ImageWithLoader: FC<{
+  src: string;
+  alt: string;
+  className?: string;
+  onLoad?: () => void;
+}> = ({ src, alt, className, onLoad }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  return (
+    <div className="relative">
+      {!isLoaded && (
+        <div
+          className={`absolute inset-0 bg-gray-200 animate-pulse ${className}`}
+        />
+      )}
+      <img
+        src={src}
+        alt={alt}
+        className={`${className} ${
+          isLoaded ? 'opacity-100' : 'opacity-0'
+        } transition-opacity duration-300`}
+        onLoad={() => {
+          setIsLoaded(true);
+          onLoad?.();
+        }}
+      />
+    </div>
+  );
+};
 
 const TeamDashboardPage: FC = (): ReactElement => {
   const { teamId } = useParams<{ teamId: string }>();
@@ -13,21 +52,37 @@ const TeamDashboardPage: FC = (): ReactElement => {
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [showJoinRequestsModal, setShowJoinRequestsModal] = useState(false);
   const [inviteEmail, setInviteEmail] = useState('');
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [imageLoadCount, setImageLoadCount] = useState(0);
 
-  const { data: teamData, isLoading: isLoadingTeam } = useTeamById(teamId || '');
-  const { data: membersData, isLoading: isLoadingMembers } = useTeamMembers(teamId || '');
-  const { data: joinRequestsData } = useTeamJoinRequests(teamId || '', !!teamId);
-  const { mutateAsync: inviteMember, isPending: isInviting } = useInviteMember(teamId || '');
-  const { mutateAsync: respondToJoinRequest, isPending: isResponding } = useRespondToJoinRequest(teamId || '');
+  const { data: teamData, isLoading: isLoadingTeam } = useTeamById(
+    teamId || ''
+  );
+  const { data: membersData, isLoading: isLoadingMembers } = useTeamMembers(
+    teamId || ''
+  );
+  const { data: joinRequestsData } = useTeamJoinRequests(
+    teamId || '',
+    !!teamId
+  );
+  const { mutateAsync: inviteMember, isPending: isInviting } = useInviteMember(
+    teamId || ''
+  );
+  const { mutateAsync: respondToJoinRequest, isPending: isResponding } =
+    useRespondToJoinRequest(teamId || '');
 
   const team = teamData?.data;
   const members = membersData?.data || [];
   const joinRequests = joinRequestsData?.data || [];
-  const pendingJoinRequests = joinRequests.filter((req: any) => req.status === 'pending');
+  const pendingJoinRequests = joinRequests.filter(
+    (req: any) => req.status === 'pending'
+  );
   const currentUserId = session?.user?.id;
 
   const isLeader = currentUserId === team?.leader_id;
-  const isMember = members.some((member: any) => member.user_id === currentUserId);
+  const isMember = members.some(
+    (member: any) => member.user_id === currentUserId
+  );
   const canInvite = isLeader && members.length < MAX_TEAM_MEMBERS;
 
   const handleInviteMember = async (e: React.FormEvent) => {
@@ -45,10 +100,15 @@ const TeamDashboardPage: FC = (): ReactElement => {
     }
   };
 
-  const handleRespondToJoinRequest = async (requestId: string, action: 'approve' | 'reject') => {
+  const handleRespondToJoinRequest = async (
+    requestId: string,
+    action: 'approve' | 'reject'
+  ) => {
     try {
       await respondToJoinRequest({ requestId, action });
-      toast.success(action === 'approve' ? 'Request approved!' : 'Request rejected');
+      toast.success(
+        action === 'approve' ? 'Request approved!' : 'Request rejected'
+      );
     } catch (error) {
       console.error('Failed to respond to join request:', error);
       toast.error('Failed to process request');
@@ -57,8 +117,67 @@ const TeamDashboardPage: FC = (): ReactElement => {
 
   if (isLoadingTeam || isLoadingMembers) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-gray-600 dark:text-neutral-400">Loading team...</div>
+      <div className="min-h-screen bg-gray-50">
+        {/* Skeleton Header */}
+        <div className="bg-white border-b">
+          <div className="w-full h-48 bg-gray-200 animate-pulse" />
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div className="flex items-start justify-between">
+              <div className="flex items-center space-x-4">
+                <div className="w-20 h-20 rounded-full bg-gray-300 animate-pulse -mt-10" />
+                <div>
+                  <div className="h-8 w-48 bg-gray-300 rounded animate-pulse" />
+                  <div className="h-4 w-32 bg-gray-200 rounded animate-pulse mt-2" />
+                  <div className="h-4 w-24 bg-gray-200 rounded animate-pulse mt-2" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="grid gap-6 lg:grid-cols-3">
+            {/* Main Content Skeleton */}
+            <div className="lg:col-span-2 space-y-6">
+              <div className="bg-white rounded-lg shadow-md p-6">
+                <div className="h-6 w-32 bg-gray-300 rounded animate-pulse mb-4" />
+                <div className="space-y-2">
+                  <div className="h-4 w-full bg-gray-200 rounded animate-pulse" />
+                  <div className="h-4 w-3/4 bg-gray-200 rounded animate-pulse" />
+                  <div className="h-4 w-5/6 bg-gray-200 rounded animate-pulse" />
+                </div>
+              </div>
+            </div>
+
+            {/* Sidebar Skeleton */}
+            <div className="space-y-6">
+              <div className="bg-white rounded-lg shadow-md p-6">
+                <div className="h-6 w-40 bg-gray-300 rounded animate-pulse mb-4" />
+                <div className="space-y-4">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="flex items-center space-x-3">
+                      <div className="w-12 h-12 rounded-full bg-gray-300 animate-pulse" />
+                      <div>
+                        <div className="h-4 w-24 bg-gray-300 rounded animate-pulse" />
+                        <div className="h-3 w-16 bg-gray-200 rounded animate-pulse mt-1" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Loading Overlay */}
+        <div className="fixed inset-0 bg-white/60 flex items-center justify-center z-50">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent"></div>
+            <p className="mt-4 text-gray-600 dark:text-neutral-400">
+              Loading team data...
+            </p>
+          </div>
+        </div>
       </div>
     );
   }
@@ -66,22 +185,48 @@ const TeamDashboardPage: FC = (): ReactElement => {
   if (!team) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Team not found</h2>
-        <Button onClick={() => navigate('/dashboard')}>Back to Dashboard</Button>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+          Team not found
+        </h2>
+        <Button onClick={() => navigate('/dashboard')}>
+          Back to Dashboard
+        </Button>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-neutral-950">
+    <div className="min-h-screen bg-gray-50 relative dark:bg-neutral-950">
+      {/* Loading overlay while images are loading */}
+      {!imagesLoaded && totalImagesToLoad > 0 && (
+        <div className="fixed inset-0 bg-white/80 flex items-center justify-center z-50">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent"></div>
+            <p className="mt-4 text-gray-600 font-medium">Loading images...</p>
+            <p className="text-sm text-gray-400 mt-1">
+              {imageLoadCount} / {totalImagesToLoad}
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Header with Banner */}
       <div className="bg-white dark:bg-neutral-900 border-b dark:border-neutral-700">
         {team.banner && (
-          <div className="w-full h-32 md:h-48 overflow-hidden">
+          <div className="w-full h-32 md:h-48 overflow-hidden relative">
+            <div
+              className={`absolute inset-0 bg-gray-200 animate-pulse ${
+                imagesLoaded ? 'hidden' : ''
+              }`}
+            />
             <img
               src={team.banner}
               alt={team.name}
-              className="w-full h-full object-cover"
+              className={`w-full h-full object-cover transition-opacity duration-300 ${
+                imagesLoaded ? 'opacity-100' : 'opacity-0'
+              }`}
+              onLoad={handleImageLoad}
+              onError={handleImageError}
             />
           </div>
         )}
@@ -89,18 +234,32 @@ const TeamDashboardPage: FC = (): ReactElement => {
           <div className="flex items-start justify-between">
             <div className="flex items-center space-x-3 md:space-x-4">
               {team.logo && (
-                <img
-                  src={team.logo}
-                  alt={team.name}
-                  className="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover border-4 border-white shadow-lg -mt-8 md:-mt-10"
-                />
+                <div className="relative">
+                  {!imagesLoaded && (
+                    <div className="absolute inset-0 w-20 h-20 rounded-full bg-gray-300 animate-pulse -mt-10" />
+                  )}
+                  <img
+                    src={team.logo}
+                    alt={team.name}
+                    className={`w-16 h-16 md:w-20 md:h-20 rounded-full object-cover border-4 border-white shadow-lg -mt-8 md:-mt-10 transition-opacity duration-300 ${
+                      imagesLoaded ? 'opacity-100' : 'opacity-0'
+                    }`}
+                    onLoad={handleImageLoad}
+                    onError={handleImageError}
+                  />
+                </div>
               )}
               <div>
-                <h1 className="text-xl md:text-3xl font-bold text-gray-900 dark:text-white line-clamp-2">{team.name}</h1>
-                <p className="text-sm md:text-base text-gray-600 dark:text-neutral-400 mt-1 line-clamp-1">📍 {team.city}</p>
+                <h1 className="text-xl md:text-3xl font-bold text-gray-900 dark:text-white line-clamp-2">
+                  {team.name}
+                </h1>
+                <p className="text-sm md:text-base text-gray-600 dark:text-neutral-400 mt-1 line-clamp-1">
+                  📍 {team.city}
+                </p>
                 <div className="flex flex-wrap items-center gap-2 md:space-x-4 mt-2">
                   <span className="text-sm text-gray-500 dark:text-neutral-400">
-                    {members.length} {members.length === 1 ? 'Member' : 'Members'}
+                    {members.length}{' '}
+                    {members.length === 1 ? 'Member' : 'Members'}
                   </span>
                   <span className="text-sm text-gray-500 dark:text-neutral-400">
                     {team.visibility === 'public' ? '🌐 Public' : '🔒 Private'}
@@ -123,14 +282,20 @@ const TeamDashboardPage: FC = (): ReactElement => {
           <div className="lg:col-span-2 space-y-4 md:space-y-6">
             {/* Team Description */}
             <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-md p-4 md:p-6">
-              <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">About Team</h2>
-              <p className="text-gray-700 dark:text-neutral-300 whitespace-pre-wrap">{team.description}</p>
+              <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
+                About Team
+              </h2>
+              <p className="text-gray-700 dark:text-neutral-300 whitespace-pre-wrap">
+                {team.description}
+              </p>
             </div>
 
             {/* Team Actions - Only for Leader */}
             {isLeader && (
               <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-md p-4 md:p-6">
-                <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">Team Management</h2>
+                <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
+                  Team Management
+                </h2>
                 <div className="grid gap-3 sm:grid-cols-2">
                   <Button
                     className="w-full"
@@ -138,7 +303,8 @@ const TeamDashboardPage: FC = (): ReactElement => {
                     onClick={() => setShowInviteModal(true)}
                     disabled={!canInvite}
                   >
-                    ➕ Invite Member {!canInvite && `(${members.length}/${MAX_TEAM_MEMBERS})`}
+                    ➕ Invite Member{' '}
+                    {!canInvite && `(${members.length}/${MAX_TEAM_MEMBERS})`}
                   </Button>
                   <Button
                     className="w-full relative"
@@ -168,9 +334,7 @@ const TeamDashboardPage: FC = (): ReactElement => {
                     </Button>
                   </Link>
                   <Link to={`/teams/${teamId}/submit`}>
-                    <Button className="w-full">
-                      🚀 Submit Project
-                    </Button>
+                    <Button className="w-full">🚀 Submit Project</Button>
                   </Link>
                 </div>
                 {!canInvite && members.length >= MAX_TEAM_MEMBERS && (
@@ -184,7 +348,9 @@ const TeamDashboardPage: FC = (): ReactElement => {
             {/* Quick Actions for Members (non-leaders) */}
             {!isLeader && isMember && (
               <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-md p-4 md:p-6">
-                <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">Quick Actions</h2>
+                <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
+                  Quick Actions
+                </h2>
                 <div className="grid gap-3 sm:grid-cols-2">
                   <Link to={`/teams/${teamId}/chat`}>
                     <Button className="w-full" variant="secondary">
@@ -208,7 +374,9 @@ const TeamDashboardPage: FC = (): ReactElement => {
                 <div className="flex items-center space-x-3">
                   <span className="text-3xl">✅</span>
                   <div>
-                    <h3 className="font-bold text-green-900 dark:text-green-400">Project Submitted</h3>
+                    <h3 className="font-bold text-green-900 dark:text-green-400">
+                      Project Submitted
+                    </h3>
                     <p className="text-green-700 dark:text-green-300 text-sm">
                       Your team has successfully submitted a project
                     </p>
@@ -227,7 +395,9 @@ const TeamDashboardPage: FC = (): ReactElement => {
           <div className="space-y-4 md:space-y-6">
             {/* Team Leader */}
             <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-md p-4 md:p-6">
-              <h3 className="text-base md:text-lg font-bold text-gray-900 dark:text-white mb-3 md:mb-4">Team Leader</h3>
+              <h3 className="text-base md:text-lg font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
+                Team Leader
+              </h3>
               {team.leader && (
                 <button
                   onClick={() => navigate(`/users/${team.leader.id}`)}
@@ -241,12 +411,18 @@ const TeamDashboardPage: FC = (): ReactElement => {
                     />
                   ) : (
                     <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-neutral-700 flex items-center justify-center">
-                      <span className="text-gray-500 dark:text-neutral-400">👤</span>
+                      <span className="text-gray-500 dark:text-neutral-400">
+                        👤
+                      </span>
                     </div>
                   )}
                   <div>
-                    <p className="font-medium text-gray-900 dark:text-white">{team.leader.fullname}</p>
-                    <p className="text-sm text-gray-600 dark:text-neutral-400">{team.leader.email}</p>
+                    <p className="font-medium text-gray-900 dark:text-white">
+                      {team.leader.fullname}
+                    </p>
+                    <p className="text-sm text-gray-600 dark:text-neutral-400">
+                      {team.leader.email}
+                    </p>
                   </div>
                 </button>
               )}
@@ -258,29 +434,35 @@ const TeamDashboardPage: FC = (): ReactElement => {
                 Members ({members.length})
               </h3>
               <div className="space-y-3">
-                {members.map((member) => (
+                {members.map((member: any) => (
                   <button
                     key={member.id}
                     onClick={() => navigate(`/users/${member.user.id}`)}
                     className="w-full flex items-center space-x-3 hover:bg-gray-100 dark:hover:bg-neutral-700 rounded-lg p-2 transition-colors text-left cursor-pointer"
                   >
-                    {member.user.avatar ? (
+                    {member.user?.avatar ? (
                       <img
                         src={member.user.avatar}
-                        alt={member.user.fullname}
+                        alt={member.user.fullname || 'Member'}
                         className="w-10 h-10 rounded-full object-cover"
+                        onLoad={handleImageLoad}
+                        onError={handleImageError}
                       />
                     ) : (
                       <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-neutral-700 flex items-center justify-center">
-                        <span className="text-gray-500 dark:text-neutral-400 text-sm">👤</span>
+                        <span className="text-gray-500 dark:text-neutral-400 text-sm">
+                          👤
+                        </span>
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
                       <p className="font-medium text-gray-900 dark:text-white truncate">
-                        {member.user.fullname}
+                        {member.user?.fullname || 'Unknown'}
                       </p>
                       <p className="text-xs text-gray-500 dark:text-neutral-400">
-                        {member.role === ETeamMemberRole.LEADER ? 'Leader' : 'Member'}
+                        {member.role === ETeamMemberRole.LEADER
+                          ? 'Leader'
+                          : 'Member'}
                       </p>
                     </div>
                   </button>
@@ -299,16 +481,21 @@ const TeamDashboardPage: FC = (): ReactElement => {
               Invite Team Member
             </h2>
             <p className="text-gray-600 dark:text-neutral-400 mb-4">
-              Send an invitation to join your team. The invited member will see the invitation on their dashboard after logging in.
+              Send an invitation to join your team. The invited member will see
+              the invitation on their dashboard after logging in.
             </p>
             <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3 mb-6">
               <p className="text-sm text-yellow-800 dark:text-yellow-300">
-                <strong>Important:</strong> The email you enter must match the GitHub email address the member uses to sign in.
+                <strong>Important:</strong> The email you enter must match the
+                GitHub email address the member uses to sign in.
               </p>
             </div>
             <form onSubmit={handleInviteMember} className="space-y-4">
               <div>
-                <label htmlFor="invite-email" className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-2">
+                <label
+                  htmlFor="invite-email"
+                  className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-2"
+                >
                   Email Address
                 </label>
                 <input
@@ -367,7 +554,9 @@ const TeamDashboardPage: FC = (): ReactElement => {
 
             {pendingJoinRequests.length === 0 ? (
               <div className="text-center py-12">
-                <p className="text-gray-600 dark:text-neutral-400 text-lg">No pending join requests</p>
+                <p className="text-gray-600 dark:text-neutral-400 text-lg">
+                  No pending join requests
+                </p>
                 <p className="text-gray-500 dark:text-neutral-500 text-sm mt-2">
                   When users request to join your team, they'll appear here
                 </p>
@@ -375,7 +564,10 @@ const TeamDashboardPage: FC = (): ReactElement => {
             ) : (
               <div className="space-y-4">
                 {pendingJoinRequests.map((request: any) => (
-                  <div key={request.id} className="border border-gray-200 dark:border-neutral-700 rounded-lg p-4 hover:shadow-md transition-shadow">
+                  <div
+                    key={request.id}
+                    className="border border-gray-200 dark:border-neutral-700 rounded-lg p-4 hover:shadow-md transition-shadow"
+                  >
                     <div className="flex items-start justify-between">
                       <div className="flex items-start space-x-3 flex-1">
                         {request.user?.avatar ? (
@@ -386,7 +578,9 @@ const TeamDashboardPage: FC = (): ReactElement => {
                           />
                         ) : (
                           <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-neutral-700 flex items-center justify-center shrink-0">
-                            <span className="text-gray-500 dark:text-neutral-400 text-xl">👤</span>
+                            <span className="text-gray-500 dark:text-neutral-400 text-xl">
+                              👤
+                            </span>
                           </div>
                         )}
                         <div className="flex-1">
@@ -404,20 +598,27 @@ const TeamDashboardPage: FC = (): ReactElement => {
                             </div>
                           )}
                           <p className="text-xs text-gray-500 dark:text-neutral-500 mt-2">
-                            Requested {new Date(request.created_at).toLocaleDateString()}
+                            Requested{' '}
+                            {new Date(request.created_at).toLocaleDateString()}
                           </p>
                         </div>
                       </div>
                       <div className="flex space-x-2 ml-4">
                         <Button
-                          onClick={() => handleRespondToJoinRequest(request.id, 'approve')}
-                          disabled={isResponding || members.length >= MAX_TEAM_MEMBERS}
+                          onClick={() =>
+                            handleRespondToJoinRequest(request.id, 'approve')
+                          }
+                          disabled={
+                            isResponding || members.length >= MAX_TEAM_MEMBERS
+                          }
                           className="px-4 py-2 text-sm"
                         >
                           ✓ Accept
                         </Button>
                         <Button
-                          onClick={() => handleRespondToJoinRequest(request.id, 'reject')}
+                          onClick={() =>
+                            handleRespondToJoinRequest(request.id, 'reject')
+                          }
                           disabled={isResponding}
                           variant="secondary"
                           className="px-4 py-2 text-sm"
@@ -429,7 +630,9 @@ const TeamDashboardPage: FC = (): ReactElement => {
                     {members.length >= MAX_TEAM_MEMBERS && (
                       <div className="mt-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-2">
                         <p className="text-xs text-yellow-800 dark:text-yellow-300">
-                          Team is full ({MAX_TEAM_MEMBERS}/{MAX_TEAM_MEMBERS} members). Remove a member before accepting new requests.
+                          Team is full ({MAX_TEAM_MEMBERS}/{MAX_TEAM_MEMBERS}{' '}
+                          members). Remove a member before accepting new
+                          requests.
                         </p>
                       </div>
                     )}

@@ -70,7 +70,7 @@ export const CitySelect: FC<CitySelectProps> = ({
           }}
           onClick={handleInputClick}
           placeholder={placeholder}
-          className={`w-full h-[42px] px-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-neutral-500 ${
+          className={`w-full h-[42px] px-3 text-[15px] border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-neutral-500 ${
             error ? 'border-red-500' : 'border-gray-300 dark:border-neutral-600'
           }`}
         />
@@ -78,7 +78,7 @@ export const CitySelect: FC<CitySelectProps> = ({
           <button
             type="button"
             onClick={handleClearSelection}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-neutral-500 hover:text-gray-600 dark:hover:text-neutral-300"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-neutral-500 hover:text-gray-600 cursor-pointer dark:hover:text-neutral-300"
           >
             ✕
           </button>
@@ -88,7 +88,7 @@ export const CitySelect: FC<CitySelectProps> = ({
       {error && <p className="text-sm text-red-500 mt-1">{error}</p>}
 
       {isOpen && (
-        <div className="absolute z-50 w-full mt-1 bg-white dark:bg-neutral-800 border border-gray-300 dark:border-neutral-600 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+        <div className="absolute z-50 w-full mt-1 bg-white dark:bg-neutral-800 border border-gray-300 dark:border-neutral-600 rounded-lg shadow-lg max-h-60 overflow-y-auto text-label2">
           {filteredCities.length > 0 ? (
             <ul className="py-1">
               {filteredCities.map((city) => (
@@ -96,7 +96,9 @@ export const CitySelect: FC<CitySelectProps> = ({
                   key={city}
                   onClick={() => handleSelectCity(city)}
                   className={`px-3 py-2 cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/30 ${
-                    value === city ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400' : 'text-gray-900 dark:text-neutral-200'
+                    value === city
+                      ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400'
+                      : 'text-gray-900 dark:text-neutral-200'
                   }`}
                 >
                   {city}

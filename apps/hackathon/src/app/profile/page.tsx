@@ -13,6 +13,7 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import { CitySelect } from '../../components/city-select';
+import { Icon } from '@iconify/react';
 
 const ROLE_OPTIONS = [
   'Frontend Developer',
@@ -31,7 +32,8 @@ const ProfilePage: FC = (): ReactElement => {
   const [avatarPreview, setAvatarPreview] = useState<string>('');
 
   const { mutateAsync: updateUser, isPending: isUpdating } = useUpdateUserMe();
-  const { mutateAsync: uploadAvatar, isPending: isUploading } = useUploadAvatar();
+  const { mutateAsync: uploadAvatar, isPending: isUploading } =
+    useUploadAvatar();
   const { session } = useAuthStore();
 
   const form = useForm<TUserEditProfileForm>({
@@ -63,7 +65,15 @@ const ProfilePage: FC = (): ReactElement => {
     if (session?.user?.skills) {
       form.setValue('skills', session.user.skills);
     }
-  }, [session?.user?.avatar, session?.user?.fullname, session?.user?.location, session?.user?.bio, session?.user?.skills, avatarPreview, form]);
+  }, [
+    session?.user?.avatar,
+    session?.user?.fullname,
+    session?.user?.location,
+    session?.user?.bio,
+    session?.user?.skills,
+    avatarPreview,
+    form,
+  ]);
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -132,7 +142,9 @@ const ProfilePage: FC = (): ReactElement => {
       <div className="bg-white dark:bg-neutral-900 w-full max-w-md p-8 rounded-xl shadow-xl dark:shadow-neutral-950/50">
         <div className="mb-6">
           <div className="flex items-center justify-between mb-2">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Edit Profile</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+              Edit Profile
+            </h1>
             <Link
               to="/dashboard"
               className="text-gray-500 dark:text-neutral-400 hover:text-gray-700 dark:hover:text-neutral-200"
@@ -152,7 +164,9 @@ const ProfilePage: FC = (): ReactElement => {
               </svg>
             </Link>
           </div>
-          <p className="text-gray-600 dark:text-neutral-400">Update your photo and name</p>
+          <p className="text-gray-600 font-sans dark:text-neutral-400">
+            Update your photo and name
+          </p>
         </div>
 
         <form onSubmit={onSubmit} className="space-y-6">
@@ -167,13 +181,18 @@ const ProfilePage: FC = (): ReactElement => {
                 />
               ) : (
                 <div className="w-32 h-32 rounded-full bg-gray-200 dark:bg-neutral-700 flex items-center justify-center group-hover:bg-gray-300 dark:group-hover:bg-neutral-600 transition-colors">
-                  <span className="text-gray-400 dark:text-neutral-500 text-4xl">👤</span>
+                  <Icon
+                    icon="ic:baseline-person"
+                    width="48"
+                    height="48"
+                    className="text-gray-400 dark:text-neutral-500"
+                  />
                 </div>
               )}
               {/* Camera overlay */}
               <label
                 htmlFor="avatar"
-                className="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full cursor-pointer hover:bg-blue-700 transition-colors shadow-lg"
+                className="absolute bottom-0 right-0 bg-primary-500 text-white p-2 rounded-full cursor-pointer hover:bg-primary-600 transition-colors shadow-lg"
               >
                 <svg
                   className="w-5 h-5"
@@ -204,7 +223,7 @@ const ProfilePage: FC = (): ReactElement => {
                 />
               </label>
             </div>
-            <p className="text-xs text-gray-500 dark:text-neutral-400 text-center">
+            <p className="text-sm text-gray-500 dark:text-neutral-400 text-center font-sans">
               Click the camera icon to change your photo
               <br />
               Format: JPG, PNG. Max 5MB
@@ -217,11 +236,12 @@ const ProfilePage: FC = (): ReactElement => {
             label="Full Name"
             placeholder="Enter your full name"
             name="fullname"
+            size="lg"
           />
 
           {/* City */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300">
+            <label className="block text-label1 font-medium text-gray-700 dark:text-neutral-300">
               City
             </label>
             <Controller
@@ -240,7 +260,7 @@ const ProfilePage: FC = (): ReactElement => {
 
           {/* Role/Skills */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300">
+            <label className="block text-label1 font-medium text-gray-700 dark:text-neutral-300">
               Role / Skills
             </label>
             <Controller
@@ -252,7 +272,7 @@ const ProfilePage: FC = (): ReactElement => {
                     {ROLE_OPTIONS.map((role) => (
                       <label
                         key={role}
-                        className="flex items-center space-x-2 cursor-pointer"
+                        className="flex items-center space-x-2 cursor-pointer font-sans"
                       >
                         <input
                           type="checkbox"
@@ -265,7 +285,9 @@ const ProfilePage: FC = (): ReactElement => {
                           }}
                           className="rounded border-gray-300 dark:border-neutral-600 text-blue-600 focus:ring-blue-500 dark:bg-neutral-800"
                         />
-                        <span className="text-sm dark:text-neutral-300">{role}</span>
+                        <span className="text-sm dark:text-neutral-300">
+                          {role}
+                        </span>
                       </label>
                     ))}
                   </div>
@@ -276,8 +298,11 @@ const ProfilePage: FC = (): ReactElement => {
 
           {/* Bio */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300">
-              Bio <span className="text-gray-400 dark:text-neutral-500">(Optional)</span>
+            <label className="block text-label1 font-medium text-gray-700 dark:text-neutral-300">
+              Bio{' '}
+              <span className="text-gray-400 dark:text-neutral-500">
+                (Optional)
+              </span>
             </label>
             <Controller
               control={form.control}
@@ -289,6 +314,7 @@ const ProfilePage: FC = (): ReactElement => {
                     placeholder="Tell us about yourself..."
                     rows={4}
                     className="w-full"
+                    size="lg"
                   />
                   {fieldState.error && (
                     <p className="text-sm text-red-500 mt-1">

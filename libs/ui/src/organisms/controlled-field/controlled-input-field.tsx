@@ -39,6 +39,8 @@ export const ControlledInputField = <T extends FieldValues>(
       error={fieldState.error?.message}
       {...inputProps}
       onChange={handleChange}
+      isRequired={props.isRequired}
+      size={props.size}
     />
   );
 };

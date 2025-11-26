@@ -66,13 +66,15 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-neutral-950">
+    <main className="min-h-screen bg-white dark:bg-neutral-950">
       {/* Navigation */}
       <div id="#top" className="hidden"></div>
       <nav className="border-b border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 sticky top-0 z-50">
         <div className="flex items-center justify-between max-w-7xl mx-auto px-4 md:px-8 py-4">
           <div className="flex items-center gap-2">
-            <span className="text-lg md:text-xl font-bold dark:text-white">IMPHNEN</span>
+            <span className="text-lg md:text-xl font-bold dark:text-white">
+              IMPHNEN
+            </span>
             <a
               href="#top"
               className="text-lg md:text-xl font-bold text-primary-500 hover:cursor-pointer"
@@ -156,7 +158,7 @@ export default function HomePage() {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-b border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
+        <nav className="md:hidden sticky top-18 border-b border-gray-200 dark:border-neutral-800 bg-white z-40 dark:bg-neutral-900">
           <div className="flex flex-col items-start gap-4 px-4 py-4">
             <a
               href="#timeline"
@@ -170,7 +172,10 @@ export default function HomePage() {
             >
               Hadiah
             </a>
-            <a href="#faq" className="ms-3 text-gray-600 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-white">
+            <a
+              href="#faq"
+              className="ms-3 text-gray-600 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-white"
+            >
               FAQ
             </a>
             {isAuthenticated ? (
@@ -182,7 +187,10 @@ export default function HomePage() {
               </button>
             ) : (
               <>
-                <a href="#masuk" className="ms-3 text-gray-600 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-white">
+                <a
+                  href="#masuk"
+                  className="ms-3 text-gray-600 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-white"
+                >
                   Masuk
                 </a>
                 <button
@@ -194,7 +202,7 @@ export default function HomePage() {
               </>
             )}
           </div>
-        </div>
+        </nav>
       )}
 
       {/* Hero Section */}
@@ -298,7 +306,9 @@ export default function HomePage() {
             Tentang <span className="text-primary-500">Hackathon</span>
           </h2>
           <p className="font-sans text-lg md:text-xl text-left md:text-center text-gray-600 dark:text-neutral-400 mb-6">
-            <span className="font-semibold text-gray-900 dark:text-white">Hackathon</span>{' '}
+            <span className="font-semibold text-gray-900 dark:text-white">
+              Hackathon
+            </span>{' '}
             adalah kompetisi pengembangan teknologi yang mengajak talenta muda
             untuk berkolaborasi dalam menciptakan solusi inovatif.
           </p>
@@ -313,7 +323,10 @@ export default function HomePage() {
       </section>
 
       {/* Prizes Section */}
-      <section id="hadiah" className="py-16 md:py-24 px-4 md:px-8 bg-gray-50 dark:bg-neutral-900">
+      <section
+        id="hadiah"
+        className="py-16 md:py-24 px-4 md:px-8 bg-gray-50 dark:bg-neutral-900"
+      >
         <div className="max-w-lg md:max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-5xl font-bold mb-4 font-bai-jamjuree dark:text-white">
@@ -335,7 +348,9 @@ export default function HomePage() {
                   />
                 </div>
               </div>
-              <h3 className="text-xl font-bold text-center mb-2 dark:text-white">Juara 1</h3>
+              <h3 className="text-xl font-bold text-center mb-2 dark:text-white">
+                Juara 1
+              </h3>
               <p className="text-2xl font-bold text-primary-500 text-center font-sans">
                 Rp6.000.000
               </p>
@@ -351,7 +366,9 @@ export default function HomePage() {
                   />
                 </div>
               </div>
-              <h3 className="text-xl font-bold text-center mb-2 dark:text-white">Juara 2</h3>
+              <h3 className="text-xl font-bold text-center mb-2 dark:text-white">
+                Juara 2
+              </h3>
               <p className="text-2xl font-bold text-primary-500 text-center font-sans">
                 Rp4.000.000
               </p>
@@ -367,7 +384,9 @@ export default function HomePage() {
                   />
                 </div>
               </div>
-              <h3 className="text-xl font-bold text-center mb-2 dark:text-white">Juara 3</h3>
+              <h3 className="text-xl font-bold text-center mb-2 dark:text-white">
+                Juara 3
+              </h3>
               <p className="text-2xl font-bold text-orange-600 dark:text-orange-500 text-center font-sans">
                 Rp2.500.000
               </p>
@@ -395,7 +414,10 @@ export default function HomePage() {
       </section>
 
       {/* Timeline Section */}
-      <section id="timeline" className="py-16 md:py-24 px-4 md:px-8 bg-white dark:bg-neutral-950">
+      <section
+        id="timeline"
+        className="py-16 md:py-24 px-4 md:px-8 bg-white dark:bg-neutral-950"
+      >
         <div className="max-w-4xl mx-auto font-sans">
           <div className="text-center mb-12 font-bai-jamjuree">
             <h2 className="text-3xl md:text-5xl font-bold mb-4 dark:text-white">
@@ -417,7 +439,9 @@ export default function HomePage() {
                 <p className="text-primary-500 font-semibold mb-2">
                   30 November 2025
                 </p>
-                <h3 className="text-xl font-bold mb-2 dark:text-white">Penutupan Registrasi</h3>
+                <h3 className="text-xl font-bold mb-2 dark:text-white">
+                  Penutupan Registrasi
+                </h3>
                 <p className="text-gray-600 dark:text-neutral-400">
                   Batas akhir pendaftaran peserta hackathon.
                 </p>
@@ -434,7 +458,9 @@ export default function HomePage() {
                 <p className="text-primary-500 font-semibold mb-2">
                   30 November 2025
                 </p>
-                <h3 className="text-xl font-bold mb-2 dark:text-white">Technical Meeting</h3>
+                <h3 className="text-xl font-bold mb-2 dark:text-white">
+                  Technical Meeting
+                </h3>
                 <p className="text-gray-600 dark:text-neutral-400">
                   Akan diadakan technical meeting terkait lomba melalui Google
                   Meet. Stay tune di grup WA Hackathon.
@@ -452,7 +478,9 @@ export default function HomePage() {
                 <p className="text-primary-500 font-semibold mb-2">
                   1 - 7 Desember 2025
                 </p>
-                <h3 className="text-xl font-bold mb-2 dark:text-white">Tahap Penyisihan</h3>
+                <h3 className="text-xl font-bold mb-2 dark:text-white">
+                  Tahap Penyisihan
+                </h3>
                 <p className="text-gray-600 dark:text-neutral-400">
                   Peserta mengerjakan tantangan yang diberikan.
                 </p>
@@ -469,7 +497,9 @@ export default function HomePage() {
                 <p className="text-primary-500 font-semibold mb-2">
                   8 - 14 Desember 2025
                 </p>
-                <h3 className="text-xl font-bold mb-2 dark:text-white">Penilaian & Webinar</h3>
+                <h3 className="text-xl font-bold mb-2 dark:text-white">
+                  Penilaian & Webinar
+                </h3>
                 <p className="text-gray-600 dark:text-neutral-400">
                   Proses penilaian oleh juri dan sesi webinar.
                 </p>
@@ -485,7 +515,9 @@ export default function HomePage() {
                 <p className="text-primary-500 font-semibold mb-2">
                   15 Desember 2025
                 </p>
-                <h3 className="text-xl font-bold mb-2 dark:text-white">Pengumuman & Final</h3>
+                <h3 className="text-xl font-bold mb-2 dark:text-white">
+                  Pengumuman & Final
+                </h3>
                 <p className="text-gray-600 dark:text-neutral-400">
                   Presentasi final dan pengumuman pemenang.
                 </p>
@@ -515,13 +547,17 @@ export default function HomePage() {
               </h3>
               <div>
                 <p className="text-primary-500 font-semibold mb-1">CTO</p>
-                <p className="text-gray-600 dark:text-neutral-400">Kolosal.ai</p>
+                <p className="text-gray-600 dark:text-neutral-400">
+                  Kolosal.ai
+                </p>
               </div>
             </div>
 
             {/* Judge 2 */}
             <div className="flex flex-col justify-between bg-white dark:bg-neutral-800 rounded-xl px-4 py-8 shadow-lg text-center">
-              <h3 className="text-p3 font-bold mb-1 dark:text-white">Anka Tama</h3>
+              <h3 className="text-p3 font-bold mb-1 dark:text-white">
+                Anka Tama
+              </h3>
               <div>
                 <p className="text-primary-500 font-semibold mb-1">Admin</p>
                 <p className="text-gray-600 dark:text-neutral-400">IMPHNEN</p>
@@ -530,7 +566,9 @@ export default function HomePage() {
 
             {/* Judge 3 */}
             <div className="flex flex-col justify-between bg-white dark:bg-neutral-800 rounded-xl px-4 py-8 shadow-lg text-center">
-              <h3 className="text-p3 font-bold mb-1 dark:text-white">Hafid Nur</h3>
+              <h3 className="text-p3 font-bold mb-1 dark:text-white">
+                Hafid Nur
+              </h3>
               <div>
                 <p className="text-primary-500 font-semibold mb-1">Moderator</p>
                 <p className="text-gray-600 dark:text-neutral-400">IMPHNEN</p>
@@ -541,7 +579,10 @@ export default function HomePage() {
       </section>
 
       {/* FAQ Section */}
-      <section id="faq" className="py-16 md:py-24 px-4 md:px-8 bg-white dark:bg-neutral-950">
+      <section
+        id="faq"
+        className="py-16 md:py-24 px-4 md:px-8 bg-white dark:bg-neutral-950"
+      >
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-5xl font-bold mb-4 text-primary-500">
@@ -554,7 +595,10 @@ export default function HomePage() {
 
           <div className="space-y-4 font-sans">
             {faqs.map((faq, index) => (
-              <div key={index} className="border border-gray-200 dark:border-neutral-700 rounded-lg">
+              <div
+                key={index}
+                className="border border-gray-200 dark:border-neutral-700 rounded-lg"
+              >
                 <button
                   onClick={() => setOpenFaq(openFaq === index ? null : index)}
                   className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-gray-50 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
@@ -579,7 +623,9 @@ export default function HomePage() {
                   </svg>
                 </button>
                 {openFaq === index && (
-                  <div className="px-6 pb-4 text-gray-600 dark:text-neutral-400">{faq.answer}</div>
+                  <div className="px-6 pb-4 text-gray-600 dark:text-neutral-400">
+                    {faq.answer}
+                  </div>
                 )}
               </div>
             ))}
@@ -820,6 +866,6 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
-    </div>
+    </main>
   );
 }

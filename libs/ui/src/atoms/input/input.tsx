@@ -32,9 +32,9 @@ type TInputProps = Omit<
 
 const sizeClasses: Record<TInputSize, { textSize: string; iconSize: string }> =
   {
-    sm: { textSize: 'text-[10px] max-h-[28px]', iconSize: 'text-[10px]' },
-    md: { textSize: 'text-[12px] max-h-[30px]', iconSize: 'text-[12px]' },
-    lg: { textSize: 'text-[15px] max-h-[34px]', iconSize: 'text-[15px]' },
+    sm: { textSize: 'text-[10px] h-[28px]', iconSize: 'text-[10px]' },
+    md: { textSize: 'text-[12px] h-[30px]', iconSize: 'text-[12px]' },
+    lg: { textSize: 'text-[15px] h-[34px]', iconSize: 'text-[15px]' },
   };
 
 const disabledClass = 'opacity-50 hover:border-neutral-200 cursor-not-allowed';
