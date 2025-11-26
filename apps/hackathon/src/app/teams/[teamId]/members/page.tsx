@@ -23,7 +23,7 @@ const ManageMembersPage: FC = (): ReactElement => {
   const { session } = useAuthStore();
   const [showInviteModal, setShowInviteModal] = useState(false);
 
-  const { data: teamData } = useTeamById(teamId || '');
+  const { data: teamData, isLoading: isLoadingTeam } = useTeamById(teamId || '');
   const { data: membersData, isLoading: isLoadingMembers } = useTeamMembers(teamId || '');
   const { data: joinRequestsData } = useTeamJoinRequests(teamId || '');
 
@@ -41,6 +41,15 @@ const ManageMembersPage: FC = (): ReactElement => {
     resolver: zodResolver(inviteMemberSchema),
     mode: 'all',
   });
+
+  // Show loading state while fetching team data
+  if (isLoadingTeam) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        <p className="text-gray-600">Loading...</p>
+      </div>
+    );
+  }
 
   if (!isLeader) {
     return (
