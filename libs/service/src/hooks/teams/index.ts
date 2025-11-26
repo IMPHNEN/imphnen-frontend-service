@@ -37,7 +37,10 @@ export const useTeams = (params?: {
     queryFn: async () => {
       try {
         // Supabase client now has auth context from setSession()
-        let query = supabase.from('teams').select('*');
+        let query = supabase.from('teams').select(`
+          *,
+          members:team_members(id)
+        `);
 
         // Filter by visibility
         if (params?.visibility) {
@@ -689,5 +692,48 @@ export const useLeaveTeam = () => {
       queryClient.invalidateQueries({ queryKey: teamKeys.myTeams() });
       queryClient.invalidateQueries({ queryKey: teamKeys.lists() });
     },
+  });
+};
+
+// Get Teams by User ID
+export const useTeamsByUserId = (userId: string) => {
+  return useQuery({
+    queryKey: ['teams-by-user', userId],
+    queryFn: async () => {
+      if (!userId) {
+        return { data: [] };
+      }
+
+      // Query team_members to find teams where user is a member
+      const { data: memberships, error: membershipsError } = await supabase
+        .from('team_members')
+        .select(`
+          team_id,
+          team:teams(
+            id,
+            name,
+            logo,
+            banner,
+            description,
+            city,
+            visibility,
+            leader_id,
+            created_at
+          )
+        `)
+        .eq('user_id', userId)
+        .eq('status', 'active');
+
+      if (membershipsError) {
+        console.error('Failed to fetch user teams:', membershipsError);
+        return { data: [] };
+      }
+
+      // Extract teams from memberships
+      const teams = memberships?.map((m: any) => m.team).filter(Boolean) || [];
+
+      return { data: teams };
+    },
+    enabled: !!userId,
   });
 };

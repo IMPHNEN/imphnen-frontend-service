@@ -1,5 +1,5 @@
 import { FC, ReactElement, useState } from 'react';
-import { Button, Input } from '@imphnen-frontend-service/ui/atoms';
+import { Button, Input, Select } from '@imphnen-frontend-service/ui/atoms';
 import { Link, useNavigate } from 'react-router';
 import { useTeams, useJoinTeam, useMyTeams, ETeamVisibility, joinTeamSchema, TJoinTeamForm } from '@imphnen-frontend-service/service';
 import { useForm } from 'react-hook-form';
@@ -65,7 +65,7 @@ const BrowseTeamsPage: FC = (): ReactElement => {
               <h1 className="text-3xl font-bold text-gray-900">Browse Teams</h1>
               <p className="text-gray-600 mt-1">Find and join teams looking for members</p>
             </div>
-            <Link to="/dashboard">
+            <Link to="/dashboard" className="hidden md:block">
               <Button variant="secondary">Back to Dashboard</Button>
             </Link>
           </div>
@@ -85,23 +85,24 @@ const BrowseTeamsPage: FC = (): ReactElement => {
                 placeholder="Search by team name..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
+                className="h-12"
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Filter by City
               </label>
-              <select
+              <Select
                 value={selectedCity}
                 onChange={(e) => setSelectedCity(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full"
               >
                 {INDONESIAN_CITIES.map((city) => (
                   <option key={city} value={city}>
                     {city}
                   </option>
                 ))}
-              </select>
+              </Select>
             </div>
           </div>
         </div>
@@ -119,15 +120,13 @@ const BrowseTeamsPage: FC = (): ReactElement => {
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {teams.map((team) => (
-              <div key={team.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-                {team.banner && (
-                  <img
-                    src={team.banner}
-                    alt={team.name}
-                    className="w-full h-32 object-cover"
-                  />
-                )}
-                <div className="p-6">
+              <div key={team.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow flex flex-col">
+                <img
+                  src={team.banner || '/images/banner-imphnen.png'}
+                  alt={team.name}
+                  className="w-full h-32 object-cover"
+                />
+                <div className="p-6 flex flex-col flex-1">
                   <div className="flex items-center space-x-3 mb-3">
                     {team.logo ? (
                       <img
@@ -140,30 +139,46 @@ const BrowseTeamsPage: FC = (): ReactElement => {
                         <span className="text-gray-500 text-xl">👥</span>
                       </div>
                     )}
-                    <div className="flex-1">
-                      <h3 className="text-lg font-bold text-gray-900">{team.name}</h3>
-                      <p className="text-sm text-gray-600">📍 {team.city}</p>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-lg font-bold text-gray-900 line-clamp-2">{team.name}</h3>
+                      <div className="text-sm text-gray-600 flex gap-2">
+                        <p className="truncate flex-1 min-w-0">📍 {team.city}</p>
+                        <p className="whitespace-nowrap shrink-0">👥 {team.members?.length || 0} members</p>
+                      </div>
                     </div>
                   </div>
                   <p className="text-gray-600 text-sm mb-4 line-clamp-3">
                     {team.description}
                   </p>
-                  {isMyTeam(team.id) ? (
-                    <Button
-                      className="w-full"
-                      variant="secondary"
-                      onClick={() => navigate(`/teams/${team.id}`)}
-                    >
-                      Your Team
-                    </Button>
-                  ) : (
-                    <Button
-                      className="w-full"
-                      onClick={() => handleJoinRequest(team.id)}
-                    >
-                      Request to Join
-                    </Button>
-                  )}
+                  <div className="space-y-3 mt-auto">
+                    {isMyTeam(team.id) ? (
+                      <Button
+                        className="w-full"
+                        variant="secondary"
+                        onClick={() => navigate(`/teams/${team.id}`)}
+                      >
+                        Your Team
+                      </Button>
+                    ) : (
+                      <>
+                        {myTeams.length === 0 && (team.members?.length || 0) < 5 && (
+                          <Button
+                            className="w-full"
+                            onClick={() => handleJoinRequest(team.id)}
+                          >
+                            Request to Join
+                          </Button>
+                        )}
+                        <Button
+                          className="w-full"
+                          variant="secondary"
+                          onClick={() => navigate(`/teams/${team.id}`)}
+                        >
+                          View Team
+                        </Button>
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}

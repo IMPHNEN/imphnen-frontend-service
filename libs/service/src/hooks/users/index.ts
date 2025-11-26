@@ -92,3 +92,23 @@ export const useUpdateUserById = () => {
     },
   });
 };
+
+export const useUserDetailsById = (userId: string) => {
+  return useQuery({
+    queryKey: ['user-supabase', userId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', userId)
+        .single();
+
+      if (error) {
+        throw new Error(error.message || 'Failed to fetch user');
+      }
+
+      return { data };
+    },
+    enabled: !!userId,
+  });
+};
