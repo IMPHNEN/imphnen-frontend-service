@@ -2,6 +2,9 @@
 @import 'tailwindcss';
 @source "../../../libs/ui/**/*.{ts,tsx}";
 
+/* Enable class-based dark mode (using .dark class on html element) */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-primary-50: #f0f8ff;
   --color-primary-100: #e1f0fd;
@@ -108,6 +111,14 @@
     border-color: var(--color-neutral-200, currentColor);
   }
 
+  .dark *,
+  .dark ::after,
+  .dark ::before,
+  .dark ::backdrop,
+  .dark ::file-selector-button {
+    border-color: var(--color-neutral-700, currentColor);
+  }
+
   /* Custom scrollbar */
   ::-webkit-scrollbar {
     width: 6px;
@@ -118,13 +129,25 @@
     background: var(--color-neutral-50);
   }
 
+  .dark ::-webkit-scrollbar-track {
+    background: var(--color-neutral-900);
+  }
+
   ::-webkit-scrollbar-thumb {
     background: #cccccc;
     border-radius: 3px;
   }
 
+  .dark ::-webkit-scrollbar-thumb {
+    background: var(--color-neutral-600);
+  }
+
   ::-webkit-scrollbar-thumb:hover {
     background: var(--color-neutral-300);
+  }
+
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-neutral-500);
   }
 
   html {
@@ -132,5 +155,15 @@
     font-weight: 400;
     font-size: 16px;
     line-height: 1.2;
+  }
+
+  /* Dark mode base styles */
+  .dark {
+    color-scheme: dark;
+  }
+
+  .dark body {
+    background-color: var(--color-neutral-950);
+    color: var(--color-neutral-100);
   }
 }

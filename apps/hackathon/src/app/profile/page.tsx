@@ -128,14 +128,14 @@ const ProfilePage: FC = (): ReactElement => {
   const isLoading = isUpdating || isUploading;
 
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen bg-gray-50 px-4 py-8">
-      <div className="bg-white w-full max-w-md p-8 rounded-xl shadow-lg">
+    <div className="flex flex-col justify-center items-center min-h-screen bg-gray-50 dark:bg-neutral-950 px-4 py-8">
+      <div className="bg-white dark:bg-neutral-900 w-full max-w-md p-8 rounded-xl shadow-lg">
         <div className="mb-6">
           <div className="flex items-center justify-between mb-2">
-            <h1 className="text-2xl font-bold text-gray-900">Edit Profile</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Edit Profile</h1>
             <Link
               to="/dashboard"
-              className="text-gray-500 hover:text-gray-700"
+              className="text-gray-500 dark:text-neutral-400 hover:text-gray-700 dark:hover:text-neutral-200"
             >
               <svg
                 className="w-6 h-6"
@@ -152,7 +152,7 @@ const ProfilePage: FC = (): ReactElement => {
               </svg>
             </Link>
           </div>
-          <p className="text-gray-600">Update your photo and name</p>
+          <p className="text-gray-600 dark:text-neutral-400">Update your photo and name</p>
         </div>
 
         <form onSubmit={onSubmit} className="space-y-6">
@@ -163,11 +163,11 @@ const ProfilePage: FC = (): ReactElement => {
                 <img
                   src={avatarPreview}
                   alt="Avatar preview"
-                  className="w-32 h-32 rounded-full object-cover border-4 border-gray-200 group-hover:border-blue-400 transition-colors"
+                  className="w-32 h-32 rounded-full object-cover border-4 border-gray-200 dark:border-neutral-700 group-hover:border-blue-400 dark:group-hover:border-blue-500 transition-colors"
                 />
               ) : (
-                <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center group-hover:bg-gray-300 transition-colors">
-                  <span className="text-gray-400 text-4xl">👤</span>
+                <div className="w-32 h-32 rounded-full bg-gray-200 dark:bg-neutral-700 flex items-center justify-center group-hover:bg-gray-300 dark:group-hover:bg-neutral-600 transition-colors">
+                  <span className="text-gray-400 dark:text-neutral-500 text-4xl">👤</span>
                 </div>
               )}
               {/* Camera overlay */}
@@ -204,7 +204,7 @@ const ProfilePage: FC = (): ReactElement => {
                 />
               </label>
             </div>
-            <p className="text-xs text-gray-500 text-center">
+            <p className="text-xs text-gray-500 dark:text-neutral-400 text-center">
               Click the camera icon to change your photo
               <br />
               Format: JPG, PNG. Max 5MB
@@ -221,7 +221,7 @@ const ProfilePage: FC = (): ReactElement => {
 
           {/* City */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300">
               City
             </label>
             <Controller
@@ -240,7 +240,7 @@ const ProfilePage: FC = (): ReactElement => {
 
           {/* Role/Skills */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300">
               Role / Skills
             </label>
             <Controller
@@ -263,9 +263,9 @@ const ProfilePage: FC = (): ReactElement => {
                               : (field.value || []).filter((v) => v !== role);
                             field.onChange(newValue);
                           }}
-                          className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                          className="rounded border-gray-300 dark:border-neutral-600 text-blue-600 focus:ring-blue-500 dark:bg-neutral-800"
                         />
-                        <span className="text-sm">{role}</span>
+                        <span className="text-sm dark:text-neutral-300">{role}</span>
                       </label>
                     ))}
                   </div>
@@ -276,8 +276,8 @@ const ProfilePage: FC = (): ReactElement => {
 
           {/* Bio */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              Bio <span className="text-gray-400">(Optional)</span>
+            <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300">
+              Bio <span className="text-gray-400 dark:text-neutral-500">(Optional)</span>
             </label>
             <Controller
               control={form.control}

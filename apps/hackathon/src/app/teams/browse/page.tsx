@@ -63,14 +63,14 @@ const BrowseTeamsPage: FC = (): ReactElement => {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-neutral-950">
       {/* Header */}
-      <div className="bg-white border-b">
+      <div className="bg-white dark:bg-neutral-900 border-b dark:border-neutral-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Browse Teams</h1>
-              <p className="text-gray-600 mt-1">Find and join teams looking for members</p>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Browse Teams</h1>
+              <p className="text-gray-600 dark:text-neutral-400 mt-1">Find and join teams looking for members</p>
             </div>
             <Link to="/dashboard" className="hidden md:block">
               <Button variant="secondary">Back to Dashboard</Button>
@@ -81,10 +81,10 @@ const BrowseTeamsPage: FC = (): ReactElement => {
 
       {/* Filters */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="bg-white p-6 rounded-lg shadow-sm mb-6">
+        <div className="bg-white dark:bg-neutral-900 p-6 rounded-lg shadow-sm mb-6">
           <div className="grid gap-4 md:grid-cols-2">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-2">
                 Search Teams
               </label>
               <input
@@ -92,11 +92,11 @@ const BrowseTeamsPage: FC = (): ReactElement => {
                 placeholder="Search by team name..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full h-[42px] px-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full h-[42px] px-3 border border-gray-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-neutral-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-2">
                 Filter by City
               </label>
               <CitySelect
@@ -111,17 +111,17 @@ const BrowseTeamsPage: FC = (): ReactElement => {
         {/* Teams List */}
         {isLoading ? (
           <div className="text-center py-12">
-            <p className="text-gray-600">Loading teams...</p>
+            <p className="text-gray-600 dark:text-neutral-400">Loading teams...</p>
           </div>
         ) : teams.length === 0 ? (
-          <div className="bg-white rounded-lg shadow-sm p-12 text-center">
-            <p className="text-gray-600 text-lg">No teams found</p>
-            <p className="text-gray-500 mt-2">Try adjusting your filters</p>
+          <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-sm p-12 text-center">
+            <p className="text-gray-600 dark:text-neutral-400 text-lg">No teams found</p>
+            <p className="text-gray-500 dark:text-neutral-500 mt-2">Try adjusting your filters</p>
           </div>
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {teams.map((team) => (
-              <div key={team.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow flex flex-col">
+              <div key={team.id} className="bg-white dark:bg-neutral-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow flex flex-col">
                 <img
                   src={team.banner || '/images/banner-imphnen.png'}
                   alt={team.name}
@@ -136,19 +136,19 @@ const BrowseTeamsPage: FC = (): ReactElement => {
                         className="w-12 h-12 rounded-full object-cover"
                       />
                     ) : (
-                      <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
-                        <span className="text-gray-500 text-xl">👥</span>
+                      <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-neutral-700 flex items-center justify-center">
+                        <span className="text-gray-500 dark:text-neutral-400 text-xl">👥</span>
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-lg font-bold text-gray-900 line-clamp-2">{team.name}</h3>
-                      <div className="text-sm text-gray-600 flex gap-2">
+                      <h3 className="text-lg font-bold text-gray-900 dark:text-white line-clamp-2">{team.name}</h3>
+                      <div className="text-sm text-gray-600 dark:text-neutral-400 flex gap-2">
                         <p className="truncate flex-1 min-w-0">📍 {team.city}</p>
                         <p className="whitespace-nowrap shrink-0">👥 {team.members?.length || 0} members</p>
                       </div>
                     </div>
                   </div>
-                  <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+                  <p className="text-gray-600 dark:text-neutral-400 text-sm mb-4 line-clamp-3">
                     {team.description}
                   </p>
                   <div className="space-y-3 mt-auto">
@@ -189,23 +189,23 @@ const BrowseTeamsPage: FC = (): ReactElement => {
 
       {/* Join Request Modal */}
       {showJoinModal && (
-        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+        <div className="fixed inset-0 bg-black/30 dark:bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-xl max-w-md w-full p-6">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
               Request to Join Team
             </h2>
-            <p className="text-gray-600 mb-6">
+            <p className="text-gray-600 dark:text-neutral-400 mb-6">
               Send a message to the team leader explaining why you want to join
             </p>
             <form onSubmit={onSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-2">
                   Your Message
                 </label>
                 <textarea
                   {...form.register('message')}
                   rows={4}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-neutral-500"
                   placeholder="Tell the team leader why you want to join their team..."
                 />
                 {form.formState.errors.message && (
