@@ -30,8 +30,6 @@ const TeamDashboardPage: FC = (): ReactElement => {
   const isMember = members.some((member: any) => member.user_id === currentUserId);
   const canInvite = isLeader && members.length < MAX_TEAM_MEMBERS;
 
-  console.log('Leader check:', { currentUserId, leaderId: team?.leader_id, isLeader });
-
   const handleInviteMember = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!inviteEmail.trim() || isInviting) return;

@@ -37,8 +37,6 @@ export const middleware = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
   const pathname = url.pathname;
 
-  console.log('[Middleware] Checking route:', pathname);
-
   // Get session from Supabase (authoritative source)
   const { data: { session: supabaseSession }, error: sessionError } = await supabase.auth.getSession();
 
@@ -86,10 +84,8 @@ export const middleware = async ({ request }: LoaderFunctionArgs) => {
       let hasLocation = false;
 
       if (cached && (now - cached.timestamp) < CACHE_DURATION) {
-        console.log('[Middleware] Using cached onboarding status');
         hasLocation = cached.hasLocation;
       } else {
-        console.log('[Middleware] Fetching fresh onboarding status');
         const { data: userData, error: userError } = await supabase
           .from('users')
           .select('location')
