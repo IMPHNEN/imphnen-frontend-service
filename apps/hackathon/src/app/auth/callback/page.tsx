@@ -176,13 +176,13 @@ const CallbackPage: FC = (): ReactElement => {
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-50">
+    <div className="flex justify-center items-center min-h-screen bg-gray-50 dark:bg-gray-950">
       <div className="text-center">
         <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mb-4"></div>
-        <h2 className="text-xl font-semibold text-gray-900 mb-2">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
           Completing login...
         </h2>
-        <p className="text-gray-600">Please wait</p>
+        <p className="text-gray-600 dark:text-gray-400">Please wait</p>
       </div>
     </div>
   );

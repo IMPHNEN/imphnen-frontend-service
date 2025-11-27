@@ -187,12 +187,12 @@ export default function HomePage() {
               </button>
             ) : (
               <>
-                <a
-                  href="#masuk"
-                  className="ms-3 text-gray-600 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white"
+                <button
+                  onClick={() => navigate('/auth/login')}
+                  className="ms-3 text-gray-600 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white cursor-pointer"
                 >
                   Masuk
-                </a>
+                </button>
                 <button
                   onClick={() => navigate('/auth/login')}
                   className="px-4 py-2 bg-primary-500 text-white text-base rounded-lg hover:bg-primary-600 transition-colors text-center cursor-pointer"
