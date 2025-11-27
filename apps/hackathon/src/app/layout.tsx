@@ -1,4 +1,9 @@
-import { Outlet, ScrollRestoration, useLocation, useNavigate } from 'react-router-dom';
+import {
+  Outlet,
+  ScrollRestoration,
+  useLocation,
+  useNavigate,
+} from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { supabase } from '@imphnen-frontend-service/service';
 
@@ -27,14 +32,21 @@ export default function RootLayout() {
       }
 
       // Check Supabase session
-      const { data: { session }, error } = await supabase.auth.getSession();
+      const {
+        data: { session },
+        error,
+      } = await supabase.auth.getSession();
 
       if (error) {
         console.error('[Layout] Session error:', error);
       }
 
       // Public auth pages (login, signup, forgot-password, reset-password) - allow unauthenticated access
-      const isPublicAuthPage = pathname === '/auth/login' || pathname === '/auth/signup' || pathname === '/auth/forgot-password' || pathname === '/auth/reset-password';
+      const isPublicAuthPage = pathname === '/maintenance';
+      // pathname === '/auth/login' ||
+      // pathname === '/auth/signup' ||
+      // pathname === '/auth/forgot-password' ||
+      // pathname === '/auth/reset-password';
 
       if (isPublicAuthPage) {
         // If already authenticated and not on password reset pages, redirect to dashboard
@@ -56,7 +68,8 @@ export default function RootLayout() {
 
       // Require authentication for all other routes
       if (!session) {
-        navigate('/auth/login', { replace: true });
+        navigate('/maintenance', { replace: true });
+        // navigate('/auth/login', { replace: true });
         setIsChecking(false);
         return;
       }
