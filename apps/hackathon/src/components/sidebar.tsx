@@ -161,9 +161,9 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen = true, onClose }) => {
   };
 
   const sidebarContent = (
-    <div className="w-64 bg-white dark:bg-gray-900 border-r dark:border-gray-700 min-h-screen flex flex-col">
+    <div className="w-64 bg-white dark:bg-gray-900 border-r dark:border-gray-800 min-h-screen flex flex-col">
       {/* Logo / Brand with Close Button */}
-      <div className="p-6 flex items-center justify-between border-b dark:border-gray-700">
+      <div className="p-6 flex items-center justify-between border-b dark:border-gray-800">
         <h1 className="text-xl font-bold text-gray-900 dark:text-white">
           Hackathon
         </h1>
@@ -190,7 +190,7 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen = true, onClose }) => {
       </div>
 
       {/* User Info */}
-      <div className="p-4 border-y dark:border-gray-700">
+      <div className="p-4 border-b dark:border-gray-800">
         <div className="flex items-center space-x-3">
           {user?.avatar ? (
             <img
@@ -246,7 +246,7 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen = true, onClose }) => {
       </nav>
 
       {/* Theme Toggle & Logout */}
-      <div className="p-4 border-t dark:border-gray-700 space-y-2">
+      <div className="p-4 border-t dark:border-gray-800 space-y-2">
         <button
           onClick={cycleTheme}
           className="flex items-center space-x-3 px-4 py-3 w-full rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
