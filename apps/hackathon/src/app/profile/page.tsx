@@ -138,8 +138,8 @@ const ProfilePage: FC = (): ReactElement => {
   const isLoading = isUpdating || isUploading;
 
   return (
-    <div className="fixed inset-0 bg-black/30 dark:bg-black/50 backdrop-blur-sm flex flex-col justify-center items-center px-4 py-8 z-50 overflow-y-auto">
-      <div className="bg-white dark:bg-neutral-900 w-full max-w-md p-8 rounded-xl shadow-xl dark:shadow-neutral-950/50">
+    <div className=" bg-black/30 dark:bg-black/50 backdrop-blur-sm flex flex-col justify-center items-center px-4 py-8 z-50 overflow-y-auto">
+      <div className="bg-white dark:bg-gray-900 w-full max-w-md p-8 rounded-xl border dark:boder-gray-800">
         <div className="mb-6">
           <div className="flex items-center justify-between mb-2">
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -180,7 +180,7 @@ const ProfilePage: FC = (): ReactElement => {
                   className="w-32 h-32 rounded-full object-cover border-4 border-gray-200 dark:border-neutral-700 group-hover:border-blue-400 dark:group-hover:border-blue-500 transition-colors"
                 />
               ) : (
-                <div className="w-32 h-32 rounded-full bg-gray-200 dark:bg-neutral-700 flex items-center justify-center group-hover:bg-gray-300 dark:group-hover:bg-neutral-600 transition-colors">
+                <div className="w-32 h-32 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center group-hover:bg-gray-300 dark:group-hover:bg-gray-600 transition-colors">
                   <Icon
                     icon="ic:baseline-person"
                     width="48"
@@ -241,7 +241,7 @@ const ProfilePage: FC = (): ReactElement => {
 
           {/* City */}
           <div className="space-y-2">
-            <label className="block text-label1 font-medium text-gray-700 dark:text-neutral-300">
+            <label className="block text-label1 font-medium text-neutral-800 dark:text-neutral-300">
               City
             </label>
             <Controller
@@ -283,7 +283,7 @@ const ProfilePage: FC = (): ReactElement => {
                               : (field.value || []).filter((v) => v !== role);
                             field.onChange(newValue);
                           }}
-                          className="rounded border-gray-300 dark:border-neutral-600 text-blue-600 focus:ring-blue-500 dark:bg-neutral-800"
+                          className="rounded border-gray-300 dark:border-neutral-600 text-blue-600 focus:ring-blue-500 dark:bg-gray-800"
                         />
                         <span className="text-sm dark:text-neutral-300">
                           {role}
@@ -313,7 +313,7 @@ const ProfilePage: FC = (): ReactElement => {
                     {...field}
                     placeholder="Tell us about yourself..."
                     rows={4}
-                    className="w-full"
+                    className="w-full font-sans"
                     size="lg"
                   />
                   {fieldState.error && (

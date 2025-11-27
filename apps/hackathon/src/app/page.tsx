@@ -66,10 +66,10 @@ export default function HomePage() {
   ];
 
   return (
-    <main className="min-h-screen bg-white dark:bg-neutral-950">
+    <main className="min-h-screen bg-white dark:bg-gray-950">
       {/* Navigation */}
       <div id="#top" className="hidden"></div>
-      <nav className="border-b border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 sticky top-0 z-50">
+      <nav className="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 sticky top-0 z-50">
         <div className="flex items-center justify-between max-w-7xl mx-auto px-4 md:px-8 py-4">
           <div className="flex items-center gap-2">
             <span className="text-lg md:text-xl font-bold dark:text-white">
@@ -86,19 +86,19 @@ export default function HomePage() {
           <div className="hidden md:flex text-label1 items-center gap-4 lg:gap-8">
             <a
               href="#timeline"
-              className="text-gray-600 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+              className="text-gray-600 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white transition-colors"
             >
               Timeline
             </a>
             <a
               href="#hadiah"
-              className="text-gray-600 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+              className="text-gray-600 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white transition-colors"
             >
               Hadiah
             </a>
             <a
               href="#faq"
-              className="text-gray-600 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+              className="text-gray-600 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white transition-colors"
             >
               FAQ
             </a>
@@ -117,7 +117,7 @@ export default function HomePage() {
                   onClick={() => navigate('/auth/login')}
                   size="sm"
                   variant="bordered"
-                  className="rounded-lg text-base"
+                  className="rounded-lg text-base dark:bg-gray-800"
                 >
                   Masuk
                 </Button>
@@ -158,23 +158,23 @@ export default function HomePage() {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <nav className="md:hidden sticky top-18 border-b border-gray-200 dark:border-neutral-800 bg-white z-40 dark:bg-neutral-900">
+        <nav className="md:hidden sticky top-18 border-b border-gray-200 dark:border-gray-800 bg-white z-40 dark:bg-gray-900">
           <div className="flex flex-col items-start gap-4 px-4 py-4">
             <a
               href="#timeline"
-              className="ms-3 text-gray-600 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-white"
+              className="ms-3 text-gray-600 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white"
             >
               Timeline
             </a>
             <a
               href="#hadiah"
-              className="ms-3 text-gray-600 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-white"
+              className="ms-3 text-gray-600 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white"
             >
               Hadiah
             </a>
             <a
               href="#faq"
-              className="ms-3 text-gray-600 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-white"
+              className="ms-3 text-gray-600 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white"
             >
               FAQ
             </a>
@@ -189,7 +189,7 @@ export default function HomePage() {
               <>
                 <a
                   href="#masuk"
-                  className="ms-3 text-gray-600 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-white"
+                  className="ms-3 text-gray-600 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white"
                 >
                   Masuk
                 </a>
@@ -228,7 +228,7 @@ export default function HomePage() {
                 className="h-12 md:h-16"
               />
             </div>
-            <span className="text-3xl md:text-5xl font-bold text-gray-400 dark:text-neutral-500">
+            <span className="text-3xl md:text-5xl font-bold text-gray-400 dark:text-gray-500">
               ×
             </span>
             <div className="flex items-center">
@@ -248,23 +248,23 @@ export default function HomePage() {
             "Inovasi AI: Mendorong Usaha Lokal dengan AI Inklusif"
           </p>
           {/* Description */}
-          <p className="text-p3 text-gray-600 dark:text-neutral-400 max-w-lg md:max-w-xl text-center mb-8 md:mb-12 px-4 font-sans">
+          <p className="text-p3 text-gray-600 dark:text-gray-200 max-w-lg md:max-w-xl text-center mb-8 md:mb-12 px-4 font-sans">
             Kompetisi pengembangan teknologi untuk menciptakan solusi inovatif
             yang menghadirkan dampak nyata
           </p>
           {/* Status */}
-          <div className="flex items-center gap-4 md:gap-8 mb-10 md:mb-16 text-base text-gray-600 dark:text-neutral-400">
+          <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8 mb-10 md:mb-16 text-base text-gray-600 dark:text-gray-200">
             <div className="flex items-center gap-2 md:gap-3">
-              <Icon icon="streamline-plump:web" width="16" height="16" />
+              <Icon icon="streamline-plump:web" className="w-4 h-4" />
               <span>Online</span>
             </div>
             <div className="flex items-center gap-2 md:gap-3 text-center">
-              <Icon icon="heroicons:clock" width="16" height="16" />
+              <Icon icon="heroicons:clock" className="w-4 h-4" />
               <span>Pendaftaran hingga 30 November 2025</span>
             </div>
           </div>
           {/* CTA Buttons */}
-          <div className="flex items-center gap-4 px-4">
+          <div className="flex flex-col md:flex-row items-center gap-4 px-4">
             <Button
               onClick={() => navigate('/auth/signup')}
               className="rounded-lg text-base max-h-auto"
@@ -275,7 +275,7 @@ export default function HomePage() {
               href="https://chat.whatsapp.com/BlxrYh9uSC37d7VPhJslGL"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center px-4 py-2.5 border-2 border-gray-300 dark:border-neutral-600 hover:border-gray-400 dark:hover:border-neutral-500 transition-colors text-center bg-transparent hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-neutral-800 text-base text-gray-600 dark:text-neutral-400 rounded-lg font-bai-jamjuree font-semibold"
+              className="inline-flex items-center justify-center px-4 py-2.5 border-2 border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 transition-colors text-center bg-transparent hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 text-base text-gray-600 dark:text-gray-200 dark:bg-gray-800 rounded-lg font-bai-jamjuree font-semibold"
             >
               Gabung Grup WA Hackathon
             </a>
@@ -283,7 +283,7 @@ export default function HomePage() {
           {/* Scroll indicator */}
           <div className="mt-12 md:mt-20">
             <svg
-              className="w-6 h-6 text-gray-400 dark:text-neutral-500 animate-bounce"
+              className="w-6 h-6 text-gray-400 dark:text-gray-500 animate-bounce"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -300,19 +300,19 @@ export default function HomePage() {
       </section>
 
       {/* About Section */}
-      <section className="py-16 md:py-24 px-4 md:px-8 bg-white dark:bg-neutral-950">
+      <section className="py-16 md:py-24 px-4 md:px-8 bg-white dark:bg-gray-950">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl md:text-5xl font-bold mb-10 dark:text-white">
             Tentang <span className="text-primary-500">Hackathon</span>
           </h2>
-          <p className="font-sans text-lg md:text-xl text-left md:text-center text-gray-600 dark:text-neutral-400 mb-6">
+          <p className="font-sans text-lg md:text-xl text-left md:text-center text-gray-600 dark:text-gray-200 mb-6">
             <span className="font-semibold text-gray-900 dark:text-white">
               Hackathon
             </span>{' '}
             adalah kompetisi pengembangan teknologi yang mengajak talenta muda
             untuk berkolaborasi dalam menciptakan solusi inovatif.
           </p>
-          <p className="font-sans text-lg md:text-xl text-left md:text-center text-gray-600 dark:text-neutral-400">
+          <p className="font-sans text-lg md:text-xl text-left md:text-center text-gray-600 dark:text-gray-200">
             IMPHNEN bersama Kolosal.ai mengadakan Hackathon dengan tema lomba{' '}
             <span className="font-semibold text-primary-500">
               "Inovasi AI: Mendorong Usaha Lokal dengan AI Inklusif"
@@ -325,7 +325,7 @@ export default function HomePage() {
       {/* Prizes Section */}
       <section
         id="hadiah"
-        className="py-16 md:py-24 px-4 md:px-8 bg-gray-50 dark:bg-neutral-900"
+        className="py-16 md:py-24 px-4 md:px-8 bg-gray-50 dark:bg-linear-to-b dark:from-gray-950 dark:to-gray-900"
       >
         <div className="max-w-lg md:max-w-6xl mx-auto">
           <div className="text-center mb-12">
@@ -339,7 +339,7 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Prize 1 */}
-            <div className="bg-white dark:bg-neutral-800 rounded-xl px-4 py-8 shadow-lg border-2 border-gray-300 dark:border-neutral-700 hover:border-primary-500 dark:hover:border-primary-500 transition-colors">
+            <div className="bg-white dark:bg-gray-900 rounded-xl px-4 py-8 shadow-lg border-2 border-gray-300 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500 transition-colors">
               <div className="flex justify-center mb-4">
                 <div className="w-16 h-16 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center">
                   <Icon
@@ -357,12 +357,12 @@ export default function HomePage() {
             </div>
 
             {/* Prize 2 */}
-            <div className="bg-white dark:bg-neutral-800 rounded-xl px-4 py-8 shadow-lg border-2 border-gray-300 dark:border-neutral-700 hover:border-gray-500 dark:hover:border-neutral-500 transition-colors">
+            <div className="bg-white dark:bg-gray-900 rounded-xl px-4 py-8 shadow-lg border-2 border-gray-300 dark:border-gray-700 hover:border-gray-500 dark:hover:border-gray-500 transition-colors">
               <div className="flex justify-center mb-4">
-                <div className="w-16 h-16 bg-gray-100 dark:bg-neutral-700 rounded-full flex items-center justify-center">
+                <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
                   <Icon
                     icon="ic:round-star"
-                    className="h-8 w-8 text-gray-600 dark:text-neutral-400"
+                    className="h-8 w-8 text-gray-600 dark:text-gray-200"
                   />
                 </div>
               </div>
@@ -375,7 +375,7 @@ export default function HomePage() {
             </div>
 
             {/* Prize 3 */}
-            <div className="bg-white dark:bg-neutral-800 rounded-xl px-4 py-8 shadow-lg border-2 border-gray-300 dark:border-neutral-700 hover:border-orange-300 dark:hover:border-orange-500 transition-colors">
+            <div className="bg-white dark:bg-gray-900 rounded-xl px-4 py-8 shadow-lg border-2 border-gray-300 dark:border-gray-700 hover:border-orange-300 dark:hover:border-orange-500 transition-colors">
               <div className="flex justify-center mb-4">
                 <div className="w-16 h-16 bg-orange-100 dark:bg-orange-900/30 rounded-full flex items-center justify-center">
                   <Icon
@@ -393,7 +393,7 @@ export default function HomePage() {
             </div>
 
             {/* Special Prize */}
-            <div className="bg-white dark:bg-neutral-800 rounded-xl px-4 py-8 shadow-lg border-2 border-gray-300 dark:border-neutral-700 hover:border-purple-300 dark:hover:border-purple-500 transition-colors">
+            <div className="bg-white dark:bg-gray-900 rounded-xl px-4 py-8 shadow-lg border-2 border-gray-300 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-500 transition-colors">
               <div className="flex justify-center mb-4">
                 <div className="w-16 h-16 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center">
                   <Icon
@@ -416,14 +416,14 @@ export default function HomePage() {
       {/* Timeline Section */}
       <section
         id="timeline"
-        className="py-16 md:py-24 px-4 md:px-8 bg-white dark:bg-neutral-950"
+        className="py-16 md:py-24 px-4 md:px-8 bg-white dark:bg-gray-950"
       >
         <div className="max-w-4xl mx-auto font-sans">
           <div className="text-center mb-12 font-bai-jamjuree">
             <h2 className="text-3xl md:text-5xl font-bold mb-4 dark:text-white">
               Timeline <span className="text-primary-500">Acara</span>
             </h2>
-            <p className="text-lg text-gray-600 dark:text-neutral-400">
+            <p className="text-lg text-gray-600 dark:text-gray-200">
               Jadwal lengkap pelaksanaan hackathon
             </p>
           </div>
@@ -433,7 +433,7 @@ export default function HomePage() {
             <div className="flex gap-6">
               <div className="flex flex-col items-center">
                 <div className="w-4 h-4 bg-primary-500 rounded-full"></div>
-                <div className="w-0.5 h-full bg-gray-300 dark:bg-neutral-700"></div>
+                <div className="w-0.5 h-full bg-gray-300 dark:bg-gray-700"></div>
               </div>
               <div className="flex-1 pb-8">
                 <p className="text-primary-500 font-semibold mb-2">
@@ -442,7 +442,7 @@ export default function HomePage() {
                 <h3 className="text-xl font-bold mb-2 dark:text-white">
                   Penutupan Registrasi
                 </h3>
-                <p className="text-gray-600 dark:text-neutral-400">
+                <p className="text-gray-600 dark:text-gray-200">
                   Batas akhir pendaftaran peserta hackathon.
                 </p>
               </div>
@@ -452,7 +452,7 @@ export default function HomePage() {
             <div className="flex gap-6">
               <div className="flex flex-col items-center">
                 <div className="w-4 h-4 bg-primary-500 rounded-full"></div>
-                <div className="w-0.5 h-full bg-gray-300 dark:bg-neutral-700"></div>
+                <div className="w-0.5 h-full bg-gray-300 dark:bg-gray-700"></div>
               </div>
               <div className="flex-1 pb-8">
                 <p className="text-primary-500 font-semibold mb-2">
@@ -461,7 +461,7 @@ export default function HomePage() {
                 <h3 className="text-xl font-bold mb-2 dark:text-white">
                   Technical Meeting
                 </h3>
-                <p className="text-gray-600 dark:text-neutral-400">
+                <p className="text-gray-600 dark:text-gray-200">
                   Akan diadakan technical meeting terkait lomba melalui Google
                   Meet. Stay tune di grup WA Hackathon.
                 </p>
@@ -472,7 +472,7 @@ export default function HomePage() {
             <div className="flex gap-6">
               <div className="flex flex-col items-center">
                 <div className="w-4 h-4 bg-primary-500 rounded-full"></div>
-                <div className="w-0.5 h-full bg-gray-300 dark:bg-neutral-700"></div>
+                <div className="w-0.5 h-full bg-gray-300 dark:bg-gray-700"></div>
               </div>
               <div className="flex-1 pb-8">
                 <p className="text-primary-500 font-semibold mb-2">
@@ -481,7 +481,7 @@ export default function HomePage() {
                 <h3 className="text-xl font-bold mb-2 dark:text-white">
                   Tahap Penyisihan
                 </h3>
-                <p className="text-gray-600 dark:text-neutral-400">
+                <p className="text-gray-600 dark:text-gray-200">
                   Peserta mengerjakan tantangan yang diberikan.
                 </p>
               </div>
@@ -491,7 +491,7 @@ export default function HomePage() {
             <div className="flex gap-6">
               <div className="flex flex-col items-center">
                 <div className="w-4 h-4 bg-primary-500 rounded-full"></div>
-                <div className="w-0.5 h-full bg-gray-300 dark:bg-neutral-700"></div>
+                <div className="w-0.5 h-full bg-gray-300 dark:bg-gray-700"></div>
               </div>
               <div className="flex-1 pb-8">
                 <p className="text-primary-500 font-semibold mb-2">
@@ -500,7 +500,7 @@ export default function HomePage() {
                 <h3 className="text-xl font-bold mb-2 dark:text-white">
                   Penilaian & Webinar
                 </h3>
-                <p className="text-gray-600 dark:text-neutral-400">
+                <p className="text-gray-600 dark:text-gray-200">
                   Proses penilaian oleh juri dan sesi webinar.
                 </p>
               </div>
@@ -518,7 +518,7 @@ export default function HomePage() {
                 <h3 className="text-xl font-bold mb-2 dark:text-white">
                   Pengumuman & Final
                 </h3>
-                <p className="text-gray-600 dark:text-neutral-400">
+                <p className="text-gray-600 dark:text-gray-200">
                   Presentasi final dan pengumuman pemenang.
                 </p>
               </div>
@@ -528,50 +528,48 @@ export default function HomePage() {
       </section>
 
       {/* Judges Section */}
-      <section className="py-16 md:py-24 px-4 md:px-8 bg-gray-50 dark:bg-neutral-900 font-sans">
+      <section className="py-16 md:py-24 px-4 md:px-8 bg-gray-50 dark:bg-gray-900 font-sans">
         <div className="md:max-w-6xl mx-auto">
           <div className="text-center mb-12 font-bai-jamjuree">
             <h2 className="text-3xl md:text-5xl font-bold mb-4 dark:text-white">
               Dewan <span className="text-primary-500">Juri</span>
             </h2>
-            <p className="text-lg text-gray-600 dark:text-neutral-400">
+            <p className="text-lg text-gray-600 dark:text-gray-200">
               Perwakilan dari IMPHNEN dan Kolosal.ai yang akan menilai karya
             </p>
           </div>
 
           <div className="w-full max-w-md md:max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Judge 1 */}
-            <div className="flex flex-col justify-between bg-white dark:bg-neutral-800 rounded-xl px-4 py-8 shadow-lg text-center">
+            <div className="flex flex-col justify-between bg-white dark:bg-gray-800 rounded-xl px-4 py-8 shadow-lg text-center">
               <h3 className="text-p3 font-bold mb-1 dark:text-white">
                 Alifais Farrel Ramdhani
               </h3>
               <div>
                 <p className="text-primary-500 font-semibold mb-1">CTO</p>
-                <p className="text-gray-600 dark:text-neutral-400">
-                  Kolosal.ai
-                </p>
+                <p className="text-gray-600 dark:text-gray-200">Kolosal.ai</p>
               </div>
             </div>
 
             {/* Judge 2 */}
-            <div className="flex flex-col justify-between bg-white dark:bg-neutral-800 rounded-xl px-4 py-8 shadow-lg text-center">
+            <div className="flex flex-col justify-between bg-white dark:bg-gray-800 rounded-xl px-4 py-8 shadow-lg text-center">
               <h3 className="text-p3 font-bold mb-1 dark:text-white">
                 Anka Tama
               </h3>
               <div>
                 <p className="text-primary-500 font-semibold mb-1">Admin</p>
-                <p className="text-gray-600 dark:text-neutral-400">IMPHNEN</p>
+                <p className="text-gray-600 dark:text-gray-200">IMPHNEN</p>
               </div>
             </div>
 
             {/* Judge 3 */}
-            <div className="flex flex-col justify-between bg-white dark:bg-neutral-800 rounded-xl px-4 py-8 shadow-lg text-center">
+            <div className="flex flex-col justify-between bg-white dark:bg-gray-800 rounded-xl px-4 py-8 shadow-lg text-center">
               <h3 className="text-p3 font-bold mb-1 dark:text-white">
                 Hafid Nur
               </h3>
               <div>
                 <p className="text-primary-500 font-semibold mb-1">Moderator</p>
-                <p className="text-gray-600 dark:text-neutral-400">IMPHNEN</p>
+                <p className="text-gray-600 dark:text-gray-200">IMPHNEN</p>
               </div>
             </div>
           </div>
@@ -581,14 +579,14 @@ export default function HomePage() {
       {/* FAQ Section */}
       <section
         id="faq"
-        className="py-16 md:py-24 px-4 md:px-8 bg-white dark:bg-neutral-950"
+        className="py-16 md:py-24 px-4 md:px-8 bg-white dark:bg-gray-950"
       >
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-5xl font-bold mb-4 text-primary-500">
               FAQ
             </h2>
-            <p className="text-lg text-gray-600 dark:text-neutral-400">
+            <p className="text-lg text-gray-600 dark:text-gray-200">
               Pertanyaan yang Sering Diajukan
             </p>
           </div>
@@ -597,11 +595,11 @@ export default function HomePage() {
             {faqs.map((faq, index) => (
               <div
                 key={index}
-                className="border border-gray-200 dark:border-neutral-700 rounded-lg"
+                className="border border-gray-200 dark:border-gray-700 rounded-lg dark:bg-gray-900"
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                  className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-gray-50 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
+                  className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer"
                 >
                   <span className="font-semibold text-gray-900 dark:text-white">
                     {faq.question}
@@ -623,7 +621,7 @@ export default function HomePage() {
                   </svg>
                 </button>
                 {openFaq === index && (
-                  <div className="px-6 pb-4 text-gray-600 dark:text-neutral-400">
+                  <div className="px-6 pb-4 text-gray-600 dark:text-gray-200">
                     {faq.answer}
                   </div>
                 )}
@@ -634,12 +632,12 @@ export default function HomePage() {
       </section>
 
       {/* Sponsors Section */}
-      <section className="py-20 md:py-28 px-4 md:px-8 bg-gray-50 dark:bg-neutral-900">
+      <section className="py-20 md:py-28 px-4 md:px-8 bg-gray-50 dark:bg-gray-900">
         <div className="max-w-6xl mx-auto text-center">
           <h2 className="text-3xl md:text-5xl font-bold mb-4 dark:text-white">
             Sponsor & <span className="text-primary-500">Partner</span>
           </h2>
-          <p className="text-lg text-gray-600 dark:text-neutral-400 mb-8">
+          <p className="text-lg text-gray-600 dark:text-gray-200 mb-8">
             Acara ini sepenuhnya disponsori oleh
           </p>
 
@@ -648,7 +646,7 @@ export default function HomePage() {
               href="https://kolosal.ai"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-white dark:bg-neutral-800 rounded-xl p-8 shadow-lg inline-block border-2 border-transparent hover:border-gray-500 dark:hover:border-neutral-500 transition-colors"
+              className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg inline-block border-2 border-transparent hover:border-gray-500 dark:hover:border-gray-500 transition-colors"
             >
               <img
                 src="images/sponsors/kolosal-logo_rlxbck.svg"
@@ -663,13 +661,13 @@ export default function HomePage() {
       {/* CTA Section */}
       <section
         id="masuk"
-        className="py-20 md:py-28 px-4 md:px-8 bg-linear-to-b from-white to-blue-50 dark:from-neutral-950 dark:to-neutral-900"
+        className="py-20 md:py-28 px-4 md:px-8 bg-linear-to-b from-white to-blue-50 dark:from-gray-950 dark:to-gray-900"
       >
         <div className="max-w-4xl mx-auto text-center font-sans">
           <h2 className="text-3xl md:text-5xl font-bold mb-6 font-bai-jamjuree dark:text-white">
             Segera Daftarkan <span className="text-primary-500">Timmu!</span>
           </h2>
-          <p className="text-lg md:text-xl text-left md:text-center text-gray-600 dark:text-neutral-400 mb-8">
+          <p className="text-lg md:text-xl text-left md:text-center text-gray-600 dark:text-gray-200 mb-8">
             Jangan lewatkan kesempatan emas untuk bersaing dengan developer
             terbaik,
             <br className="hidden md:block" /> belajar dari para ahli, dan
@@ -687,13 +685,13 @@ export default function HomePage() {
               href="https://chat.whatsapp.com/BlxrYh9uSC37d7VPhJslGL"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-8 py-3 bg-white dark:bg-neutral-800 text-gray-900 dark:text-white text-lg rounded-lg border-2 border-gray-300 dark:border-neutral-600 hover:border-gray-400 dark:hover:border-neutral-500 transition-colors font-semibold"
+              className="px-8 py-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-lg rounded-lg border-2 border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 transition-colors font-semibold"
             >
               Gabung Grup WA Hackathon
             </a>
           </div>
 
-          <p className="text-sm text-gray-500 dark:text-neutral-500 mt-6">
+          <p className="text-sm text-gray-500 dark:text-gray-500 mt-6">
             Pendaftaran ditutup pada{' '}
             <span className="text-primary-500 font-semibold">
               30 November 2025
@@ -703,7 +701,7 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12 px-4 md:px-8 font-sans">
+      <footer className="bg-gray-950 text-white py-12 px-4 md:px-8 font-sans">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
             {/* Brand */}

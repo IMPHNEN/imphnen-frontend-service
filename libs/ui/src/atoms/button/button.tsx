@@ -26,12 +26,13 @@ type TButtonProps = DetailedHTMLProps<
 const variantClasses: Record<TButtonVariant, string> = {
   primary: 'bg-primary-500 hover:bg-primary-600 text-white shadow-md',
   secondary:
-    'bg-white dark:bg-neutral-800 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-neutral-700 text-primary-500 dark:text-primary-400 shadow-md dark:shadow-neutral-900/50',
-  text: 'bg-transparent hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-neutral-800 text-primary-500 dark:text-primary-400',
+    'bg-white dark:bg-gray-800 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-gray-700 text-primary-500 dark:text-primary-400 shadow-md dark:shadow-gray-900/50 border dark:border-gray-700',
+  text: 'bg-transparent hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-gray-800 text-primary-500 dark:text-primary-400',
   bordered:
-    'border border-primary-500 dark:border-primary-400 hover:border-primary-600 dark:hover:border-primary-300 bg-transparent hover:text-primary-600 dark:hover:text-primary-300 hover:bg-gray-50 dark:hover:bg-neutral-800 text-primary-500 dark:text-primary-400',
+    'border border-primary-500 dark:border-primary-400 hover:border-primary-600 dark:hover:border-primary-300 bg-transparent hover:text-primary-600 dark:hover:text-primary-300 hover:bg-gray-50 dark:hover:bg-gray-800 text-primary-500 dark:text-primary-400',
   success: 'bg-success-500 hover:bg-success-600 text-white shadow-md',
-  danger: 'bg-danger-100 dark:bg-danger-500/20 hover:bg-danger-200 dark:hover:bg-danger-500/30 text-danger-500 shadow-md dark:shadow-neutral-900/50',
+  danger:
+    'bg-danger-100 dark:bg-danger-500/20 hover:bg-danger-200 dark:hover:bg-danger-500/30 text-danger-500 shadow-md dark:shadow-gray-900/50',
 };
 
 const sizeClasses: Record<TButtonSize, string> = {

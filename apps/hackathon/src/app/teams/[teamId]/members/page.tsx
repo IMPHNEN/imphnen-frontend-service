@@ -23,17 +23,28 @@ const ManageMembersPage: FC = (): ReactElement => {
   const { session } = useAuthStore();
   const [showInviteModal, setShowInviteModal] = useState(false);
 
-  const { data: teamData, isLoading: isLoadingTeam } = useTeamById(teamId || '');
-  const { data: membersData, isLoading: isLoadingMembers } = useTeamMembers(teamId || '');
+  const { data: teamData, isLoading: isLoadingTeam } = useTeamById(
+    teamId || ''
+  );
+  const { data: membersData, isLoading: isLoadingMembers } = useTeamMembers(
+    teamId || ''
+  );
   const { data: joinRequestsData } = useTeamJoinRequests(teamId || '');
 
-  const { mutateAsync: inviteMember, isPending: isInviting } = useInviteMember(teamId || '');
-  const { mutateAsync: removeMember, isPending: isRemoving } = useRemoveMember(teamId || '');
-  const { mutateAsync: respondToRequest, isPending: isResponding } = useRespondToJoinRequest(teamId || '');
+  const { mutateAsync: inviteMember, isPending: isInviting } = useInviteMember(
+    teamId || ''
+  );
+  const { mutateAsync: removeMember, isPending: isRemoving } = useRemoveMember(
+    teamId || ''
+  );
+  const { mutateAsync: respondToRequest, isPending: isResponding } =
+    useRespondToJoinRequest(teamId || '');
 
   const team = teamData?.data;
   const members = membersData?.data || [];
-  const joinRequests = Array.isArray(joinRequestsData?.data) ? joinRequestsData.data : [];
+  const joinRequests = Array.isArray(joinRequestsData?.data)
+    ? joinRequestsData.data
+    : [];
   const currentUserId = session?.user?.id;
   const isLeader = currentUserId === team?.leader_id;
 
@@ -45,18 +56,24 @@ const ManageMembersPage: FC = (): ReactElement => {
   // Show loading state while fetching team data
   if (isLoadingTeam) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 dark:bg-neutral-950">
-        <p className="text-gray-600 dark:text-neutral-400">Loading...</p>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-950">
+        <p className="text-gray-600 dark:text-gray-400">Loading...</p>
       </div>
     );
   }
 
   if (!isLeader) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 dark:bg-neutral-950">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Access Denied</h2>
-        <p className="text-gray-600 dark:text-neutral-400 mb-4">Only the team leader can manage members</p>
-        <Button onClick={() => navigate(`/teams/${teamId}`)}>Back to Team</Button>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-950">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+          Access Denied
+        </h2>
+        <p className="text-gray-600 dark:text-gray-400 mb-4">
+          Only the team leader can manage members
+        </p>
+        <Button onClick={() => navigate(`/teams/${teamId}`)}>
+          Back to Team
+        </Button>
       </div>
     );
   }
@@ -103,19 +120,26 @@ const ManageMembersPage: FC = (): ReactElement => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-neutral-950">
-      <div className="bg-white dark:bg-neutral-900 border-b dark:border-neutral-700">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+      <div className="bg-white dark:bg-gray-900 border-b dark:border-gray-700">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col md:flex-row gap-y-4 items-start md:items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Manage Members</h1>
-              <p className="text-gray-600 dark:text-neutral-400 mt-1">{team?.name}</p>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                Manage Members
+              </h1>
+              <p className="text-gray-600 dark:text-gray-400 mt-1">
+                {team?.name}
+              </p>
             </div>
             <div className="flex space-x-3">
               <Button onClick={() => setShowInviteModal(true)}>
                 Invite Member
               </Button>
-              <Button variant="secondary" onClick={() => navigate(`/teams/${teamId}`)}>
+              <Button
+                variant="secondary"
+                onClick={() => navigate(`/teams/${teamId}`)}
+              >
                 Back to Team
               </Button>
             </div>
@@ -126,13 +150,16 @@ const ManageMembersPage: FC = (): ReactElement => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
         {/* Join Requests */}
         {joinRequests.length > 0 && (
-          <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md dark:shadow-neutral-950/50 p-6">
+          <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md dark:shadow-gray-950/50 p-6">
             <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
               Join Requests ({joinRequests.length})
             </h2>
             <div className="space-y-3">
               {joinRequests.map((request) => (
-                <div key={request.id} className="border dark:border-neutral-700 rounded-lg p-4">
+                <div
+                  key={request.id}
+                  className="border dark:border-gray-700 rounded-lg p-4"
+                >
                   <div className="flex items-start justify-between">
                     <div className="flex items-center space-x-3 flex-1">
                       {request.user.avatar ? (
@@ -142,17 +169,27 @@ const ManageMembersPage: FC = (): ReactElement => {
                           className="w-12 h-12 rounded-full object-cover"
                         />
                       ) : (
-                        <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-neutral-700 flex items-center justify-center">
-                          <span className="text-gray-500 dark:text-neutral-400">👤</span>
+                        <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                          <span className="text-gray-500 dark:text-gray-400">
+                            👤
+                          </span>
                         </div>
                       )}
                       <div className="flex-1">
-                        <p className="font-medium text-gray-900 dark:text-white">{request.user.fullname}</p>
-                        <p className="text-sm text-gray-600 dark:text-neutral-400">{request.user.email}</p>
+                        <p className="font-medium text-gray-900 dark:text-white">
+                          {request.user.fullname}
+                        </p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          {request.user.email}
+                        </p>
                         {request.user.location && (
-                          <p className="text-sm text-gray-500 dark:text-neutral-500">📍 {request.user.location}</p>
+                          <p className="text-sm text-gray-500 dark:text-gray-500">
+                            📍 {request.user.location}
+                          </p>
                         )}
-                        <p className="text-sm text-gray-700 dark:text-neutral-300 mt-2 italic">"{request.message}"</p>
+                        <p className="text-sm text-gray-700 dark:text-gray-300 mt-2 italic">
+                          "{request.message}"
+                        </p>
                       </div>
                     </div>
                     <div className="flex space-x-2 ml-4">
@@ -180,16 +217,21 @@ const ManageMembersPage: FC = (): ReactElement => {
         )}
 
         {/* Current Members */}
-        <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md dark:shadow-neutral-950/50 p-6">
+        <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md dark:shadow-gray-950/50 p-6">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
             Current Members ({members.length})
           </h2>
           {isLoadingMembers ? (
-            <p className="text-gray-600 dark:text-neutral-400">Loading members...</p>
+            <p className="text-gray-600 dark:text-gray-400">
+              Loading members...
+            </p>
           ) : (
             <div className="space-y-3">
               {members.map((member) => (
-                <div key={member.id} className="border dark:border-neutral-700 rounded-lg p-4 flex items-center justify-between">
+                <div
+                  key={member.id}
+                  className="border dark:border-gray-700 rounded-lg p-4 flex items-center justify-between"
+                >
                   <div className="flex items-center space-x-3">
                     {member.user.avatar ? (
                       <img
@@ -198,15 +240,23 @@ const ManageMembersPage: FC = (): ReactElement => {
                         className="w-12 h-12 rounded-full object-cover"
                       />
                     ) : (
-                      <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-neutral-700 flex items-center justify-center">
-                        <span className="text-gray-500 dark:text-neutral-400">👤</span>
+                      <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                        <span className="text-gray-500 dark:text-gray-400">
+                          👤
+                        </span>
                       </div>
                     )}
                     <div>
-                      <p className="font-medium text-gray-900 dark:text-white">{member.user.fullname}</p>
-                      <p className="text-sm text-gray-600 dark:text-neutral-400">{member.user.email}</p>
+                      <p className="font-medium text-gray-900 dark:text-white">
+                        {member.user.fullname}
+                      </p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        {member.user.email}
+                      </p>
                       {member.user.location && (
-                        <p className="text-sm text-gray-500 dark:text-neutral-500">📍 {member.user.location}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-500">
+                          📍 {member.user.location}
+                        </p>
                       )}
                       <div className="flex items-center space-x-2 mt-1">
                         {member.role === 'leader' && (
@@ -241,7 +291,8 @@ const ManageMembersPage: FC = (): ReactElement => {
         {/* Warning */}
         <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
           <p className="text-sm text-yellow-800 dark:text-yellow-200">
-            <strong>Note:</strong> Members cannot leave the team without your approval. Only you can remove members from the team.
+            <strong>Note:</strong> Members cannot leave the team without your
+            approval. Only you can remove members from the team.
           </p>
         </div>
       </div>
@@ -249,27 +300,30 @@ const ManageMembersPage: FC = (): ReactElement => {
       {/* Invite Member Modal */}
       {showInviteModal && (
         <div className="fixed inset-0 bg-black/20 dark:bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-xl dark:shadow-neutral-950/50 max-w-md w-full p-6">
+          <div className="bg-white dark:bg-gray-900 rounded-lg shadow-xl dark:shadow-gray-950/50 max-w-md w-full p-6">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
               Invite Member
             </h2>
-            <p className="text-gray-600 dark:text-neutral-400 mb-4">
-              Send an invitation to join your team. The invited member will see the invitation on their dashboard after logging in.
+            <p className="text-gray-600 dark:text-gray-400 mb-4 font-sans">
+              Send an invitation to join your team. The invited member will see
+              the invitation on their dashboard after logging in.
             </p>
             <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3 mb-6">
-              <p className="text-sm text-yellow-800 dark:text-yellow-200">
-                <strong>Important:</strong> The email you enter must match the GitHub email address the member uses to sign in.
+              <p className="text-sm text-yellow-800 dark:text-yellow-200 font-sans">
+                <strong>Important:</strong> The email you enter must match the
+                GitHub email address the member uses to sign in.
               </p>
             </div>
             <form onSubmit={handleInvite} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Email Address
                 </label>
                 <Input
                   {...form.register('email')}
                   type="email"
                   placeholder="member@example.com"
+                  size="lg"
                 />
                 {form.formState.errors.email && (
                   <p className="text-sm text-red-500 mt-1">

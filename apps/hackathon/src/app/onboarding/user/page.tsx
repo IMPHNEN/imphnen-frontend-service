@@ -104,13 +104,13 @@ const UserOnboardingPage: FC = (): ReactElement => {
   });
 
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen bg-gray-50 dark:bg-neutral-950 px-4 py-8">
-      <div className="bg-white dark:bg-neutral-900 w-full max-w-2xl p-8 rounded-xl shadow-lg dark:shadow-neutral-950/50">
+    <div className="flex flex-col justify-center items-center min-h-screen bg-gray-50 dark:bg-gray-950 px-4 py-8">
+      <div className="bg-white dark:bg-gray-900 w-full max-w-2xl p-8 rounded-xl shadow-lg dark:shadow-gray-950/50">
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
             Complete Your Profile
           </h1>
-          <p className="text-gray-600 font-sans dark:text-neutral-400">
+          <p className="text-gray-600 font-sans dark:text-gray-400">
             Tell us more about yourself to get started
           </p>
         </div>
@@ -123,15 +123,15 @@ const UserOnboardingPage: FC = (): ReactElement => {
                 <img
                   src={avatarPreview}
                   alt="Avatar preview"
-                  className="w-32 h-32 rounded-full object-cover border-4 border-gray-200 dark:border-neutral-700"
+                  className="w-32 h-32 rounded-full object-cover border-4 border-gray-200 dark:border-gray-700"
                 />
               ) : (
-                <div className="w-32 h-32 rounded-full bg-gray-200 dark:bg-neutral-700 flex items-center justify-center">
+                <div className="w-32 h-32 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
                   <Icon
                     icon="ic:baseline-person"
                     width="48"
                     height="48"
-                    className="text-gray-400 dark:text-neutral-500"
+                    className="text-gray-400 dark:text-gray-500"
                   />
                 </div>
               )}
@@ -149,7 +149,7 @@ const UserOnboardingPage: FC = (): ReactElement => {
                   onChange={handleAvatarChange}
                 />
               </label>
-              <p className="text-xs text-gray-500 dark:text-neutral-500 mt-2 text-center">
+              <p className="text-xs text-gray-500 dark:text-gray-500 mt-2 text-center">
                 Optional, but highly recommended
               </p>
             </div>
@@ -168,7 +168,7 @@ const UserOnboardingPage: FC = (): ReactElement => {
 
           {/* City */}
           <div className="space-y-2">
-            <label className="block text-base font-medium text-gray-700 dark:text-neutral-300">
+            <label className="block text-base font-medium text-gray-700 dark:text-gray-300">
               City <span className="text-red-500">*</span>
             </label>
             <Controller
@@ -187,7 +187,7 @@ const UserOnboardingPage: FC = (): ReactElement => {
 
           {/* Role/Skills */}
           <div className="space-y-2">
-            <label className="block text-base font-medium text-gray-700 dark:text-neutral-300">
+            <label className="block text-base font-medium text-gray-700 dark:text-gray-300">
               Role / Skills
             </label>
             <Controller
@@ -210,9 +210,9 @@ const UserOnboardingPage: FC = (): ReactElement => {
                               : (field.value || []).filter((v) => v !== role);
                             field.onChange(newValue);
                           }}
-                          className="rounded border-gray-300 dark:border-neutral-600 text-blue-600 dark:text-primary-500 focus:ring-blue-500 dark:focus:ring-primary-500 dark:bg-neutral-800"
+                          className="rounded border-gray-300 dark:border-gray-600 text-blue-600 dark:text-primary-500 focus:ring-blue-500 dark:focus:ring-primary-500 dark:bg-gray-800"
                         />
-                        <span className="text-sm dark:text-neutral-300">
+                        <span className="text-sm dark:text-gray-300">
                           {role}
                         </span>
                       </label>
@@ -225,9 +225,9 @@ const UserOnboardingPage: FC = (): ReactElement => {
 
           {/* Bio */}
           <div className="space-y-2">
-            <label className="block text-base font-medium text-gray-700 dark:text-neutral-300">
+            <label className="block text-base font-medium text-gray-700 dark:text-gray-300">
               Bio{' '}
-              <span className="text-gray-400 dark:text-neutral-500">
+              <span className="text-gray-400 dark:text-gray-500">
                 (Optional)
               </span>
             </label>
