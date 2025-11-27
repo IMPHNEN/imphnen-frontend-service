@@ -3,6 +3,7 @@ import { supabase } from '@imphnen-frontend-service/service';
 import { Link, useNavigate } from 'react-router';
 import { toast } from 'sonner';
 import { Icon } from '@iconify/react';
+import ThemeToggle from '../../../components/theme-toggle';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
@@ -80,13 +81,23 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-50 p-4">
-      <div className="bg-white w-full max-w-md p-8 rounded-2xl shadow-lg border border-gray-200">
+    <div className="flex justify-center items-center min-h-screen bg-gray-50 dark:bg-gray-950 p-4">
+      <div className="bg-white dark:bg-gray-900 w-full max-w-md p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
+        <div className="flex items-center justify-between mb-6">
+          <button
+            onClick={() => navigate('/auth/login')}
+            className="cursor-pointer text-primary-500 hover:text-primary-600 dark:text-primary-400 dark:hover:text-primary-300 text-base font-sans flex items-center"
+          >
+            <Icon icon="ic:baseline-chevron-left" width="24" height="24" />
+            Back to Login
+          </button>
+          <ThemeToggle />
+        </div>
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
             Forgot Password?
           </h2>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             No worries, we'll send you reset instructions
           </p>
         </div>
@@ -95,7 +106,7 @@ export default function ForgotPasswordPage() {
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
             >
               Email Address
             </label>
@@ -106,7 +117,7 @@ export default function ForgotPasswordPage() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="your@email.com"
               disabled={isLoading}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+              className="bg-white dark:bg-gray-800 w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
               required
             />
           </div>
@@ -119,16 +130,6 @@ export default function ForgotPasswordPage() {
             {isLoading ? 'Sending...' : 'Send Reset Link'}
           </button>
         </form>
-
-        <div className="mt-8">
-          <Link
-            to="/auth/login"
-            className="text-primary-500 hover:text-primary-600 flex items-center"
-          >
-            <Icon icon="ic:baseline-chevron-left" width="24" height="24" />
-            <span> Back to Login</span>
-          </Link>
-        </div>
       </div>
     </div>
   );
