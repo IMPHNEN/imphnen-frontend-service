@@ -1,4 +1,4 @@
-﻿import { FC, ReactElement } from 'react';
+﻿import { FC, ReactElement, useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import {
   useMyTeams,
@@ -9,16 +9,49 @@ import {
 import { toast } from 'sonner';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { Icon } from '@iconify/react';
+import ProfilePage from '../profile/page';
+
+type Invitation = {
+  id: string;
+  team: {
+    id?: string;
+    name?: string;
+    logo?: string;
+    banner?: string;
+    description?: string;
+    city?: string;
+    visibility?: string;
+    leader_id?: string;
+  };
+  inviter: {
+    id?: string;
+    fullname?: string;
+    email?: string;
+    avatar?: string;
+  };
+};
 
 const DashboardPage: FC = (): ReactElement => {
   const { session } = useAuthStore();
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  // Lock background scroll when profile modal is open
+  useEffect(() => {
+    if (showProfileModal) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalOverflow || '';
+      };
+    }
+  }, [showProfileModal]);
   const { data: teamsData } = useMyTeams();
   const { data: invitationsData } = useMyInvitations();
   const { mutateAsync: respondToInvitation } = useRespondToInvitation();
 
   const user = session?.user;
   const myTeams = teamsData?.data || [];
-  const invitations = invitationsData?.data || [];
+  const invitations: Invitation[] = (invitationsData?.data ||
+    []) as Invitation[];
 
   const handleAcceptInvitation = async (invitationId: string) => {
     try {
@@ -41,225 +74,233 @@ const DashboardPage: FC = (): ReactElement => {
   };
 
   return (
-    <div className="p-6 md:p-8 md:max-w-7xl w-full mx-auto overflow-hidden">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-          Welcome, {user?.fullname || user?.email?.split('@')[0] || 'User'}!
-        </h1>
-        {user?.location && (
-          <p className="text-gray-600 dark:text-gray-400 mt-1 font-sans flex items-center space-x-1">
-            <Icon icon="heroicons:map-pin-16-solid" width="24" height="24" />
-            <span>{user.location}</span>
-          </p>
-        )}
-      </div>
-
-      {invitations.length > 0 && (
-        <div className="mb-8 bg-primary-50 dark:bg-blue-900/20 border border-primary-200 dark:border-blue-800 rounded-lg p-6">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-            Team Invitations ({invitations.length})
-          </h2>
-          <div className="space-y-3 font-sans">
-            {invitations.map((invitation) => (
-              <div
-                key={invitation.id}
-                className="bg-white dark:bg-gray-900 p-4 rounded-lg shadow-sm flex items-center justify-between"
-              >
-                <div>
-                  <p className="font-medium text-gray-900 dark:text-white">
-                    {invitation.team.name}
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Invited by {invitation.inviter.fullname}
-                  </p>
-                </div>
-                <div className="flex space-x-2">
-                  <Button
-                    size="sm"
-                    onClick={() => handleAcceptInvitation(invitation.id)}
-                  >
-                    Accept
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    onClick={() => handleRejectInvitation(invitation.id)}
-                  >
-                    Decline
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
+    <>
+      <div className="p-6 md:p-8 md:max-w-7xl w-full mx-auto">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+            Welcome, {user?.fullname || user?.email?.split('@')[0] || 'User'}!
+          </h1>
+          {user?.location && (
+            <p className="text-gray-600 dark:text-gray-400 mt-1 font-sans flex items-center space-x-1">
+              <Icon icon="heroicons:map-pin-16-solid" width="24" height="24" />
+              <span>{user.location}</span>
+            </p>
+          )}
         </div>
-      )}
 
-      {myTeams.length > 0 ? (
-        <div className="mb-6 md:mb-8">
-          <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
-            My Team
-          </h2>
-          <div className="grid grid-cols-1 gap-4 md:gap-6 w-full md:max-w-lg">
-            {myTeams.map((team) => (
-              <Link
-                key={team.id}
-                to={'/teams/' + team.id}
-                className="bg-white dark:bg-gray-900 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
-              >
-                {team.banner && (
-                  <div className="w-full aspect-3/1">
-                    <img
-                      src={team.banner}
-                      alt={team.name}
-                      className="w-full h-full object-cover"
-                    />
+        {invitations.length > 0 && (
+          <div className="mb-8 bg-primary-50 dark:bg-blue-900/20 border border-primary-200 dark:border-blue-800 rounded-lg p-6">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+              Team Invitations ({invitations.length})
+            </h2>
+            <div className="space-y-3 font-sans">
+              {invitations.map((invitation) => (
+                <div
+                  key={invitation.id}
+                  className="bg-white dark:bg-gray-900 p-4 rounded-lg shadow-sm flex items-center justify-between"
+                >
+                  <div>
+                    <p className="font-medium text-gray-900 dark:text-white">
+                      {invitation.team?.name ?? 'Unnamed Team'}
+                    </p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      Invited by{' '}
+                      {invitation.inviter?.fullname ?? 'Unknown User'}
+                    </p>
+                  </div>
+                  <div className="flex space-x-2">
+                    <Button
+                      size="sm"
+                      onClick={() => handleAcceptInvitation(invitation.id)}
+                    >
+                      Accept
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      onClick={() => handleRejectInvitation(invitation.id)}
+                    >
+                      Decline
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {myTeams.length > 0 ? (
+          <div className="mb-6 md:mb-8">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
+              My Team
+            </h2>
+            <div className="grid grid-cols-1 gap-4 md:gap-6 w-full md:max-w-lg">
+              {myTeams.map((team) => (
+                <Link
+                  key={team.id}
+                  to={'/teams/' + team.id}
+                  className="bg-white dark:bg-gray-900 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                >
+                  {team.banner && (
+                    <div className="w-full aspect-3/1">
+                      <img
+                        src={team.banner}
+                        alt={team.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
+                  <div className="p-4">
+                    <div className="flex flex-col md:flex-row items-center space-y-3 space-x-3 -mt-14 md:mt-0 mb-2 md:mb-3 min-w-12 min-h-12 ">
+                      {team.logo && (
+                        <img
+                          src={team.logo}
+                          alt={team.name}
+                          className="w-20 h-20 rounded-full object-cover shrink-0 border-black dark:border-gray-700"
+                        />
+                      )}
+                      <div>
+                        <h3 className="text-xl md:text-lg font-bold text-gray-900 dark:text-white leading-tight">
+                          {team.name}
+                        </h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center">
+                          <Icon
+                            icon="heroicons:map-pin-16-solid"
+                            width="16"
+                            height="16"
+                          />
+                          <span className="ml-1">{team.city}</span>
+                        </p>
+                      </div>
+                    </div>
+                    <p className="text-gray-600 dark:text-gray-400 line-clamp-3 text-ellipsis font-sans">
+                      {team.description}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="mb-6 md:mb-8 bg-white dark:bg-gray-900 rounded-lg shadow-md p-6 md:p-8">
+            <div className="text-center">
+              <div className="text-3xl md:text-4xl mb-2 md:mb-3">👋</div>
+              <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-1 md:mb-2">
+                You are not in a team yet
+              </h2>
+              <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 font-sans">
+                Use the sidebar to browse teams or create your own
+              </p>
+            </div>
+          </div>
+        )}
+
+        <div className="mt-8 bg-white dark:bg-gray-900 rounded-xl shadow-lg">
+          <div className="bg-linear-to-r from-primary-600 to-primary-500 h-24 rounded-t-xl"></div>
+          <div className="px-4 md:px-8 pb-4 md:pb-8 max-w-7xl">
+            <div className="flex flex-col md:flex-row md:items-start -mt-12 mb-4 md:mb-6">
+              <div className="flex flex-col md:flex-row items-start">
+                {user?.avatar ? (
+                  <img
+                    src={user.avatar}
+                    alt={user.fullname || 'User'}
+                    className="w-20 h-20 md:w-24 md:h-24 rounded-full border-4 border-white dark:border-gray-700 shadow-lg object-cover"
+                  />
+                ) : (
+                  <div className="w-20 h-20 md:w-24 md:h-24 rounded-full border-4 border-white dark:border-gray-700 shadow-lg bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                    <span className="text-gray-400 dark:text-gray-500 text-3xl md:text-4xl font-sans">
+                      U
+                    </span>
                   </div>
                 )}
-                <div className="p-4">
-                  <div className="flex flex-col md:flex-row items-center space-y-3 space-x-3 -mt-14 md:mt-0 mb-2 md:mb-3 min-w-12 min-h-12 ">
-                    {team.logo && (
-                      <img
-                        src={team.logo}
-                        alt={team.name}
-                        className="w-20 h-20 rounded-full object-cover shrink-0 border-black dark:border-gray-700"
-                      />
-                    )}
-                    <div>
-                      <h3 className="text-xl md:text-lg font-bold text-gray-900 dark:text-white leading-tight">
-                        {team.name}
-                      </h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center">
-                        <Icon
-                          icon="heroicons:map-pin-16-solid"
-                          width="16"
-                          height="16"
-                        />
-                        <span className="ml-1">{team.city}</span>
-                      </p>
-                    </div>
-                  </div>
-                  <p className="text-gray-600 dark:text-gray-400 line-clamp-3 text-ellipsis font-sans">
-                    {team.description}
-                  </p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      ) : (
-        <div className="mb-6 md:mb-8 bg-white dark:bg-gray-900 rounded-lg shadow-md p-6 md:p-8">
-          <div className="text-center">
-            <div className="text-3xl md:text-4xl mb-2 md:mb-3">👋</div>
-            <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-1 md:mb-2">
-              You are not in a team yet
-            </h2>
-            <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 font-sans">
-              Use the sidebar to browse teams or create your own
-            </p>
-          </div>
-        </div>
-      )}
+                <div className="md:ml-6 mt-4 md:mt-14">
+                  <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
+                    {user?.fullname ||
+                      user?.email?.split('@')[0] ||
+                      'Unnamed User'}
+                  </h2>
 
-      <div className="mt-8 bg-white dark:bg-gray-900 rounded-xl shadow-lg">
-        <div className="bg-linear-to-r from-primary-600 to-primary-500 h-24 rounded-t-xl"></div>
-        <div className="px-4 md:px-8 pb-4 md:pb-8 max-w-7xl">
-          <div className="flex flex-col md:flex-row md:items-start -mt-12 mb-4 md:mb-6">
-            <div className="flex flex-col md:flex-row items-start">
-              {user?.avatar ? (
-                <img
-                  src={user.avatar}
-                  alt={user.fullname || 'User'}
-                  className="w-20 h-20 md:w-24 md:h-24 rounded-full border-4 border-white dark:border-gray-700 shadow-lg object-cover"
-                />
-              ) : (
-                <div className="w-20 h-20 md:w-24 md:h-24 rounded-full border-4 border-white dark:border-gray-700 shadow-lg bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                  <span className="text-gray-400 dark:text-gray-500 text-3xl md:text-4xl font-sans">
-                    U
-                  </span>
+                  {user?.location ? (
+                    <p className="text-gray-600 dark:text-gray-400 flex items-center mt-1 text-sm md:text-base font-sans">
+                      <Icon
+                        icon="heroicons:map-pin-16-solid"
+                        width="16"
+                        height="16"
+                      />
+                      <span className="ml-1">{user.location}</span>
+                    </p>
+                  ) : (
+                    <Link
+                      to="/onboarding/user"
+                      className="text-primary-500 dark:text-blue-400 hover:text-primary-600 dark:hover:text-blue-300 text-sm md:text-sm mt-1 flex items-center"
+                    >
+                      <span className="font-sans">Complete your profile</span>
+                      <Icon
+                        icon="ic:baseline-chevron-right"
+                        width="24"
+                        height="24"
+                      />
+                    </Link>
+                  )}
+                </div>
+              </div>
+              {user?.location && (
+                <button
+                  type="button"
+                  onClick={() => setShowProfileModal(true)}
+                  className="mt-3 md:mt-14 md:ml-auto inline-flex items-center justify-center px-3 py-1.5 md:px-4 md:py-2 bg-primary-500 text-white rounded-lg text md:text-sm font-medium shadow-sm hover:bg-primary-600 transition-colors w-full md:w-auto cursor-pointer"
+                >
+                  Edit Profile
+                </button>
+              )}
+            </div>
+            <div className="space-y-4 md:space-y-6 w-full max-w-full">
+              {user?.bio && (
+                <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm w-full max-w-full overflow-x-hidden">
+                  <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide mb-2">
+                    About
+                  </h3>
+                  <p className="text-gray-800 dark:text-gray-200 leading-relaxed line-clamp-3 wrap-break-word break-all overflow-hidden w-full max-w-full">
+                    {user.bio}
+                  </p>
                 </div>
               )}
-              <div className="md:ml-6 mt-4 md:mt-14">
-                <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">
-                  {user?.fullname ||
-                    user?.email?.split('@')[0] ||
-                    'Unnamed User'}
-                </h2>
-
-                {user?.location ? (
-                  <p className="text-gray-600 dark:text-gray-400 flex items-center mt-1 text-sm md:text-base font-sans">
-                    <Icon
-                      icon="heroicons:map-pin-16-solid"
-                      width="16"
-                      height="16"
-                    />
-                    <span className="ml-1">{user.location}</span>
-                  </p>
-                ) : (
-                  <Link
-                    to="/onboarding/user"
-                    className="text-primary-500 dark:text-blue-400 hover:text-primary-600 dark:hover:text-blue-300 text-sm md:text-sm mt-1 flex items-center"
-                  >
-                    <span className="font-sans">Complete your profile</span>
-                    <Icon
-                      icon="ic:baseline-chevron-right"
-                      width="24"
-                      height="24"
-                    />
-                  </Link>
-                )}
-              </div>
-            </div>
-            {user?.location && (
-              <Link
-                to="/profile"
-                className="mt-3 md:mt-14 md:ml-auto inline-flex items-center justify-center px-3 py-1.5 md:px-4 md:py-2 bg-primary-500 text-white rounded-lg text md:text-sm font-medium shadow-sm hover:bg-primary-600 transition-colors w-full md:w-auto"
-              >
-                Edit Profile
-              </Link>
-            )}
-          </div>
-          <div className="space-y-4 md:space-y-6 w-full max-w-full">
-            {user?.bio && (
-              <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm w-full max-w-full overflow-x-hidden">
-                <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide mb-2">
-                  About
-                </h3>
-                <p className="text-gray-800 dark:text-gray-200 leading-relaxed line-clamp-3 wrap-break-word break-all overflow-hidden w-full max-w-full">
-                  {user.bio}
-                </p>
-              </div>
-            )}
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
-              <h3 className="font-semibold text-gray-700 dark:text-gray-300 tracking-wide mb-3">
-                Contact
-              </h3>
-              <div className="flex items-center text-gray-700 dark:text-gray-300">
-                <span className="text-gray-900 dark:text-white">
-                  {user?.email}
-                </span>
-              </div>
-            </div>
-            {user?.skills && user.skills.length > 0 && (
               <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
                 <h3 className="font-semibold text-gray-700 dark:text-gray-300 tracking-wide mb-3">
-                  Skills
+                  Contact
                 </h3>
-                <div className="flex flex-wrap gap-2">
-                  {user.skills.map((skill: string) => (
-                    <span
-                      key={skill}
-                      className="inline-flex items-center px-4 py-2 border border-primary-600 dark:border-gray-500 text-primary-600 dark:text-white rounded-4xl text-xs font-medium dark:bg-gray-600"
-                    >
-                      {skill}
-                    </span>
-                  ))}
+                <div className="flex items-center text-gray-700 dark:text-gray-300">
+                  <span className="text-gray-900 dark:text-white">
+                    {user?.email}
+                  </span>
                 </div>
               </div>
-            )}
+              {user?.skills && user.skills.length > 0 && (
+                <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
+                  <h3 className="font-semibold text-gray-700 dark:text-gray-300 tracking-wide mb-3">
+                    Skills
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {user.skills.map((skill: string) => (
+                      <span
+                        key={skill}
+                        className="inline-flex items-center px-4 py-2 border border-primary-600 dark:border-gray-500 text-primary-600 dark:text-white rounded-4xl text-xs font-medium dark:bg-gray-600"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      <ProfilePage
+        open={showProfileModal}
+        onClose={() => setShowProfileModal(false)}
+      />
+    </>
   );
 };
 
