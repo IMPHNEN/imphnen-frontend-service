@@ -11,6 +11,7 @@ import {
   useAuthStore,
 } from '@imphnen-frontend-service/service';
 import { toast } from 'sonner';
+import { Icon } from '@iconify/react';
 
 const MAX_TEAM_MEMBERS = 5;
 
@@ -140,18 +141,18 @@ const TeamDashboardPage: FC = (): ReactElement => {
 
   if (isLoadingTeam || isLoadingMembers) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
         {/* Skeleton Header */}
-        <div className="bg-white border-b">
-          <div className="w-full h-48 bg-gray-200 animate-pulse" />
+        <div className="bg-white dark:bg-gray-950 border-b">
+          <div className="w-full h-48 bg-gray-200 dark:bg-gray-800 animate-pulse" />
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <div className="flex items-start justify-between">
               <div className="flex items-center space-x-4">
-                <div className="w-20 h-20 rounded-full bg-gray-300 animate-pulse -mt-10" />
+                <div className="w-20 h-20 rounded-full bg-gray-300 dark:bg-gray-700 animate-pulse -mt-10" />
                 <div>
-                  <div className="h-8 w-48 bg-gray-300 rounded animate-pulse" />
-                  <div className="h-4 w-32 bg-gray-200 rounded animate-pulse mt-2" />
-                  <div className="h-4 w-24 bg-gray-200 rounded animate-pulse mt-2" />
+                  <div className="h-8 w-48 bg-gray-300 dark:bg-gray-700 rounded animate-pulse" />
+                  <div className="h-4 w-32 bg-gray-200 dark:bg-gray-800 rounded animate-pulse mt-2" />
+                  <div className="h-4 w-24 bg-gray-200 dark:bg-gray-800 rounded animate-pulse mt-2" />
                 </div>
               </div>
             </div>
@@ -162,27 +163,27 @@ const TeamDashboardPage: FC = (): ReactElement => {
           <div className="grid gap-6 lg:grid-cols-3">
             {/* Main Content Skeleton */}
             <div className="lg:col-span-2 space-y-6">
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <div className="h-6 w-32 bg-gray-300 rounded animate-pulse mb-4" />
+              <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-6">
+                <div className="h-6 w-32 bg-gray-300 dark:bg-gray-700 rounded animate-pulse mb-4" />
                 <div className="space-y-2">
-                  <div className="h-4 w-full bg-gray-200 rounded animate-pulse" />
-                  <div className="h-4 w-3/4 bg-gray-200 rounded animate-pulse" />
-                  <div className="h-4 w-5/6 bg-gray-200 rounded animate-pulse" />
+                  <div className="h-4 w-full bg-gray-200 dark:bg-gray-800 rounded animate-pulse" />
+                  <div className="h-4 w-3/4 bg-gray-200 dark:bg-gray-800 rounded animate-pulse" />
+                  <div className="h-4 w-5/6 bg-gray-200 dark:bg-gray-800 rounded animate-pulse" />
                 </div>
               </div>
             </div>
 
             {/* Sidebar Skeleton */}
             <div className="space-y-6">
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <div className="h-6 w-40 bg-gray-300 rounded animate-pulse mb-4" />
+              <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-6">
+                <div className="h-6 w-40 bg-gray-300 dark:bg-gray-700 rounded animate-pulse mb-4" />
                 <div className="space-y-4">
                   {[1, 2, 3].map((i) => (
                     <div key={i} className="flex items-center space-x-3">
-                      <div className="w-12 h-12 rounded-full bg-gray-300 animate-pulse" />
+                      <div className="w-12 h-12 rounded-full bg-gray-300 dark:bg-gray-700 animate-pulse" />
                       <div>
-                        <div className="h-4 w-24 bg-gray-300 rounded animate-pulse" />
-                        <div className="h-3 w-16 bg-gray-200 rounded animate-pulse mt-1" />
+                        <div className="h-4 w-24 bg-gray-300 dark:bg-gray-700 rounded animate-pulse" />
+                        <div className="h-3 w-16 bg-gray-200 dark:bg-gray-800 rounded animate-pulse mt-1" />
                       </div>
                     </div>
                   ))}
@@ -196,7 +197,7 @@ const TeamDashboardPage: FC = (): ReactElement => {
         <div className="fixed inset-0 bg-white/60 flex items-center justify-center z-50">
           <div className="text-center">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent"></div>
-            <p className="mt-4 text-gray-600 dark:text-neutral-400">
+            <p className="mt-4 text-gray-600 dark:text-white">
               Loading team data...
             </p>
           </div>
@@ -219,7 +220,7 @@ const TeamDashboardPage: FC = (): ReactElement => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 relative dark:bg-neutral-950">
+    <div className="min-h-screen bg-gray-50 relative dark:bg-gray-950">
       {/* Loading overlay while images are loading */}
       {!imagesLoaded && totalImagesToLoad > 0 && (
         <div className="fixed inset-0 bg-white/80 flex items-center justify-center z-50">
@@ -234,9 +235,9 @@ const TeamDashboardPage: FC = (): ReactElement => {
       )}
 
       {/* Header with Banner */}
-      <div className="bg-white dark:bg-neutral-900 border-b dark:border-neutral-700">
+      <div className="bg-white dark:bg-gray-900 border-b dark:border-gray-700">
         {team.banner && (
-          <div className="w-full h-32 md:h-48 overflow-hidden relative">
+          <div className="relative w-full aspect-3/1 overflow-hidden">
             <div
               className={`absolute inset-0 bg-gray-200 animate-pulse ${
                 imagesLoaded ? 'hidden' : ''
@@ -245,26 +246,27 @@ const TeamDashboardPage: FC = (): ReactElement => {
             <img
               src={team.banner}
               alt={team.name}
-              className={`w-full h-full object-cover transition-opacity duration-300 ${
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
                 imagesLoaded ? 'opacity-100' : 'opacity-0'
               }`}
               onLoad={handleImageLoad}
               onError={handleImageError}
             />
+            <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-transparent via-black/20 to-black/60" />
           </div>
         )}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-6">
           <div className="flex items-start justify-between">
             <div className="flex items-center space-x-3 md:space-x-4">
               {team.logo && (
-                <div className="relative">
+                <div className="relative shrink-0">
                   {!imagesLoaded && (
-                    <div className="absolute inset-0 w-20 h-20 rounded-full bg-gray-300 animate-pulse -mt-10" />
+                    <div className="absolute inset-0 w-20 h-20 rounded-full bg-gray-300 dark:bg-gray-700 animate-pulse -mt-10" />
                   )}
                   <img
                     src={team.logo}
                     alt={team.name}
-                    className={`w-16 h-16 md:w-20 md:h-20 rounded-full object-cover border-4 border-white shadow-lg -mt-8 md:-mt-10 transition-opacity duration-300 ${
+                    className={`w-16 h-16 md:w-20 md:h-20 rounded-full object-cover border-4 border-white shadow-lg -mt-8 md:-mt-10 transition-opacity duration-300 shrink-0 ${
                       imagesLoaded ? 'opacity-100' : 'opacity-0'
                     }`}
                     onLoad={handleImageLoad}
@@ -276,20 +278,32 @@ const TeamDashboardPage: FC = (): ReactElement => {
                 <h1 className="text-xl md:text-3xl font-bold text-gray-900 dark:text-white line-clamp-2">
                   {team.name}
                 </h1>
-                <p className="text-sm md:text-base text-gray-600 dark:text-neutral-400 mt-1 line-clamp-1">
-                  📍 {team.city}
+                <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 mt-1 line-clamp-1 font-sans flex items-center">
+                  <Icon icon="mdi:map-marker" className="inline-block mr-1" />
+                  <span>{team.city}</span>
                 </p>
                 <div className="flex flex-wrap items-center gap-2 md:space-x-4 mt-2">
-                  <span className="text-sm text-gray-500 dark:text-neutral-400">
+                  <span className="text-sm text-gray-500 dark:text-gray-400 flex items-center">
+                    <Icon
+                      icon="mdi:account-multiple"
+                      className="inline-block mr-1"
+                    />
                     {members.length}{' '}
                     {members.length === 1 ? 'Member' : 'Members'}
                   </span>
-                  <span className="text-sm text-gray-500 dark:text-neutral-400">
-                    {team.visibility === 'public' ? '🌐 Public' : '🔒 Private'}
+                  <span className="text-sm text-gray-500 dark:text-gray-400 flex items-center">
+                    <Icon
+                      icon={
+                        team.visibility === 'public' ? 'mdi:web' : 'mdi:lock'
+                      }
+                      className="inline-block mr-1"
+                    />
+                    {team.visibility === 'public' ? 'Public' : 'Private'}
                   </span>
                   {isLeader && (
-                    <span className="hidden md:inline-flex px-3 py-1 bg-blue-600 text-white rounded-md text-sm font-semibold shadow-sm">
-                      👑 Team Leader
+                    <span className="hidden md:inline-flex px-3 py-1 bg-blue-600 text-white rounded-md text-sm font-semibold shadow-sm items-center">
+                      <Icon icon="mdi:crown" className="inline-block mr-1" />
+                      <span>Team Leader</span>
                     </span>
                   )}
                 </div>
@@ -300,22 +314,22 @@ const TeamDashboardPage: FC = (): ReactElement => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8">
-        <div className="grid gap-4 md:gap-6 lg:grid-cols-3">
+        <div className="grid gap-4 md:gap-6 xl:grid-cols-3">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-4 md:space-y-6">
             {/* Team Description */}
-            <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-md p-4 md:p-6">
+            <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 md:p-6">
               <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
                 About Team
               </h2>
-              <p className="text-gray-700 dark:text-neutral-300 whitespace-pre-wrap">
+              <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap break-all font-sans">
                 {team.description}
               </p>
             </div>
 
             {/* Team Actions - Only for Leader */}
             {isLeader && (
-              <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-md p-4 md:p-6">
+              <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 md:p-6">
                 <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
                   Team Management
                 </h2>
@@ -326,7 +340,8 @@ const TeamDashboardPage: FC = (): ReactElement => {
                     onClick={() => setShowInviteModal(true)}
                     disabled={!canInvite}
                   >
-                    ➕ Invite Member{' '}
+                    <Icon icon="mdi:plus" className="inline-block mr-2" />
+                    Invite Member{' '}
                     {!canInvite && `(${members.length}/${MAX_TEAM_MEMBERS})`}
                   </Button>
                   <Button
@@ -334,7 +349,8 @@ const TeamDashboardPage: FC = (): ReactElement => {
                     variant="secondary"
                     onClick={() => setShowJoinRequestsModal(true)}
                   >
-                    📩 Join Requests
+                    <Icon icon="mdi:email" className="inline-block mr-2" /> Join
+                    Requests
                     {pendingJoinRequests.length > 0 && (
                       <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
                         {pendingJoinRequests.length}
@@ -343,25 +359,34 @@ const TeamDashboardPage: FC = (): ReactElement => {
                   </Button>
                   <Link to={`/teams/${teamId}/edit`}>
                     <Button className="w-full" variant="secondary">
-                      ✏️ Edit Team Info
+                      <Icon icon="mdi:pencil" className="inline-block mr-2" />
+                      Edit Team Info
                     </Button>
                   </Link>
                   <Link to={`/teams/${teamId}/members`}>
                     <Button className="w-full" variant="secondary">
-                      👥 Manage Members
+                      <Icon
+                        icon="mdi:account-group"
+                        className="inline-block mr-2"
+                      />
+                      Manage Members
                     </Button>
                   </Link>
                   <Link to={`/teams/${teamId}/chat`}>
                     <Button className="w-full" variant="secondary">
-                      💬 Team Chat
+                      <Icon icon="mdi:chat" className="inline-block mr-2" />
+                      Team Chat
                     </Button>
                   </Link>
                   <Link to={`/teams/${teamId}/submit`}>
-                    <Button className="w-full">🚀 Submit Project</Button>
+                    <Button className="w-full">
+                      <Icon icon="mdi:rocket" className="inline-block mr-2" />
+                      Submit Project
+                    </Button>
                   </Link>
                 </div>
                 {!canInvite && members.length >= MAX_TEAM_MEMBERS && (
-                  <p className="text-sm text-gray-600 dark:text-neutral-400 mt-3 text-center">
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-3 text-center">
                     Maximum team size reached ({MAX_TEAM_MEMBERS} members)
                   </p>
                 )}
@@ -370,7 +395,7 @@ const TeamDashboardPage: FC = (): ReactElement => {
 
             {/* Quick Actions for Members (non-leaders) */}
             {!isLeader && isMember && (
-              <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-md p-4 md:p-6">
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 md:p-6">
                 <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
                   Quick Actions
                 </h2>
@@ -417,14 +442,14 @@ const TeamDashboardPage: FC = (): ReactElement => {
           {/* Sidebar */}
           <div className="space-y-4 md:space-y-6">
             {/* Team Leader */}
-            <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-md p-4 md:p-6">
+            <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 md:p-6">
               <h3 className="text-base md:text-lg font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
                 Team Leader
               </h3>
               {team.leader && (
                 <button
                   onClick={() => navigate(`/users/${team.leader.id}`)}
-                  className="w-full flex items-center space-x-3 hover:bg-gray-100 dark:hover:bg-neutral-700 rounded-lg p-2 transition-colors text-left cursor-pointer"
+                  className="w-full flex items-center space-x-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg p-2 transition-colors text-left cursor-pointer"
                 >
                   {team.leader.avatar ? (
                     <img
@@ -433,8 +458,8 @@ const TeamDashboardPage: FC = (): ReactElement => {
                       className="w-12 h-12 rounded-full object-cover"
                     />
                   ) : (
-                    <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-neutral-700 flex items-center justify-center">
-                      <span className="text-gray-500 dark:text-neutral-400">
+                    <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                      <span className="text-gray-500 dark:text-gray-400">
                         👤
                       </span>
                     </div>
@@ -443,7 +468,7 @@ const TeamDashboardPage: FC = (): ReactElement => {
                     <p className="font-medium text-gray-900 dark:text-white">
                       {team.leader.fullname}
                     </p>
-                    <p className="text-sm text-gray-600 dark:text-neutral-400">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
                       {team.leader.email}
                     </p>
                   </div>
@@ -452,7 +477,7 @@ const TeamDashboardPage: FC = (): ReactElement => {
             </div>
 
             {/* Team Members */}
-            <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-md p-4 md:p-6">
+            <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 md:p-6">
               <h3 className="text-base md:text-lg font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
                 Members ({members.length})
               </h3>
@@ -461,7 +486,7 @@ const TeamDashboardPage: FC = (): ReactElement => {
                   <button
                     key={member.id}
                     onClick={() => navigate(`/users/${member.user.id}`)}
-                    className="w-full flex items-center space-x-3 hover:bg-gray-100 dark:hover:bg-neutral-700 rounded-lg p-2 transition-colors text-left cursor-pointer"
+                    className="w-full flex items-center space-x-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg p-2 transition-colors text-left cursor-pointer"
                   >
                     {member.user?.avatar ? (
                       <img
@@ -472,8 +497,8 @@ const TeamDashboardPage: FC = (): ReactElement => {
                         onError={handleImageError}
                       />
                     ) : (
-                      <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-neutral-700 flex items-center justify-center">
-                        <span className="text-gray-500 dark:text-neutral-400 text-sm">
+                      <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                        <span className="text-gray-500 dark:text-gray-400 text-sm">
                           👤
                         </span>
                       </div>
@@ -482,7 +507,7 @@ const TeamDashboardPage: FC = (): ReactElement => {
                       <p className="font-medium text-gray-900 dark:text-white truncate">
                         {member.user?.fullname || 'Unknown'}
                       </p>
-                      <p className="text-xs text-gray-500 dark:text-neutral-400">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
                         {member.role === ETeamMemberRole.LEADER
                           ? 'Leader'
                           : 'Member'}
@@ -499,16 +524,16 @@ const TeamDashboardPage: FC = (): ReactElement => {
       {/* Invite Member Modal */}
       {showInviteModal && (
         <div className="fixed inset-0 bg-black/20 dark:bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-xl max-w-md w-full p-6">
+          <div className="bg-white dark:bg-gray-900 rounded-lg shadow-xl max-w-md w-full p-6">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
               Invite Team Member
             </h2>
-            <p className="text-gray-600 dark:text-neutral-400 mb-4">
+            <p className="text-gray-600 dark:text-gray-400 mb-4 font-sans">
               Send an invitation to join your team. The invited member will see
               the invitation on their dashboard after logging in.
             </p>
             <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3 mb-6">
-              <p className="text-sm text-yellow-800 dark:text-yellow-300">
+              <p className="text-sm text-yellow-800 dark:text-yellow-300 font-sans">
                 <strong>Important:</strong> The email you enter must match the
                 GitHub email address the member uses to sign in.
               </p>
@@ -517,7 +542,7 @@ const TeamDashboardPage: FC = (): ReactElement => {
               <div>
                 <label
                   htmlFor="invite-email"
-                  className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-2"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                 >
                   Email Address
                 </label>
@@ -527,10 +552,10 @@ const TeamDashboardPage: FC = (): ReactElement => {
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
                   placeholder="Enter email address..."
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-neutral-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500"
                   required
                 />
-                <p className="text-sm text-gray-500 dark:text-neutral-400 mt-1">
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                   Current members: {members.length}/{MAX_TEAM_MEMBERS}
                 </p>
               </div>
@@ -562,14 +587,14 @@ const TeamDashboardPage: FC = (): ReactElement => {
       {/* Join Requests Modal */}
       {showJoinRequestsModal && (
         <div className="fixed inset-0 bg-black/30 dark:bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-xl max-w-2xl w-full p-6 max-h-[80vh] overflow-y-auto">
+          <div className="bg-white dark:bg-gray-900 rounded-lg shadow-xl max-w-2xl w-full p-6 max-h-[80vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                 Join Requests ({pendingJoinRequests.length})
               </h2>
               <button
                 onClick={() => setShowJoinRequestsModal(false)}
-                className="text-gray-400 dark:text-neutral-500 hover:text-gray-600 dark:hover:text-neutral-300 text-2xl"
+                className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 text-2xl cursor-pointer"
               >
                 ✕
               </button>
@@ -577,10 +602,10 @@ const TeamDashboardPage: FC = (): ReactElement => {
 
             {pendingJoinRequests.length === 0 ? (
               <div className="text-center py-12">
-                <p className="text-gray-600 dark:text-neutral-400 text-lg">
+                <p className="text-gray-600 dark:text-gray-400 text-lg">
                   No pending join requests
                 </p>
-                <p className="text-gray-500 dark:text-neutral-500 text-sm mt-2">
+                <p className="text-gray-500 dark:text-gray-500 text-sm mt-2 font-sans">
                   When users request to join your team, they'll appear here
                 </p>
               </div>
@@ -589,7 +614,7 @@ const TeamDashboardPage: FC = (): ReactElement => {
                 {pendingJoinRequests.map((request: any) => (
                   <div
                     key={request.id}
-                    className="border border-gray-200 dark:border-neutral-700 rounded-lg p-4 hover:shadow-md transition-shadow"
+                    className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow"
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex items-start space-x-3 flex-1">
@@ -600,9 +625,12 @@ const TeamDashboardPage: FC = (): ReactElement => {
                             className="w-12 h-12 rounded-full object-cover"
                           />
                         ) : (
-                          <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-neutral-700 flex items-center justify-center shrink-0">
-                            <span className="text-gray-500 dark:text-neutral-400 text-xl">
-                              👤
+                          <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center shrink-0">
+                            <span className="text-gray-500 dark:text-gray-400 text-xl">
+                              <Icon
+                                icon="mdi:account-circle"
+                                className="text-3xl"
+                              />
                             </span>
                           </div>
                         )}
@@ -610,49 +638,51 @@ const TeamDashboardPage: FC = (): ReactElement => {
                           <p className="font-semibold text-gray-900 dark:text-white">
                             {request.user?.fullname || 'Unknown User'}
                           </p>
-                          <p className="text-sm text-gray-600 dark:text-neutral-400">
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
                             {request.user?.email}
                           </p>
                           {request.message && (
-                            <div className="mt-2 bg-gray-50 dark:bg-neutral-800 rounded-lg p-3">
-                              <p className="text-sm text-gray-700 dark:text-neutral-300">
+                            <div className="mt-2 bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
+                              <p className="text-sm text-gray-700 dark:text-gray-300">
                                 <strong>Message:</strong> {request.message}
                               </p>
                             </div>
                           )}
-                          <p className="text-xs text-gray-500 dark:text-neutral-500 mt-2">
+                          <p className="text-sm text-gray-500 dark:text-gray-500 mt-2 font-sans">
                             Requested{' '}
                             {new Date(request.created_at).toLocaleDateString()}
                           </p>
                         </div>
                       </div>
-                      <div className="flex space-x-2 ml-4">
-                        <Button
-                          onClick={() =>
-                            handleRespondToJoinRequest(request.id, 'approve')
-                          }
-                          disabled={
-                            isResponding || members.length >= MAX_TEAM_MEMBERS
-                          }
-                          className="px-4 py-2 text-sm"
-                        >
-                          ✓ Accept
-                        </Button>
-                        <Button
-                          onClick={() =>
-                            handleRespondToJoinRequest(request.id, 'reject')
-                          }
-                          disabled={isResponding}
-                          variant="secondary"
-                          className="px-4 py-2 text-sm"
-                        >
-                          ✕ Reject
-                        </Button>
-                      </div>
                     </div>
+
+                    <div className="flex space-x-2 mt-4 justify-end">
+                      <Button
+                        onClick={() =>
+                          handleRespondToJoinRequest(request.id, 'approve')
+                        }
+                        disabled={
+                          isResponding || members.length >= MAX_TEAM_MEMBERS
+                        }
+                        className="px-4 py-2 text-sm"
+                      >
+                        Accept
+                      </Button>
+                      <Button
+                        onClick={() =>
+                          handleRespondToJoinRequest(request.id, 'reject')
+                        }
+                        disabled={isResponding}
+                        variant="secondary"
+                        className="px-4 py-2 text-sm"
+                      >
+                        Reject
+                      </Button>
+                    </div>
+
                     {members.length >= MAX_TEAM_MEMBERS && (
-                      <div className="mt-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-2">
-                        <p className="text-xs text-yellow-800 dark:text-yellow-300">
+                      <div className="mt-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3">
+                        <p className="text-sm text-yellow-800 dark:text-yellow-300 font-sans">
                           Team is full ({MAX_TEAM_MEMBERS}/{MAX_TEAM_MEMBERS}{' '}
                           members). Remove a member before accepting new
                           requests.

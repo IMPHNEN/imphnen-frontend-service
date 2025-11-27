@@ -63,6 +63,12 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen = true, onClose }) => {
       show: true,
     },
     {
+      name: 'My Teams',
+      path: '/teams/' + myTeams[0]?.id,
+      icon: <Icon icon="heroicons:users" className="w-5 h-5" />,
+      show: myTeams.length > 0,
+    },
+    {
       name: 'Browse Teams',
       path: '/teams/browse',
       icon: <Icon icon="heroicons-outline:search" className="w-5 h-5" />,

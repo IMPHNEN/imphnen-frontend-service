@@ -3,10 +3,19 @@ import { ControlledInputField } from '@imphnen-frontend-service/ui/organisms';
 import { Button, Textarea } from '@imphnen-frontend-service/ui/atoms';
 import { useNavigate, useParams } from 'react-router';
 import { useForm, Controller } from 'react-hook-form';
-import { teamUpdateSchema, TTeamUpdateForm, useUpdateTeam, useTeamById, ETeamVisibility, useUploadFile, useAuthStore } from '@imphnen-frontend-service/service';
+import {
+  teamUpdateSchema,
+  TTeamUpdateForm,
+  useUpdateTeam,
+  useTeamById,
+  ETeamVisibility,
+  useUploadFile,
+  useAuthStore,
+} from '@imphnen-frontend-service/service';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { CitySelect } from '../../../../components/city-select';
+import { Icon } from '@iconify/react';
 
 const EditTeamPage: FC = (): ReactElement => {
   const { teamId } = useParams<{ teamId: string }>();
@@ -17,8 +26,12 @@ const EditTeamPage: FC = (): ReactElement => {
   const [bannerFile, setBannerFile] = useState<File | null>(null);
   const [bannerPreview, setBannerPreview] = useState<string>('');
 
-  const { data: teamData, isLoading: isLoadingTeam } = useTeamById(teamId || '');
-  const { mutateAsync: updateTeam, isPending: isUpdating } = useUpdateTeam(teamId || '');
+  const { data: teamData, isLoading: isLoadingTeam } = useTeamById(
+    teamId || ''
+  );
+  const { mutateAsync: updateTeam, isPending: isUpdating } = useUpdateTeam(
+    teamId || ''
+  );
   const { mutateAsync: uploadFile, isPending: isUploading } = useUploadFile();
 
   const team = teamData?.data;
@@ -47,18 +60,24 @@ const EditTeamPage: FC = (): ReactElement => {
 
   if (isLoadingTeam) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-neutral-950">
-        <div className="text-gray-600 dark:text-neutral-400">Loading team...</div>
+      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-950">
+        <div className="text-gray-600 dark:text-gray-400">Loading team...</div>
       </div>
     );
   }
 
   if (!isLeader) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 dark:bg-neutral-950">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Access Denied</h2>
-        <p className="text-gray-600 dark:text-neutral-400 mb-4">Only the team leader can edit team information</p>
-        <Button onClick={() => navigate(`/teams/${teamId}`)}>Back to Team</Button>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-950">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+          Access Denied
+        </h2>
+        <p className="text-gray-600 dark:text-gray-400 mb-4">
+          Only the team leader can edit team information
+        </p>
+        <Button onClick={() => navigate(`/teams/${teamId}`)}>
+          Back to Team
+        </Button>
       </div>
     );
   }
@@ -115,28 +134,35 @@ const EditTeamPage: FC = (): ReactElement => {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-neutral-950">
-      <div className="bg-white dark:bg-neutral-900 border-b dark:border-neutral-700">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+      <div className="bg-white dark:bg-gray-900 border-b dark:border-gray-700">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Edit Team Info</h1>
-          <p className="text-gray-600 dark:text-neutral-400 mt-1">Update your team details</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+            Edit Team Info
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">
+            Update your team details
+          </p>
         </div>
       </div>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md dark:shadow-neutral-950/50 p-8">
+        <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md dark:shadow-gray-950/50 p-8">
           <form onSubmit={onSubmit} className="space-y-6">
             {/* Banner Upload */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-2">
+              <label className="block text-label1 font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Team Banner
               </label>
               {bannerPreview ? (
-                <div className="relative">
+                <div
+                  className="relative w-full"
+                  style={{ aspectRatio: '3 / 1' }}
+                >
                   <img
                     src={bannerPreview}
                     alt="Banner preview"
-                    className="w-full h-48 object-cover rounded-lg border-2 border-gray-200 dark:border-neutral-700"
+                    className="absolute inset-0 w-full h-full object-cover rounded-lg border-2 border-gray-200 dark:border-gray-700"
                   />
                   <button
                     type="button"
@@ -145,16 +171,20 @@ const EditTeamPage: FC = (): ReactElement => {
                       setBannerPreview('');
                       form.setValue('banner', null);
                     }}
-                    className="absolute top-2 right-2 bg-red-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-red-600"
+                    className="absolute top-2 right-2 bg-danger-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-danger-700 cursor-pointer"
                   >
                     Remove
                   </button>
                 </div>
               ) : (
-                <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-gray-300 dark:border-neutral-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-neutral-800">
+                <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800">
                   <div className="text-center">
-                    <p className="text-gray-500 dark:text-neutral-400">Click to upload banner</p>
-                    <p className="text-xs text-gray-400 dark:text-neutral-500 mt-1">1200x400 recommended</p>
+                    <p className="text-gray-500 dark:text-gray-400">
+                      Click to upload banner
+                    </p>
+                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                      1200x400 recommended
+                    </p>
                   </div>
                   <input
                     type="file"
@@ -168,7 +198,7 @@ const EditTeamPage: FC = (): ReactElement => {
 
             {/* Logo Upload */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-2">
+              <label className="block text-label1 font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Team Logo
               </label>
               <div className="flex items-center space-x-4">
@@ -176,16 +206,18 @@ const EditTeamPage: FC = (): ReactElement => {
                   <img
                     src={logoPreview}
                     alt="Logo preview"
-                    className="w-24 h-24 rounded-full object-cover border-2 border-gray-200 dark:border-neutral-700"
+                    className="w-24 h-24 rounded-full object-cover border-2 border-gray-200 dark:border-gray-700"
                   />
                 ) : (
-                  <div className="w-24 h-24 rounded-full bg-gray-200 dark:bg-neutral-700 flex items-center justify-center">
-                    <span className="text-gray-400 dark:text-neutral-500 text-3xl">👥</span>
+                  <div className="w-24 h-24 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                    <span className="text-gray-400 dark:text-gray-500 text-3xl">
+                      <Icon icon="mdi:account-group" />
+                    </span>
                   </div>
                 )}
-                <div>
+                <div className="flex flex-col md:flex-row items-start justify-start gap-1">
                   <label htmlFor="logo" className="cursor-pointer">
-                    <span className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 inline-block">
+                    <span className="px-4 py-2 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700 inline-block">
                       {logoPreview ? 'Change Logo' : 'Upload Logo'}
                     </span>
                     <input
@@ -204,7 +236,7 @@ const EditTeamPage: FC = (): ReactElement => {
                         setLogoPreview('');
                         form.setValue('logo', null);
                       }}
-                      className="ml-3 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                      className="px-4 py-2 text-sm bg-danger-600 text-white rounded-lg hover:bg-danger-700 cursor-pointer"
                     >
                       Remove
                     </button>
@@ -219,11 +251,13 @@ const EditTeamPage: FC = (): ReactElement => {
               label="Team Name"
               placeholder="Enter team name"
               name="name"
+              size="lg"
+              isRequired={true}
             />
 
             {/* City */}
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                 City
               </label>
               <Controller
@@ -242,7 +276,7 @@ const EditTeamPage: FC = (): ReactElement => {
 
             {/* Description */}
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300">
+              <label className="block text-label1 font-medium text-gray-700 dark:text-gray-300">
                 Description
               </label>
               <Controller
@@ -256,9 +290,12 @@ const EditTeamPage: FC = (): ReactElement => {
                       placeholder="Tell others about your team..."
                       rows={4}
                       className="w-full"
+                      size="lg"
                     />
                     {fieldState.error && (
-                      <p className="text-sm text-red-500 mt-1">{fieldState.error.message}</p>
+                      <p className="text-sm text-red-500 mt-1">
+                        {fieldState.error.message}
+                      </p>
                     )}
                   </div>
                 )}
@@ -267,7 +304,7 @@ const EditTeamPage: FC = (): ReactElement => {
 
             {/* Visibility */}
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300">
+              <label className="block text-label1 font-medium text-gray-700 dark:text-gray-300">
                 Team Visibility
               </label>
               <Controller
@@ -275,7 +312,7 @@ const EditTeamPage: FC = (): ReactElement => {
                 name="visibility"
                 render={({ field }) => (
                   <div className="space-y-3">
-                    <label className="flex items-start space-x-3 cursor-pointer border dark:border-neutral-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-neutral-800">
+                    <label className="flex items-start space-x-3 cursor-pointer border dark:border-gray-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-800">
                       <input
                         type="radio"
                         {...field}
@@ -284,13 +321,15 @@ const EditTeamPage: FC = (): ReactElement => {
                         className="mt-1"
                       />
                       <div>
-                        <p className="font-medium text-gray-900 dark:text-white">Public</p>
-                        <p className="text-sm text-gray-600 dark:text-neutral-400">
+                        <p className="font-medium text-gray-900 dark:text-white">
+                          Public
+                        </p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 font-sans">
                           Team will be visible in Browse Teams
                         </p>
                       </div>
                     </label>
-                    <label className="flex items-start space-x-3 cursor-pointer border dark:border-neutral-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-neutral-800">
+                    <label className="flex items-start space-x-3 cursor-pointer border dark:border-gray-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-800">
                       <input
                         type="radio"
                         {...field}
@@ -299,8 +338,10 @@ const EditTeamPage: FC = (): ReactElement => {
                         className="mt-1"
                       />
                       <div>
-                        <p className="font-medium text-gray-900 dark:text-white">Private</p>
-                        <p className="text-sm text-gray-600 dark:text-neutral-400">
+                        <p className="font-medium text-gray-900 dark:text-white">
+                          Private
+                        </p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 font-sans">
                           Team hidden, invite-only
                         </p>
                       </div>

@@ -56,7 +56,7 @@ export const InputField: FC<TInputFieldProps> = ({
       <label
         htmlFor={htmlFor}
         className={cn(
-          'items-start justify-item-start text-start !text-neutral-800',
+          'items-start justify-item-start text-start text-neutral-800! dark:text-gray-300!',
           sizeClasses[size].label
         )}
       >
