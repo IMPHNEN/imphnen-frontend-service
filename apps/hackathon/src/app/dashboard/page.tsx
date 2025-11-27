@@ -212,7 +212,7 @@ const DashboardPage: FC = (): ReactElement => {
                 <h3 className="text-sm font-semibold text-gray-700 dark:text-neutral-300 uppercase tracking-wide mb-2">
                   About
                 </h3>
-                <p className="text-gray-800 dark:text-neutral-200 leading-relaxed">
+                <p className="text-gray-800 dark:text-neutral-200 leading-relaxed line-clamp-3 wrap-break-word">
                   {user.bio}
                 </p>
               </div>
