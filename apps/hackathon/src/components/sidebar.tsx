@@ -161,19 +161,19 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen = true, onClose }) => {
   };
 
   const sidebarContent = (
-    <div className="w-64 bg-white dark:bg-neutral-900 border-r dark:border-neutral-700 min-h-screen flex flex-col">
+    <div className="w-64 bg-white dark:bg-gray-900 border-r dark:border-gray-700 min-h-screen flex flex-col">
       {/* Logo / Brand with Close Button */}
-      <div className="p-6 flex items-center justify-between border-b dark:border-neutral-700">
+      <div className="p-6 flex items-center justify-between border-b dark:border-gray-700">
         <h1 className="text-xl font-bold text-gray-900 dark:text-white">
           Hackathon
         </h1>
         {onClose && (
           <button
             onClick={onClose}
-            className="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors"
+            className="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           >
             <svg
-              className="w-5 h-5 text-gray-500 dark:text-neutral-400"
+              className="w-5 h-5 text-gray-500 dark:text-gray-400"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -190,7 +190,7 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen = true, onClose }) => {
       </div>
 
       {/* User Info */}
-      <div className="p-4 border-y dark:border-neutral-700">
+      <div className="p-4 border-y dark:border-gray-700">
         <div className="flex items-center space-x-3">
           {user?.avatar ? (
             <img
@@ -204,7 +204,7 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen = true, onClose }) => {
                 icon="ic:baseline-person"
                 width="24"
                 height="24"
-                className="text-gray-400 dark:text-neutral-400"
+                className="text-gray-400 dark:text-gray-400"
               />
             </div>
           )}
@@ -212,7 +212,7 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen = true, onClose }) => {
             <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
               {user?.fullname || user?.email?.split('@')[0] || 'User'}
             </p>
-            <p className="text-xs text-gray-500 dark:text-neutral-400 truncate">
+            <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
               {user?.email}
             </p>
           </div>
@@ -233,7 +233,7 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen = true, onClose }) => {
                     className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
                       isActive
                         ? 'bg-primary-50 dark:bg-blue-900/30 text-primary-600 dark:text-blue-400 font-medium'
-                        : 'text-gray-700 dark:text-neutral-300 hover:bg-gray-100 dark:hover:bg-neutral-800'
+                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
                     }`}
                   >
                     {item.icon}
@@ -246,10 +246,10 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen = true, onClose }) => {
       </nav>
 
       {/* Theme Toggle & Logout */}
-      <div className="p-4 border-t dark:border-neutral-700 space-y-2">
+      <div className="p-4 border-t dark:border-gray-700 space-y-2">
         <button
           onClick={cycleTheme}
-          className="flex items-center space-x-3 px-4 py-3 w-full rounded-lg text-gray-700 dark:text-neutral-300 hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors"
+          className="flex items-center space-x-3 px-4 py-3 w-full rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
         >
           {getThemeIcon()}
           <span>{getThemeLabel()}</span>
