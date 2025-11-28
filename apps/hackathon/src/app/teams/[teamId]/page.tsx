@@ -87,9 +87,16 @@ const TeamDashboardPage: FC = (): ReactElement => {
   const { data: membersData, isLoading: isLoadingMembers } = useTeamMembers(
     teamId || ''
   );
+
+  const team = teamData?.data;
+  const members = membersData?.data || [];
+  const currentUserId = session?.user?.id;
+  const isLeader = currentUserId === team?.leader_id;
+
+  // Only fetch join requests if user is the team leader
   const { data: joinRequestsData } = useTeamJoinRequests(
     teamId || '',
-    !!teamId
+    !!teamId && isLeader
   );
   const { mutateAsync: inviteMember, isPending: isInviting } = useInviteMember(
     teamId || ''
@@ -98,15 +105,10 @@ const TeamDashboardPage: FC = (): ReactElement => {
     useRespondToJoinRequest(teamId || '');
   const { mutateAsync: leaveTeam, isPending: isLeaving } = useLeaveTeam();
 
-  const team = teamData?.data;
-  const members = membersData?.data || [];
   const joinRequests = joinRequestsData?.data || [];
   const pendingJoinRequests = joinRequests.filter(
     (req: any) => req.status === 'pending'
   );
-  const currentUserId = session?.user?.id;
-
-  const isLeader = currentUserId === team?.leader_id;
   const isMember = members.some(
     (member: any) => member.user_id === currentUserId
   );
