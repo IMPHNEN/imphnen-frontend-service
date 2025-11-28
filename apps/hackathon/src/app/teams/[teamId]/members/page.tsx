@@ -47,6 +47,7 @@ const ManageMembersPage: FC = (): ReactElement => {
     : [];
   const currentUserId = session?.user?.id;
   const isLeader = currentUserId === team?.leader_id;
+  const hasSubmission = team?.has_submission;
 
   const form = useForm<TInviteMemberForm>({
     resolver: zodResolver(inviteMemberSchema),
@@ -133,7 +134,11 @@ const ManageMembersPage: FC = (): ReactElement => {
               </p>
             </div>
             <div className="flex space-x-3">
-              <Button onClick={() => setShowInviteModal(true)}>
+              <Button
+                onClick={() => setShowInviteModal(true)}
+                disabled={hasSubmission}
+                title={hasSubmission ? 'Cannot invite members after project submission' : undefined}
+              >
                 Invite Member
               </Button>
               <Button
@@ -148,6 +153,23 @@ const ManageMembersPage: FC = (): ReactElement => {
       </div>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+        {/* Submission Lock Warning */}
+        {hasSubmission && (
+          <div className="bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-500 rounded-lg p-4">
+            <div className="flex items-start space-x-3">
+              <span className="text-2xl">🔒</span>
+              <div>
+                <h3 className="font-bold text-amber-900 dark:text-amber-100">
+                  Team Locked
+                </h3>
+                <p className="text-amber-800 dark:text-amber-200 text-sm font-sans mt-1">
+                  Your team has submitted a project. You cannot add or remove members after submission to maintain competition integrity.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Join Requests */}
         {joinRequests.length > 0 && (
           <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md dark:shadow-gray-950/50 p-6">
@@ -196,7 +218,8 @@ const ManageMembersPage: FC = (): ReactElement => {
                       <Button
                         size="sm"
                         onClick={() => handleApproveRequest(request.id)}
-                        disabled={isResponding}
+                        disabled={isResponding || hasSubmission}
+                        title={hasSubmission ? 'Cannot accept members after project submission' : undefined}
                       >
                         Approve
                       </Button>
@@ -272,7 +295,7 @@ const ManageMembersPage: FC = (): ReactElement => {
                       </div>
                     </div>
                   </div>
-                  {member.role !== 'leader' && (
+                  {member.role !== 'leader' && !hasSubmission && (
                     <Button
                       size="sm"
                       variant="secondary"
@@ -289,12 +312,14 @@ const ManageMembersPage: FC = (): ReactElement => {
         </div>
 
         {/* Warning */}
-        <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
-          <p className="text-sm text-yellow-800 dark:text-yellow-200">
-            <strong>Note:</strong> Members cannot leave the team without your
-            approval. Only you can remove members from the team.
-          </p>
-        </div>
+        {!hasSubmission && (
+          <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+            <p className="text-sm text-yellow-800 dark:text-yellow-200">
+              <strong>Note:</strong> Members cannot leave the team without your
+              approval. Only you can remove members from the team.
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Invite Member Modal */}
