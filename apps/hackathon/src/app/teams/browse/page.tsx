@@ -1,8 +1,8 @@
-import { FC, ReactElement, useState, useEffect } from 'react';
+import { FC, ReactElement, useState, useEffect, useRef, useCallback } from 'react';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { Link, useNavigate } from 'react-router';
 import {
-  useTeams,
+  useInfiniteTeams,
   useJoinTeam,
   useMyTeams,
   ETeamVisibility,
@@ -22,6 +22,9 @@ const BrowseTeamsPage: FC = (): ReactElement => {
   const [selectedTeamId, setSelectedTeamId] = useState<string | null>(null);
   const [showJoinModal, setShowJoinModal] = useState(false);
 
+  // Ref for intersection observer
+  const loadMoreRef = useRef<HTMLDivElement>(null);
+
   // Debounce search term
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -30,7 +33,13 @@ const BrowseTeamsPage: FC = (): ReactElement => {
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
-  const { data: teamsData, isLoading } = useTeams({
+  const {
+    data: teamsData,
+    isLoading,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+  } = useInfiniteTeams({
     search: debouncedSearch,
     city: selectedCity || undefined,
     visibility: ETeamVisibility.PUBLIC,
@@ -44,8 +53,35 @@ const BrowseTeamsPage: FC = (): ReactElement => {
     mode: 'all',
   });
 
-  const teams = teamsData?.data || [];
+  // Flatten pages into single array
+  const teams = teamsData?.pages.flatMap((page) => page.data) || [];
   const myTeams = myTeamsData?.data || [];
+
+  // Intersection Observer callback
+  const handleObserver = useCallback(
+    (entries: IntersectionObserverEntry[]) => {
+      const [target] = entries;
+      if (target.isIntersecting && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    },
+    [hasNextPage, isFetchingNextPage, fetchNextPage]
+  );
+
+  // Set up intersection observer
+  useEffect(() => {
+    const element = loadMoreRef.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(handleObserver, {
+      root: null,
+      rootMargin: '100px',
+      threshold: 0,
+    });
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [handleObserver]);
 
   // Helper function to check if user is a member of a team
   const isMyTeam = (teamId: string) => {
@@ -135,85 +171,102 @@ const BrowseTeamsPage: FC = (): ReactElement => {
             </p>
           </div>
         ) : (
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {teams.map((team) => (
-              <div
-                key={team.id}
-                className="bg-white dark:bg-gray-900 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow flex flex-col border dark:border-gray-800"
-              >
-                <img
-                  src={team.banner || '/images/banner-imphnen.webp'}
-                  alt={team.name}
-                  className="w-full aspect-3/1 object-cover"
-                />
-                <div className="p-6 flex flex-col flex-1">
-                  <div className="flex items-center space-x-3 mb-3">
-                    {team.logo ? (
-                      <img
-                        src={team.logo}
-                        alt={team.name}
-                        className="w-12 h-12 rounded-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                        <span className="text-gray-500 dark:text-gray-300 text-xl">
-                          <Icon icon="mdi:account-group" />
-                        </span>
-                      </div>
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-lg font-bold text-gray-900 dark:text-white line-clamp-2 leading-tight">
-                        {team.name}
-                      </h3>
-                      <div className="text-sm font-sans text-gray-600 dark:text-gray-400 flex gap-2">
-                        <p className="truncate flex-1 min-w-0 flex items-center gap-x-1">
-                          <Icon icon="mdi:map-marker" />{' '}
-                          <span>{team.city}</span>
-                        </p>
-                        <p className="whitespace-nowrap shrink-0 flex items-center gap-x-1">
-                          <Icon icon="mdi:account-group" />{' '}
-                          {team.members?.length || 0} members
-                        </p>
+          <>
+            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+              {teams.map((team) => (
+                <div
+                  key={team.id}
+                  className="bg-white dark:bg-gray-900 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow flex flex-col border dark:border-gray-800"
+                >
+                  <img
+                    src={team.banner || '/images/banner-imphnen.webp'}
+                    alt={team.name}
+                    className="w-full aspect-3/1 object-cover"
+                  />
+                  <div className="p-6 flex flex-col flex-1">
+                    <div className="flex items-center space-x-3 mb-3">
+                      {team.logo ? (
+                        <img
+                          src={team.logo}
+                          alt={team.name}
+                          className="w-12 h-12 rounded-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                          <span className="text-gray-500 dark:text-gray-300 text-xl">
+                            <Icon icon="mdi:account-group" />
+                          </span>
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-lg font-bold text-gray-900 dark:text-white line-clamp-2 leading-tight">
+                          {team.name}
+                        </h3>
+                        <div className="text-sm font-sans text-gray-600 dark:text-gray-400 flex gap-2">
+                          <p className="truncate flex-1 min-w-0 flex items-center gap-x-1">
+                            <Icon icon="mdi:map-marker" />{' '}
+                            <span>{team.city}</span>
+                          </p>
+                          <p className="whitespace-nowrap shrink-0 flex items-center gap-x-1">
+                            <Icon icon="mdi:account-group" />{' '}
+                            {team.members?.length || 0} members
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3 font-sans">
-                    {team.description}
-                  </p>
-                  <div className="space-y-3 mt-auto">
-                    {isMyTeam(team.id) ? (
-                      <Button
-                        className="w-full"
-                        variant="secondary"
-                        onClick={() => navigate(`/teams/${team.id}`)}
-                      >
-                        Your Team
-                      </Button>
-                    ) : (
-                      <>
-                        {myTeams.length === 0 &&
-                          (team.members?.length || 0) < 5 && (
-                            <Button
-                              className="w-full"
-                              onClick={() => handleJoinRequest(team.id)}
-                            >
-                              Request to Join
-                            </Button>
-                          )}
+                    <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3 font-sans">
+                      {team.description}
+                    </p>
+                    <div className="space-y-3 mt-auto">
+                      {isMyTeam(team.id) ? (
                         <Button
                           className="w-full"
                           variant="secondary"
                           onClick={() => navigate(`/teams/${team.id}`)}
                         >
-                          View Team
+                          Your Team
                         </Button>
-                      </>
-                    )}
+                      ) : (
+                        <>
+                          {myTeams.length === 0 &&
+                            (team.members?.length || 0) < 5 && (
+                              <Button
+                                className="w-full"
+                                onClick={() => handleJoinRequest(team.id)}
+                              >
+                                Request to Join
+                              </Button>
+                            )}
+                          <Button
+                            className="w-full"
+                            variant="secondary"
+                            onClick={() => navigate(`/teams/${team.id}`)}
+                          >
+                            View Team
+                          </Button>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+
+            {/* Intersection Observer Sentinel */}
+            <div ref={loadMoreRef} className="py-8 flex justify-center">
+              {isFetchingNextPage && (
+                <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                  <Icon icon="mdi:loading" className="animate-spin text-xl" />
+                  <span>Loading more teams...</span>
+                </div>
+              )}
+              {!hasNextPage && teams.length > 0 && (
+                <p className="text-gray-500 dark:text-gray-500 text-sm">
+                  No more teams to load
+                </p>
+              )}
+            </div>
+          </>
         )}
       </div>
 

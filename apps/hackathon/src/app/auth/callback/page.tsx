@@ -18,15 +18,38 @@ const CallbackPage: FC = (): ReactElement => {
       hasRunRef.current = true;
 
       try {
-        // Get the code from URL query params
+        // Check URL hash for Supabase email confirmation callback
+        const hashParams = new URLSearchParams(globalThis.location.hash.substring(1));
         const urlParams = new URLSearchParams(globalThis.location.search);
+
+        const type = hashParams.get('type') || urlParams.get('type');
+        const accessToken = hashParams.get('access_token') || urlParams.get('access_token');
+
+        // Handle email confirmation callback from Supabase
+        if (type === 'signup' || type === 'email_confirmation' || type === 'recovery') {
+          // Don't auto sign in - redirect to login with success message
+          setIsProcessing(false);
+
+          if (type === 'recovery') {
+            // Password reset - redirect to reset password page
+            toast.success('Email verified! Please set your new password.');
+            navigate('/auth/reset-password' + (accessToken ? `?access_token=${accessToken}` : ''));
+          } else {
+            // Email confirmation for signup
+            toast.success('Email verified successfully! Please log in to continue.');
+            navigate('/auth/login');
+          }
+          return;
+        }
+
+        // Get the code from URL query params (GitHub OAuth)
         const code = urlParams.get('code');
 
         if (!code) {
-          throw new Error('No authorization code received from GitHub');
+          throw new Error('No authorization code received');
         }
 
-        // Exchange the code for tokens using backend API
+        // Exchange the code for tokens using backend API (GitHub OAuth)
         const result = await exchangeGitHubCode({ code });
 
         toast.success('Login successful!');

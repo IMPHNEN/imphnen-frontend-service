@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
 import { hackathonApi, HackathonApiResponse } from '../../api/hackathon';
 import { useAuthStore } from '../auth';
 import type {
@@ -128,6 +128,39 @@ export const useTeams = (params?: {
 
       return { data: response.data.data || [] };
     },
+  });
+};
+
+// Infinite scroll teams hook
+const TEAMS_PAGE_SIZE = 12;
+
+export const useInfiniteTeams = (params?: {
+  city?: string;
+  visibility?: string;
+  search?: string;
+}) => {
+  return useInfiniteQuery({
+    queryKey: [...teamKeys.lists(), 'infinite', params],
+    queryFn: async ({ pageParam = 1 }) => {
+      const queryParams = new URLSearchParams();
+      queryParams.append('page', String(pageParam));
+      queryParams.append('limit', String(TEAMS_PAGE_SIZE));
+      if (params?.search) queryParams.append('search', params.search);
+      if (params?.city) queryParams.append('city', params.city);
+      if (params?.visibility) queryParams.append('visibility', params.visibility);
+
+      const response = await hackathonApi.get<HackathonApiResponse<Team[]>>(
+        `/teams/browse?${queryParams.toString()}`
+      );
+
+      const teams = response.data.data || [];
+      return {
+        data: teams,
+        nextPage: teams.length === TEAMS_PAGE_SIZE ? pageParam + 1 : undefined,
+      };
+    },
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => lastPage.nextPage,
   });
 };
 

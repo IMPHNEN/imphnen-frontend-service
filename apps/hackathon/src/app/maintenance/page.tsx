@@ -1,3 +1,5 @@
+import { Link } from 'react-router';
+
 export default function MaintenancePage() {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-50 dark:bg-gray-950 px-4">
@@ -9,12 +11,12 @@ export default function MaintenancePage() {
           <br />
           Thank you for your patience.
         </p>
-        <a
-          href="/"
+        <Link
+          to="/"
           className="mt-4 inline-block text-primary-600 hover:underline"
         >
           Back to Homepage
-        </a>
+        </Link>
       </div>
     </div>
   );

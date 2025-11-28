@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router';
+import { useNavigate, Link } from 'react-router';
 import { useState } from 'react';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { Icon } from '@iconify/react';
@@ -796,12 +796,12 @@ export default function HomePage() {
                   </a>
                 </li>
                 <li>
-                  <a
-                    href="/auth/signup"
+                  <Link
+                    to="/auth/signup"
                     className="hover:text-white transition-colors"
                   >
                     Daftar
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>

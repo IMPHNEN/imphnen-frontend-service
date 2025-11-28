@@ -1,5 +1,5 @@
 import { SessionUser } from '@imphnen-frontend-service/utils';
-import { hackathonApi } from '@imphnen-frontend-service/service';
+import { hackathonApi, SessionToken } from '@imphnen-frontend-service/service';
 import { LoaderFunctionArgs, redirect } from 'react-router';
 
 const mappingPublicRoutes = [
@@ -37,9 +37,10 @@ export const middleware = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
   const pathname = url.pathname;
 
-  // Get session from local storage (via SessionUser)
-  const session = SessionUser.get();
-  const isAuthenticated = !!session?.token?.access_token;
+  // Get token from cookies and user from local storage
+  const tokenData = SessionToken.get();
+  const user = SessionUser.get();
+  const isAuthenticated = !!tokenData?.token?.access_token;
 
   // Allow to access the hackathon pages without authentication
   if (mappingPublicPrefixRoutes.some((prefix) => pathname.startsWith(prefix))) {
@@ -71,7 +72,7 @@ export const middleware = async ({ request }: LoaderFunctionArgs) => {
   // Skip onboarding check for onboarding routes themselves
   if (!mappingOnboardingRoutes.includes(pathname)) {
     try {
-      const userId = session?.user?.id;
+      const userId = user?.id;
       if (!userId) {
         return redirect('/auth/login');
       }
@@ -85,8 +86,8 @@ export const middleware = async ({ request }: LoaderFunctionArgs) => {
       if (cached && (now - cached.timestamp) < CACHE_DURATION) {
         hasLocation = cached.hasLocation;
       } else {
-        // First check session data (faster)
-        if (session?.user?.location) {
+        // First check user data (faster)
+        if (user?.location) {
           hasLocation = true;
         } else {
           // Fetch from backend API
@@ -94,8 +95,8 @@ export const middleware = async ({ request }: LoaderFunctionArgs) => {
             const response = await hackathonApi.get('/users/me');
             hasLocation = !!response.data?.data?.location;
           } catch {
-            // If API fails, check session data as fallback
-            hasLocation = !!session?.user?.location;
+            // If API fails, check user data as fallback
+            hasLocation = !!user?.location;
           }
         }
 
@@ -113,9 +114,9 @@ export const middleware = async ({ request }: LoaderFunctionArgs) => {
     }
   }
 
-  // Check route permissions using user data from session
+  // Check route permissions using user data
   const userPermissions =
-    session?.user?.role?.permissions?.map?.((perm) => perm?.name) ?? [];
+    user?.role?.permissions?.map?.((perm) => perm?.name) ?? [];
 
   const matchedRoute = mappingRoutePermissions.find(
     (route) => route.path === pathname

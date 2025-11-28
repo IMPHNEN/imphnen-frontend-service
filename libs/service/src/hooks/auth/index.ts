@@ -111,42 +111,15 @@ export const useLogin = () => {
   });
 };
 
-// Email/Password Signup
+// Email/Password Signup - returns message only (user needs to activate via email)
 export const useSignup = () => {
-  const { setSession } = useAuthStore();
-
   return useMutation({
     mutationFn: async (data: SignupRequest) => {
-      const response = await hackathonApi.post<HackathonApiResponse<AuthResponse>>(
+      const response = await hackathonApi.post<HackathonApiResponse<MessageResponse>>(
         '/auth/signup',
         data
       );
       return response.data.data;
-    },
-    onSuccess: (data) => {
-      setSession({
-        token: data.token,
-        user: {
-          id: data.user.id,
-          email: data.user.email,
-          fullname: data.user.fullname,
-          phone_number: data.user.phone_number || '',
-          avatar: data.user.avatar || '',
-          birthdate: data.user.birthdate || '',
-          gender: data.user.gender || '',
-          is_active: data.user.is_active,
-          location: data.user.location,
-          bio: data.user.bio,
-          skills: data.user.skills,
-          role: {
-            id: '',
-            name: 'user',
-            permissions: [],
-            created_at: '',
-            updated_at: '',
-          },
-        },
-      });
     },
   });
 };

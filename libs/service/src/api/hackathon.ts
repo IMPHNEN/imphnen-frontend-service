@@ -16,8 +16,8 @@ export const hackathonApi = axios.create({
 hackathonApi.interceptors.request.use(
   (config) => {
     const { session } = useAuthStore.getState();
-    if (session?.token) {
-      config.headers.Authorization = `Bearer ${session.token}`;
+    if (session?.token?.access_token) {
+      config.headers.Authorization = `Bearer ${session.token.access_token}`;
     }
     return config;
   },

@@ -1,54 +1,124 @@
 import { useState } from 'react';
-import {
-  useGitHubAuth,
-  useSignup,
-} from '@imphnen-frontend-service/service';
+import { useGitHubAuth, useSignup } from '@imphnen-frontend-service/service';
 import { GithubOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router';
+import { useNavigate, Link, Links } from 'react-router';
 import { toast } from 'sonner';
 import { Icon } from '@iconify/react';
 import { ThemeToggle } from '../../../components/theme-toggle';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+
+const signupSchema = z
+  .object({
+    fullname: z
+      .string()
+      .min(1, 'Full name is required')
+      .min(2, 'Full name must be at least 2 characters'),
+    email: z
+      .string()
+      .min(1, 'Email is required')
+      .email('Please enter a valid email address'),
+    password: z
+      .string()
+      .min(1, 'Password is required')
+      .min(6, 'Password must be at least 6 characters'),
+    confirmPassword: z.string().min(1, 'Please confirm your password'),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Passwords do not match',
+    path: ['confirmPassword'],
+  });
+
+type SignupFormData = z.infer<typeof signupSchema>;
 
 export default function SignupPage() {
   const navigate = useNavigate();
   const { signInWithGitHub } = useGitHubAuth();
   const signupMutation = useSignup();
   const [isGithubLoading, setIsGithubLoading] = useState(false);
-  const [fullname, setFullname] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState('');
 
-  const handleEmailSignup = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm<SignupFormData>({
+    resolver: zodResolver(signupSchema),
+    mode: 'onChange',
+  });
+
+  const onSubmit = async (data: SignupFormData) => {
     setError(null);
 
-    if (!fullname || !email || !password || !confirmPassword) {
-      setError('Please fill in all fields');
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setError('Passwords do not match');
-      return;
-    }
-
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters long');
-      return;
-    }
-
     try {
-      await signupMutation.mutateAsync({ email, password, fullname });
-
-      toast.success('Account created successfully!');
-      navigate('/onboarding/user');
+      const result = await signupMutation.mutateAsync({
+        email: data.email,
+        password: data.password,
+        fullname: data.fullname,
+      });
+      toast.success(result.message);
+      setRegisteredEmail(data.email);
+      setRegistrationSuccess(true);
     } catch (err) {
       console.error('[Signup] Email signup failed:', err);
       setError((err as Error).message || 'Signup failed');
     }
   };
+
+  // Show success screen after registration
+  if (registrationSuccess) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-gray-50 dark:bg-gray-950 p-4">
+        <div className="bg-white dark:bg-gray-900 w-full max-w-md p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 text-center">
+          <div className="mb-6">
+            <div className="mx-auto w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mb-4">
+              <Icon
+                icon="mdi:email-check"
+                className="text-3xl text-green-600 dark:text-green-400"
+              />
+            </div>
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+              Check Your Email
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400">
+              We've sent an activation link to{' '}
+              <strong>{registeredEmail}</strong>
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Click the link in the email to activate your account. The link
+              will expire in 24 hours.
+            </p>
+
+            <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-3">
+              <p className="text-sm text-amber-700 dark:text-amber-300">
+                Don't forget to check your spam folder if you don't see the
+                email.
+              </p>
+            </div>
+
+            <Link to="/auth/login">
+              <button className="w-full py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 transition-colors cursor-pointer">
+                Go to Login
+              </button>
+            </Link>
+
+            <button
+              onClick={() => setRegistrationSuccess(false)}
+              className="w-full py-3 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer"
+            >
+              Register with different email
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const handleGithubLogin = async () => {
     try {
@@ -68,6 +138,11 @@ export default function SignupPage() {
       setIsGithubLoading(false);
     }
   };
+
+  const inputBaseClass =
+    'w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:cursor-not-allowed';
+  const inputErrorClass = 'border-red-500 dark:border-red-500';
+  const inputNormalClass = 'border-gray-300 dark:border-gray-600';
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-50 dark:bg-gray-950 p-4">
@@ -98,7 +173,7 @@ export default function SignupPage() {
           </div>
         )}
 
-        <form onSubmit={handleEmailSignup} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <label
               htmlFor="fullname"
@@ -109,13 +184,18 @@ export default function SignupPage() {
             <input
               id="fullname"
               type="text"
-              value={fullname}
-              onChange={(e) => setFullname(e.target.value)}
+              {...register('fullname')}
               placeholder="John Doe"
               disabled={signupMutation.isPending}
-              className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:cursor-not-allowed"
-              required
+              className={`${inputBaseClass} ${
+                errors.fullname ? inputErrorClass : inputNormalClass
+              }`}
             />
+            {errors.fullname && (
+              <p className="mt-1 text-sm text-red-500 dark:text-red-400">
+                {errors.fullname.message}
+              </p>
+            )}
           </div>
 
           <div>
@@ -128,13 +208,18 @@ export default function SignupPage() {
             <input
               id="email"
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              {...register('email')}
               placeholder="your@email.com"
               disabled={signupMutation.isPending}
-              className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:cursor-not-allowed"
-              required
+              className={`${inputBaseClass} ${
+                errors.email ? inputErrorClass : inputNormalClass
+              }`}
             />
+            {errors.email && (
+              <p className="mt-1 text-sm text-red-500 dark:text-red-400">
+                {errors.email.message}
+              </p>
+            )}
           </div>
 
           <div>
@@ -147,13 +232,18 @@ export default function SignupPage() {
             <input
               id="password"
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              {...register('password')}
               placeholder="••••••••"
               disabled={signupMutation.isPending}
-              className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:cursor-not-allowed"
-              required
+              className={`${inputBaseClass} ${
+                errors.password ? inputErrorClass : inputNormalClass
+              }`}
             />
+            {errors.password && (
+              <p className="mt-1 text-sm text-red-500 dark:text-red-400">
+                {errors.password.message}
+              </p>
+            )}
           </div>
 
           <div>
@@ -166,21 +256,28 @@ export default function SignupPage() {
             <input
               id="confirmPassword"
               type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              {...register('confirmPassword')}
               placeholder="••••••••"
               disabled={signupMutation.isPending}
-              className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:cursor-not-allowed"
-              required
+              className={`${inputBaseClass} ${
+                errors.confirmPassword ? inputErrorClass : inputNormalClass
+              }`}
             />
+            {errors.confirmPassword && (
+              <p className="mt-1 text-sm text-red-500 dark:text-red-400">
+                {errors.confirmPassword.message}
+              </p>
+            )}
           </div>
 
           <button
             type="submit"
-            disabled={signupMutation.isPending}
+            disabled={!isValid || signupMutation.isPending}
             className="w-full py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed transition-colors cursor-pointer"
           >
-            {signupMutation.isPending ? 'Creating account...' : 'Create Account'}
+            {signupMutation.isPending
+              ? 'Creating account...'
+              : 'Create Account'}
           </button>
         </form>
 
@@ -207,12 +304,12 @@ export default function SignupPage() {
         <div className="mt-6 text-center">
           <p className="text-gray-600 dark:text-gray-400 text-sm">
             Already have an account?{' '}
-            <a
-              href="/auth/login"
+            <Link
+              to="/auth/login"
               className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-semibold"
             >
               Sign in
-            </a>
+            </Link>
           </p>
         </div>
 
