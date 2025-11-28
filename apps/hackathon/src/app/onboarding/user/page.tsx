@@ -60,6 +60,20 @@ const UserOnboardingPage: FC = (): ReactElement => {
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      // Validate file size (max 2MB)
+      if (file.size > 2 * 1024 * 1024) {
+        toast.error('The file is too large. Maximum size is 2MB.');
+        e.target.value = '';
+        return;
+      }
+
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        toast.error('The file must be an image');
+        e.target.value = '';
+        return;
+      }
+
       setAvatarFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -150,7 +164,7 @@ const UserOnboardingPage: FC = (): ReactElement => {
                 />
               </label>
               <p className="text-xs text-gray-500 dark:text-gray-500 mt-2 text-center">
-                Optional, but highly recommended
+                Optional, but highly recommended. Max 2MB
               </p>
             </div>
           </div>

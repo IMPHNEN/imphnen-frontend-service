@@ -84,15 +84,17 @@ const ProfilePage: FC<ProfileModalProps> = ({
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Validate file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        toast.error('The file is too large. Maximum 5MB');
+      // Validate file size (max 2MB)
+      if (file.size > 2 * 1024 * 1024) {
+        toast.error('The file is too large. Maximum size is 2MB.');
+        e.target.value = '';
         return;
       }
 
       // Validate file type
       if (!file.type.startsWith('image/')) {
         toast.error('The file must be an image');
+        e.target.value = '';
         return;
       }
 
@@ -235,7 +237,7 @@ const ProfilePage: FC<ProfileModalProps> = ({
               <p className="text-sm text-gray-500 dark:text-neutral-400 text-center font-sans">
                 Click the camera icon to change your photo
                 <br />
-                Format: JPG, PNG. Max 5MB
+                Format: JPG, PNG. Max 2MB
               </p>
             </div>
 

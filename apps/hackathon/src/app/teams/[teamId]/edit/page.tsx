@@ -16,6 +16,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { CitySelect } from '../../../../components/city-select';
 import { Icon } from '@iconify/react';
+import { toast } from 'sonner';
+
+const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
 
 const EditTeamPage: FC = (): ReactElement => {
   const { teamId } = useParams<{ teamId: string }>();
@@ -85,6 +88,11 @@ const EditTeamPage: FC = (): ReactElement => {
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (file.size > MAX_FILE_SIZE) {
+        toast.error('Logo image is too large. Maximum size is 2MB.');
+        e.target.value = '';
+        return;
+      }
       setLogoFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -97,6 +105,11 @@ const EditTeamPage: FC = (): ReactElement => {
   const handleBannerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (file.size > MAX_FILE_SIZE) {
+        toast.error('Banner image is too large. Maximum size is 2MB.');
+        e.target.value = '';
+        return;
+      }
       setBannerFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -183,7 +196,7 @@ const EditTeamPage: FC = (): ReactElement => {
                       Click to upload banner
                     </p>
                     <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
-                      1200x400 recommended
+                      1200x400 recommended. Max 2MB
                     </p>
                   </div>
                   <input
@@ -215,32 +228,35 @@ const EditTeamPage: FC = (): ReactElement => {
                     </span>
                   </div>
                 )}
-                <div className="flex flex-col md:flex-row items-start justify-start gap-1">
-                  <label htmlFor="logo" className="cursor-pointer">
-                    <span className="px-4 py-2 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700 inline-block">
-                      {logoPreview ? 'Change Logo' : 'Upload Logo'}
-                    </span>
-                    <input
-                      id="logo"
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={handleLogoChange}
-                    />
-                  </label>
-                  {logoPreview && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setLogoFile(null);
-                        setLogoPreview('');
-                        form.setValue('logo', null);
-                      }}
-                      className="px-4 py-2 text-sm bg-danger-600 text-white rounded-lg hover:bg-danger-700 cursor-pointer"
-                    >
-                      Remove
-                    </button>
-                  )}
+                <div>
+                  <div className="flex flex-col md:flex-row items-start justify-start gap-1">
+                    <label htmlFor="logo" className="cursor-pointer">
+                      <span className="px-4 py-2 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700 inline-block">
+                        {logoPreview ? 'Change Logo' : 'Upload Logo'}
+                      </span>
+                      <input
+                        id="logo"
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handleLogoChange}
+                      />
+                    </label>
+                    {logoPreview && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setLogoFile(null);
+                          setLogoPreview('');
+                          form.setValue('logo', null);
+                        }}
+                        className="px-4 py-2 text-sm bg-danger-600 text-white rounded-lg hover:bg-danger-700 cursor-pointer"
+                      >
+                        Remove
+                      </button>
+                    )}
+                  </div>
+                  <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">Max 2MB</p>
                 </div>
               </div>
             </div>

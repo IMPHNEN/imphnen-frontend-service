@@ -13,8 +13,10 @@ import {
   useAuthStore,
 } from '@imphnen-frontend-service/service';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from 'sonner';
 
 const MIN_TEAM_MEMBERS = 2; // Minimum members required to submit (including leader)
+const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
 
 const SubmitProjectPage: FC = (): ReactElement => {
   const { teamId } = useParams<{ teamId: string }>();
@@ -89,6 +91,14 @@ const SubmitProjectPage: FC = (): ReactElement => {
     const files = e.target.files;
     if (!files) return;
 
+    // Validate file sizes
+    const oversizedFiles = Array.from(files).filter(file => file.size > MAX_FILE_SIZE);
+    if (oversizedFiles.length > 0) {
+      toast.error(`${oversizedFiles.length} file(s) are too large. Maximum size is 2MB per file.`);
+      e.target.value = '';
+      return;
+    }
+
     try {
       const uploadPromises = Array.from(files).map((file) => uploadFile(file));
       const results = await Promise.all(uploadPromises);
@@ -96,6 +106,7 @@ const SubmitProjectPage: FC = (): ReactElement => {
       setScreenshots([...screenshots, ...urls]);
     } catch (error) {
       console.error('Failed to upload screenshots:', error);
+      toast.error('Failed to upload screenshots. Please try again.');
     }
   };
 
@@ -271,7 +282,7 @@ const SubmitProjectPage: FC = (): ReactElement => {
                     Click to upload screenshots
                   </p>
                   <p className="text-xs text-gray-400 dark:text-gray-500 mt-1 font-sans">
-                    PNG, JPG up to 5MB each
+                    PNG, JPG. Max 2MB each
                   </p>
                 </div>
                 <input

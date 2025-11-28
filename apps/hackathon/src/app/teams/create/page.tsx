@@ -5,8 +5,11 @@ import { useNavigate } from 'react-router';
 import { useForm, Controller } from 'react-hook-form';
 import { teamCreateSchema, TTeamCreateForm, useCreateTeam, ETeamVisibility, useUploadFile } from '@imphnen-frontend-service/service';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from 'sonner';
 
 import { CitySelect } from '../../../components/city-select';
+
+const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
 
 const CreateTeamPage: FC = (): ReactElement => {
   const navigate = useNavigate();
@@ -31,6 +34,11 @@ const CreateTeamPage: FC = (): ReactElement => {
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (file.size > MAX_FILE_SIZE) {
+        toast.error('Logo image is too large. Maximum size is 2MB.');
+        e.target.value = '';
+        return;
+      }
       setLogoFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -43,6 +51,11 @@ const CreateTeamPage: FC = (): ReactElement => {
   const handleBannerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (file.size > MAX_FILE_SIZE) {
+        toast.error('Banner image is too large. Maximum size is 2MB.');
+        e.target.value = '';
+        return;
+      }
       setBannerFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -73,9 +86,20 @@ const CreateTeamPage: FC = (): ReactElement => {
         banner: bannerUrl,
       });
 
+      toast.success('Team created successfully!');
       navigate(`/teams/${result.data.id}`);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to create team:', error);
+
+      // Handle specific error messages
+      const message = error?.message || '';
+      if (message.includes('413') || message.includes('length limit') || message.includes('too large')) {
+        toast.error('Image file is too large. Please use smaller images (max 2MB each).');
+      } else if (message.includes('already a member')) {
+        toast.error(message);
+      } else {
+        toast.error(message || 'Failed to create team. Please try again.');
+      }
     }
   });
 
@@ -119,7 +143,7 @@ const CreateTeamPage: FC = (): ReactElement => {
                 <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-gray-300 dark:border-neutral-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-neutral-800">
                   <div className="text-center">
                     <p className="text-gray-500 dark:text-neutral-400">Click to upload banner</p>
-                    <p className="text-xs text-gray-400 dark:text-neutral-500 mt-1">1200x400 recommended</p>
+                    <p className="text-xs text-gray-400 dark:text-neutral-500 mt-1">1200x400 recommended. Max 2MB</p>
                   </div>
                   <input
                     type="file"
@@ -149,30 +173,33 @@ const CreateTeamPage: FC = (): ReactElement => {
                   </div>
                 )}
                 <div>
-                  <label htmlFor="logo" className="cursor-pointer">
-                    <span className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 inline-block">
-                      {logoPreview ? 'Change Logo' : 'Upload Logo'}
-                    </span>
-                    <input
-                      id="logo"
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={handleLogoChange}
-                    />
-                  </label>
-                  {logoPreview && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setLogoFile(null);
-                        setLogoPreview('');
-                      }}
-                      className="ml-3 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                    >
-                      Remove
-                    </button>
-                  )}
+                  <div>
+                    <label htmlFor="logo" className="cursor-pointer">
+                      <span className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 inline-block">
+                        {logoPreview ? 'Change Logo' : 'Upload Logo'}
+                      </span>
+                      <input
+                        id="logo"
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handleLogoChange}
+                      />
+                    </label>
+                    {logoPreview && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setLogoFile(null);
+                          setLogoPreview('');
+                        }}
+                        className="ml-3 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                      >
+                        Remove
+                      </button>
+                    )}
+                  </div>
+                  <p className="text-xs text-gray-400 dark:text-neutral-500 mt-2">Max 2MB</p>
                 </div>
               </div>
             </div>
