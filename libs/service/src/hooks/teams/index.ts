@@ -504,6 +504,27 @@ export const useLeaveTeam = () => {
   });
 };
 
+// Delete Team Hook (Leader only)
+export const useDeleteTeam = () => {
+  const queryClient = useQueryClient();
+  const { session } = useAuthStore();
+
+  return useMutation({
+    mutationFn: async (teamId: string) => {
+      if (!session?.user?.id) {
+        throw new Error('You must be logged in to delete a team');
+      }
+
+      await hackathonApi.delete(`/teams/${teamId}`);
+      return { success: true };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: teamKeys.myTeams() });
+      queryClient.invalidateQueries({ queryKey: teamKeys.lists() });
+    },
+  });
+};
+
 // Get Teams by User ID - uses /users/{user_id}/teams
 export const useTeamsByUserId = (userId: string) => {
   return useQuery({

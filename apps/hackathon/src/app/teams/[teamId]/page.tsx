@@ -8,6 +8,7 @@ import {
   useTeamJoinRequests,
   useRespondToJoinRequest,
   useLeaveTeam,
+  useDeleteTeam,
   ETeamMemberRole,
   useAuthStore,
 } from '@imphnen-frontend-service/service';
@@ -54,6 +55,8 @@ const TeamDashboardPage: FC = (): ReactElement => {
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [showJoinRequestsModal, setShowJoinRequestsModal] = useState(false);
   const [showLeaveModal, setShowLeaveModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState('');
   const [inviteEmail, setInviteEmail] = useState('');
   const [imagesLoaded, setImagesLoaded] = useState(false);
   const [imageLoadCount, setImageLoadCount] = useState(0);
@@ -104,6 +107,7 @@ const TeamDashboardPage: FC = (): ReactElement => {
   const { mutateAsync: respondToJoinRequest, isPending: isResponding } =
     useRespondToJoinRequest(teamId || '');
   const { mutateAsync: leaveTeam, isPending: isLeaving } = useLeaveTeam();
+  const { mutateAsync: deleteTeam, isPending: isDeleting } = useDeleteTeam();
 
   const joinRequests = joinRequestsData?.data || [];
   const pendingJoinRequests = joinRequests.filter(
@@ -154,6 +158,19 @@ const TeamDashboardPage: FC = (): ReactElement => {
     } catch (error) {
       console.error('Failed to leave team:', error);
       toast.error('Failed to leave team');
+    }
+  };
+
+  const handleDeleteTeam = async () => {
+    if (!teamId) return;
+
+    try {
+      await deleteTeam(teamId);
+      toast.success('Team deleted successfully');
+      navigate('/dashboard');
+    } catch (error: any) {
+      console.error('Failed to delete team:', error);
+      toast.error(error?.message || 'Failed to delete team');
     }
   };
 
@@ -407,6 +424,21 @@ const TeamDashboardPage: FC = (): ReactElement => {
                   <p className="text-sm text-gray-600 dark:text-gray-400 mt-3 text-center">
                     Maximum team size reached ({MAX_TEAM_MEMBERS} members)
                   </p>
+                )}
+                {/* Danger Zone - Only show when leader is alone */}
+                {members.length === 1 && (
+                  <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <h3 className="text-sm font-medium text-red-600 dark:text-red-400 mb-3">
+                      Danger Zone
+                    </h3>
+                    <Button
+                      className="w-full bg-red-600 hover:bg-red-700 text-white"
+                      onClick={() => setShowDeleteModal(true)}
+                    >
+                      <Icon icon="mdi:delete" className="inline-block mr-2" />
+                      Delete Team
+                    </Button>
+                  </div>
                 )}
               </div>
             )}
@@ -762,6 +794,66 @@ const TeamDashboardPage: FC = (): ReactElement => {
                 disabled={isLeaving}
               >
                 {isLeaving ? 'Leaving...' : 'Leave Team'}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Team Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-black/30 dark:bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-900 rounded-lg shadow-xl max-w-md w-full p-6">
+            <div className="text-center mb-6">
+              <div className="mx-auto w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mb-4">
+                <Icon
+                  icon="mdi:delete-alert"
+                  className="text-3xl text-red-600 dark:text-red-400"
+                />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                Delete Team?
+              </h2>
+              <p className="text-gray-600 dark:text-gray-400">
+                This action is <strong className="text-red-600 dark:text-red-400">permanent</strong> and cannot be undone.
+              </p>
+            </div>
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
+              <p className="text-sm text-red-800 dark:text-red-300 font-sans">
+                <strong>Warning:</strong> All team data, chat messages, and submissions will be permanently deleted.
+              </p>
+            </div>
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Type <span className="font-bold text-red-600 dark:text-red-400">{team?.name}</span> to confirm:
+              </label>
+              <input
+                type="text"
+                value={deleteConfirmText}
+                onChange={(e) => setDeleteConfirmText(e.target.value)}
+                placeholder="Type team name here"
+                className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500"
+                autoComplete="off"
+              />
+            </div>
+            <div className="flex space-x-3">
+              <Button
+                type="button"
+                variant="secondary"
+                className="flex-1"
+                onClick={() => {
+                  setShowDeleteModal(false);
+                  setDeleteConfirmText('');
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleDeleteTeam}
+                className="flex-1 bg-red-600 hover:bg-red-700"
+                disabled={isDeleting || deleteConfirmText !== team?.name}
+              >
+                {isDeleting ? 'Deleting...' : 'Delete Team'}
               </Button>
             </div>
           </div>
