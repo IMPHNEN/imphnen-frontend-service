@@ -1,17 +1,41 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { userService } from '../../api/users';
-import { supabase, getAuthenticatedClient } from '../../supabase';
+import { hackathonApi, HackathonApiResponse } from '../../api/hackathon';
 import { useAuthStore } from '../auth';
 
-// Supabase-based user hooks
+// User type
+interface User {
+  id: string;
+  email: string;
+  fullname: string;
+  bio?: string;
+  location?: string;
+  avatar?: string;
+  skills?: string[];
+  created_at: string;
+  updated_at?: string;
+}
+
+// Update user request type
+interface UpdateUserRequest {
+  fullname?: string;
+  bio?: string;
+  location?: string;
+  avatar?: string;
+  skills?: string[];
+}
+
+// Backend API-based user hooks
 
 export const useUserMe = () => {
+  const { session } = useAuthStore();
+
   return useQuery({
     queryKey: ['user-me'],
     queryFn: async () => {
-      const user = await userService.getUserMe();
-      return { data: user };
+      const response = await hackathonApi.get<HackathonApiResponse<User>>('/users/me');
+      return { data: response.data.data };
     },
+    enabled: !!session?.user?.id,
   });
 };
 
@@ -19,8 +43,8 @@ export const useUserById = (id: string) => {
   return useQuery({
     queryKey: ['user-by-id', id],
     queryFn: async () => {
-      const user = await userService.getUserById(id);
-      return { data: user };
+      const response = await hackathonApi.get<HackathonApiResponse<User>>(`/users/${id}`);
+      return { data: response.data.data };
     },
     enabled: !!id,
   });
@@ -32,35 +56,24 @@ export const useUpdateUserMe = () => {
 
   return useMutation({
     mutationKey: ['update-user-me'],
-    mutationFn: async (data: any) => {
+    mutationFn: async (data: UpdateUserRequest) => {
       if (!session?.user?.id) {
         throw new Error('You must be logged in to update profile');
       }
 
-      // Supabase client now has auth context from setSession()
-      const { data: updatedUser, error } = await supabase
-        .from('users')
-        .update({
-          fullname: data.fullname,
-          bio: data.bio,
-          location: data.location,
-          avatar: data.avatar,
-          skills: data.skills,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', session.user.id)
-        .select()
-        .single();
+      const response = await hackathonApi.put<HackathonApiResponse<User>>('/users/me', {
+        fullname: data.fullname,
+        bio: data.bio,
+        location: data.location,
+        avatar: data.avatar,
+        skills: data.skills,
+      });
 
-      if (error) {
-        console.error('Failed to update user profile:', error);
-        throw new Error(error.message || 'Failed to update profile');
-      }
-      return { data: updatedUser };
+      return { data: response.data.data };
     },
     onSuccess: (result) => {
       // Update Zustand session store with new user data
-      if (session && result.data) {
+      if (session?.user && result.data) {
         setSession({
           token: session.token,
           user: {
@@ -83,9 +96,11 @@ export const useUpdateUserById = () => {
 
   return useMutation({
     mutationKey: ['update-user-by-id'],
-    mutationFn: async ({ id, data }: { id: string; data: any }) => {
-      const updated = await userService.updateUserById(id, data);
-      return { data: updated };
+    mutationFn: async ({ id, data }: { id: string; data: UpdateUserRequest }) => {
+      // Note: This might not be supported by backend (only /users/me for updates)
+      // Keeping for API compatibility but it will likely fail
+      const response = await hackathonApi.put<HackathonApiResponse<User>>(`/users/${id}`, data);
+      return { data: response.data.data };
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['user-by-id', variables.id] });
@@ -95,19 +110,10 @@ export const useUpdateUserById = () => {
 
 export const useUserDetailsById = (userId: string) => {
   return useQuery({
-    queryKey: ['user-supabase', userId],
+    queryKey: ['user-details', userId],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('users')
-        .select('*')
-        .eq('id', userId)
-        .single();
-
-      if (error) {
-        throw new Error(error.message || 'Failed to fetch user');
-      }
-
-      return { data };
+      const response = await hackathonApi.get<HackathonApiResponse<User>>(`/users/${userId}`);
+      return { data: response.data.data };
     },
     enabled: !!userId,
   });

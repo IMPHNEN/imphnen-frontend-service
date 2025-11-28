@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import {
   useGitHubAuth,
-  useEmailAuth,
-  supabase,
-  useAuthStore,
+  useSignup,
 } from '@imphnen-frontend-service/service';
 import { GithubOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router';
@@ -13,11 +11,9 @@ import { ThemeToggle } from '../../../components/theme-toggle';
 
 export default function SignupPage() {
   const navigate = useNavigate();
-  const { setSession } = useAuthStore();
   const { signInWithGitHub } = useGitHubAuth();
-  const { signUpWithEmail } = useEmailAuth();
+  const signupMutation = useSignup();
   const [isGithubLoading, setIsGithubLoading] = useState(false);
-  const [isEmailLoading, setIsEmailLoading] = useState(false);
   const [fullname, setFullname] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -44,95 +40,31 @@ export default function SignupPage() {
     }
 
     try {
-      setIsEmailLoading(true);
-      // console.log('[Signup] Attempting email signup...');
+      await signupMutation.mutateAsync({ email, password, fullname });
 
-      const result = await signUpWithEmail(email, password, fullname);
-      // console.log('[Signup] Email signup successful:', result);
-
-      if (!result.user) {
-        throw new Error('Signup failed - no user returned');
-      }
-
-      // Create user record in database
-      const { error: upsertError } = await supabase.from('users').upsert(
-        {
-          id: result.user.id,
-          email: result.user.email || '',
-          fullname: fullname,
-          is_active: true,
-          updated_at: new Date().toISOString(),
-        },
-        {
-          onConflict: 'id',
-        }
-      );
-
-      if (upsertError) {
-        console.warn('[Signup] Failed to create user record');
-      }
-
-      // If session is available (email confirmation disabled), store it
-      if (result.session) {
-        setSession({
-          token: {
-            access_token: result.session.access_token,
-            refresh_token: result.session.refresh_token || '',
-          },
-          user: {
-            id: result.user.id,
-            email: result.user.email || '',
-            fullname: fullname,
-            phone_number: '',
-            avatar: '',
-            birthdate: '',
-            gender: '',
-            is_active: true,
-            role: {
-              id: '',
-              name: 'user',
-              permissions: [],
-              created_at: '',
-              updated_at: '',
-            },
-          },
-        });
-
-        toast.success('Account created successfully!');
-        navigate('/onboarding/user');
-      } else {
-        // Email confirmation is enabled
-        toast.success(
-          'Account created! Please check your email to verify your account.'
-        );
-        setTimeout(() => {
-          navigate('/auth/login');
-        }, 2000);
-      }
+      toast.success('Account created successfully!');
+      navigate('/onboarding/user');
     } catch (err) {
-      // console.error('[Signup] Email signup failed:', err);
+      console.error('[Signup] Email signup failed:', err);
       setError((err as Error).message || 'Signup failed');
-      setIsEmailLoading(false);
     }
   };
 
   const handleGithubLogin = async () => {
     try {
       setIsGithubLoading(true);
-      // console.log('[Signup] Initiating GitHub OAuth...');
 
       const result = await signInWithGitHub();
-      // console.log('[Signup] OAuth result:', result);
 
       if (result?.url) {
-        // console.log('[Signup] Redirecting to GitHub OAuth:', result.url);
         globalThis.location.href = result.url;
       } else {
-        // console.error('[Signup] No OAuth URL returned');
         setIsGithubLoading(false);
+        setError('Failed to get GitHub OAuth URL');
       }
-    } catch (error) {
-      // console.error('[Signup] GitHub login failed:', error);
+    } catch (err) {
+      console.error('[Signup] GitHub login failed:', err);
+      setError((err as Error).message || 'GitHub login failed');
       setIsGithubLoading(false);
     }
   };
@@ -180,7 +112,7 @@ export default function SignupPage() {
               value={fullname}
               onChange={(e) => setFullname(e.target.value)}
               placeholder="John Doe"
-              disabled={isEmailLoading}
+              disabled={signupMutation.isPending}
               className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:cursor-not-allowed"
               required
             />
@@ -199,7 +131,7 @@ export default function SignupPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="your@email.com"
-              disabled={isEmailLoading}
+              disabled={signupMutation.isPending}
               className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:cursor-not-allowed"
               required
             />
@@ -218,7 +150,7 @@ export default function SignupPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              disabled={isEmailLoading}
+              disabled={signupMutation.isPending}
               className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:cursor-not-allowed"
               required
             />
@@ -237,7 +169,7 @@ export default function SignupPage() {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="••••••••"
-              disabled={isEmailLoading}
+              disabled={signupMutation.isPending}
               className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:cursor-not-allowed"
               required
             />
@@ -245,10 +177,10 @@ export default function SignupPage() {
 
           <button
             type="submit"
-            disabled={isEmailLoading}
+            disabled={signupMutation.isPending}
             className="w-full py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed transition-colors cursor-pointer"
           >
-            {isEmailLoading ? 'Creating account...' : 'Create Account'}
+            {signupMutation.isPending ? 'Creating account...' : 'Create Account'}
           </button>
         </form>
 

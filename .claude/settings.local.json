@@ -10,7 +10,8 @@
       "Bash(ren page.tsx page-original.tsx)",
       "Bash(ren:*)",
       "Bash(npx supabase:*)",
-      "Bash(libs/service/src/types/supabase.ts)"
+      "Bash(libs/service/src/types/supabase.ts)",
+      "Bash(npx nx build:*)"
     ],
     "deny": [],
     "ask": []

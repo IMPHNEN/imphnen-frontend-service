@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import {
   useGitHubAuth,
-  useEmailAuth,
-  supabase,
-  useAuthStore,
+  useLogin,
 } from '@imphnen-frontend-service/service';
 import { GithubOutlined } from '@ant-design/icons';
 import { useNavigate, Link } from 'react-router';
@@ -12,14 +10,10 @@ import { Icon } from '@iconify/react';
 import { ThemeToggle } from '../../../components/theme-toggle';
 
 export default function LoginPage() {
-  // console.log('[LoginPage] Rendering...');
-
   const navigate = useNavigate();
-  const { setSession } = useAuthStore();
   const { signInWithGitHub } = useGitHubAuth();
-  const { signInWithEmail } = useEmailAuth();
+  const loginMutation = useLogin();
   const [isGithubLoading, setIsGithubLoading] = useState(false);
-  const [isEmailLoading, setIsEmailLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -34,52 +28,12 @@ export default function LoginPage() {
     }
 
     try {
-      setIsEmailLoading(true);
-      // console.log('[Login] Attempting email login...');
-
-      const result = await signInWithEmail(email, password);
-      // console.log('[Login] Email login successful:', result);
-
-      // Get user data from database
-      const { data: userData } = await supabase
-        .from('users')
-        .select('*')
-        .eq('id', result.user.id)
-        .single();
-
-      // Store session in Zustand
-      setSession({
-        token: {
-          access_token: result.session.access_token,
-          refresh_token: result.session.refresh_token || '',
-        },
-        user: {
-          id: result.user.id,
-          email: result.user.email || '',
-          fullname:
-            userData?.fullname || result.user.user_metadata?.full_name || '',
-          phone_number: userData?.phone_number || '',
-          avatar: userData?.avatar || '',
-          birthdate: userData?.birthdate || '',
-          gender: userData?.gender || '',
-          is_active: userData?.is_active || true,
-          location: userData?.location,
-          bio: userData?.bio,
-          skills: userData?.skills,
-          role: {
-            id: '',
-            name: 'user',
-            permissions: [],
-            created_at: '',
-            updated_at: '',
-          },
-        },
-      });
+      const result = await loginMutation.mutateAsync({ email, password });
 
       toast.success('Login successful!');
 
       // Redirect based on onboarding status
-      if (userData?.location) {
+      if (result.user.location) {
         navigate('/dashboard');
       } else {
         navigate('/onboarding/user');
@@ -87,29 +41,25 @@ export default function LoginPage() {
     } catch (err) {
       console.error('[Login] Email login failed:', err);
       setError((err as Error).message || 'Login failed');
-      setIsEmailLoading(false);
     }
   };
 
   const handleGithubLogin = async () => {
     try {
       setIsGithubLoading(true);
-      // console.log('[Login] Initiating GitHub OAuth...');
 
       const result = await signInWithGitHub();
-      // console.log('[Login] OAuth result:', result);
 
       // Check if we got a redirect URL
       if (result?.url) {
-        // console.log('[Login] Redirecting to GitHub OAuth:', result.url);
-        // Manually redirect immediately
         globalThis.location.href = result.url;
       } else {
-        // console.error('[Login] No OAuth URL returned');
         setIsGithubLoading(false);
+        setError('Failed to get GitHub OAuth URL');
       }
-    } catch (error) {
-      // console.error('[Login] GitHub login failed');
+    } catch (err) {
+      console.error('[Login] GitHub login failed:', err);
+      setError((err as Error).message || 'GitHub login failed');
       setIsGithubLoading(false);
     }
   };
@@ -157,7 +107,7 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="your@email.com"
-              disabled={isEmailLoading}
+              disabled={loginMutation.isPending}
               className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:cursor-not-allowed"
               required
             />
@@ -184,7 +134,7 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              disabled={isEmailLoading}
+              disabled={loginMutation.isPending}
               className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:cursor-not-allowed"
               required
             />
@@ -192,10 +142,10 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            disabled={isEmailLoading}
+            disabled={loginMutation.isPending}
             className="w-full py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed transition-colors cursor-pointer"
           >
-            {isEmailLoading ? 'Signing in...' : 'Sign in with Email'}
+            {loginMutation.isPending ? 'Signing in...' : 'Sign in with Email'}
           </button>
         </form>
 

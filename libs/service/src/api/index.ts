@@ -5,6 +5,7 @@ export * from './gacha';
 export * from './users';
 export * from './mentors';
 export * from './upload';
+export * from './hackathon';
 
 // Common API response wrapper interface
 export interface ApiResponse<T> {

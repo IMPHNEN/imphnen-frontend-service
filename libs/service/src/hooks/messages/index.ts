@@ -1,7 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '../../supabase';
+import { hackathonApi, HackathonApiResponse } from '../../api/hackathon';
 import { useAuthStore } from '../auth';
-import { useEffect } from 'react';
 
 export type Message = {
   id: string;
@@ -24,101 +23,22 @@ export const messageKeys = {
   team: (teamId: string) => [...messageKeys.all, 'team', teamId] as const,
 };
 
-// Fetch messages for a team
+// Fetch messages for a team with polling
 export const useTeamMessages = (teamId: string) => {
-  const queryClient = useQueryClient();
-
-  const query = useQuery({
+  return useQuery({
     queryKey: messageKeys.team(teamId),
     queryFn: async () => {
-      const { data: messages, error } = await supabase
-        .from('team_messages')
-        .select(`
-          id,
-          team_id,
-          user_id,
-          message,
-          created_at,
-          updated_at,
-          user:users(id, fullname, avatar, email)
-        `)
-        .eq('team_id', teamId)
-        .order('created_at', { ascending: true });
-
-      if (error) {
-        console.error('Failed to fetch messages:', error);
-        throw new Error(error.message || 'Failed to fetch messages');
-      }
-
-      return messages as Message[];
+      const response = await hackathonApi.get<HackathonApiResponse<Message[]>>(
+        `/chat/teams/${teamId}`
+      );
+      return response.data.data || [];
     },
     enabled: !!teamId,
+    // Poll every 3 seconds for new messages
+    refetchInterval: 3000,
+    // Keep refetching even when window loses focus
+    refetchIntervalInBackground: true,
   });
-
-  // Subscribe to realtime updates
-  useEffect(() => {
-    if (!teamId) return;
-
-    const channel = supabase
-      .channel(`team_messages:${teamId}`)
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'team_messages',
-          filter: `team_id=eq.${teamId}`,
-        },
-        async (payload) => {
-          console.log('[Realtime] New message:', payload);
-
-          // Fetch the full message with user data
-          const { data: newMessage } = await supabase
-            .from('team_messages')
-            .select(`
-              id,
-              team_id,
-              user_id,
-              message,
-              created_at,
-              updated_at,
-              user:users(id, fullname, avatar, email)
-            `)
-            .eq('id', payload.new.id)
-            .single();
-
-          if (newMessage) {
-            queryClient.setQueryData<Message[]>(
-              messageKeys.team(teamId),
-              (old) => [...(old || []), newMessage as Message]
-            );
-          }
-        }
-      )
-      .on(
-        'postgres_changes',
-        {
-          event: 'DELETE',
-          schema: 'public',
-          table: 'team_messages',
-          filter: `team_id=eq.${teamId}`,
-        },
-        (payload) => {
-          console.log('[Realtime] Message deleted:', payload);
-          queryClient.setQueryData<Message[]>(
-            messageKeys.team(teamId),
-            (old) => old?.filter((msg) => msg.id !== payload.old.id) || []
-          );
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [teamId, queryClient]);
-
-  return query;
 };
 
 // Send a message
@@ -132,26 +52,15 @@ export const useSendMessage = (teamId: string) => {
         throw new Error('You must be logged in to send messages');
       }
 
-      const { data, error } = await supabase
-        .from('team_messages')
-        .insert({
-          team_id: teamId,
-          user_id: session.user.id,
-          message,
-        })
-        .select()
-        .single();
+      const response = await hackathonApi.post<HackathonApiResponse<Message>>(
+        `/chat/teams/${teamId}`,
+        { message }
+      );
 
-      if (error) {
-        console.error('Failed to send message:', error);
-        throw new Error(error.message || 'Failed to send message');
-      }
-
-      return data;
+      return response.data.data;
     },
     onSuccess: () => {
-      // Realtime will handle adding the message to the list
-      // But we can invalidate to ensure consistency
+      // Invalidate to trigger immediate refetch
       queryClient.invalidateQueries({ queryKey: messageKeys.team(teamId) });
     },
   });
@@ -163,18 +72,9 @@ export const useDeleteMessage = (teamId: string) => {
 
   return useMutation({
     mutationFn: async (messageId: string) => {
-      const { error } = await supabase
-        .from('team_messages')
-        .delete()
-        .eq('id', messageId);
-
-      if (error) {
-        console.error('Failed to delete message:', error);
-        throw new Error(error.message || 'Failed to delete message');
-      }
+      await hackathonApi.delete(`/chat/messages/${messageId}`);
     },
     onSuccess: () => {
-      // Realtime will handle removing the message from the list
       queryClient.invalidateQueries({ queryKey: messageKeys.team(teamId) });
     },
   });

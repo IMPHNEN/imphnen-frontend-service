@@ -125,6 +125,7 @@ export type TSubmitProjectRequest = {
   description: string;
   repository_url: string;
   demo_url?: string;
+  video_url?: string;
   presentation_url?: string;
   screenshots?: string[];
 };

@@ -1,8 +1,27 @@
 import { useMutation } from '@tanstack/react-query';
-import { supabase, getAuthenticatedClient } from '../../supabase';
+import { hackathonApi, HackathonApiResponse } from '../../api/hackathon';
 import { useAuthStore } from '../auth';
 
-// Supabase Storage-based upload hooks
+// Upload response type from backend
+interface UploadResponse {
+  url: string;
+}
+
+// Helper function to convert File to base64
+const fileToBase64 = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      // Remove the data:image/xxx;base64, prefix
+      const base64 = (reader.result as string).split(',')[1];
+      resolve(base64);
+    };
+    reader.onerror = (error) => reject(error);
+  });
+};
+
+// Backend API-based upload hooks
 
 export const useUploadFile = () => {
   const { session } = useAuthStore();
@@ -14,30 +33,18 @@ export const useUploadFile = () => {
         throw new Error('You must be logged in to upload files');
       }
 
-      // Generate a unique file name
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${session.user.id}-${Date.now()}.${fileExt}`;
-      const filePath = `teams/${fileName}`;
+      const base64Data = await fileToBase64(file);
 
-      // Supabase client now has auth context from setSession()
-      const { error } = await supabase.storage
-        .from('hackathon-uploads')
-        .upload(filePath, file, {
-          cacheControl: '3600',
-          upsert: true,
-        });
+      const response = await hackathonApi.post<HackathonApiResponse<UploadResponse>>(
+        '/upload/team',
+        {
+          filename: file.name,
+          content_type: file.type,
+          data: base64Data,
+        }
+      );
 
-      if (error) {
-        console.error('Failed to upload file:', error);
-        throw new Error(error.message || 'Failed to upload file');
-      }
-
-      // Get public URL
-      const { data: publicUrlData } = supabase.storage
-        .from('hackathon-uploads')
-        .getPublicUrl(filePath);
-
-      return { data: { url: publicUrlData.publicUrl } };
+      return { data: { url: response.data.data.url } };
     },
   });
 };
@@ -52,34 +59,131 @@ export const useUploadAvatar = () => {
         throw new Error('You must be logged in to upload avatar');
       }
 
-      // Generate a unique file name
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${session.user.id}-${Date.now()}.${fileExt}`;
-      const filePath = `avatars/${fileName}`;
-
-      // Supabase client now has auth context from setSession()
-      const { error } = await supabase.storage
-        .from('hackathon-uploads')
-        .upload(filePath, file, {
-          cacheControl: '3600',
-          upsert: true,
-        });
-
-      if (error) {
-        console.error('Failed to upload avatar:', error);
-        throw new Error(error.message || 'Failed to upload avatar');
+      // Validate file type
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
+      if (!allowedTypes.includes(file.type)) {
+        throw new Error('Invalid file type. Allowed types: JPEG, PNG, WebP, GIF');
       }
 
-      // Get public URL
-      const { data: publicUrlData } = supabase.storage
-        .from('hackathon-uploads')
-        .getPublicUrl(filePath);
+      // Validate file size (max 5MB)
+      const maxSize = 5 * 1024 * 1024;
+      if (file.size > maxSize) {
+        throw new Error('File too large. Maximum size: 5MB');
+      }
 
-      return { data: { url: publicUrlData.publicUrl } };
+      const base64Data = await fileToBase64(file);
+
+      const response = await hackathonApi.post<HackathonApiResponse<UploadResponse>>(
+        '/upload/avatar',
+        {
+          filename: file.name,
+          content_type: file.type,
+          data: base64Data,
+        }
+      );
+
+      return { data: { url: response.data.data.url } };
     },
   });
 };
 
+export const useUploadTeamFile = () => {
+  const { session } = useAuthStore();
+
+  return useMutation({
+    mutationKey: ['upload-team-file'],
+    mutationFn: async (file: File) => {
+      if (!session?.user?.id) {
+        throw new Error('You must be logged in to upload files');
+      }
+
+      // Validate file type
+      const allowedTypes = [
+        'image/jpeg',
+        'image/jpg',
+        'image/png',
+        'image/webp',
+        'image/gif',
+        'application/pdf',
+      ];
+      if (!allowedTypes.includes(file.type)) {
+        throw new Error('Invalid file type. Allowed types: JPEG, PNG, WebP, GIF, PDF');
+      }
+
+      // Validate file size (max 20MB)
+      const maxSize = 20 * 1024 * 1024;
+      if (file.size > maxSize) {
+        throw new Error('File too large. Maximum size: 20MB');
+      }
+
+      const base64Data = await fileToBase64(file);
+
+      const response = await hackathonApi.post<HackathonApiResponse<UploadResponse>>(
+        '/upload/team',
+        {
+          filename: file.name,
+          content_type: file.type,
+          data: base64Data,
+        }
+      );
+
+      return { data: { url: response.data.data.url } };
+    },
+  });
+};
+
+export const useUploadSubmission = () => {
+  const { session } = useAuthStore();
+
+  return useMutation({
+    mutationKey: ['upload-submission'],
+    mutationFn: async (file: File) => {
+      if (!session?.user?.id) {
+        throw new Error('You must be logged in to upload submissions');
+      }
+
+      // Validate file type
+      const allowedTypes = [
+        'image/jpeg',
+        'image/jpg',
+        'image/png',
+        'image/webp',
+        'image/gif',
+        'application/pdf',
+        'application/zip',
+        'application/x-zip-compressed',
+        'video/mp4',
+        'video/webm',
+      ];
+      if (!allowedTypes.includes(file.type)) {
+        throw new Error(
+          'Invalid file type. Allowed types: Images, PDF, ZIP, MP4, WebM'
+        );
+      }
+
+      // Validate file size (max 50MB)
+      const maxSize = 50 * 1024 * 1024;
+      if (file.size > maxSize) {
+        throw new Error('File too large. Maximum size: 50MB');
+      }
+
+      const base64Data = await fileToBase64(file);
+
+      const response = await hackathonApi.post<HackathonApiResponse<UploadResponse>>(
+        '/upload/submission',
+        {
+          filename: file.name,
+          content_type: file.type,
+          data: base64Data,
+        }
+      );
+
+      return { data: { url: response.data.data.url } };
+    },
+  });
+};
+
+// Keep useUploadCV for compatibility, using team upload endpoint
 export const useUploadCV = () => {
   const { session } = useAuthStore();
 
@@ -90,30 +194,29 @@ export const useUploadCV = () => {
         throw new Error('You must be logged in to upload CV');
       }
 
-      // Generate a unique file name
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${session.user.id}-${Date.now()}.${fileExt}`;
-      const filePath = `cvs/${fileName}`;
-
-      // Supabase client now has auth context from setSession()
-      const { error } = await supabase.storage
-        .from('hackathon-uploads')
-        .upload(filePath, file, {
-          cacheControl: '3600',
-          upsert: true,
-        });
-
-      if (error) {
-        console.error('Failed to upload CV:', error);
-        throw new Error(error.message || 'Failed to upload CV');
+      // Validate file type
+      if (file.type !== 'application/pdf') {
+        throw new Error('CV must be a PDF file');
       }
 
-      // Get public URL
-      const { data: publicUrlData } = supabase.storage
-        .from('hackathon-uploads')
-        .getPublicUrl(filePath);
+      // Validate file size (max 20MB)
+      const maxSize = 20 * 1024 * 1024;
+      if (file.size > maxSize) {
+        throw new Error('File too large. Maximum size: 20MB');
+      }
 
-      return { data: { url: publicUrlData.publicUrl } };
+      const base64Data = await fileToBase64(file);
+
+      const response = await hackathonApi.post<HackathonApiResponse<UploadResponse>>(
+        '/upload/team',
+        {
+          filename: file.name,
+          content_type: file.type,
+          data: base64Data,
+        }
+      );
+
+      return { data: { url: response.data.data.url } };
     },
   });
 };
