@@ -36,6 +36,7 @@ export type TTeamItem = {
   city: string;
   visibility: ETeamVisibility;
   leader_id: string;
+  member_count: number;
   created_at: string;
   updated_at: string;
 };
@@ -43,7 +44,6 @@ export type TTeamItem = {
 export type TTeamDetailItem = TTeamItem & {
   leader: TUserItem;
   members: TTeamMemberItem[];
-  member_count: number;
   has_submission: boolean;
 };
 

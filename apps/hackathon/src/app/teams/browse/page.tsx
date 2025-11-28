@@ -209,7 +209,7 @@ const BrowseTeamsPage: FC = (): ReactElement => {
                           </p>
                           <p className="whitespace-nowrap shrink-0 flex items-center gap-x-1">
                             <Icon icon="mdi:account-group" />{' '}
-                            {team.members?.length || 0} members
+                            {team.member_count || 0} members
                           </p>
                         </div>
                       </div>
@@ -229,7 +229,7 @@ const BrowseTeamsPage: FC = (): ReactElement => {
                       ) : (
                         <>
                           {myTeams.length === 0 &&
-                            (team.members?.length || 0) < 5 && (
+                            (team.member_count || 0) < 5 && (
                               <Button
                                 className="w-full"
                                 onClick={() => handleJoinRequest(team.id)}

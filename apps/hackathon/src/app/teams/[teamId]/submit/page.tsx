@@ -14,11 +14,14 @@ import {
 } from '@imphnen-frontend-service/service';
 import { zodResolver } from '@hookform/resolvers/zod';
 
+const MIN_TEAM_MEMBERS = 2; // Minimum members required to submit (including leader)
+
 const SubmitProjectPage: FC = (): ReactElement => {
   const { teamId } = useParams<{ teamId: string }>();
   const navigate = useNavigate();
   const { session } = useAuthStore();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [confirmText, setConfirmText] = useState('');
   const [screenshots, setScreenshots] = useState<string[]>([]);
 
   const { data: teamData } = useTeamById(teamId || '');
@@ -31,6 +34,8 @@ const SubmitProjectPage: FC = (): ReactElement => {
   const currentUserId = session?.user?.id;
   const isLeader = currentUserId === team?.leader_id;
   const hasSubmission = !!submissionData?.data;
+  const memberCount = team?.members?.length || 0;
+  const hasEnoughMembers = memberCount >= MIN_TEAM_MEMBERS;
 
   const form = useForm<TProjectSubmissionForm>({
     resolver: zodResolver(projectSubmissionSchema),
@@ -122,6 +127,25 @@ const SubmitProjectPage: FC = (): ReactElement => {
       </div>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Minimum Members Warning */}
+        {!hasEnoughMembers && (
+          <div className="bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-500 rounded-lg p-6 mb-6">
+            <div className="flex items-start space-x-3">
+              <span className="text-3xl">👥</span>
+              <div>
+                <h3 className="font-bold text-amber-900 dark:text-amber-100 text-lg">
+                  Team Members Required
+                </h3>
+                <p className="text-amber-800 dark:text-amber-200 mt-2 text-sm font-sans">
+                  Your team needs at least <strong>{MIN_TEAM_MEMBERS} members</strong> to submit a project.
+                  Currently you have <strong>{memberCount} member{memberCount !== 1 ? 's' : ''}</strong>.
+                  Please invite more members to your team before submitting.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Warning Banner */}
         <div className="bg-red-50 dark:bg-red-900/20 border-2 border-red-500 rounded-lg p-6 mb-6">
           <div className="flex items-start space-x-3">
@@ -274,11 +298,16 @@ const SubmitProjectPage: FC = (): ReactElement => {
               <Button
                 type="submit"
                 className="flex-1"
-                disabled={!form.formState.isValid || isUploading}
+                disabled={!form.formState.isValid || isUploading || !hasEnoughMembers}
               >
                 Review & Submit
               </Button>
             </div>
+            {!hasEnoughMembers && (
+              <p className="text-center text-sm text-amber-600 dark:text-amber-400 mt-2">
+                You need at least {MIN_TEAM_MEMBERS} team members to submit
+              </p>
+            )}
           </form>
         </div>
       </div>
@@ -298,7 +327,7 @@ const SubmitProjectPage: FC = (): ReactElement => {
             </div>
             <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 mb-6">
               <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
-                By clicking "Submit Project", you confirm that:
+                By submitting, you confirm that:
               </p>
               <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-2">
                 <li>✓ All information is correct and complete</li>
@@ -307,19 +336,35 @@ const SubmitProjectPage: FC = (): ReactElement => {
                 <li>✓ Your team agrees with this submission</li>
               </ul>
             </div>
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Type <span className="font-bold text-red-600 dark:text-red-400">SUBMIT</span> to confirm:
+              </label>
+              <input
+                type="text"
+                value={confirmText}
+                onChange={(e) => setConfirmText(e.target.value)}
+                placeholder="Type SUBMIT here"
+                className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500"
+                autoComplete="off"
+              />
+            </div>
             <div className="flex space-x-3">
               <Button
                 type="button"
                 variant="secondary"
                 className="flex-1"
-                onClick={() => setShowConfirmModal(false)}
+                onClick={() => {
+                  setShowConfirmModal(false);
+                  setConfirmText('');
+                }}
               >
                 Go Back
               </Button>
               <Button
                 onClick={onSubmit}
                 className="flex-1 bg-red-600 hover:bg-red-700"
-                disabled={isSubmitting}
+                disabled={isSubmitting || confirmText !== 'SUBMIT'}
               >
                 {isSubmitting ? 'Submitting...' : 'Submit Project'}
               </Button>
