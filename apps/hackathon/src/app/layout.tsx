@@ -33,17 +33,15 @@ export default function RootLayout() {
         return;
       }
 
-      // Public auth pages (login, signup, forgot-password, reset-password) - allow unauthenticated access
-      const isPublicAuthPage = pathname === '/maintenance';
-
-      if (isPublicAuthPage) {
+      // Public auth pages - allow unauthenticated access
+      if (pathname.startsWith('/auth')) {
         // If already authenticated and not on password reset pages, redirect to dashboard
         if (session && pathname !== '/auth/reset-password') {
           navigate('/dashboard', { replace: true });
           setIsChecking(false);
           return;
         }
-        // Allow unauthenticated access
+        // Allow unauthenticated access to auth pages
         setIsChecking(false);
         return;
       }
@@ -56,7 +54,7 @@ export default function RootLayout() {
 
       // Require authentication for all other routes
       if (!session) {
-        navigate('/maintenance', { replace: true });
+        navigate('/auth/login', { replace: true });
         setIsChecking(false);
         return;
       }
