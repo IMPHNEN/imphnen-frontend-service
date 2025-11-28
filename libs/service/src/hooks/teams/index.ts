@@ -493,8 +493,8 @@ export const useLeaveTeam = () => {
         throw new Error('You must be logged in to leave a team');
       }
 
-      // Use the remove member endpoint with current user's ID
-      await hackathonApi.delete(`/teams/${teamId}/members/${session.user.id}`);
+      // Use the dedicated leave team endpoint
+      await hackathonApi.post(`/teams/${teamId}/leave`);
       return { success: true };
     },
     onSuccess: () => {
