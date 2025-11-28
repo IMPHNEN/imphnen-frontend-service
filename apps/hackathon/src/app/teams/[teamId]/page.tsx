@@ -7,6 +7,7 @@ import {
   useInviteMember,
   useTeamJoinRequests,
   useRespondToJoinRequest,
+  useLeaveTeam,
   ETeamMemberRole,
   useAuthStore,
 } from '@imphnen-frontend-service/service';
@@ -52,6 +53,7 @@ const TeamDashboardPage: FC = (): ReactElement => {
   const { session } = useAuthStore();
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [showJoinRequestsModal, setShowJoinRequestsModal] = useState(false);
+  const [showLeaveModal, setShowLeaveModal] = useState(false);
   const [inviteEmail, setInviteEmail] = useState('');
   const [imagesLoaded, setImagesLoaded] = useState(false);
   const [imageLoadCount, setImageLoadCount] = useState(0);
@@ -94,6 +96,7 @@ const TeamDashboardPage: FC = (): ReactElement => {
   );
   const { mutateAsync: respondToJoinRequest, isPending: isResponding } =
     useRespondToJoinRequest(teamId || '');
+  const { mutateAsync: leaveTeam, isPending: isLeaving } = useLeaveTeam();
 
   const team = teamData?.data;
   const members = membersData?.data || [];
@@ -136,6 +139,19 @@ const TeamDashboardPage: FC = (): ReactElement => {
     } catch (error) {
       console.error('Failed to respond to join request:', error);
       toast.error('Failed to process request');
+    }
+  };
+
+  const handleLeaveTeam = async () => {
+    if (!teamId) return;
+
+    try {
+      await leaveTeam(teamId);
+      toast.success('You have left the team');
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Failed to leave team:', error);
+      toast.error('Failed to leave team');
     }
   };
 
@@ -395,23 +411,33 @@ const TeamDashboardPage: FC = (): ReactElement => {
 
             {/* Quick Actions for Members (non-leaders) */}
             {!isLeader && isMember && (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 md:p-6">
+              <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 md:p-6">
                 <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
                   Quick Actions
                 </h2>
                 <div className="grid gap-3 sm:grid-cols-2">
                   <Link to={`/teams/${teamId}/chat`}>
                     <Button className="w-full" variant="secondary">
-                      💬 Team Chat
+                      <Icon icon="mdi:chat" className="inline-block mr-2" />
+                      Team Chat
                     </Button>
                   </Link>
                   {team.has_submission && (
                     <Link to={`/teams/${teamId}/submission`}>
                       <Button className="w-full" variant="secondary">
-                        📄 View Submission
+                        <Icon icon="mdi:file-document" className="inline-block mr-2" />
+                        View Submission
                       </Button>
                     </Link>
                   )}
+                  <Button
+                    className="w-full"
+                    variant="secondary"
+                    onClick={() => setShowLeaveModal(true)}
+                  >
+                    <Icon icon="mdi:exit-run" className="inline-block mr-2" />
+                    Leave Team
+                  </Button>
                 </div>
               </div>
             )}
@@ -693,6 +719,50 @@ const TeamDashboardPage: FC = (): ReactElement => {
                 ))}
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Leave Team Confirmation Modal */}
+      {showLeaveModal && (
+        <div className="fixed inset-0 bg-black/30 dark:bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-900 rounded-lg shadow-xl max-w-md w-full p-6">
+            <div className="text-center mb-6">
+              <div className="mx-auto w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mb-4">
+                <Icon
+                  icon="mdi:exit-run"
+                  className="text-3xl text-red-600 dark:text-red-400"
+                />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                Leave Team?
+              </h2>
+              <p className="text-gray-600 dark:text-gray-400">
+                Are you sure you want to leave <strong>{team?.name}</strong>?
+              </p>
+            </div>
+            <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4 mb-6">
+              <p className="text-sm text-amber-800 dark:text-amber-300 font-sans">
+                <strong>Warning:</strong> If you leave, you will need to request to join again or be re-invited by the team leader.
+              </p>
+            </div>
+            <div className="flex space-x-3">
+              <Button
+                type="button"
+                variant="secondary"
+                className="flex-1"
+                onClick={() => setShowLeaveModal(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleLeaveTeam}
+                className="flex-1 bg-red-600 hover:bg-red-700"
+                disabled={isLeaving}
+              >
+                {isLeaving ? 'Leaving...' : 'Leave Team'}
+              </Button>
+            </div>
           </div>
         </div>
       )}
