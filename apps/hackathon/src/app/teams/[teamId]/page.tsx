@@ -431,8 +431,7 @@ const TeamDashboardPage: FC = (): ReactElement => {
                     </Link>
                   )}
                   <Button
-                    className="w-full"
-                    variant="secondary"
+                    className="w-full bg-red-600 hover:bg-red-700 text-white"
                     onClick={() => setShowLeaveModal(true)}
                   >
                     <Icon icon="mdi:exit-run" className="inline-block mr-2" />
