@@ -1,26 +1,28 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '@imphnen-frontend-service/service';
+import { useResetPassword, useAuthStore } from '@imphnen-frontend-service/service';
 import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
 
 export default function ResetPasswordPage() {
   const navigate = useNavigate();
+  const { clearSession } = useAuthStore();
+  const resetPasswordMutation = useResetPassword();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [isValidToken, setIsValidToken] = useState(false);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
 
-  // useEffect(() => {
-  //   // Check if we have a valid session (from the reset link)
-  //   supabase.auth.getSession().then(({ data: { session } }) => {
-  //     if (session) {
-  //       setIsValidToken(true);
-  //     } else {
-  //       toast.error('Invalid or expired reset link');
-  //       setTimeout(() => navigate('/auth/forgot-password'), 2000);
-  //     }
-  //   });
-  // }, [navigate]);
+  useEffect(() => {
+    // Get the access_token from URL hash (Supabase sends it as hash fragment)
+    const hashParams = new URLSearchParams(globalThis.location.hash.substring(1));
+    const token = hashParams.get('access_token');
+
+    if (token) {
+      setAccessToken(token);
+    } else {
+      toast.error('Invalid or expired reset link');
+      setTimeout(() => navigate('/auth/forgot-password'), 2000);
+    }
+  }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,42 +37,39 @@ export default function ResetPasswordPage() {
       return;
     }
 
+    if (!accessToken) {
+      toast.error('Invalid reset token');
+      return;
+    }
+
     try {
-      setIsLoading(true);
-
-      const { error } = await supabase.auth.updateUser({
-        password: password,
+      await resetPasswordMutation.mutateAsync({
+        access_token: accessToken,
+        new_password: password,
       });
-
-      if (error) {
-        throw error;
-      }
 
       toast.success('Password updated successfully!');
 
-      // Sign out and redirect to login
-      await supabase.auth.signOut();
+      // Clear session and redirect to login
+      clearSession();
       navigate('/auth/login');
     } catch (err) {
-      // console.error('Failed to reset password:', err);
       toast.error((err as Error).message || 'Failed to reset password');
-    } finally {
-      setIsLoading(false);
     }
   };
 
-  // if (!isValidToken) {
-  //   return (
-  //     <div className="flex justify-center items-center min-h-screen bg-gray-50 dark:bg-gray-950">
-  //       <div className="text-center">
-  //         <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mb-4"></div>
-  //         <p className="text-gray-600 dark:text-gray-400">
-  //           Verifying reset link...
-  //         </p>
-  //       </div>
-  //     </div>
-  //   );
-  // }
+  if (!accessToken) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-gray-50 dark:bg-gray-950">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400">
+            Verifying reset link...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-50 dark:bg-gray-950 p-4">
@@ -98,7 +97,7 @@ export default function ResetPasswordPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              disabled={isLoading}
+              disabled={resetPasswordMutation.isPending}
               className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
               required
               minLength={6}
@@ -118,7 +117,7 @@ export default function ResetPasswordPage() {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="••••••••"
-              disabled={isLoading}
+              disabled={resetPasswordMutation.isPending}
               className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
               required
               minLength={6}
@@ -127,10 +126,10 @@ export default function ResetPasswordPage() {
 
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={resetPasswordMutation.isPending}
             className="w-full py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
           >
-            {isLoading ? 'Updating...' : 'Update Password'}
+            {resetPasswordMutation.isPending ? 'Updating...' : 'Update Password'}
           </button>
         </form>
       </div>

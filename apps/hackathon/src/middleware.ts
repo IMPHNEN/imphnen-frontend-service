@@ -1,5 +1,5 @@
 import { SessionUser } from '@imphnen-frontend-service/utils';
-import { supabase } from '@imphnen-frontend-service/service';
+import { hackathonApi } from '@imphnen-frontend-service/service';
 import { LoaderFunctionArgs, redirect } from 'react-router';
 
 const mappingPublicRoutes = [
@@ -37,14 +37,9 @@ export const middleware = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
   const pathname = url.pathname;
 
-  // Get session from Supabase (authoritative source)
-  const { data: { session: supabaseSession }, error: sessionError } = await supabase.auth.getSession();
-
-  // Handle session errors
-  if (sessionError) {
-    console.error('[Middleware] Session error:', sessionError);
-    // Don't redirect on session errors, let the app handle it
-  }
+  // Get session from local storage (via SessionUser)
+  const session = SessionUser.get();
+  const isAuthenticated = !!session?.token?.access_token;
 
   // Allow to access the hackathon pages without authentication
   if (mappingPublicPrefixRoutes.some((prefix) => pathname.startsWith(prefix))) {
@@ -63,20 +58,24 @@ export const middleware = async ({ request }: LoaderFunctionArgs) => {
 
   // Auth routes (all /auth/* paths) - redirect to dashboard if already authenticated
   if (pathname.startsWith('/auth')) {
-    if (supabaseSession) return redirect('/dashboard');
+    if (isAuthenticated) return redirect('/dashboard');
     return null;
   }
 
-  // Require authentication for all other routes - ONLY check Supabase session
-  if (!supabaseSession) {
+  // Require authentication for all other routes
+  if (!isAuthenticated) {
     return redirect('/auth/login');
   }
 
-  // Check if user has completed onboarding by querying database (not localStorage!)
+  // Check if user has completed onboarding
   // Skip onboarding check for onboarding routes themselves
   if (!mappingOnboardingRoutes.includes(pathname)) {
     try {
-      const userId = supabaseSession.user.id;
+      const userId = session?.user?.id;
+      if (!userId) {
+        return redirect('/auth/login');
+      }
+
       const now = Date.now();
 
       // Check cache first
@@ -86,19 +85,19 @@ export const middleware = async ({ request }: LoaderFunctionArgs) => {
       if (cached && (now - cached.timestamp) < CACHE_DURATION) {
         hasLocation = cached.hasLocation;
       } else {
-        const { data: userData, error: userError } = await supabase
-          .from('users')
-          .select('location')
-          .eq('id', userId)
-          .single();
-
-        if (userError) {
-          console.error('[Middleware] Failed to fetch user data:', userError);
-          // If we can't fetch user data, allow access (don't break the app)
-          return null;
+        // First check session data (faster)
+        if (session?.user?.location) {
+          hasLocation = true;
+        } else {
+          // Fetch from backend API
+          try {
+            const response = await hackathonApi.get('/users/me');
+            hasLocation = !!response.data?.data?.location;
+          } catch {
+            // If API fails, check session data as fallback
+            hasLocation = !!session?.user?.location;
+          }
         }
-
-        hasLocation = !!userData?.location;
 
         // Update cache
         onboardingCache.set(userId, { hasLocation, timestamp: now });
@@ -114,10 +113,9 @@ export const middleware = async ({ request }: LoaderFunctionArgs) => {
     }
   }
 
-  // Check route permissions using fresh user data from Zustand (for UI metadata)
-  const session = SessionUser.get();
+  // Check route permissions using user data from session
   const userPermissions =
-    session?.role?.permissions?.map?.((perm) => perm?.name) ?? [];
+    session?.user?.role?.permissions?.map?.((perm) => perm?.name) ?? [];
 
   const matchedRoute = mappingRoutePermissions.find(
     (route) => route.path === pathname

@@ -5,7 +5,7 @@ import {
   useNavigate,
 } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { supabase } from '@imphnen-frontend-service/service';
+import { useAuthStore, useUserMe } from '@imphnen-frontend-service/service';
 
 // Define onboarding routes
 const ONBOARDING_ROUTES = new Set(['/onboarding/user']);
@@ -13,6 +13,8 @@ const ONBOARDING_ROUTES = new Set(['/onboarding/user']);
 export default function RootLayout() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { session } = useAuthStore();
+  const { data: userData, isLoading: isUserLoading } = useUserMe();
   const [isChecking, setIsChecking] = useState(true);
 
   useEffect(() => {
@@ -31,22 +33,8 @@ export default function RootLayout() {
         return;
       }
 
-      // Check Supabase session
-      const {
-        data: { session },
-        error,
-      } = await supabase.auth.getSession();
-
-      if (error) {
-        console.error('[Layout] Session error:', error);
-      }
-
       // Public auth pages (login, signup, forgot-password, reset-password) - allow unauthenticated access
       const isPublicAuthPage = pathname === '/maintenance';
-      // pathname === '/auth/login' ||
-      // pathname === '/auth/signup' ||
-      // pathname === '/auth/forgot-password' ||
-      // pathname === '/auth/reset-password';
 
       if (isPublicAuthPage) {
         // If already authenticated and not on password reset pages, redirect to dashboard
@@ -69,35 +57,23 @@ export default function RootLayout() {
       // Require authentication for all other routes
       if (!session) {
         navigate('/maintenance', { replace: true });
-        // navigate('/auth/login', { replace: true });
         setIsChecking(false);
+        return;
+      }
+
+      // Wait for user data to load before checking onboarding
+      if (isUserLoading) {
         return;
       }
 
       // Check if user has completed onboarding (skip for onboarding routes)
       if (!ONBOARDING_ROUTES.has(pathname)) {
-        try {
-          const { data: userData, error: userError } = await supabase
-            .from('users')
-            .select('location')
-            .eq('id', session.user.id)
-            .single();
+        const hasLocation = !!userData?.data?.location || !!session?.user?.location;
 
-          if (userError) {
-            console.error('[Layout] Failed to fetch user data:', userError);
-            setIsChecking(false);
-            return;
-          }
-
-          const hasLocation = !!userData?.location;
-
-          if (!hasLocation) {
-            navigate('/onboarding/user', { replace: true });
-            setIsChecking(false);
-            return;
-          }
-        } catch (error) {
-          // Silently handle error
+        if (!hasLocation) {
+          navigate('/onboarding/user', { replace: true });
+          setIsChecking(false);
+          return;
         }
       }
 
@@ -105,7 +81,7 @@ export default function RootLayout() {
     };
 
     checkAuth();
-  }, [location.pathname, navigate]);
+  }, [location.pathname, navigate, session, userData, isUserLoading]);
 
   // Show loading state while checking auth
   if (isChecking) {

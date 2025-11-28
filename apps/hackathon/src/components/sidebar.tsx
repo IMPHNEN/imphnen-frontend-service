@@ -3,7 +3,6 @@ import { Link, useLocation } from 'react-router';
 import {
   useMyTeams,
   useAuthStore,
-  supabase,
 } from '@imphnen-frontend-service/service';
 import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
@@ -40,19 +39,11 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen = true, onClose }) => {
     }
   }, [location.pathname]);
 
-  const handleLogout = async () => {
-    try {
-      await supabase.auth.signOut();
-      clearSession();
-      localStorage.clear();
-      toast.success('Logged out successfully');
-      navigate('/auth/login');
-    } catch (error) {
-      console.error('Logout error:', error);
-      clearSession();
-      localStorage.clear();
-      navigate('/auth/login');
-    }
+  const handleLogout = () => {
+    clearSession();
+    localStorage.clear();
+    toast.success('Logged out successfully');
+    navigate('/auth/login');
   };
 
   const navItems: NavItem[] = [

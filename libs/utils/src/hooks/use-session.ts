@@ -1,4 +1,4 @@
-import { supabase, useAuthStore } from '@imphnen-frontend-service/service';
+import { useAuthStore } from '@imphnen-frontend-service/service';
 import { useNavigate } from 'react-router';
 
 export const useSession = () => {
@@ -6,9 +6,9 @@ export const useSession = () => {
   const { clearSession, session, status } = useAuthStore();
   const isAuthenticated = status === 'authenticated';
 
-  const signOut = async () => {
-    await supabase.auth.signOut();
+  const signOut = () => {
     clearSession();
+    localStorage.clear();
     navigate('/auth/login');
   };
 
