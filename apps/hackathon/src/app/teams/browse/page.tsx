@@ -14,7 +14,33 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { CitySelect } from '../../../components/city-select';
 import { Icon } from '@iconify/react';
 
-const TEAMS_PER_PAGE = 12;
+const DEFAULT_PER_PAGE = 12;
+const PER_PAGE_OPTIONS = [6, 12, 24, 48];
+
+// Skeleton card component for loading state
+const TeamCardSkeleton: FC = () => (
+  <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md overflow-hidden flex flex-col border dark:border-gray-800 animate-pulse">
+    <div className="w-full aspect-3/1 bg-gray-200 dark:bg-gray-700" />
+    <div className="p-6 flex flex-col flex-1">
+      <div className="flex items-center space-x-3 mb-3">
+        <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700" />
+        <div className="flex-1">
+          <div className="h-5 w-32 bg-gray-200 dark:bg-gray-700 rounded mb-2" />
+          <div className="h-4 w-48 bg-gray-200 dark:bg-gray-700 rounded" />
+        </div>
+      </div>
+      <div className="space-y-2 mb-4 flex-1">
+        <div className="h-4 w-full bg-gray-200 dark:bg-gray-700 rounded" />
+        <div className="h-4 w-5/6 bg-gray-200 dark:bg-gray-700 rounded" />
+        <div className="h-4 w-4/6 bg-gray-200 dark:bg-gray-700 rounded" />
+      </div>
+      <div className="space-y-3 mt-auto">
+        <div className="h-10 w-full bg-gray-200 dark:bg-gray-700 rounded" />
+        <div className="h-10 w-full bg-gray-200 dark:bg-gray-700 rounded" />
+      </div>
+    </div>
+  </div>
+);
 
 const BrowseTeamsPage: FC = (): ReactElement => {
   const navigate = useNavigate();
@@ -24,6 +50,7 @@ const BrowseTeamsPage: FC = (): ReactElement => {
   const [selectedTeamId, setSelectedTeamId] = useState<string | null>(null);
   const [showJoinModal, setShowJoinModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [perPage, setPerPage] = useState(DEFAULT_PER_PAGE);
 
   // Debounce search term and reset page
   useEffect(() => {
@@ -45,7 +72,7 @@ const BrowseTeamsPage: FC = (): ReactElement => {
     isFetching,
   } = useTeams({
     page: currentPage,
-    limit: TEAMS_PER_PAGE,
+    limit: perPage,
     search: debouncedSearch,
     city: selectedCity || undefined,
     visibility: ETeamVisibility.PUBLIC,
@@ -177,16 +204,17 @@ const BrowseTeamsPage: FC = (): ReactElement => {
         {/* Teams Count */}
         {!isLoading && total > 0 && (
           <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
-            Showing {(currentPage - 1) * TEAMS_PER_PAGE + 1}-
-            {Math.min(currentPage * TEAMS_PER_PAGE, total)} of {total} teams
+            Showing {(currentPage - 1) * perPage + 1}-
+            {Math.min(currentPage * perPage, total)} of {total} teams
           </div>
         )}
 
         {/* Teams List */}
-        {isLoading ? (
-          <div className="text-center py-12">
-            <Icon icon="mdi:loading" className="animate-spin text-4xl text-gray-400 mx-auto mb-2" />
-            <p className="text-gray-600 dark:text-gray-400">Loading teams...</p>
+        {isLoading || isFetching ? (
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {Array.from({ length: perPage }).map((_, index) => (
+              <TeamCardSkeleton key={index} />
+            ))}
           </div>
         ) : teams.length === 0 ? (
           <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm p-12 text-center">
@@ -199,7 +227,7 @@ const BrowseTeamsPage: FC = (): ReactElement => {
           </div>
         ) : (
           <>
-            <div className={`grid gap-6 md:grid-cols-2 xl:grid-cols-3 ${isFetching ? 'opacity-50' : ''}`}>
+            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
               {teams.map((team: any) => (
                 <div
                   key={team.id}
@@ -295,57 +323,81 @@ const BrowseTeamsPage: FC = (): ReactElement => {
             </div>
 
             {/* Pagination */}
-            {totalPages > 1 && (
+            {(totalPages > 1 || total > 6) && (
               <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="secondary"
-                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                    disabled={currentPage === 1 || isFetching}
-                    className="px-3"
-                  >
-                    <Icon icon="mdi:chevron-left" className="text-xl" />
-                  </Button>
+                {totalPages > 1 && (
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="secondary"
+                      onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                      disabled={currentPage === 1 || isFetching}
+                      className="px-3"
+                    >
+                      <Icon icon="mdi:chevron-left" className="text-xl" />
+                    </Button>
 
-                  <div className="flex items-center gap-1">
-                    {getPageNumbers().map((page, index) =>
-                      typeof page === 'string' ? (
-                        <span
-                          key={`ellipsis-${index}`}
-                          className="px-2 text-gray-400 dark:text-gray-500"
-                        >
-                          ...
-                        </span>
-                      ) : (
-                        <button
-                          key={page}
-                          onClick={() => setCurrentPage(page)}
-                          disabled={isFetching}
-                          className={`min-w-10 h-10 px-3 rounded-md text-sm font-medium transition-colors ${
-                            currentPage === page
-                              ? 'bg-blue-600 text-white'
-                              : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-600'
-                          }`}
-                        >
-                          {page}
-                        </button>
-                      )
-                    )}
+                    <div className="flex items-center gap-1">
+                      {getPageNumbers().map((page, index) =>
+                        typeof page === 'string' ? (
+                          <span
+                            key={`ellipsis-${index}`}
+                            className="px-2 text-gray-400 dark:text-gray-500"
+                          >
+                            ...
+                          </span>
+                        ) : (
+                          <button
+                            key={page}
+                            onClick={() => setCurrentPage(page)}
+                            disabled={isFetching}
+                            className={`min-w-10 h-10 px-3 rounded-md text-sm font-medium transition-colors ${
+                              currentPage === page
+                                ? 'bg-blue-600 text-white'
+                                : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-600'
+                            }`}
+                          >
+                            {page}
+                          </button>
+                        )
+                      )}
+                    </div>
+
+                    <Button
+                      variant="secondary"
+                      onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                      disabled={currentPage === totalPages || isFetching}
+                      className="px-3"
+                    >
+                      <Icon icon="mdi:chevron-right" className="text-xl" />
+                    </Button>
                   </div>
+                )}
 
-                  <Button
-                    variant="secondary"
-                    onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                    disabled={currentPage === totalPages || isFetching}
-                    className="px-3"
-                  >
-                    <Icon icon="mdi:chevron-right" className="text-xl" />
-                  </Button>
+                <div className="flex items-center gap-3">
+                  {totalPages > 1 && (
+                    <span className="text-sm text-gray-500 dark:text-gray-400">
+                      Page {currentPage} of {totalPages}
+                    </span>
+                  )}
+
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-gray-500 dark:text-gray-400">Show:</span>
+                    <select
+                      value={perPage}
+                      onChange={(e) => {
+                        setPerPage(Number(e.target.value));
+                        setCurrentPage(1);
+                      }}
+                      className="h-10 px-3 pr-8 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                      {PER_PAGE_OPTIONS.map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
-
-                <span className="text-sm text-gray-500 dark:text-gray-400">
-                  Page {currentPage} of {totalPages}
-                </span>
               </div>
             )}
           </>
