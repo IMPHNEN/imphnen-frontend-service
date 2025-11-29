@@ -429,7 +429,7 @@ const TeamDashboardPage: FC = (): ReactElement => {
                     </Link>
                   ) : (
                     <Link to={`/teams/${teamId}/submit`}>
-                      <Button className="w-full">
+                      <Button className="w-full" disabled={members.length < 2}>
                         <Icon icon="mdi:rocket" className="inline-block mr-2" />
                         Submit Project
                       </Button>
