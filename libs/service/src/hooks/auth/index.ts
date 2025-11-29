@@ -272,12 +272,9 @@ export const useEmailAuth = () => {
 
   const signUpWithEmail = async (email: string, password: string, fullname: string) => {
     const result = await signupMutation.mutateAsync({ email, password, fullname });
+    // Signup only returns a message (user needs to verify email first)
     return {
-      user: result.user,
-      session: {
-        access_token: result.token.access_token,
-        refresh_token: result.token.refresh_token,
-      },
+      message: result.message,
     };
   };
 
