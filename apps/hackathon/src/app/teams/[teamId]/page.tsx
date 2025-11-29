@@ -480,13 +480,15 @@ const TeamDashboardPage: FC = (): ReactElement => {
                       </Button>
                     </Link>
                   )}
-                  <Button
-                    className="w-full bg-red-600 hover:bg-red-700 text-white"
-                    onClick={() => setShowLeaveModal(true)}
-                  >
-                    <Icon icon="mdi:exit-run" className="inline-block mr-2" />
-                    Leave Team
-                  </Button>
+                  {!team.has_submission && (
+                    <Button
+                      className="w-full bg-red-600 hover:bg-red-700 text-white"
+                      onClick={() => setShowLeaveModal(true)}
+                    >
+                      <Icon icon="mdi:exit-run" className="inline-block mr-2" />
+                      Leave Team
+                    </Button>
+                  )}
                 </div>
               </div>
             )}
