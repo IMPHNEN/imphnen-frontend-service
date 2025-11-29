@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useResetPassword, useAuthStore } from '@imphnen-frontend-service/service';
 import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
+import { Icon } from '@iconify/react';
 
 export default function ResetPasswordPage() {
   const navigate = useNavigate();
@@ -10,11 +11,15 @@ export default function ResetPasswordPage() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
     // Get the access_token from URL hash (Supabase sends it as hash fragment)
+    // or from query params (when redirected from callback page)
     const hashParams = new URLSearchParams(globalThis.location.hash.substring(1));
-    const token = hashParams.get('access_token');
+    const queryParams = new URLSearchParams(globalThis.location.search);
+    const token = hashParams.get('access_token') || queryParams.get('access_token');
 
     if (token) {
       setAccessToken(token);
@@ -91,17 +96,26 @@ export default function ResetPasswordPage() {
             >
               New Password
             </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              disabled={resetPasswordMutation.isPending}
-              className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-              required
-              minLength={6}
-            />
+            <div className="relative">
+              <input
+                id="password"
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                disabled={resetPasswordMutation.isPending}
+                className="w-full px-4 py-2.5 pr-12 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                required
+                minLength={6}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+              >
+                <Icon icon={showPassword ? 'mdi:eye-off' : 'mdi:eye'} className="text-xl" />
+              </button>
+            </div>
           </div>
 
           <div>
@@ -111,17 +125,26 @@ export default function ResetPasswordPage() {
             >
               Confirm New Password
             </label>
-            <input
-              id="confirmPassword"
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="••••••••"
-              disabled={resetPasswordMutation.isPending}
-              className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-              required
-              minLength={6}
-            />
+            <div className="relative">
+              <input
+                id="confirmPassword"
+                type={showConfirmPassword ? 'text' : 'password'}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="••••••••"
+                disabled={resetPasswordMutation.isPending}
+                className="w-full px-4 py-2.5 pr-12 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                required
+                minLength={6}
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+              >
+                <Icon icon={showConfirmPassword ? 'mdi:eye-off' : 'mdi:eye'} className="text-xl" />
+              </button>
+            </div>
           </div>
 
           <button

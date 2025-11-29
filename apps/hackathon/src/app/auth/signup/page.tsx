@@ -40,6 +40,8 @@ export default function SignupPage() {
   const [error, setError] = useState<string | null>(null);
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
   const [registeredEmail, setRegisteredEmail] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const {
     register,
@@ -229,16 +231,25 @@ export default function SignupPage() {
             >
               Password
             </label>
-            <input
-              id="password"
-              type="password"
-              {...register('password')}
-              placeholder="••••••••"
-              disabled={signupMutation.isPending}
-              className={`${inputBaseClass} ${
-                errors.password ? inputErrorClass : inputNormalClass
-              }`}
-            />
+            <div className="relative">
+              <input
+                id="password"
+                type={showPassword ? 'text' : 'password'}
+                {...register('password')}
+                placeholder="••••••••"
+                disabled={signupMutation.isPending}
+                className={`${inputBaseClass} pr-12 ${
+                  errors.password ? inputErrorClass : inputNormalClass
+                }`}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+              >
+                <Icon icon={showPassword ? 'mdi:eye-off' : 'mdi:eye'} className="text-xl" />
+              </button>
+            </div>
             {errors.password && (
               <p className="mt-1 text-sm text-red-500 dark:text-red-400">
                 {errors.password.message}
@@ -253,16 +264,25 @@ export default function SignupPage() {
             >
               Confirm Password
             </label>
-            <input
-              id="confirmPassword"
-              type="password"
-              {...register('confirmPassword')}
-              placeholder="••••••••"
-              disabled={signupMutation.isPending}
-              className={`${inputBaseClass} ${
-                errors.confirmPassword ? inputErrorClass : inputNormalClass
-              }`}
-            />
+            <div className="relative">
+              <input
+                id="confirmPassword"
+                type={showConfirmPassword ? 'text' : 'password'}
+                {...register('confirmPassword')}
+                placeholder="••••••••"
+                disabled={signupMutation.isPending}
+                className={`${inputBaseClass} pr-12 ${
+                  errors.confirmPassword ? inputErrorClass : inputNormalClass
+                }`}
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+              >
+                <Icon icon={showConfirmPassword ? 'mdi:eye-off' : 'mdi:eye'} className="text-xl" />
+              </button>
+            </div>
             {errors.confirmPassword && (
               <p className="mt-1 text-sm text-red-500 dark:text-red-400">
                 {errors.confirmPassword.message}

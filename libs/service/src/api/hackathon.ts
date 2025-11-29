@@ -31,10 +31,16 @@ hackathonApi.interceptors.response.use(
   (response) => response,
   (error) => {
     // Handle 401 - clear session and redirect to login
+    // But skip redirect if already on auth pages (to avoid reload on login failure)
     if (error.response?.status === 401) {
-      useAuthStore.getState().clearSession();
-      if (typeof window !== 'undefined') {
-        window.location.href = '/auth/login';
+      const isAuthPage = globalThis.window !== undefined && globalThis.location.pathname.startsWith('/auth');
+
+      // Only clear session and redirect if not on auth page
+      if (!isAuthPage) {
+        useAuthStore.getState().clearSession();
+        if (globalThis.window !== undefined) {
+          globalThis.location.href = '/auth/login';
+        }
       }
     }
 
