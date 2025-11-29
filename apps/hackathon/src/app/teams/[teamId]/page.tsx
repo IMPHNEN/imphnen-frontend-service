@@ -397,12 +397,14 @@ const TeamDashboardPage: FC = (): ReactElement => {
                       </Button>
                     </>
                   )}
-                  <Link to={`/teams/${teamId}/edit`}>
-                    <Button className="w-full" variant="secondary">
-                      <Icon icon="mdi:pencil" className="inline-block mr-2" />
-                      Edit Team Info
-                    </Button>
-                  </Link>
+                  {!team.has_submission && (
+                    <Link to={`/teams/${teamId}/edit`}>
+                      <Button className="w-full" variant="secondary">
+                        <Icon icon="mdi:pencil" className="inline-block mr-2" />
+                        Edit Team Info
+                      </Button>
+                    </Link>
+                  )}
                   <Link to={`/teams/${teamId}/members`}>
                     <Button className="w-full" variant="secondary">
                       <Icon
