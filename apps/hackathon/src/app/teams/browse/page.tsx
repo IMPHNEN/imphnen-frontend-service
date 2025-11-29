@@ -1,6 +1,6 @@
-import { FC, ReactElement, useState, useEffect } from 'react';
+import { FC, ReactElement, useState, useEffect, useCallback } from 'react';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
-import { Link, useNavigate } from 'react-router';
+import { Link, useNavigate, useSearchParams } from 'react-router';
 import {
   useTeams,
   useJoinTeam,
@@ -44,26 +44,94 @@ const TeamCardSkeleton: FC = () => (
 
 const BrowseTeamsPage: FC = (): ReactElement => {
   const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [debouncedSearch, setDebouncedSearch] = useState('');
-  const [selectedCity, setSelectedCity] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Initialize state from URL params
+  const initialPage = parseInt(searchParams.get('page') || '1', 10);
+  const initialPerPage = parseInt(
+    searchParams.get('per_page') || String(DEFAULT_PER_PAGE),
+    10
+  );
+  const initialSearch = searchParams.get('search') || '';
+  const initialCity = searchParams.get('city') || '';
+
+  const [searchTerm, setSearchTerm] = useState(initialSearch);
+  const [debouncedSearch, setDebouncedSearch] = useState(initialSearch);
+  const [selectedCity, setSelectedCity] = useState(initialCity);
   const [selectedTeamId, setSelectedTeamId] = useState<string | null>(null);
   const [showJoinModal, setShowJoinModal] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [perPage, setPerPage] = useState(DEFAULT_PER_PAGE);
+  const [currentPage, setCurrentPage] = useState(
+    PER_PAGE_OPTIONS.includes(initialPerPage) ? initialPage : 1
+  );
+  const [perPage, setPerPage] = useState(
+    PER_PAGE_OPTIONS.includes(initialPerPage) ? initialPerPage : DEFAULT_PER_PAGE
+  );
+
+  // Update URL when pagination state changes
+  const updateUrlParams = useCallback(
+    (params: {
+      page?: number;
+      per_page?: number;
+      search?: string;
+      city?: string;
+    }) => {
+      const newParams = new URLSearchParams(searchParams);
+
+      if (params.page !== undefined) {
+        if (params.page === 1) {
+          newParams.delete('page');
+        } else {
+          newParams.set('page', String(params.page));
+        }
+      }
+
+      if (params.per_page !== undefined) {
+        if (params.per_page === DEFAULT_PER_PAGE) {
+          newParams.delete('per_page');
+        } else {
+          newParams.set('per_page', String(params.per_page));
+        }
+      }
+
+      if (params.search !== undefined) {
+        if (params.search === '') {
+          newParams.delete('search');
+        } else {
+          newParams.set('search', params.search);
+        }
+      }
+
+      if (params.city !== undefined) {
+        if (params.city === '') {
+          newParams.delete('city');
+        } else {
+          newParams.set('city', params.city);
+        }
+      }
+
+      setSearchParams(newParams, { replace: true });
+    },
+    [searchParams, setSearchParams]
+  );
 
   // Debounce search term and reset page
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(searchTerm);
-      setCurrentPage(1); // Reset to first page on search
+      if (searchTerm !== debouncedSearch) {
+        setCurrentPage(1);
+        updateUrlParams({ search: searchTerm, page: 1 });
+      }
     }, 300);
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
-  // Reset page when city filter changes
+  // Update URL when city filter changes
   useEffect(() => {
-    setCurrentPage(1);
+    if (selectedCity !== initialCity) {
+      setCurrentPage(1);
+      updateUrlParams({ city: selectedCity, page: 1 });
+    }
   }, [selectedCity]);
 
   const {
@@ -329,7 +397,11 @@ const BrowseTeamsPage: FC = (): ReactElement => {
                   <div className="flex items-center gap-2">
                     <Button
                       variant="secondary"
-                      onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                      onClick={() => {
+                        const newPage = Math.max(1, currentPage - 1);
+                        setCurrentPage(newPage);
+                        updateUrlParams({ page: newPage });
+                      }}
                       disabled={currentPage === 1 || isFetching}
                       className="px-3"
                     >
@@ -348,7 +420,10 @@ const BrowseTeamsPage: FC = (): ReactElement => {
                         ) : (
                           <button
                             key={page}
-                            onClick={() => setCurrentPage(page)}
+                            onClick={() => {
+                              setCurrentPage(page);
+                              updateUrlParams({ page });
+                            }}
                             disabled={isFetching}
                             className={`min-w-10 h-10 px-3 rounded-md text-sm font-medium transition-colors ${
                               currentPage === page
@@ -364,7 +439,11 @@ const BrowseTeamsPage: FC = (): ReactElement => {
 
                     <Button
                       variant="secondary"
-                      onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                      onClick={() => {
+                        const newPage = Math.min(totalPages, currentPage + 1);
+                        setCurrentPage(newPage);
+                        updateUrlParams({ page: newPage });
+                      }}
                       disabled={currentPage === totalPages || isFetching}
                       className="px-3"
                     >
@@ -385,8 +464,10 @@ const BrowseTeamsPage: FC = (): ReactElement => {
                     <select
                       value={perPage}
                       onChange={(e) => {
-                        setPerPage(Number(e.target.value));
+                        const newPerPage = Number(e.target.value);
+                        setPerPage(newPerPage);
                         setCurrentPage(1);
+                        updateUrlParams({ per_page: newPerPage, page: 1 });
                       }}
                       className="h-10 px-3 pr-8 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
