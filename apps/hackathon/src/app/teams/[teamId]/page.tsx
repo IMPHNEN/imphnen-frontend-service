@@ -369,29 +369,34 @@ const TeamDashboardPage: FC = (): ReactElement => {
                   Team Management
                 </h2>
                 <div className="grid gap-3 sm:grid-cols-2">
-                  <Button
-                    className="w-full"
-                    variant="secondary"
-                    onClick={() => setShowInviteModal(true)}
-                    disabled={!canInvite}
-                  >
-                    <Icon icon="mdi:plus" className="inline-block mr-2" />
-                    Invite Member{' '}
-                    {!canInvite && `(${members.length}/${MAX_TEAM_MEMBERS})`}
-                  </Button>
-                  <Button
-                    className="w-full relative"
-                    variant="secondary"
-                    onClick={() => setShowJoinRequestsModal(true)}
-                  >
-                    <Icon icon="mdi:email" className="inline-block mr-2" /> Join
-                    Requests
-                    {pendingJoinRequests.length > 0 && (
-                      <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
-                        {pendingJoinRequests.length}
-                      </span>
-                    )}
-                  </Button>
+                  {/* Hide invite/join management after submission */}
+                  {!team.has_submission && (
+                    <>
+                      <Button
+                        className="w-full"
+                        variant="secondary"
+                        onClick={() => setShowInviteModal(true)}
+                        disabled={!canInvite}
+                      >
+                        <Icon icon="mdi:plus" className="inline-block mr-2" />
+                        Invite Member{' '}
+                        {!canInvite && `(${members.length}/${MAX_TEAM_MEMBERS})`}
+                      </Button>
+                      <Button
+                        className="w-full relative"
+                        variant="secondary"
+                        onClick={() => setShowJoinRequestsModal(true)}
+                      >
+                        <Icon icon="mdi:email" className="inline-block mr-2" /> Join
+                        Requests
+                        {pendingJoinRequests.length > 0 && (
+                          <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
+                            {pendingJoinRequests.length}
+                          </span>
+                        )}
+                      </Button>
+                    </>
+                  )}
                   <Link to={`/teams/${teamId}/edit`}>
                     <Button className="w-full" variant="secondary">
                       <Icon icon="mdi:pencil" className="inline-block mr-2" />
@@ -404,7 +409,7 @@ const TeamDashboardPage: FC = (): ReactElement => {
                         icon="mdi:account-group"
                         className="inline-block mr-2"
                       />
-                      Manage Members
+                      View Members
                     </Button>
                   </Link>
                   <Link to={`/teams/${teamId}/chat`}>
@@ -413,20 +418,29 @@ const TeamDashboardPage: FC = (): ReactElement => {
                       Team Chat
                     </Button>
                   </Link>
-                  <Link to={`/teams/${teamId}/submit`}>
-                    <Button className="w-full">
-                      <Icon icon="mdi:rocket" className="inline-block mr-2" />
-                      Submit Project
-                    </Button>
-                  </Link>
+                  {team.has_submission ? (
+                    <Link to={`/teams/${teamId}/submission`}>
+                      <Button className="w-full" variant="secondary">
+                        <Icon icon="mdi:file-document" className="inline-block mr-2" />
+                        View Submission
+                      </Button>
+                    </Link>
+                  ) : (
+                    <Link to={`/teams/${teamId}/submit`}>
+                      <Button className="w-full">
+                        <Icon icon="mdi:rocket" className="inline-block mr-2" />
+                        Submit Project
+                      </Button>
+                    </Link>
+                  )}
                 </div>
-                {!canInvite && members.length >= MAX_TEAM_MEMBERS && (
+                {!team.has_submission && !canInvite && members.length >= MAX_TEAM_MEMBERS && (
                   <p className="text-sm text-gray-600 dark:text-gray-400 mt-3 text-center">
                     Maximum team size reached ({MAX_TEAM_MEMBERS} members)
                   </p>
                 )}
-                {/* Danger Zone - Only show when leader is alone */}
-                {members.length === 1 && (
+                {/* Danger Zone - Only show when leader is alone and no submission */}
+                {members.length === 1 && !team.has_submission && (
                   <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
                     <h3 className="text-sm font-medium text-red-600 dark:text-red-400 mb-3">
                       Danger Zone
