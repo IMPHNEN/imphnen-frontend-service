@@ -106,12 +106,16 @@ interface Submission {
   created_at: string;
 }
 
-// Pagination response type
-interface PaginatedTeamsResponse {
-  teams: Team[];
-  total: number;
-  page: number;
-  per_page: number;
+// List response type with pagination
+interface ListResponseWithMeta<T> {
+  message: string;
+  data: T[];
+  meta: {
+    page: number;
+    per_page: number;
+    total_page: number;
+    total_data: number;
+  };
 }
 
 // Team CRUD Hooks
@@ -127,22 +131,22 @@ export const useTeams = (params?: {
     queryFn: async () => {
       const queryParams = new URLSearchParams();
       if (params?.page) queryParams.append('page', String(params.page));
-      if (params?.limit) queryParams.append('limit', String(params.limit));
+      if (params?.limit) queryParams.append('per_page', String(params.limit));
       if (params?.search) queryParams.append('search', params.search);
       if (params?.city) queryParams.append('city', params.city);
       if (params?.visibility) queryParams.append('visibility', params.visibility);
 
-      const response = await hackathonApi.get<HackathonApiResponse<PaginatedTeamsResponse>>(
+      const response = await hackathonApi.get<ListResponseWithMeta<Team>>(
         `/teams/browse${queryParams.toString() ? `?${queryParams.toString()}` : ''}`
       );
 
-      const data = response.data.data;
+      const { data, meta } = response.data;
       return {
-        teams: data?.teams || [],
-        total: data?.total || 0,
-        page: data?.page || 1,
-        perPage: data?.per_page || 12,
-        totalPages: Math.ceil((data?.total || 0) / (data?.per_page || 12)),
+        teams: data || [],
+        total: meta?.total_data || 0,
+        page: meta?.page || 1,
+        perPage: meta?.per_page || 12,
+        totalPages: meta?.total_page || 1,
       };
     },
   });
