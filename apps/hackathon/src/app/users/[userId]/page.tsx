@@ -131,62 +131,65 @@ const UserProfilePage: FC = (): ReactElement => {
                   Team
                 </h2>
                 <div className="space-y-4">
-                  {userTeams.map((team: any) => (
-                    <Link
-                      key={team.id}
-                      to={'/teams/' + team.id}
-                      className="block bg-white dark:bg-gray-800 rounded-lg shadow-md dark:shadow-gray-950/50 overflow-hidden hover:shadow-lg transition-shadow border dark:border-gray-700"
-                    >
-                      <img
-                        src={team.banner || '/images/banner-imphnen.webp'}
-                        alt={team.name}
-                        className="w-full aspect-3/1 object-cover"
-                      />
-                      <div className="p-4">
-                        <div className="flex items-center space-x-3 mb-3">
-                          {team.logo ? (
-                            <img
-                              src={team.logo}
-                              alt={team.name}
-                              className="w-12 h-12 rounded-full object-cover"
-                            />
-                          ) : (
-                            <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                              <Icon icon="mdi:account-group" className="text-gray-500 dark:text-gray-400 text-xl" />
-                            </div>
-                          )}
-                          <div className="flex-1 min-w-0">
-                            <h3 className="font-bold text-gray-900 dark:text-white line-clamp-1 text-lg">
-                              {team.name}
-                            </h3>
-                            <div className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-3 font-sans mt-1">
-                              {team.has_submission && (
-                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 shrink-0">
-                                  <Icon icon="mdi:check-circle" className="text-sm" />
-                                  Submitted
+                  {userTeams.map((item: any) => {
+                    const team = item.team || item;
+                    return (
+                      <Link
+                        key={team.id}
+                        to={'/teams/' + team.id}
+                        className="block bg-white dark:bg-gray-800 rounded-lg shadow-md dark:shadow-gray-950/50 overflow-hidden hover:shadow-lg transition-shadow border dark:border-gray-700"
+                      >
+                        <img
+                          src={team.banner || '/images/banner-imphnen.webp'}
+                          alt={team.name}
+                          className="w-full aspect-3/1 object-cover"
+                        />
+                        <div className="p-4">
+                          <div className="flex items-center space-x-3 mb-3">
+                            {team.logo ? (
+                              <img
+                                src={team.logo}
+                                alt={team.name}
+                                className="w-12 h-12 rounded-full object-cover"
+                              />
+                            ) : (
+                              <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                                <Icon icon="mdi:account-group" className="text-gray-500 dark:text-gray-400 text-xl" />
+                              </div>
+                            )}
+                            <div className="flex-1 min-w-0">
+                              <h3 className="font-bold text-gray-900 dark:text-white line-clamp-1 text-lg">
+                                {team.name}
+                              </h3>
+                              <div className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-3 font-sans mt-1">
+                                {team.has_submission && (
+                                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 shrink-0">
+                                    <Icon icon="mdi:check-circle" className="text-sm" />
+                                    Submitted
+                                  </span>
+                                )}
+                                {team.city && (
+                                  <span className="flex items-center gap-1 truncate">
+                                    <Icon icon="mdi:map-marker" className="shrink-0" />
+                                    <span className="truncate">{team.city}</span>
+                                  </span>
+                                )}
+                                <span className="flex items-center gap-1 shrink-0">
+                                  <Icon icon="mdi:account-group" />
+                                  {team.member_count || team.members?.length || 0} member{(team.member_count || team.members?.length || 0) !== 1 ? 's' : ''}
                                 </span>
-                              )}
-                              {team.city && (
-                                <span className="flex items-center gap-1 truncate">
-                                  <Icon icon="mdi:map-marker" className="shrink-0" />
-                                  <span className="truncate">{team.city}</span>
-                                </span>
-                              )}
-                              <span className="flex items-center gap-1 shrink-0">
-                                <Icon icon="mdi:account-group" />
-                                {team.member_count || team.members?.length || 0} member{(team.member_count || team.members?.length || 0) !== 1 ? 's' : ''}
-                              </span>
+                              </div>
                             </div>
                           </div>
+                          {team.description && (
+                            <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-2 font-sans">
+                              {team.description}
+                            </p>
+                          )}
                         </div>
-                        {team.description && (
-                          <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-2 font-sans">
-                            {team.description}
-                          </p>
-                        )}
-                      </div>
-                    </Link>
-                  ))}
+                      </Link>
+                    );
+                  })}
                 </div>
               </div>
             ) : (
