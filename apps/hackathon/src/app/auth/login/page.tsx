@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   useGitHubAuth,
   useLogin,
@@ -18,6 +18,26 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+
+  // Check for password reset tokens in URL and redirect to reset-password page
+  useEffect(() => {
+    const hashParams = new URLSearchParams(globalThis.location.hash.substring(1));
+    const urlParams = new URLSearchParams(globalThis.location.search);
+
+    const accessToken = hashParams.get('access_token') || urlParams.get('access_token');
+    const type = hashParams.get('type') || urlParams.get('type');
+
+    // If we have an access_token, this is likely a password reset redirect that landed on the wrong page
+    if (accessToken) {
+      console.log('[Login] Detected access_token, redirecting to reset-password page');
+
+      // Check if it's a password recovery
+      if (type === 'recovery' || type === 'magiclink' || !type) {
+        toast.info('Redirecting to password reset...');
+        navigate('/auth/reset-password?access_token=' + accessToken);
+      }
+    }
+  }, [navigate]);
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
