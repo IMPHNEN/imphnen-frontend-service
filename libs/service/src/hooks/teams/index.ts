@@ -106,6 +106,14 @@ interface Submission {
   created_at: string;
 }
 
+// Pagination response type
+interface PaginatedTeamsResponse {
+  teams: Team[];
+  total: number;
+  page: number;
+  per_page: number;
+}
+
 // Team CRUD Hooks
 export const useTeams = (params?: {
   page?: number;
@@ -118,15 +126,24 @@ export const useTeams = (params?: {
     queryKey: teamKeys.list(params),
     queryFn: async () => {
       const queryParams = new URLSearchParams();
+      if (params?.page) queryParams.append('page', String(params.page));
+      if (params?.limit) queryParams.append('limit', String(params.limit));
       if (params?.search) queryParams.append('search', params.search);
       if (params?.city) queryParams.append('city', params.city);
       if (params?.visibility) queryParams.append('visibility', params.visibility);
 
-      const response = await hackathonApi.get<HackathonApiResponse<Team[]>>(
+      const response = await hackathonApi.get<HackathonApiResponse<PaginatedTeamsResponse>>(
         `/teams/browse${queryParams.toString() ? `?${queryParams.toString()}` : ''}`
       );
 
-      return { data: response.data.data || [] };
+      const data = response.data.data;
+      return {
+        teams: data?.teams || [],
+        total: data?.total || 0,
+        page: data?.page || 1,
+        perPage: data?.per_page || 12,
+        totalPages: Math.ceil((data?.total || 0) / (data?.per_page || 12)),
+      };
     },
   });
 };

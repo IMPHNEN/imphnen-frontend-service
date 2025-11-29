@@ -1,8 +1,8 @@
-import { FC, ReactElement, useState, useEffect, useRef, useCallback } from 'react';
+import { FC, ReactElement, useState, useEffect } from 'react';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { Link, useNavigate } from 'react-router';
 import {
-  useInfiniteTeams,
+  useTeams,
   useJoinTeam,
   useMyTeams,
   ETeamVisibility,
@@ -14,6 +14,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { CitySelect } from '../../../components/city-select';
 import { Icon } from '@iconify/react';
 
+const TEAMS_PER_PAGE = 12;
+
 const BrowseTeamsPage: FC = (): ReactElement => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
@@ -21,25 +23,29 @@ const BrowseTeamsPage: FC = (): ReactElement => {
   const [selectedCity, setSelectedCity] = useState('');
   const [selectedTeamId, setSelectedTeamId] = useState<string | null>(null);
   const [showJoinModal, setShowJoinModal] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  // Ref for intersection observer
-  const loadMoreRef = useRef<HTMLDivElement>(null);
-
-  // Debounce search term
+  // Debounce search term and reset page
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(searchTerm);
+      setCurrentPage(1); // Reset to first page on search
     }, 300);
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
+  // Reset page when city filter changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCity]);
+
   const {
     data: teamsData,
     isLoading,
-    isFetchingNextPage,
-    hasNextPage,
-    fetchNextPage,
-  } = useInfiniteTeams({
+    isFetching,
+  } = useTeams({
+    page: currentPage,
+    limit: TEAMS_PER_PAGE,
     search: debouncedSearch,
     city: selectedCity || undefined,
     visibility: ETeamVisibility.PUBLIC,
@@ -53,35 +59,10 @@ const BrowseTeamsPage: FC = (): ReactElement => {
     mode: 'all',
   });
 
-  // Flatten pages into single array
-  const teams = teamsData?.pages.flatMap((page) => page.data) || [];
+  const teams = teamsData?.teams || [];
+  const totalPages = teamsData?.totalPages || 1;
+  const total = teamsData?.total || 0;
   const myTeams = myTeamsData?.data || [];
-
-  // Intersection Observer callback
-  const handleObserver = useCallback(
-    (entries: IntersectionObserverEntry[]) => {
-      const [target] = entries;
-      if (target.isIntersecting && hasNextPage && !isFetchingNextPage) {
-        fetchNextPage();
-      }
-    },
-    [hasNextPage, isFetchingNextPage, fetchNextPage]
-  );
-
-  // Set up intersection observer
-  useEffect(() => {
-    const element = loadMoreRef.current;
-    if (!element) return;
-
-    const observer = new IntersectionObserver(handleObserver, {
-      root: null,
-      rootMargin: '100px',
-      threshold: 0,
-    });
-
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, [handleObserver]);
 
   // Helper function to check if user is a member of a team
   const isMyTeam = (teamId: string) => {
@@ -105,6 +86,43 @@ const BrowseTeamsPage: FC = (): ReactElement => {
       console.error('Failed to send join request:', error);
     }
   });
+
+  // Generate page numbers to display
+  const getPageNumbers = () => {
+    const pages: (number | string)[] = [];
+    const maxVisible = 5;
+
+    if (totalPages <= maxVisible + 2) {
+      // Show all pages if total is small
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      // Always show first page
+      pages.push(1);
+
+      if (currentPage > 3) {
+        pages.push('...');
+      }
+
+      // Show pages around current
+      const start = Math.max(2, currentPage - 1);
+      const end = Math.min(totalPages - 1, currentPage + 1);
+
+      for (let i = start; i <= end; i++) {
+        pages.push(i);
+      }
+
+      if (currentPage < totalPages - 2) {
+        pages.push('...');
+      }
+
+      // Always show last page
+      pages.push(totalPages);
+    }
+
+    return pages;
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
@@ -156,9 +174,18 @@ const BrowseTeamsPage: FC = (): ReactElement => {
           </div>
         </div>
 
+        {/* Teams Count */}
+        {!isLoading && total > 0 && (
+          <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+            Showing {(currentPage - 1) * TEAMS_PER_PAGE + 1}-
+            {Math.min(currentPage * TEAMS_PER_PAGE, total)} of {total} teams
+          </div>
+        )}
+
         {/* Teams List */}
         {isLoading ? (
           <div className="text-center py-12">
+            <Icon icon="mdi:loading" className="animate-spin text-4xl text-gray-400 mx-auto mb-2" />
             <p className="text-gray-600 dark:text-gray-400">Loading teams...</p>
           </div>
         ) : teams.length === 0 ? (
@@ -172,8 +199,8 @@ const BrowseTeamsPage: FC = (): ReactElement => {
           </div>
         ) : (
           <>
-            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-              {teams.map((team) => (
+            <div className={`grid gap-6 md:grid-cols-2 xl:grid-cols-3 ${isFetching ? 'opacity-50' : ''}`}>
+              {teams.map((team: any) => (
                 <div
                   key={team.id}
                   className="bg-white dark:bg-gray-900 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow flex flex-col border dark:border-gray-800"
@@ -267,20 +294,60 @@ const BrowseTeamsPage: FC = (): ReactElement => {
               ))}
             </div>
 
-            {/* Intersection Observer Sentinel */}
-            <div ref={loadMoreRef} className="py-8 flex justify-center">
-              {isFetchingNextPage && (
-                <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-                  <Icon icon="mdi:loading" className="animate-spin text-xl" />
-                  <span>Loading more teams...</span>
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="secondary"
+                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                    disabled={currentPage === 1 || isFetching}
+                    className="px-3"
+                  >
+                    <Icon icon="mdi:chevron-left" className="text-xl" />
+                  </Button>
+
+                  <div className="flex items-center gap-1">
+                    {getPageNumbers().map((page, index) =>
+                      typeof page === 'string' ? (
+                        <span
+                          key={`ellipsis-${index}`}
+                          className="px-2 text-gray-400 dark:text-gray-500"
+                        >
+                          ...
+                        </span>
+                      ) : (
+                        <button
+                          key={page}
+                          onClick={() => setCurrentPage(page)}
+                          disabled={isFetching}
+                          className={`min-w-10 h-10 px-3 rounded-md text-sm font-medium transition-colors ${
+                            currentPage === page
+                              ? 'bg-blue-600 text-white'
+                              : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-600'
+                          }`}
+                        >
+                          {page}
+                        </button>
+                      )
+                    )}
+                  </div>
+
+                  <Button
+                    variant="secondary"
+                    onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                    disabled={currentPage === totalPages || isFetching}
+                    className="px-3"
+                  >
+                    <Icon icon="mdi:chevron-right" className="text-xl" />
+                  </Button>
                 </div>
-              )}
-              {!hasNextPage && teams.length > 0 && (
-                <p className="text-gray-500 dark:text-gray-500 text-sm">
-                  No more teams to load
-                </p>
-              )}
-            </div>
+
+                <span className="text-sm text-gray-500 dark:text-gray-400">
+                  Page {currentPage} of {totalPages}
+                </span>
+              </div>
+            )}
           </>
         )}
       </div>
