@@ -174,10 +174,6 @@ const UserProfilePage: FC = (): ReactElement => {
                                     <span className="truncate">{team.city}</span>
                                   </span>
                                 )}
-                                <span className="flex items-center gap-1 shrink-0">
-                                  <Icon icon="mdi:account-group" />
-                                  {team.member_count || team.members?.length || 0} member{(team.member_count || team.members?.length || 0) !== 1 ? 's' : ''}
-                                </span>
                               </div>
                             </div>
                           </div>
