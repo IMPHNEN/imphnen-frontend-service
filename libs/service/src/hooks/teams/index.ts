@@ -125,6 +125,8 @@ export const useTeams = (params?: {
   city?: string;
   visibility?: string;
   search?: string;
+  minMembers?: number;
+  maxMembers?: number;
 }) => {
   return useQuery({
     queryKey: teamKeys.list(params),
@@ -135,6 +137,8 @@ export const useTeams = (params?: {
       if (params?.search) queryParams.append('search', params.search);
       if (params?.city) queryParams.append('city', params.city);
       if (params?.visibility) queryParams.append('visibility', params.visibility);
+      if (params?.minMembers) queryParams.append('min_members', String(params.minMembers));
+      if (params?.maxMembers) queryParams.append('max_members', String(params.maxMembers));
 
       const response = await hackathonApi.get<ListResponseWithMeta<Team>>(
         `/teams/browse${queryParams.toString() ? `?${queryParams.toString()}` : ''}`

@@ -17,6 +17,17 @@ import { Icon } from '@iconify/react';
 const DEFAULT_PER_PAGE = 12;
 const PER_PAGE_OPTIONS = [6, 12, 24, 48];
 
+// Member filter options
+const MEMBER_FILTER_OPTIONS = [
+  { label: 'All Teams', value: '', minMembers: undefined, maxMembers: undefined },
+  { label: 'Looking for Members (1-4)', value: 'looking', minMembers: 1, maxMembers: 4 },
+  { label: '1 Member', value: '1', minMembers: 1, maxMembers: 1 },
+  { label: '2 Members', value: '2', minMembers: 2, maxMembers: 2 },
+  { label: '3 Members', value: '3', minMembers: 3, maxMembers: 3 },
+  { label: '4 Members', value: '4', minMembers: 4, maxMembers: 4 },
+  { label: '5 Members (Full)', value: '5', minMembers: 5, maxMembers: 5 },
+];
+
 // Skeleton card component for loading state
 const TeamCardSkeleton: FC = () => (
   <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md overflow-hidden flex flex-col border dark:border-gray-800 animate-pulse">
@@ -54,10 +65,12 @@ const BrowseTeamsPage: FC = (): ReactElement => {
   );
   const initialSearch = searchParams.get('search') || '';
   const initialCity = searchParams.get('city') || '';
+  const initialMembers = searchParams.get('members') || '';
 
   const [searchTerm, setSearchTerm] = useState(initialSearch);
   const [debouncedSearch, setDebouncedSearch] = useState(initialSearch);
   const [selectedCity, setSelectedCity] = useState(initialCity);
+  const [selectedMembers, setSelectedMembers] = useState(initialMembers);
   const [selectedTeamId, setSelectedTeamId] = useState<string | null>(null);
   const [showJoinModal, setShowJoinModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(
@@ -74,6 +87,7 @@ const BrowseTeamsPage: FC = (): ReactElement => {
       per_page?: number;
       search?: string;
       city?: string;
+      members?: string;
     }) => {
       const newParams = new URLSearchParams(searchParams);
 
@@ -109,6 +123,14 @@ const BrowseTeamsPage: FC = (): ReactElement => {
         }
       }
 
+      if (params.members !== undefined) {
+        if (params.members === '') {
+          newParams.delete('members');
+        } else {
+          newParams.set('members', params.members);
+        }
+      }
+
       setSearchParams(newParams, { replace: true });
     },
     [searchParams, setSearchParams]
@@ -134,6 +156,11 @@ const BrowseTeamsPage: FC = (): ReactElement => {
     }
   }, [selectedCity]);
 
+  // Get member filter values
+  const memberFilter = MEMBER_FILTER_OPTIONS.find(
+    (opt) => opt.value === selectedMembers
+  );
+
   const {
     data: teamsData,
     isLoading,
@@ -144,6 +171,8 @@ const BrowseTeamsPage: FC = (): ReactElement => {
     search: debouncedSearch,
     city: selectedCity || undefined,
     visibility: ETeamVisibility.PUBLIC,
+    minMembers: memberFilter?.minMembers,
+    maxMembers: memberFilter?.maxMembers,
   });
 
   const { data: myTeamsData } = useMyTeams();
@@ -243,7 +272,7 @@ const BrowseTeamsPage: FC = (): ReactElement => {
       {/* Filters */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-sm mb-6 border dark:border-gray-800">
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid gap-4 md:grid-cols-3">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Search Teams
@@ -265,6 +294,26 @@ const BrowseTeamsPage: FC = (): ReactElement => {
                 onChange={setSelectedCity}
                 placeholder="All Cities (search to filter...)"
               />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Filter by Members
+              </label>
+              <select
+                value={selectedMembers}
+                onChange={(e) => {
+                  setSelectedMembers(e.target.value);
+                  setCurrentPage(1);
+                  updateUrlParams({ members: e.target.value, page: 1 });
+                }}
+                className="w-full h-[42px] px-3 border border-gray-300 dark:border-gray-700 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+              >
+                {MEMBER_FILTER_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
         </div>
