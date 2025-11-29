@@ -199,18 +199,16 @@ const BrowseTeamsPage: FC = (): ReactElement => {
                         </div>
                       )}
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-start gap-2">
-                          <h3 className="text-lg font-bold text-gray-900 dark:text-white line-clamp-1 leading-tight flex-1 min-w-0">
-                            {team.name}
-                          </h3>
+                        <h3 className="text-lg font-bold text-gray-900 dark:text-white line-clamp-1 leading-tight">
+                          {team.name}
+                        </h3>
+                        <div className="text-sm font-sans text-gray-600 dark:text-gray-400 flex items-center gap-2 mt-1">
                           {team.has_submission && (
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 shrink-0 mt-0.5">
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 shrink-0">
                               <Icon icon="mdi:check-circle" className="text-sm" />
                               Submitted
                             </span>
                           )}
-                        </div>
-                        <div className="text-sm font-sans text-gray-600 dark:text-gray-400 flex gap-2 mt-1">
                           <p className="truncate flex-1 min-w-0 flex items-center gap-x-1">
                             <Icon icon="mdi:map-marker" />{' '}
                             <span>{team.city}</span>
