@@ -179,6 +179,19 @@ export default function LoginPage() {
           </span>
         </button>
 
+        <p className="mt-3 text-xs text-center text-gray-500 dark:text-gray-500 font-sans">
+          Make sure your GitHub email is{' '}
+          <a
+            href="https://github.com/settings/emails"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary-600 dark:text-primary-400 hover:underline"
+          >
+            set to public
+          </a>{' '}
+          for GitHub sign in to work.
+        </p>
+
         <div className="mt-6 text-center">
           <p className="text-gray-600 dark:text-gray-400 text-sm">
             Don't have an account?{' '}
