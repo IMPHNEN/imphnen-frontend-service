@@ -134,48 +134,60 @@ const DashboardPage: FC = (): ReactElement => {
             <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
               My Team
             </h2>
-            <div className="grid grid-cols-1 gap-4 md:gap-6 w-full md:max-w-lg">
-              {myTeams.map((team) => (
+            <div className="space-y-4 w-full md:max-w-xl">
+              {myTeams.map((team: any) => (
                 <Link
                   key={team.id}
                   to={'/teams/' + team.id}
-                  className="bg-white dark:bg-gray-900 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                  className="block bg-white dark:bg-gray-900 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow border dark:border-gray-700"
                 >
-                  {team.banner && (
-                    <div className="w-full aspect-3/1">
-                      <img
-                        src={team.banner}
-                        alt={team.name}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  )}
+                  <img
+                    src={team.banner || '/images/banner-imphnen.webp'}
+                    alt={team.name}
+                    className="w-full aspect-3/1 object-cover"
+                  />
                   <div className="p-4">
-                    <div className="flex flex-col md:flex-row items-center space-y-3 space-x-3 -mt-14 md:mt-0 mb-2 md:mb-3 min-w-12 min-h-12 ">
-                      {team.logo && (
+                    <div className="flex items-center space-x-3 mb-3">
+                      {team.logo ? (
                         <img
                           src={team.logo}
                           alt={team.name}
-                          className="w-20 h-20 rounded-full object-cover shrink-0 border-black dark:border-gray-700"
+                          className="w-12 h-12 rounded-full object-cover shrink-0"
                         />
+                      ) : (
+                        <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center shrink-0">
+                          <Icon icon="mdi:account-group" className="text-gray-500 dark:text-gray-400 text-xl" />
+                        </div>
                       )}
-                      <div>
-                        <h3 className="text-xl md:text-lg font-bold text-gray-900 dark:text-white leading-tight">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-lg font-bold text-gray-900 dark:text-white leading-tight line-clamp-1">
                           {team.name}
                         </h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center">
-                          <Icon
-                            icon="heroicons:map-pin-16-solid"
-                            width="16"
-                            height="16"
-                          />
-                          <span className="ml-1">{team.city}</span>
-                        </p>
+                        <div className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-3 font-sans mt-1">
+                          {team.has_submission && (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 shrink-0">
+                              <Icon icon="mdi:check-circle" className="text-sm" />
+                              Submitted
+                            </span>
+                          )}
+                          {team.city && (
+                            <span className="flex items-center gap-1 truncate">
+                              <Icon icon="mdi:map-marker" className="shrink-0" />
+                              <span className="truncate">{team.city}</span>
+                            </span>
+                          )}
+                          <span className="flex items-center gap-1 shrink-0">
+                            <Icon icon="mdi:account-group" />
+                            {team.member_count || team.members?.length || 0} member{(team.member_count || team.members?.length || 0) !== 1 ? 's' : ''}
+                          </span>
+                        </div>
                       </div>
                     </div>
-                    <p className="text-gray-600 dark:text-gray-400 line-clamp-3 text-ellipsis font-sans">
-                      {team.description}
-                    </p>
+                    {team.description && (
+                      <p className="text-gray-600 dark:text-gray-400 line-clamp-2 text-sm font-sans">
+                        {team.description}
+                      </p>
+                    )}
                   </div>
                 </Link>
               ))}
