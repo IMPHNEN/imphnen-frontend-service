@@ -128,7 +128,7 @@ const UserProfilePage: FC = (): ReactElement => {
             {userTeams.length > 0 ? (
               <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md dark:shadow-gray-950/50 p-4 md:p-6">
                 <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
-                  {userTeams.length === 1 ? 'Team' : 'Teams'} ({userTeams.length})
+                  Team
                 </h2>
                 <div className="space-y-4">
                   {userTeams.map((team: any) => (
