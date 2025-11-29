@@ -130,14 +130,14 @@ const DashboardPage: FC = (): ReactElement => {
         )}
 
         {myTeams.length > 0 ? (
-          <div className="mb-6 md:mb-8">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
-              My Team
-            </h2>
-            <div className="space-y-4 w-full md:max-w-xl">
-              {myTeams.map((team: any) => (
+          (() => {
+            const team = myTeams[0] as any;
+            return (
+              <div className="mb-6 md:mb-8">
+                <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
+                  My Team
+                </h2>
                 <Link
-                  key={team.id}
                   to={'/teams/' + team.id}
                   className="block bg-white dark:bg-gray-900 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow border dark:border-gray-700"
                 >
@@ -146,24 +146,24 @@ const DashboardPage: FC = (): ReactElement => {
                     alt={team.name}
                     className="w-full aspect-3/1 object-cover"
                   />
-                  <div className="p-4">
-                    <div className="flex items-center space-x-3 mb-3">
+                  <div className="p-4 md:p-6">
+                    <div className="flex items-center space-x-4 mb-4">
                       {team.logo ? (
                         <img
                           src={team.logo}
                           alt={team.name}
-                          className="w-12 h-12 rounded-full object-cover shrink-0"
+                          className="w-16 h-16 rounded-full object-cover shrink-0"
                         />
                       ) : (
-                        <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center shrink-0">
-                          <Icon icon="mdi:account-group" className="text-gray-500 dark:text-gray-400 text-xl" />
+                        <div className="w-16 h-16 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center shrink-0">
+                          <Icon icon="mdi:account-group" className="text-gray-500 dark:text-gray-400 text-2xl" />
                         </div>
                       )}
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-lg font-bold text-gray-900 dark:text-white leading-tight line-clamp-1">
+                        <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white leading-tight line-clamp-1">
                           {team.name}
                         </h3>
-                        <div className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-3 font-sans mt-1">
+                        <div className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-3 font-sans mt-2">
                           {team.has_submission && (
                             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 shrink-0">
                               <Icon icon="mdi:check-circle" className="text-sm" />
@@ -184,15 +184,15 @@ const DashboardPage: FC = (): ReactElement => {
                       </div>
                     </div>
                     {team.description && (
-                      <p className="text-gray-600 dark:text-gray-400 line-clamp-2 text-sm font-sans">
+                      <p className="text-gray-600 dark:text-gray-400 line-clamp-3 font-sans">
                         {team.description}
                       </p>
                     )}
                   </div>
                 </Link>
-              ))}
-            </div>
-          </div>
+              </div>
+            );
+          })()
         ) : (
           <div className="mb-6 md:mb-8 bg-white dark:bg-gray-900 rounded-lg shadow-md p-6 md:p-8">
             <div className="text-center">
