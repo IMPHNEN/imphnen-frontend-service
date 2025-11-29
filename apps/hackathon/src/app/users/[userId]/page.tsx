@@ -124,60 +124,66 @@ const UserProfilePage: FC = (): ReactElement => {
               </div>
             )}
 
-            {/* Teams Section */}
+            {/* Team Section */}
             {userTeams.length > 0 ? (
               <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md dark:shadow-gray-950/50 p-4 md:p-6">
                 <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
-                  Teams ({userTeams.length})
+                  {userTeams.length === 1 ? 'Team' : 'Teams'} ({userTeams.length})
                 </h2>
-                <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-4">
                   {userTeams.map((team: any) => (
                     <Link
                       key={team.id}
                       to={'/teams/' + team.id}
-                      className="bg-white dark:bg-gray-800 rounded-lg shadow-md dark:shadow-gray-950/50 overflow-hidden hover:shadow-lg transition-shadow"
+                      className="block bg-white dark:bg-gray-800 rounded-lg shadow-md dark:shadow-gray-950/50 overflow-hidden hover:shadow-lg transition-shadow border dark:border-gray-700"
                     >
-                      <div className="w-full aspect-3/1">
-                        <img
-                          src={team.banner}
-                          alt={team.name}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
+                      <img
+                        src={team.banner || '/images/banner-imphnen.webp'}
+                        alt={team.name}
+                        className="w-full aspect-3/1 object-cover"
+                      />
                       <div className="p-4">
-                        <div className="flex items-center space-x-3 mb-2">
-                          {team.logo && (
+                        <div className="flex items-center space-x-3 mb-3">
+                          {team.logo ? (
                             <img
                               src={team.logo}
                               alt={team.name}
                               className="w-12 h-12 rounded-full object-cover"
                             />
+                          ) : (
+                            <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                              <Icon icon="mdi:account-group" className="text-gray-500 dark:text-gray-400 text-xl" />
+                            </div>
                           )}
                           <div className="flex-1 min-w-0">
-                            <h3 className="font-bold text-gray-900 dark:text-white line-clamp-2 mb-1">
+                            <h3 className="font-bold text-gray-900 dark:text-white line-clamp-1 text-lg">
                               {team.name}
                             </h3>
-                            <div className="text-sm text-gray-600 dark:text-gray-400 flex gap-2 font-sans">
-                              <p className="truncate flex-1 min-w-0">
-                                <Icon
-                                  icon="mdi:map-marker"
-                                  className="inline-block w-4 h-4 mr-1"
-                                />
-                                {team.city}
-                              </p>
-                              <p className="whitespace-nowrap shrink-0">
-                                <Icon
-                                  icon="mdi:account-group"
-                                  className="inline-block w-4 h-4 mr-1"
-                                />
-                                {team.members?.length || 0} members
-                              </p>
+                            <div className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-3 font-sans mt-1">
+                              {team.has_submission && (
+                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 shrink-0">
+                                  <Icon icon="mdi:check-circle" className="text-sm" />
+                                  Submitted
+                                </span>
+                              )}
+                              {team.city && (
+                                <span className="flex items-center gap-1 truncate">
+                                  <Icon icon="mdi:map-marker" className="shrink-0" />
+                                  <span className="truncate">{team.city}</span>
+                                </span>
+                              )}
+                              <span className="flex items-center gap-1 shrink-0">
+                                <Icon icon="mdi:account-group" />
+                                {team.member_count || team.members?.length || 0} member{(team.member_count || team.members?.length || 0) !== 1 ? 's' : ''}
+                              </span>
                             </div>
                           </div>
                         </div>
-                        <p className="text-gray-600 dark:text-gray-400 text-base line-clamp-2 font-sans">
-                          {team.description}
-                        </p>
+                        {team.description && (
+                          <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-2 font-sans">
+                            {team.description}
+                          </p>
+                        )}
                       </div>
                     </Link>
                   ))}
@@ -186,10 +192,12 @@ const UserProfilePage: FC = (): ReactElement => {
             ) : (
               <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md dark:shadow-gray-950/50 p-4 md:p-6">
                 <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
-                  Teams
+                  Team
                 </h2>
                 <div className="text-center py-8">
-                  <div className="text-4xl mb-3">👥</div>
+                  <div className="text-4xl mb-3">
+                    <Icon icon="mdi:account-group-outline" className="inline-block text-gray-400" />
+                  </div>
                   <p className="text-gray-600 dark:text-gray-400">
                     Not in any team yet
                   </p>
