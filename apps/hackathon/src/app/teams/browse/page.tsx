@@ -247,18 +247,18 @@ const BrowseTeamsPage: FC = (): ReactElement => {
                         </div>
                       </div>
                     </div>
-                    <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3 font-sans">
+                    <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3 font-sans flex-1">
                       {team.description}
                     </p>
-                    {(team.member_count || 0) === 1 && !team.has_submission && (
-                      <div className="mb-4 p-2 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
-                        <p className="text-xs text-amber-700 dark:text-amber-400 flex items-center gap-1">
-                          <Icon icon="mdi:alert" className="text-sm shrink-0" />
-                          <span>This team needs at least 2 members to submit</span>
-                        </p>
-                      </div>
-                    )}
                     <div className="space-y-3 mt-auto">
+                      {(team.member_count || 0) === 1 && !team.has_submission && (
+                        <div className="p-2 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
+                          <p className="text-xs text-amber-700 dark:text-amber-400 flex items-center gap-1">
+                            <Icon icon="mdi:alert" className="text-sm shrink-0" />
+                            <span>This team needs at least 2 members to submit</span>
+                          </p>
+                        </div>
+                      )}
                       {isMyTeam(team.id) ? (
                         <Button
                           className="w-full"
