@@ -157,9 +157,9 @@ export const BackofficeSidebar: FC<SidebarProps> = ({
   };
 
   const sidebarContent = (
-    <div className="w-[280px] bg-white h-svh py-10 md:py-[60px] px-7 shadow-xl flex flex-col justify-between">
-      <div className="flex flex-col gap-10 md:gap-20 justify-between items-center">
-        <div className="flex justify-between md:justify-center items-center w-full">
+    <div className="w-[280px] bg-white h-svh py-10 lg:py-[60px] px-7 shadow-xl flex flex-col justify-between">
+      <div className="flex flex-col gap-10 lg:gap-20 justify-between items-center">
+        <div className="flex justify-around lg:justify-center items-center w-full">
           <img
             src="/logos/simple.svg"
             alt="IMPHNEN Logo"
@@ -168,7 +168,7 @@ export const BackofficeSidebar: FC<SidebarProps> = ({
           {onClose && (
             <button
               onClick={onClose}
-              className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
+              className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
               aria-label="Close sidebar"
             >
               <svg
@@ -275,13 +275,13 @@ export const BackofficeSidebar: FC<SidebarProps> = ({
   return (
     <>
       {/* Desktop Sidebar - visible on lg+, sticky */}
-      <div className="hidden md:block sticky top-0 h-screen overflow-y-auto">
+      <div className="hidden lg:block sticky top-0 h-screen overflow-y-auto shadow">
         {sidebarContent}
       </div>
 
       {/* Mobile Sidebar - overlay */}
       {isOpen && (
-        <div className="md:hidden fixed inset-0 z-50">
+        <div className="lg:hidden fixed inset-0 z-50">
           {/* Backdrop */}
           <div
             className="fixed inset-0 bg-black/50 transition-opacity"

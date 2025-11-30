@@ -7,8 +7,10 @@ export const HackathonDashboardPage: FC = (): ReactElement => {
         <h1 className="text-p2 font-semibold">Hackathon Dashboard</h1>
       </header>
 
-      <section className="bg-white rounded-lg shadow-sm p-8 border border-neutral-100">
-        <p className="text-label1 text-neutral-600">Boilerplate page for hackathon dashboard. Add KPIs and actions here.</p>
+      <section className="bg-white rounded-lg shadow p-8">
+        <p className="text-label1 text-neutral-600">
+          Boilerplate page for hackathon dashboard. Add KPIs and actions here.
+        </p>
       </section>
     </main>
   );
