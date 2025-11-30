@@ -199,7 +199,7 @@ export const BackofficeSidebar: FC<SidebarProps> = ({
                     className={cn(
                       'flex items-center justify-between w-full gap-3 px-2 py-2.5 rounded-md cursor-pointer',
                       openGroups[menu.label]
-                        ? 'bg-primary-500 text-white'
+                        ? 'bg-primary-400 hover:bg-primary-500 text-white'
                         : 'text-gray-700 hover:bg-gray-100'
                     )}
                   >
@@ -225,7 +225,7 @@ export const BackofficeSidebar: FC<SidebarProps> = ({
                           className={cn(
                             'flex items-center gap-3 px-2 py-2.5 rounded-md',
                             isActive(child.href)
-                              ? 'bg-primary-100 text-primary-700'
+                              ? 'bg-primary-100 text-primary-700 hover:bg-primary-200'
                               : 'text-gray-700 hover:bg-gray-100'
                           )}
                         >

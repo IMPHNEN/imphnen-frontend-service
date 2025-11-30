@@ -2,7 +2,10 @@ import { FC, ReactElement, useState } from 'react';
 import ModalUserDetail from '../../../components/modal-user-detail';
 import ModalSuspendOrBan from '../../../components/modal-suspend-or-ban';
 import ModalDeleteUser from '../../../components/modal-delete-user';
-import { DataTable } from '@imphnen-frontend-service/ui/organisms';
+import {
+  BackofficeWrapper,
+  DataTable,
+} from '@imphnen-frontend-service/ui/organisms';
 import {
   ColumnDef,
   getCoreRowModel,
@@ -143,13 +146,12 @@ export const HackathonUsersPage: FC = (): ReactElement => {
   });
 
   return (
-    <main className="w-full px-12 py-10 flex flex-col gap-8">
-      <header className="bg-white py-4 px-8 rounded-lg shadow p-4">
-        <h1 className="text-p2 font-semibold">Hackathon Users</h1>
-      </header>
-
+    <BackofficeWrapper title="IMPHNEN x Kolosal.ai Hackathon 2025">
+      <h1 className="mb-8 text-p1 font-semibold text-neutral-700">
+        User Management
+      </h1>
       {/* Filters and actions */}
-      <section className="bg-white rounded-lg shadow-sm p-8 border border-neutral-100 flex flex-col gap-6">
+      <section className="bg-white rounded-md shadow p-8 flex flex-col gap-6">
         <div className="flex flex-wrap gap-3 items-center">
           <input
             type="text"
@@ -185,7 +187,7 @@ export const HackathonUsersPage: FC = (): ReactElement => {
         isOpen={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
       />
-    </main>
+    </BackofficeWrapper>
   );
 };
 

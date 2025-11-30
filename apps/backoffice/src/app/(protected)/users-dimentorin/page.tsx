@@ -1,19 +1,29 @@
-import { SearchOutlined } from "@ant-design/icons";
-import { Button, Input, Select } from "@imphnen-frontend-service/ui/atoms";
-import { BackofficeWrapper, DataTable } from "@imphnen-frontend-service/ui/organisms";
-import { cn, For } from "@imphnen-frontend-service/utils";
-import { ColumnDef, getCoreRowModel, getPaginationRowModel, PaginationState, RowSelectionState, useReactTable } from "@tanstack/react-table";
-import { ReactElement, useState } from "react";
-import { ModalDetailUser } from "./_components/modal/detail";
+import { SearchOutlined } from '@ant-design/icons';
+import { Button, Input, Select } from '@imphnen-frontend-service/ui/atoms';
+import {
+  BackofficeWrapper,
+  DataTable,
+} from '@imphnen-frontend-service/ui/organisms';
+import { cn, For } from '@imphnen-frontend-service/utils';
+import {
+  ColumnDef,
+  getCoreRowModel,
+  getPaginationRowModel,
+  PaginationState,
+  RowSelectionState,
+  useReactTable,
+} from '@tanstack/react-table';
+import { ReactElement, useState } from 'react';
+import { ModalDetailUser } from './_components/modal/detail';
 
 type UserStatus = 'active' | 'inactive';
 
 interface UserType {
-  id: number
-  name: string
-  email: string
-  rating: number
-  status: UserStatus
+  id: number;
+  name: string;
+  email: string;
+  rating: number;
+  status: UserStatus;
 }
 
 const mockData: UserType[] = Array.from({ length: 90 }, (_, i) => ({
@@ -22,15 +32,15 @@ const mockData: UserType[] = Array.from({ length: 90 }, (_, i) => ({
   email: 'fullname23@gmail.com',
   rating: 4.5,
   status: i % 2 === 0 ? 'active' : 'inactive',
-}))
+}));
 
 export default function Components(): ReactElement {
-  const TABS = ['mentor', 'mentee'] as const
-  const [activeTab, setActiveTab] = useState<'mentor' | 'mentee'>('mentor')
-  const [showDetail, setShowDetail] = useState(false)
-  const [selectedUserId, setSelectedUserId] = useState<number | null>(null)
+  const TABS = ['mentor', 'mentee'] as const;
+  const [activeTab, setActiveTab] = useState<'mentor' | 'mentee'>('mentor');
+  const [showDetail, setShowDetail] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
 
-  const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 9,
@@ -39,7 +49,7 @@ export default function Components(): ReactElement {
   const columns: ColumnDef<UserType>[] = [
     {
       id: 'select',
-      meta: { cellClassName: cn("w-20") },
+      meta: { cellClassName: cn('w-20') },
       header: ({ table }) => (
         <input
           type="checkbox"
@@ -97,7 +107,7 @@ export default function Components(): ReactElement {
     },
     {
       header: 'Action',
-      meta: { cellClassName: cn("w-72") },
+      meta: { cellClassName: cn('w-72') },
       cell: ({ row }) => (
         <Button
           variant="primary"
@@ -113,7 +123,7 @@ export default function Components(): ReactElement {
         </Button>
       ),
     },
-  ]
+  ];
 
   const table = useReactTable({
     data: mockData,
@@ -134,14 +144,19 @@ export default function Components(): ReactElement {
   return (
     <BackofficeWrapper title="Dimentorin.dev">
       <div className="mb-8 flex justify-between items-center">
-        <h1 className="text-p1 font-semibold text-neutral-700">User Management</h1>
+        <h1 className="text-p1 font-semibold text-neutral-700 mb-8">
+          User Management
+        </h1>
         <div className="flex gap-2 bg-primary-100 p-1.5 rounded-md">
           <For data={TABS}>
             {(tab) => (
               <Button
                 key={tab}
                 variant="text"
-                className={cn("px-3 py-2 capitalize", activeTab === tab && "bg-white")}
+                className={cn(
+                  'px-3 py-2 capitalize',
+                  activeTab === tab && 'bg-white'
+                )}
                 onClick={() => setActiveTab(tab)}
               >
                 {tab}
@@ -163,12 +178,16 @@ export default function Components(): ReactElement {
             </div>
           </div>
           <Select>
-            <option selected disabled>Rating</option>
+            <option selected disabled>
+              Rating
+            </option>
             <option value="4.5">4.5</option>
             <option value="5">5</option>
           </Select>
           <Select>
-            <option selected disabled>Status</option>
+            <option selected disabled>
+              Status
+            </option>
             <option value="active">Active</option>
             <option value="inactive">Inactive</option>
           </Select>
