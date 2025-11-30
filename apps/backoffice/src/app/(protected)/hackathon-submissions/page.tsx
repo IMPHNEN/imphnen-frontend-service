@@ -1,7 +1,4 @@
 import { FC, ReactElement, useState } from 'react';
-import ModalUserDetail from '../../../components/modal-user-detail';
-import ModalSuspendOrBan from '../../../components/modal-suspend-or-ban';
-import ModalDeleteUser from '../../../components/modal-delete-user';
 import {
   BackofficeWrapper,
   DataTable,
@@ -16,13 +13,9 @@ import {
 } from '@tanstack/react-table';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { cn } from '@imphnen-frontend-service/utils';
-import { SearchOutlined } from '@ant-design/icons';
+import { EditOutlined } from '@ant-design/icons';
 
 export const HackathonUsersPage: FC = (): ReactElement => {
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showDetailModal, setShowDetailModal] = useState(false);
-  const [showSuspendModal, setShowSuspendModal] = useState(false);
-
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -31,80 +24,38 @@ export const HackathonUsersPage: FC = (): ReactElement => {
 
   const mockData: any[] = Array.from({ length: 90 }, (_, i) => ({
     id: i + 1,
-    name: i % 3 === 0 ? 'Ahmad Wijuana' : 'Sofia Wijuana',
-    email: 'fullname23@gmail.com',
-    rating: 4.5,
-    status: i % 2 === 0 ? 'active' : 'inactive',
+    project_name: `Project ${i + 1}`,
+    repository_url: `https://github.com/user/repo${i + 1}`,
+    demo_url: `https://demo.example.com/project${i + 1}`,
+    presentation_url: `https://slides.example.com/project${i + 1}`,
   }));
 
   type UserStatus = 'active' | 'inactive';
 
-  interface UserType {
+  interface SubmissionType {
     id: number;
-    name: string;
-    email: string;
-    rating: number;
-    status: UserStatus;
+    project_name: string;
+    repository_url: string;
+    demo_url: string;
+    presentation_url: string;
   }
 
-  const columns: ColumnDef<UserType>[] = [
+  const columns: ColumnDef<SubmissionType>[] = [
     {
-      id: 'select',
-      meta: { cellClassName: cn('w-20') },
-      header: ({ table }) => (
-        <input
-          type="checkbox"
-          className="rounded"
-          checked={table.getIsAllRowsSelected()}
-          onChange={table.getToggleAllRowsSelectedHandler()}
-        />
-      ),
-      cell: ({ row }) => (
-        <input
-          type="checkbox"
-          className="rounded"
-          checked={row.getIsSelected()}
-          onChange={row.getToggleSelectedHandler()}
-        />
-      ),
+      header: 'Project Name',
+      accessorKey: 'project_name',
     },
     {
-      id: 'name',
-      header: 'Name',
-      accessorKey: 'name',
+      header: 'Repository URL',
+      accessorKey: 'repository_url',
     },
     {
-      id: 'email',
-      header: 'Email',
-      accessorKey: 'email',
+      header: 'Demo URL',
+      accessorKey: 'demo_url',
     },
     {
-      id: 'rating',
-      header: 'Rating',
-      accessorKey: 'rating',
-    },
-    {
-      id: 'status',
-      header: 'Status',
-      accessorKey: 'status',
-      cell: ({ row }) => {
-        const status = row.original.status;
-        const statusColors: Record<UserStatus, string> = {
-          active: 'bg-success-200 text-success-500',
-          inactive: 'bg-danger-200 text-danger-500',
-        };
-        const statusText: Record<UserStatus, string> = {
-          active: 'Active',
-          inactive: 'Inactive',
-        };
-        return (
-          <div
-            className={`py-2 px-4 rounded-md text-center ${statusColors[status]}`}
-          >
-            {statusText[status]}
-          </div>
-        );
-      },
+      header: 'Presentation URL',
+      accessorKey: 'presentation_url',
     },
     {
       header: 'Action',
@@ -113,17 +64,12 @@ export const HackathonUsersPage: FC = (): ReactElement => {
         <Button
           variant="primary"
           size="sm"
-          onClick={
-            (e) => {}
-            //   {
-            //   e.stopPropagation();
-            //   setSelectedUserId(row.original.id);
-            //   setShowDetail(true);
-            // }
-          }
           className="flex items-center gap-2 w-max"
+          onClick={() => {
+            // View detail logic
+          }}
         >
-          <SearchOutlined className="text-[16px]" /> Lihat Detail & Action
+          <EditOutlined className="text-base" /> View & Manage
         </Button>
       ),
     },
@@ -175,18 +121,6 @@ export const HackathonUsersPage: FC = (): ReactElement => {
       </section>
 
       {/* Modals extracted into shared backoffice components */}
-      <ModalUserDetail
-        isOpen={showDetailModal}
-        onClose={() => setShowDetailModal(false)}
-      />
-      <ModalSuspendOrBan
-        isOpen={showSuspendModal}
-        onClose={() => setShowSuspendModal(false)}
-      />
-      <ModalDeleteUser
-        isOpen={showDeleteModal}
-        onClose={() => setShowDeleteModal(false)}
-      />
     </BackofficeWrapper>
   );
 };

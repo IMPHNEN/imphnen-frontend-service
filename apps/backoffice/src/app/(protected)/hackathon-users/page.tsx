@@ -1,7 +1,5 @@
 import { FC, ReactElement, useState } from 'react';
-import ModalUserDetail from '../../../components/modal-user-detail';
-import ModalSuspendOrBan from '../../../components/modal-suspend-or-ban';
-import ModalDeleteUser from '../../../components/modal-delete-user';
+import ModalUserDetail from './_components/modal-user-detail';
 import {
   BackofficeWrapper,
   DataTable,
@@ -16,12 +14,11 @@ import {
 } from '@tanstack/react-table';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { cn } from '@imphnen-frontend-service/utils';
-import { SearchOutlined } from '@ant-design/icons';
+import { EditOutlined } from '@ant-design/icons';
+// Removed unused SearchOutlined icon after schema revision
 
 export const HackathonUsersPage: FC = (): ReactElement => {
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showDetailModal, setShowDetailModal] = useState(false);
-  const [showSuspendModal, setShowSuspendModal] = useState(false);
 
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [pagination, setPagination] = useState<PaginationState>({
@@ -29,82 +26,68 @@ export const HackathonUsersPage: FC = (): ReactElement => {
     pageSize: 9,
   });
 
-  const mockData: any[] = Array.from({ length: 90 }, (_, i) => ({
-    id: i + 1,
-    name: i % 3 === 0 ? 'Ahmad Wijuana' : 'Sofia Wijuana',
-    email: 'fullname23@gmail.com',
-    rating: 4.5,
-    status: i % 2 === 0 ? 'active' : 'inactive',
-  }));
-
-  type UserStatus = 'active' | 'inactive';
-
+  // Mock data aligned to API user schema
   interface UserType {
-    id: number;
-    name: string;
+    id: string;
+    fullname: string;
     email: string;
-    rating: number;
-    status: UserStatus;
+    is_active: boolean;
+    location: string;
+    created_at: string;
+    updated_at: string;
+    avatar?: string;
+    phone_number?: string;
   }
+
+  const mockData: UserType[] = Array.from({ length: 50 }, (_, i) => ({
+    id: `24db9e4d-ca4c-46aa-ac36-8ef04bbe015f`,
+    fullname: i % 3 === 0 ? 'Ahmad Wijuana' : 'Sofia Wijuana',
+    email: `user${i + 1}@example.com`,
+    is_active: i % 5 !== 0,
+    location: i % 2 === 0 ? 'Jakarta' : 'Bandung',
+    created_at: new Date(Date.now() - i * 86400000).toISOString(),
+    updated_at: new Date().toISOString(),
+    avatar: undefined,
+    phone_number: '+62-812-0000-000',
+  }));
 
   const columns: ColumnDef<UserType>[] = [
     {
-      id: 'select',
-      meta: { cellClassName: cn('w-20') },
-      header: ({ table }) => (
-        <input
-          type="checkbox"
-          className="rounded"
-          checked={table.getIsAllRowsSelected()}
-          onChange={table.getToggleAllRowsSelectedHandler()}
-        />
-      ),
-      cell: ({ row }) => (
-        <input
-          type="checkbox"
-          className="rounded"
-          checked={row.getIsSelected()}
-          onChange={row.getToggleSelectedHandler()}
-        />
-      ),
+      accessorKey: 'id',
+      header: 'ID',
     },
     {
-      id: 'name',
-      header: 'Name',
-      accessorKey: 'name',
+      accessorKey: 'fullname',
+      header: 'Full Name',
     },
     {
-      id: 'email',
-      header: 'Email',
       accessorKey: 'email',
+      header: 'Email',
     },
     {
-      id: 'rating',
-      header: 'Rating',
-      accessorKey: 'rating',
+      accessorKey: 'location',
+      header: 'Location',
     },
     {
-      id: 'status',
+      accessorKey: 'is_active',
       header: 'Status',
-      accessorKey: 'status',
-      cell: ({ row }) => {
-        const status = row.original.status;
-        const statusColors: Record<UserStatus, string> = {
-          active: 'bg-success-200 text-success-500',
-          inactive: 'bg-danger-200 text-danger-500',
-        };
-        const statusText: Record<UserStatus, string> = {
-          active: 'Active',
-          inactive: 'Inactive',
-        };
-        return (
-          <div
-            className={`py-2 px-4 rounded-md text-center ${statusColors[status]}`}
-          >
-            {statusText[status]}
-          </div>
-        );
-      },
+      cell: ({ row }) => (
+        <div
+          className={cn(
+            'py-2 px-4 text-sm rounded-2xl text-center',
+            row.original.is_active
+              ? 'bg-success-200 text-success-700'
+              : 'bg-danger-200 text-danger-700'
+          )}
+        >
+          {row.original.is_active ? 'Active' : 'Inactive'}
+        </div>
+      ),
+    },
+    {
+      accessorKey: 'created_at',
+      header: 'Joined',
+      cell: ({ row }) => new Date(row.original.created_at).toLocaleDateString(),
     },
     {
       header: 'Action',
@@ -113,17 +96,12 @@ export const HackathonUsersPage: FC = (): ReactElement => {
         <Button
           variant="primary"
           size="sm"
-          onClick={
-            (e) => {}
-            //   {
-            //   e.stopPropagation();
-            //   setSelectedUserId(row.original.id);
-            //   setShowDetail(true);
-            // }
-          }
           className="flex items-center gap-2 w-max"
+          onClick={() => {
+            // View detail logic
+          }}
         >
-          <SearchOutlined className="text-[16px]" /> Lihat Detail & Action
+          <EditOutlined className="text-base" /> View & Manage
         </Button>
       ),
     },
@@ -161,10 +139,10 @@ export const HackathonUsersPage: FC = (): ReactElement => {
           <select className="border border-neutral-200 rounded-md px-3 py-2 text-label1 w-full sm:w-40">
             <option value="all">All Status</option>
             <option value="active">Active</option>
-            <option value="suspended">Suspended</option>
+            <option value="inactive">Inactive</option>
           </select>
           <select className="border border-neutral-200 rounded-md px-3 py-2 text-label1 w-full sm:w-40">
-            <option value="all">All City</option>
+            <option value="all">All Location</option>
             <option value="jakarta">Jakarta</option>
             <option value="bandung">Bandung</option>
           </select>
@@ -174,18 +152,10 @@ export const HackathonUsersPage: FC = (): ReactElement => {
         <DataTable data={mockData} columns={columns} table={table} />
       </section>
 
-      {/* Modals extracted into shared backoffice components */}
+      {/* Modals component */}
       <ModalUserDetail
         isOpen={showDetailModal}
         onClose={() => setShowDetailModal(false)}
-      />
-      <ModalSuspendOrBan
-        isOpen={showSuspendModal}
-        onClose={() => setShowSuspendModal(false)}
-      />
-      <ModalDeleteUser
-        isOpen={showDeleteModal}
-        onClose={() => setShowDeleteModal(false)}
       />
     </BackofficeWrapper>
   );

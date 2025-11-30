@@ -14,7 +14,7 @@ const ModalUserDetail: FC<ModalProps> = ({ isOpen, onClose }) => {
         <div className="bg-white rounded-lg shadow w-full max-w-3xl">
           <div className="border-b px-6 py-4 flex justify-between items-center">
             <h2 className="text-p3 font-semibold">User Detail</h2>
-            <button className="p-2" onClick={onClose}>
+            <button className="p-2 cursor-pointer" onClick={onClose}>
               ✕
             </button>
           </div>

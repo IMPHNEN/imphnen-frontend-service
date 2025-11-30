@@ -1,7 +1,4 @@
 import { FC, ReactElement, useState } from 'react';
-import ModalUserDetail from '../../../components/modal-user-detail';
-import ModalSuspendOrBan from '../../../components/modal-suspend-or-ban';
-import ModalDeleteUser from '../../../components/modal-delete-user';
 import {
   BackofficeWrapper,
   DataTable,
@@ -16,11 +13,11 @@ import {
 } from '@tanstack/react-table';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { cn } from '@imphnen-frontend-service/utils';
+import { useTeams } from '@imphnen-frontend-service/service';
+import { EditOutlined } from '@ant-design/icons';
 
 export const HackathonTeamsPage: FC = (): ReactElement => {
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showDetailModal, setShowDetailModal] = useState(false);
-  const [showSuspendModal, setShowSuspendModal] = useState(false);
+  const { data: teamsData } = useTeams();
 
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [pagination, setPagination] = useState<PaginationState>({
@@ -64,34 +61,12 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
 
   const columns: ColumnDef<TeamType>[] = [
     {
-      id: 'select',
-      meta: { cellClassName: cn('w-12') },
-      header: ({ table }) => (
-        <input
-          type="checkbox"
-          className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
-          checked={table.getIsAllRowsSelected()}
-          onChange={table.getToggleAllRowsSelectedHandler()}
-        />
-      ),
-      cell: ({ row }) => (
-        <input
-          type="checkbox"
-          className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
-          checked={row.getIsSelected()}
-          onChange={row.getToggleSelectedHandler()}
-        />
-      ),
+      accessorKey: 'id',
+      header: 'ID',
     },
     {
       accessorKey: 'name',
       header: 'Team Name',
-      cell: ({ row }) => (
-        <div>
-          <div className="font-medium text-gray-900">{row.original.name}</div>
-          <div className="text-xs text-gray-500">{row.original.id}</div>
-        </div>
-      ),
     },
     {
       accessorKey: 'city',
@@ -105,10 +80,10 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
         return (
           <span
             className={cn(
-              'px-2 py-1 rounded-full text-xs font-medium',
+              'py-2 px-4 text-sm rounded-2xl text-center',
               isPublic
-                ? 'bg-green-100 text-green-700'
-                : 'bg-gray-100 text-gray-700'
+                ? 'bg-info-200 text-info-700'
+                : 'bg-gray-200 text-gray-700'
             )}
           >
             {isPublic ? 'Public' : 'Private'}
@@ -119,12 +94,6 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
     {
       accessorKey: 'member_count',
       header: 'Members',
-      cell: ({ row }) => (
-        <div className="flex items-center gap-1">
-          <span className="font-medium">{row.getValue('member_count')}</span>
-          <span className="text-gray-500 text-xs">members</span>
-        </div>
-      ),
     },
     {
       id: 'leader',
@@ -139,22 +108,22 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
             <div className="text-xs text-gray-500">{leader.email}</div>
           </div>
         ) : (
-          <span className="text-gray-400 italic">No leader</span>
+          <span className="text-gray-400 italic">-</span>
         );
       },
     },
     {
       accessorKey: 'has_submission',
-      header: 'Submission',
+      header: 'Submitted',
       cell: ({ row }) => {
         const hasSubmission = row.original.has_submission;
         return (
           <span
             className={cn(
-              'px-2 py-1 rounded-full text-xs font-medium',
+              'py-2 px-4 text-sm rounded-2xl text-center',
               hasSubmission
-                ? 'bg-blue-100 text-blue-700'
-                : 'bg-orange-100 text-orange-700'
+                ? 'bg-success-200 text-success-700'
+                : 'bg-danger-200 text-danger-700'
             )}
           >
             {hasSubmission ? 'Yes' : 'No'}
@@ -166,11 +135,7 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
       accessorKey: 'updated_at',
       header: 'Last Updated',
       cell: ({ row }) => {
-        return (
-          <span className="text-sm text-gray-500">
-            {new Date(row.original.updated_at).toLocaleDateString()}
-          </span>
-        );
+        return new Date(row.original.updated_at).toLocaleDateString();
       },
     },
     {
@@ -180,25 +145,14 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
       cell: ({ row }) => (
         <div className="flex items-center gap-2">
           <Button
-            variant="text"
+            variant="primary"
             size="sm"
-            className="text-primary-600 hover:text-primary-700 p-0"
+            className="flex items-center gap-2 w-max"
             onClick={() => {
               // View detail logic
             }}
           >
-            View
-          </Button>
-          <span className="text-gray-300">|</span>
-          <Button
-            variant="text"
-            size="sm"
-            className="text-gray-600 hover:text-gray-700 p-0"
-            onClick={() => {
-              // Manage logic
-            }}
-          >
-            Manage
+            <EditOutlined className="text-base" /> View & Manage
           </Button>
         </div>
       ),
@@ -249,18 +203,6 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
         <DataTable data={mockData} columns={columns} table={table} />
       </section>
       {/* Modals extracted into shared backoffice components */}
-      <ModalUserDetail
-        isOpen={showDetailModal}
-        onClose={() => setShowDetailModal(false)}
-      />
-      <ModalSuspendOrBan
-        isOpen={showSuspendModal}
-        onClose={() => setShowSuspendModal(false)}
-      />
-      <ModalDeleteUser
-        isOpen={showDeleteModal}
-        onClose={() => setShowDeleteModal(false)}
-      />
     </BackofficeWrapper>
   );
 };
