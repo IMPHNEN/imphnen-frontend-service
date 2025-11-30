@@ -1,6 +1,6 @@
 # Hackathon Backoffice API Contract
 
-## GET /api/v1/dashboard
+## GET /api/v1/admin/dashboard
 
 ### Purpose
 
@@ -14,7 +14,7 @@ Single endpoint delivering aggregated metrics for the IMPHNEN x Kolosal.ai Hacka
 ### Examples
 
 ```
-GET /api/v1/hackathon/dashboard
+GET /api/v1/admin/dashboard
 ```
 
 ### Response Schema
