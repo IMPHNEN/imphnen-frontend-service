@@ -131,8 +131,7 @@ const DashboardPage: FC = (): ReactElement => {
 
         {myTeams.length > 0 ? (
           (() => {
-            const item = myTeams[0] as any;
-            const team = item.team || item;
+            const team = myTeams[0] as any;
             return (
               <div className="mb-6 md:mb-8">
                 <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">

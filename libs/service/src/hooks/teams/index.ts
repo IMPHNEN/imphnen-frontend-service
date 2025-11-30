@@ -434,8 +434,11 @@ export const useMyTeams = () => {
   return useQuery({
     queryKey: teamKeys.myTeams(),
     queryFn: async () => {
-      const response = await hackathonApi.get<HackathonApiResponse<Team[]>>('/teams/my');
-      return { data: response.data.data || [] };
+      const response = await hackathonApi.get<HackathonApiResponse<any[]>>('/teams/my');
+      const rawData = response.data.data || [];
+      // Unwrap nested team data if present (API returns [{team: {...}}] or [{id, name, ...}])
+      const teams = rawData.map((item: any) => item.team || item);
+      return { data: teams };
     },
     enabled: !!session?.user?.id,
   });
@@ -555,8 +558,11 @@ export const useTeamsByUserId = (userId: string) => {
   return useQuery({
     queryKey: ['teams-by-user', userId],
     queryFn: async () => {
-      const response = await hackathonApi.get<HackathonApiResponse<Team[]>>(`/users/${userId}/teams`);
-      return { data: response.data.data || [] };
+      const response = await hackathonApi.get<HackathonApiResponse<any[]>>(`/users/${userId}/teams`);
+      const rawData = response.data.data || [];
+      // Unwrap nested team data if present (API returns [{team: {...}}] or [{id, name, ...}])
+      const teams = rawData.map((item: any) => item.team || item);
+      return { data: teams };
     },
     enabled: !!userId,
   });
