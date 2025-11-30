@@ -18,27 +18,52 @@ import { Link, useLocation } from 'react-router-dom';
 import { cn, For, useSession } from '@imphnen-frontend-service/utils';
 
 const MENUS = [
-  { label: 'Dashboard & Set Gacha', href: '/dashboard', icon: <AppstoreOutlined className="text-[20px]" /> },
-  { label: 'Dashboard - Dimentorin', href: '/dashboard-dimentorin', icon: <AppstoreOutlined className="text-[20px]" /> },
-  { label: 'Gacha Roll', href: '/gacha-roll', icon: <ReloadOutlined className="text-[20px]" /> },
-  { label: 'Permissions', href: '/permissions', icon: <UserSwitchOutlined className="text-[20px]" /> },
-  { label: 'Roles', href: '/roles', icon: <UsergroupAddOutlined className="text-[20px]" /> },
-  { label: 'Data Akun', href: '/accounts', icon: <UserOutlined className="text-[20px]" /> },
-  { label: 'Validasi Transaksi', href: '/transactions', icon: <AuditOutlined className="text-[20px]" /> },
-  { label: 'Data Pengiriman Hadiah', href: '/prizes', icon: <InboxOutlined className="text-[20px]" /> },
-  { label: 'User - Dimentorin', href: '/users-dimentorin', icon: <UserSwitchOutlined className="text-[20px]" /> },
-  { label: 'Session - Dimentorin', href: '/session-dimentorin', icon: <ScheduleOutlined className="text-[20px]" /> },
-  { label: 'Content & Roadmap', href: '/roadmap-dimentorin', icon: <BookOutlined className="text-[20px]" /> },
-  { label: 'Feedback & Review', href: '/feedback-review-dimentorin', icon: <CommentOutlined className="text-[20px]" /> },
-  { label: 'Settings - Dimentorin', href: '/settings-dimentorin', icon: <SettingOutlined className="text-[20px]" /> },
-]
+  {
+    label: 'Dashboard & Set Gacha',
+    href: '/dashboard',
+    icon: <AppstoreOutlined className="text-[20px]" />,
+  },
+  {
+    label: 'Hackathon Dashboard',
+    href: '/hackathon-dashboard',
+    icon: <AppstoreOutlined className="text-p3" />,
+  },
+  {
+    label: 'Hackathon Users',
+    href: '/hackathon-users',
+    icon: <UserOutlined className="text-p3" />,
+  },
+  {
+    label: 'Hackathon Teams',
+    href: '/hackathon-teams',
+    icon: <UsergroupAddOutlined className="text-p3" />,
+  },
+  {
+    label: 'Hackathon Submissions',
+    href: '/hackathon-submissions',
+    icon: <AuditOutlined className="text-p3" />,
+  },
+  // { label: 'Dashboard - Dimentorin', href: '/dashboard-dimentorin', icon: <AppstoreOutlined className="text-[20px]" /> },
+  // { label: 'Gacha Roll', href: '/gacha-roll', icon: <ReloadOutlined className="text-[20px]" /> },
+  // { label: 'Permissions', href: '/permissions', icon: <UserSwitchOutlined className="text-[20px]" /> },
+  // { label: 'Roles', href: '/roles', icon: <UsergroupAddOutlined className="text-[20px]" /> },
+  // { label: 'Data Akun', href: '/accounts', icon: <UserOutlined className="text-[20px]" /> },
+  // { label: 'Validasi Transaksi', href: '/transactions', icon: <AuditOutlined className="text-[20px]" /> },
+  // { label: 'Data Pengiriman Hadiah', href: '/prizes', icon: <InboxOutlined className="text-[20px]" /> },
+  // { label: 'User - Dimentorin', href: '/users-dimentorin', icon: <UserSwitchOutlined className="text-[20px]" /> },
+  // { label: 'Session - Dimentorin', href: '/session-dimentorin', icon: <ScheduleOutlined className="text-[20px]" /> },
+  // { label: 'Content & Roadmap', href: '/roadmap-dimentorin', icon: <BookOutlined className="text-[20px]" /> },
+  // { label: 'Feedback & Review', href: '/feedback-review-dimentorin', icon: <CommentOutlined className="text-[20px]" /> },
+  // { label: 'Settings - Dimentorin', href: '/settings-dimentorin', icon: <SettingOutlined className="text-[20px]" /> },
+];
 
 export const BackofficeSidebar: FC = (): ReactElement => {
   const { signOut } = useSession();
   const location = useLocation();
   const isActive = (path: string) => {
-    if (path === '/dashboard' && location.pathname === '/dashboard-dimentorin') return false
-    return location.pathname.includes(path)
+    if (path === '/dashboard' && location.pathname === '/dashboard-dimentorin')
+      return false;
+    return location.pathname.includes(path);
   };
 
   return (
@@ -53,8 +78,10 @@ export const BackofficeSidebar: FC = (): ReactElement => {
                 key={href}
                 to={href}
                 className={cn(
-                  "flex items-center justify-items-start gap-3 px-[8px] py-[10px]",
-                  isActive(href) ? "bg-primary-500 text-white rounded-md" : "text-gray-700 hover:bg-gray-100"
+                  'flex items-center justify-items-start gap-3 px-[8px] py-[10px]',
+                  isActive(href)
+                    ? 'bg-primary-500 text-white rounded-md'
+                    : 'text-gray-700 hover:bg-gray-100'
                 )}
               >
                 {icon}
