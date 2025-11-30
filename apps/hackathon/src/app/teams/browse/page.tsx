@@ -17,6 +17,9 @@ import { Icon } from '@iconify/react';
 const DEFAULT_PER_PAGE = 12;
 const PER_PAGE_OPTIONS = [6, 12, 24, 48];
 
+// Team features deadline: 2025-11-30 23:59:00 WIB (UTC+7)
+const TEAM_FEATURES_DEADLINE = new Date('2025-11-30T16:59:00Z');
+
 // Member filter options
 const MEMBER_FILTER_OPTIONS = [
   { label: 'All Teams', value: '', minMembers: undefined, maxMembers: undefined },
@@ -56,6 +59,9 @@ const TeamCardSkeleton: FC = () => (
 const BrowseTeamsPage: FC = (): ReactElement => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
+
+  // Check if team features are closed
+  const isTeamFeaturesClosed = new Date() >= TEAM_FEATURES_DEADLINE;
 
   // Initialize state from URL params
   const initialPage = parseInt(searchParams.get('page') || '1', 10);
@@ -416,7 +422,8 @@ const BrowseTeamsPage: FC = (): ReactElement => {
                         <>
                           {myTeams.length === 0 &&
                             (team.member_count || 0) < 5 &&
-                            !team.has_submission && (
+                            !team.has_submission &&
+                            !isTeamFeaturesClosed && (
                               <Button
                                 className="w-full"
                                 onClick={() => handleJoinRequest(team.id)}

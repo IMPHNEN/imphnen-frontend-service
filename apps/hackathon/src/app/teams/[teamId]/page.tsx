@@ -17,6 +17,9 @@ import { Icon } from '@iconify/react';
 
 const MAX_TEAM_MEMBERS = 5;
 
+// Team features deadline: 2025-11-30 23:59:00 WIB (UTC+7)
+const TEAM_FEATURES_DEADLINE = new Date('2025-11-30T16:59:00Z');
+
 // Image component with loading state
 const ImageWithLoader: FC<{
   src: string;
@@ -52,6 +55,9 @@ const TeamDashboardPage: FC = (): ReactElement => {
   const { teamId } = useParams<{ teamId: string }>();
   const navigate = useNavigate();
   const { session } = useAuthStore();
+
+  // Check if team features are closed
+  const isTeamFeaturesClosed = new Date() >= TEAM_FEATURES_DEADLINE;
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [showJoinRequestsModal, setShowJoinRequestsModal] = useState(false);
   const [showLeaveModal, setShowLeaveModal] = useState(false);
@@ -369,8 +375,8 @@ const TeamDashboardPage: FC = (): ReactElement => {
                   Team Management
                 </h2>
                 <div className="grid gap-3 sm:grid-cols-2">
-                  {/* Hide invite/join management after submission */}
-                  {!team.has_submission && (
+                  {/* Hide invite/join management after submission or deadline */}
+                  {!team.has_submission && !isTeamFeaturesClosed && (
                     <>
                       <Button
                         className="w-full"
@@ -397,7 +403,7 @@ const TeamDashboardPage: FC = (): ReactElement => {
                       </Button>
                     </>
                   )}
-                  {!team.has_submission && (
+                  {!team.has_submission && !isTeamFeaturesClosed && (
                     <Link to={`/teams/${teamId}/edit`}>
                       <Button className="w-full" variant="secondary">
                         <Icon icon="mdi:pencil" className="inline-block mr-2" />
@@ -441,8 +447,8 @@ const TeamDashboardPage: FC = (): ReactElement => {
                     Maximum team size reached ({MAX_TEAM_MEMBERS} members)
                   </p>
                 )}
-                {/* Danger Zone - Only show when leader is alone and no submission */}
-                {members.length === 1 && !team.has_submission && (
+                {/* Danger Zone - Only show when leader is alone, no submission, and features not closed */}
+                {members.length === 1 && !team.has_submission && !isTeamFeaturesClosed && (
                   <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
                     <h3 className="text-sm font-medium text-red-600 dark:text-red-400 mb-3">
                       Danger Zone
@@ -480,7 +486,7 @@ const TeamDashboardPage: FC = (): ReactElement => {
                       </Button>
                     </Link>
                   )}
-                  {!team.has_submission && (
+                  {!team.has_submission && !isTeamFeaturesClosed && (
                     <Button
                       className="w-full bg-red-600 hover:bg-red-700 text-white"
                       onClick={() => setShowLeaveModal(true)}
