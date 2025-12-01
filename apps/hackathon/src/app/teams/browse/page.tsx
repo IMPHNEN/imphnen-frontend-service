@@ -31,6 +31,13 @@ const MEMBER_FILTER_OPTIONS = [
   { label: '5 Members (Full)', value: '5', minMembers: 5, maxMembers: 5 },
 ];
 
+// Submission status filter options
+const SUBMISSION_FILTER_OPTIONS = [
+  { label: 'All Teams', value: '' },
+  { label: 'Submitted', value: 'true' },
+  { label: 'Not Submitted', value: 'false' },
+];
+
 // Skeleton card component for loading state
 const TeamCardSkeleton: FC = () => (
   <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md overflow-hidden flex flex-col border dark:border-gray-800 animate-pulse">
@@ -72,11 +79,13 @@ const BrowseTeamsPage: FC = (): ReactElement => {
   const initialSearch = searchParams.get('search') || '';
   const initialCity = searchParams.get('city') || '';
   const initialMembers = searchParams.get('members') || '';
+  const initialSubmission = searchParams.get('submission') || '';
 
   const [searchTerm, setSearchTerm] = useState(initialSearch);
   const [debouncedSearch, setDebouncedSearch] = useState(initialSearch);
   const [selectedCity, setSelectedCity] = useState(initialCity);
   const [selectedMembers, setSelectedMembers] = useState(initialMembers);
+  const [selectedSubmission, setSelectedSubmission] = useState(initialSubmission);
   const [selectedTeamId, setSelectedTeamId] = useState<string | null>(null);
   const [showJoinModal, setShowJoinModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(
@@ -94,6 +103,7 @@ const BrowseTeamsPage: FC = (): ReactElement => {
       search?: string;
       city?: string;
       members?: string;
+      submission?: string;
     }) => {
       const newParams = new URLSearchParams(searchParams);
 
@@ -137,6 +147,14 @@ const BrowseTeamsPage: FC = (): ReactElement => {
         }
       }
 
+      if (params.submission !== undefined) {
+        if (params.submission === '') {
+          newParams.delete('submission');
+        } else {
+          newParams.set('submission', params.submission);
+        }
+      }
+
       setSearchParams(newParams, { replace: true });
     },
     [searchParams, setSearchParams]
@@ -167,6 +185,9 @@ const BrowseTeamsPage: FC = (): ReactElement => {
     (opt) => opt.value === selectedMembers
   );
 
+  // Convert submission filter value to boolean
+  const hasSubmissionFilter = selectedSubmission === 'true' ? true : selectedSubmission === 'false' ? false : undefined;
+
   const {
     data: teamsData,
     isLoading,
@@ -179,6 +200,7 @@ const BrowseTeamsPage: FC = (): ReactElement => {
     visibility: ETeamVisibility.PUBLIC,
     minMembers: memberFilter?.minMembers,
     maxMembers: memberFilter?.maxMembers,
+    hasSubmission: hasSubmissionFilter,
   });
 
   const { data: myTeamsData } = useMyTeams();
@@ -278,7 +300,7 @@ const BrowseTeamsPage: FC = (): ReactElement => {
       {/* Filters */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-sm mb-6 border dark:border-gray-800">
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Search Teams
@@ -315,6 +337,26 @@ const BrowseTeamsPage: FC = (): ReactElement => {
                 className="w-full h-[42px] px-3 border border-gray-300 dark:border-gray-700 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
               >
                 {MEMBER_FILTER_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Submission Status
+              </label>
+              <select
+                value={selectedSubmission}
+                onChange={(e) => {
+                  setSelectedSubmission(e.target.value);
+                  setCurrentPage(1);
+                  updateUrlParams({ submission: e.target.value, page: 1 });
+                }}
+                className="w-full h-[42px] px-3 border border-gray-300 dark:border-gray-700 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+              >
+                {SUBMISSION_FILTER_OPTIONS.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
