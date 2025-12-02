@@ -243,16 +243,6 @@ const SubmitProjectPage: FC = (): ReactElement => {
               size="lg"
             />
 
-            {/* Presentation URL */}
-            <ControlledInputField
-              control={form.control}
-              label="Presentation URL (Optional)"
-              placeholder="https://slides.com/your-presentation or Google Drive link"
-              name="presentation_url"
-              type="url"
-              size="lg"
-            />
-
             {/* Screenshots */}
             <div>
               <label className="block text-label1 font-medium text-neutral-800 dark:text-gray-300">

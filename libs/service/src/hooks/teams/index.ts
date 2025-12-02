@@ -127,6 +127,7 @@ export const useTeams = (params?: {
   search?: string;
   minMembers?: number;
   maxMembers?: number;
+  hasSubmission?: boolean;
 }) => {
   return useQuery({
     queryKey: teamKeys.list(params),
@@ -139,6 +140,7 @@ export const useTeams = (params?: {
       if (params?.visibility) queryParams.append('visibility', params.visibility);
       if (params?.minMembers) queryParams.append('min_members', String(params.minMembers));
       if (params?.maxMembers) queryParams.append('max_members', String(params.maxMembers));
+      if (params?.hasSubmission !== undefined) queryParams.append('has_submission', String(params.hasSubmission));
 
       const response = await hackathonApi.get<ListResponseWithMeta<Team>>(
         `/teams/browse${queryParams.toString() ? `?${queryParams.toString()}` : ''}`
@@ -434,8 +436,11 @@ export const useMyTeams = () => {
   return useQuery({
     queryKey: teamKeys.myTeams(),
     queryFn: async () => {
-      const response = await hackathonApi.get<HackathonApiResponse<Team[]>>('/teams/my');
-      return { data: response.data.data || [] };
+      const response = await hackathonApi.get<HackathonApiResponse<any[]>>('/teams/my');
+      const rawData = response.data.data || [];
+      // Unwrap nested team data if present (API returns [{team: {...}}] or [{id, name, ...}])
+      const teams = rawData.map((item: any) => item.team || item);
+      return { data: teams };
     },
     enabled: !!session?.user?.id,
   });
@@ -447,6 +452,8 @@ export const useSubmitProject = (teamId: string) => {
 
   return useMutation({
     mutationFn: async (data: TSubmitProjectRequest) => {
+      let submissionId: string;
+
       // First, check if submission exists
       try {
         const existingResponse = await hackathonApi.get<HackathonApiResponse<Submission | null>>(
@@ -464,28 +471,41 @@ export const useSubmitProject = (teamId: string) => {
               demo_url: data.demo_url,
               video_url: data.video_url,
               presentation_url: data.presentation_url,
+              screenshots: data.screenshots,
             }
           );
-          return { data: response.data.data };
+          submissionId = response.data.data.id;
+        } else {
+          throw new Error('No existing submission');
         }
       } catch {
         // No existing submission, create new one
+        const response = await hackathonApi.post<HackathonApiResponse<Submission>>(
+          `/submissions/teams/${teamId}`,
+          {
+            project_name: data.project_name,
+            description: data.description,
+            repository_url: data.repository_url,
+            demo_url: data.demo_url,
+            video_url: data.video_url,
+            presentation_url: data.presentation_url,
+            screenshots: data.screenshots,
+          }
+        );
+        submissionId = response.data.data.id;
       }
 
-      // Create new submission
-      const response = await hackathonApi.post<HackathonApiResponse<Submission>>(
-        `/submissions/teams/${teamId}`,
-        {
-          project_name: data.project_name,
-          description: data.description,
-          repository_url: data.repository_url,
-          demo_url: data.demo_url,
-          video_url: data.video_url,
-          presentation_url: data.presentation_url,
-        }
+      // Step 2: Submit the project (draft -> pending_verification)
+      await hackathonApi.post<HackathonApiResponse<Submission>>(
+        `/submissions/${submissionId}/submit`
       );
 
-      return { data: response.data.data };
+      // Step 3: Confirm the submission (pending_verification -> submitted)
+      const finalResponse = await hackathonApi.post<HackathonApiResponse<Submission>>(
+        `/submissions/${submissionId}/confirm`
+      );
+
+      return { data: finalResponse.data.data };
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: teamKeys.submission(teamId) });
@@ -555,8 +575,11 @@ export const useTeamsByUserId = (userId: string) => {
   return useQuery({
     queryKey: ['teams-by-user', userId],
     queryFn: async () => {
-      const response = await hackathonApi.get<HackathonApiResponse<Team[]>>(`/users/${userId}/teams`);
-      return { data: response.data.data || [] };
+      const response = await hackathonApi.get<HackathonApiResponse<any[]>>(`/users/${userId}/teams`);
+      const rawData = response.data.data || [];
+      // Unwrap nested team data if present (API returns [{team: {...}}] or [{id, name, ...}])
+      const teams = rawData.map((item: any) => item.team || item);
+      return { data: teams };
     },
     enabled: !!userId,
   });

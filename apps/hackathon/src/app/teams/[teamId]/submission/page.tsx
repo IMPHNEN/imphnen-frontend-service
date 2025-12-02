@@ -60,20 +60,46 @@ const SubmissionViewPage: FC = (): ReactElement => {
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Status Banner */}
-        <div className="bg-green-50 dark:bg-green-900/20 border border-green-500 rounded-lg p-6 mb-6">
-          <div className="flex items-center space-x-3">
-            <span className="text-4xl">✅</span>
-            <div>
-              <h3 className="font-bold text-green-900 dark:text-green-100 text-lg">Project Submitted Successfully</h3>
-              <p className="text-green-700 dark:text-green-300 text-sm">
-                Submitted on {submittedDate}
-              </p>
-              <p className="text-green-600 dark:text-green-400 text-xs mt-1">
-                This submission is now read-only and cannot be edited
-              </p>
+        {submission.status === 'submitted' ? (
+          <div className="bg-green-50 dark:bg-green-900/20 border border-green-500 rounded-lg p-6 mb-6">
+            <div className="flex items-center space-x-3">
+              <span className="text-4xl">✅</span>
+              <div>
+                <h3 className="font-bold text-green-900 dark:text-green-100 text-lg">Project Submitted Successfully</h3>
+                <p className="text-green-700 dark:text-green-300 text-sm">
+                  Submitted on {submittedDate}
+                </p>
+                <p className="text-green-600 dark:text-green-400 text-xs mt-1">
+                  This submission is now read-only and cannot be edited
+                </p>
+              </div>
             </div>
           </div>
-        </div>
+        ) : submission.status === 'pending_verification' ? (
+          <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-500 rounded-lg p-6 mb-6">
+            <div className="flex items-center space-x-3">
+              <span className="text-4xl">⏳</span>
+              <div>
+                <h3 className="font-bold text-yellow-900 dark:text-yellow-100 text-lg">Submission Pending Verification</h3>
+                <p className="text-yellow-700 dark:text-yellow-300 text-sm">
+                  Your submission is being processed
+                </p>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-500 rounded-lg p-6 mb-6">
+            <div className="flex items-center space-x-3">
+              <span className="text-4xl">📝</span>
+              <div>
+                <h3 className="font-bold text-orange-900 dark:text-orange-100 text-lg">Draft Submission</h3>
+                <p className="text-orange-700 dark:text-orange-300 text-sm">
+                  This submission is still in draft and has not been finalized
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md dark:shadow-neutral-950/50 overflow-hidden">
           {/* Project Header */}
@@ -124,21 +150,6 @@ const SubmissionViewPage: FC = (): ReactElement => {
                 </div>
               )}
 
-              {/* Presentation URL */}
-              {submission.presentation_url && (
-                <div>
-                  <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">Presentation</h3>
-                  <a
-                    href={submission.presentation_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center space-x-2 text-blue-600 dark:text-primary-400 hover:text-blue-800 dark:hover:text-primary-300"
-                  >
-                    <span>📊</span>
-                    <span className="break-all">{submission.presentation_url}</span>
-                  </a>
-                </div>
-              )}
             </div>
 
             {/* Screenshots */}
@@ -173,8 +184,18 @@ const SubmissionViewPage: FC = (): ReactElement => {
               <div className="grid gap-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-600 dark:text-neutral-400">Status:</span>
-                  <span className="font-medium text-green-600 dark:text-green-400">
-                    {submission.status === 'submitted' ? '✓ Submitted' : 'Draft'}
+                  <span className={`font-medium ${
+                    submission.status === 'submitted'
+                      ? 'text-green-600 dark:text-green-400'
+                      : submission.status === 'pending_verification'
+                        ? 'text-yellow-600 dark:text-yellow-400'
+                        : 'text-orange-600 dark:text-orange-400'
+                  }`}>
+                    {submission.status === 'submitted'
+                      ? '✓ Submitted'
+                      : submission.status === 'pending_verification'
+                        ? '⏳ Pending Verification'
+                        : '📝 Draft'}
                   </span>
                 </div>
                 <div className="flex justify-between">

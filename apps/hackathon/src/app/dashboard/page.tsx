@@ -11,6 +11,9 @@ import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { Icon } from '@iconify/react';
 import ProfilePage from '../profile/page';
 
+// Team features deadline: 2025-11-30 23:59:00 WIB (UTC+7)
+const TEAM_FEATURES_DEADLINE = new Date('2025-11-30T16:59:00Z');
+
 type Invitation = {
   id: string;
   team: {
@@ -34,6 +37,9 @@ type Invitation = {
 const DashboardPage: FC = (): ReactElement => {
   const { session } = useAuthStore();
   const [showProfileModal, setShowProfileModal] = useState(false);
+
+  // Check if team features are closed
+  const isTeamFeaturesClosed = new Date() >= TEAM_FEATURES_DEADLINE;
   // Lock background scroll when profile modal is open
   useEffect(() => {
     if (showProfileModal) {
@@ -93,6 +99,14 @@ const DashboardPage: FC = (): ReactElement => {
             <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
               Team Invitations ({invitations.length})
             </h2>
+            {isTeamFeaturesClosed && (
+              <div className="mb-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-3">
+                <p className="text-sm text-amber-700 dark:text-amber-300 flex items-center gap-2">
+                  <Icon icon="mdi:clock-alert" className="text-lg shrink-0" />
+                  Team features are closed. You can no longer accept invitations.
+                </p>
+              </div>
+            )}
             <div className="space-y-3 font-sans">
               {invitations.map((invitation) => (
                 <div
@@ -108,21 +122,23 @@ const DashboardPage: FC = (): ReactElement => {
                       {invitation.inviter?.fullname ?? 'Unknown User'}
                     </p>
                   </div>
-                  <div className="flex space-x-2">
-                    <Button
-                      size="sm"
-                      onClick={() => handleAcceptInvitation(invitation.id)}
-                    >
-                      Accept
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      onClick={() => handleRejectInvitation(invitation.id)}
-                    >
-                      Decline
-                    </Button>
-                  </div>
+                  {!isTeamFeaturesClosed && (
+                    <div className="flex space-x-2">
+                      <Button
+                        size="sm"
+                        onClick={() => handleAcceptInvitation(invitation.id)}
+                      >
+                        Accept
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        onClick={() => handleRejectInvitation(invitation.id)}
+                      >
+                        Decline
+                      </Button>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

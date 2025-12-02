@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useGitHubAuth, useSignup } from '@imphnen-frontend-service/service';
 import { GithubOutlined } from '@ant-design/icons';
-import { useNavigate, Link, Links } from 'react-router';
+import { useNavigate, Link } from 'react-router';
 import { toast } from 'sonner';
 import { Icon } from '@iconify/react';
 import { ThemeToggle } from '../../../components/theme-toggle';
@@ -32,8 +32,14 @@ const signupSchema = z
 
 type SignupFormData = z.infer<typeof signupSchema>;
 
+// Registration deadline: 2025-11-30 23:29:00 WIB (UTC+7)
+const REGISTRATION_DEADLINE = new Date('2025-11-30T16:29:00Z');
+
 export default function SignupPage() {
   const navigate = useNavigate();
+
+  // Check if registration is closed
+  const isRegistrationClosed = new Date() >= REGISTRATION_DEADLINE;
   const { signInWithGitHub } = useGitHubAuth();
   const signupMutation = useSignup();
   const [isGithubLoading, setIsGithubLoading] = useState(false);
@@ -69,6 +75,49 @@ export default function SignupPage() {
       setError((err as Error).message || 'Signup failed');
     }
   };
+
+  // Show closed registration screen
+  if (isRegistrationClosed) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-gray-50 dark:bg-gray-950 p-4">
+        <div className="bg-white dark:bg-gray-900 w-full max-w-md p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 text-center">
+          <div className="mb-6">
+            <div className="mx-auto w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mb-4">
+              <Icon
+                icon="mdi:clock-alert"
+                className="text-3xl text-red-600 dark:text-red-400"
+              />
+            </div>
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+              Registration Closed
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400">
+              The registration period for this hackathon has ended.
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Thank you for your interest! Registration closed on November 30, 2025 at 23:29 WIB.
+            </p>
+
+            <Link to="/auth/login">
+              <button className="w-full py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 transition-colors cursor-pointer">
+                Go to Login
+              </button>
+            </Link>
+
+            <button
+              onClick={() => navigate('/')}
+              className="w-full py-3 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer"
+            >
+              Back to Homepage
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Show success screen after registration
   if (registrationSuccess) {
