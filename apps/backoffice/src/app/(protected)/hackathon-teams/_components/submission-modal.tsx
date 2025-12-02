@@ -76,7 +76,7 @@ const SubmissionModal: FC<SubmissionModalProps> = ({
               <p className="text-xs text-success-600">
                 Submitted on{' '}
                 {new Date(mockSubmission.submitted_at).toLocaleDateString(
-                  'en-US',
+                  'en-UK',
                   {
                     year: 'numeric',
                     month: 'long',

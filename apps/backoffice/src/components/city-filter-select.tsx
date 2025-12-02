@@ -8,6 +8,7 @@ interface CityFilterSelectProps {
   className?: string;
   placeholder?: string;
   allOptionLabel?: string;
+  filterIcon?: boolean;
 }
 
 export const CityFilterSelect: FC<CityFilterSelectProps> = ({
@@ -16,6 +17,7 @@ export const CityFilterSelect: FC<CityFilterSelectProps> = ({
   className = '',
   placeholder = 'Search cities...',
   allOptionLabel = 'All Cities',
+  filterIcon = true,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -66,7 +68,9 @@ export const CityFilterSelect: FC<CityFilterSelectProps> = ({
   return (
     <div className={`relative ${className}`} ref={dropdownRef}>
       <div className="relative">
-        <FilterOutlined className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 text-sm pointer-events-none z-10" />
+        {filterIcon && (
+          <FilterOutlined className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 text-sm pointer-events-none z-10" />
+        )}
         <input
           ref={inputRef}
           type="text"
@@ -78,7 +82,9 @@ export const CityFilterSelect: FC<CityFilterSelectProps> = ({
           onClick={handleInputClick}
           onFocus={handleInputClick}
           placeholder={isOpen ? placeholder : displayValue}
-          className="border border-neutral-200 rounded-lg pl-10 pr-10 py-2.5 text-sm w-full focus:border-primary-500 focus:outline-none appearance-none bg-white cursor-pointer"
+          className={`border border-neutral-200 rounded-lg pr-10 py-2.5 text-sm w-full focus:border-primary-500 focus:outline-none appearance-none bg-white cursor-pointer ${
+            filterIcon ? ' pl-10' : 'pl-3'
+          }`}
         />
         {showClearButton && (
           <button

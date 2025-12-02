@@ -1,7 +1,8 @@
-import { FC, useState, useEffect, useMemo } from 'react';
+import { FC, useState, useEffect, useMemo, useRef } from 'react';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { cn } from '@imphnen-frontend-service/utils';
 import TeamBannerPlaceholder from './team-banner-placeholder';
+import { CityFilterSelect } from '../../../../components/city-filter-select';
 import {
   TeamOutlined,
   CalendarOutlined,
@@ -16,6 +17,8 @@ import {
   CheckCircleOutlined,
   ClockCircleOutlined,
   CloseCircleOutlined,
+  CameraOutlined,
+  UploadOutlined,
 } from '@ant-design/icons';
 
 interface TeamMember {
@@ -66,6 +69,9 @@ const ModalTeamDetail: FC<ModalProps> = ({ isOpen, onClose, team }) => {
   const [formData, setFormData] = useState<TeamType | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [activeTab, setActiveTab] = useState<'details' | 'members'>('details');
+  const [showLogoMenu, setShowLogoMenu] = useState(false);
+  const logoInputRef = useRef<HTMLInputElement>(null);
+  const bannerInputRef = useRef<HTMLInputElement>(null);
 
   // Initialize form data when modal opens
   useEffect(() => {
@@ -102,7 +108,9 @@ const ModalTeamDetail: FC<ModalProps> = ({ isOpen, onClose, team }) => {
       formData.name !== team.name ||
       formData.description !== team.description ||
       formData.city !== team.city ||
-      formData.visibility !== team.visibility
+      formData.visibility !== team.visibility ||
+      formData.logo !== team.logo ||
+      formData.banner !== team.banner
     );
   }, [formData, team]);
 
@@ -125,7 +133,7 @@ const ModalTeamDetail: FC<ModalProps> = ({ isOpen, onClose, team }) => {
 
   const handleInputChange = (
     field: keyof TeamType,
-    value: string | boolean | 'public' | 'private'
+    value: string | boolean | 'public' | 'private' | undefined
   ) => {
     setFormData((prev) => (prev ? { ...prev, [field]: value } : null));
   };
@@ -145,7 +153,59 @@ const ModalTeamDetail: FC<ModalProps> = ({ isOpen, onClose, team }) => {
     onClose();
   };
 
-  const cities = ['Jakarta', 'Bandung', 'Surabaya', 'Medan', 'Yogyakarta'];
+  const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        alert('Please select an image file');
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Image size must be less than 5MB');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const logoUrl = e.target?.result as string;
+        handleInputChange('logo', logoUrl);
+        setShowLogoMenu(false);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleBannerUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        alert('Please select an image file');
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Image size must be less than 5MB');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const bannerUrl = e.target?.result as string;
+        handleInputChange('banner', bannerUrl);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveLogo = () => {
+    handleInputChange('logo', undefined);
+    setShowLogoMenu(false);
+  };
+
+  const handleRemoveBanner = () => {
+    handleInputChange('banner', undefined);
+  };
+
+  const triggerLogoUpload = () => {
+    logoInputRef.current?.click();
+  };
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -169,40 +229,155 @@ const ModalTeamDetail: FC<ModalProps> = ({ isOpen, onClose, team }) => {
           </div>
           <button
             className="p-2 hover:bg-neutral-100 rounded-lg transition-colors cursor-pointer"
-            onClick={onClose}
+            onClick={() => {
+              setShowLogoMenu(false);
+              onClose();
+            }}
           >
             <CloseOutlined className="text-neutral-400 text-lg" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-6 space-y-6">
-          {/* Banner Section (for existing teams) */}
-          {team && (
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-neutral-700">
-                Team Banner
-              </label>
-              <TeamBannerPlaceholder
-                banner={team.banner}
-                teamName={team.name}
-                className="rounded-lg border border-neutral-200"
-              />
-            </div>
-          )}
+        <div className="p-6 space-y-6" onClick={() => setShowLogoMenu(false)}>
+          {/* Hidden File Inputs */}
+          <input
+            type="file"
+            ref={logoInputRef}
+            onChange={handleLogoUpload}
+            accept="image/*"
+            className="hidden"
+          />
+          <input
+            type="file"
+            ref={bannerInputRef}
+            onChange={handleBannerUpload}
+            accept="image/*"
+            className="hidden"
+          />
 
-          {/* Team Name */}
+          {/* Interactive Banner Section */}
           <div className="space-y-2">
             <label className="block text-sm font-medium text-neutral-700">
-              Team Name <span className="text-danger-500">*</span>
+              Team Banner
+              <span className="text-xs text-neutral-500 ml-2">
+                (3:1 aspect ratio recommended)
+              </span>
             </label>
-            <input
-              type="text"
-              className="w-full border border-neutral-200 rounded-lg px-3 py-2 text-sm focus:border-primary-500 focus:outline-none"
-              placeholder="Enter team name"
-              value={formData.name}
-              onChange={(e) => handleInputChange('name', e.target.value)}
-            />
+            <div className="relative group">
+              <TeamBannerPlaceholder
+                banner={formData.banner}
+                teamName={formData.name || 'Team Name'}
+                className="rounded-lg border border-neutral-200 transition-all group-hover:border-primary-300"
+              />
+              {/* Banner Action Buttons */}
+              <div className="absolute inset-0 bg-black/40 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    bannerInputRef.current?.click();
+                  }}
+                  className="bg-white/90 hover:bg-white text-neutral-700 border-transparent shadow-sm gap-2"
+                >
+                  <UploadOutlined className="text-sm" />
+                  {formData.banner ? 'Change Banner' : 'Add Banner'}
+                </Button>
+                {formData.banner && (
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRemoveBanner();
+                    }}
+                    className="bg-white/90 hover:bg-white text-red-600 border-transparent shadow-sm hover:text-red-700 gap-2"
+                  >
+                    <DeleteOutlined className="text-sm" />
+                    Delete Banner
+                  </Button>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Team Logo & Name Row */}
+          <div className="grid grid-cols-12 gap-4 items-start">
+            {/* Interactive Team Logo */}
+            <div className="col-span-2">
+              <label className="block text-sm font-medium text-neutral-700 mb-2">
+                Logo
+              </label>
+              <div className="relative group">
+                <div className="w-24 h-24 rounded-full bg-neutral-100 flex items-center justify-center overflow-hidden border border-neutral-200 group-hover:border-primary-300 transition-colors">
+                  {formData.logo ? (
+                    <img
+                      src={formData.logo}
+                      alt={formData.name || 'Team Logo'}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <TeamOutlined className="text-neutral-400 text-xl" />
+                  )}
+                </div>
+                {/* Logo Hover Overlay - Full circle */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowLogoMenu(!showLogoMenu);
+                  }}
+                  className="absolute inset-0 bg-neutral-300/80 cursor-pointer rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center w-24 h-24"
+                >
+                  <CameraOutlined className="text-white text-lg" />
+                </button>
+
+                {/* Logo Menu Dropdown */}
+                {showLogoMenu && (
+                  <div className="absolute top-full left-0 mt-2 bg-white rounded-lg shadow-lg border border-neutral-200 py-2 min-w-[140px] z-10">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        triggerLogoUpload();
+                      }}
+                      className="w-full px-4 py-2 text-left text-sm text-neutral-700 hover:bg-neutral-50 flex items-center gap-2 cursor-pointer"
+                    >
+                      <UploadOutlined className="text-sm" />
+                      {formData.logo ? 'Change Logo' : 'Upload Logo'}
+                    </button>
+                    {formData.logo && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleRemoveLogo();
+                        }}
+                        className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 cursor-pointer"
+                      >
+                        <DeleteOutlined className="text-sm" />
+                        Remove Logo
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Team Name */}
+            <div className="col-span-10 space-y-2">
+              <label className="block text-sm font-medium text-neutral-700">
+                Team Name <span className="text-danger-500">*</span>
+              </label>
+              <input
+                type="text"
+                className="w-full border border-neutral-200 rounded-lg px-3 py-2 text-sm focus:border-primary-500 focus:outline-none"
+                placeholder="Enter team name"
+                value={formData.name}
+                onChange={(e) => handleInputChange('name', e.target.value)}
+              />
+              <p className="text-xs text-neutral-500">
+                Click logo to upload or change team logo (circular format)
+              </p>
+            </div>
           </div>
 
           {/* Team Description */}
@@ -224,18 +399,16 @@ const ModalTeamDetail: FC<ModalProps> = ({ isOpen, onClose, team }) => {
             <label className="block text-sm font-medium text-neutral-700">
               City <span className="text-danger-500">*</span>
             </label>
-            <select
-              className="w-full border border-neutral-200 rounded-lg px-3 py-2 text-sm focus:border-primary-500 focus:outline-none"
-              value={formData.city}
-              onChange={(e) => handleInputChange('city', e.target.value)}
-            >
-              <option value="">Select a city</option>
-              {cities.map((city) => (
-                <option key={city} value={city}>
-                  {city}
-                </option>
-              ))}
-            </select>
+            <CityFilterSelect
+              value={formData.city || 'all'}
+              onChange={(city) =>
+                handleInputChange('city', city === 'all' ? '' : city)
+              }
+              className="w-full"
+              placeholder="Search cities..."
+              allOptionLabel="Select a city"
+              filterIcon={false}
+            />
           </div>
 
           {/* Visibility */}
@@ -323,7 +496,7 @@ const ModalTeamDetail: FC<ModalProps> = ({ isOpen, onClose, team }) => {
               <div className="flex border-b border-neutral-200">
                 <button
                   className={cn(
-                    'px-4 py-2 text-sm font-medium border-b-2 transition-colors',
+                    'px-4 py-2 text-sm font-medium border-b-2 transition-colors cursor-pointer',
                     activeTab === 'details'
                       ? 'border-primary-500 text-primary-600'
                       : 'border-transparent text-neutral-500 hover:text-neutral-700'
@@ -334,7 +507,7 @@ const ModalTeamDetail: FC<ModalProps> = ({ isOpen, onClose, team }) => {
                 </button>
                 <button
                   className={cn(
-                    'px-4 py-2 text-sm font-medium border-b-2 transition-colors',
+                    'px-4 py-2 text-sm font-medium border-b-2 transition-colors cursor-pointer',
                     activeTab === 'members'
                       ? 'border-primary-500 text-primary-600'
                       : 'border-transparent text-neutral-500 hover:text-neutral-700'
@@ -356,7 +529,7 @@ const ModalTeamDetail: FC<ModalProps> = ({ isOpen, onClose, team }) => {
                         </label>
                         <div className="p-3 bg-neutral-50 rounded-lg">
                           <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-full bg-neutral-200 flex items-center justify-center overflow-hidden">
+                            <div className="w-10 h-10 rounded-full bg-neutral-200 flex items-center justify-center overflow-hidden">
                               {leader.user.avatar ? (
                                 <img
                                   src={leader.user.avatar}
