@@ -167,14 +167,12 @@ const ModalTeamDetail: FC<ModalProps> = ({ isOpen, onClose, team }) => {
               </p>
             </div>
           </div>
-          <Button
-            variant="secondary"
-            size="sm"
+          <button
+            className="p-2 hover:bg-neutral-100 rounded-lg transition-colors cursor-pointer"
             onClick={onClose}
-            className="shrink-0"
           >
-            <CloseOutlined />
-          </Button>
+            <CloseOutlined className="text-neutral-400 text-lg" />
+          </button>
         </div>
 
         {/* Content */}
@@ -600,7 +598,7 @@ const ModalTeamDetail: FC<ModalProps> = ({ isOpen, onClose, team }) => {
 
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-60 p-4">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-60 p-4">
           <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
             <div className="p-6">
               <div className="flex items-center gap-4 mb-4">

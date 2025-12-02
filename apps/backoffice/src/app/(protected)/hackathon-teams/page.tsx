@@ -1,6 +1,8 @@
 import { FC, ReactElement, useState, useMemo, useCallback } from 'react';
 import ModalTeamDetail from './_components/modal-team-detail-new';
 import SubmissionModal from './_components/submission-modal';
+import { CityFilterSelect } from '../../../components/city-filter-select';
+import INDONESIAN_CITIES from '../../../constants/cities';
 import {
   BackofficeWrapper,
   DataTable,
@@ -58,7 +60,8 @@ interface TeamType {
 }
 
 // Move mock data outside component to prevent recreation
-const cities = ['Jakarta', 'Bandung', 'Surabaya', 'Medan', 'Yogyakarta'];
+// Sample data for popular cities from the INDONESIAN_CITIES constant
+const cities = INDONESIAN_CITIES.slice(0, 20); // Use first 20 cities for variety
 const teamNames = [
   'Innovators',
   'Hackers',
@@ -255,7 +258,6 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
         if (
           !team.name.toLowerCase().includes(searchTerm) &&
           !team.city.toLowerCase().includes(searchTerm) &&
-          !team.description?.toLowerCase().includes(searchTerm) &&
           !leaderName.toLowerCase().includes(searchTerm) &&
           !memberNames.toLowerCase().includes(searchTerm)
         ) {
@@ -496,7 +498,7 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
             <div className="relative">
               <FilterOutlined className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 text-sm pointer-events-none z-10" />
               <select
-                className="border border-neutral-200 rounded-lg pl-10 pr-10 py-2.5 text-sm w-full sm:w-36 focus:border-primary-500 focus:outline-none appearance-none bg-white cursor-pointer"
+                className="border border-neutral-200 rounded-lg pl-10 pr-10 py-2.5 text-sm w-full sm:w-40 focus:border-primary-500 focus:outline-none appearance-none bg-white cursor-pointer"
                 value={visibilityFilter}
                 onChange={(e) => setVisibilityFilter(e.target.value)}
               >
@@ -507,27 +509,19 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
             </div>
 
             {/* City Filter */}
-            <div className="relative">
-              <FilterOutlined className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 text-sm pointer-events-none z-10" />
-              <select
-                className="border border-neutral-200 rounded-lg pl-10 pr-10 py-2.5 text-sm w-full sm:w-44 focus:border-primary-500 focus:outline-none appearance-none bg-white cursor-pointer"
-                value={cityFilter}
-                onChange={(e) => setCityFilter(e.target.value)}
-              >
-                <option value="all">All Cities</option>
-                {cities.map((city) => (
-                  <option key={city} value={city}>
-                    {city}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <CityFilterSelect
+              value={cityFilter}
+              onChange={setCityFilter}
+              className="w-full sm:w-44"
+              placeholder="Search cities..."
+              allOptionLabel="All Cities"
+            />
 
             {/* Member Count Filter */}
             <div className="relative">
               <FilterOutlined className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 text-sm pointer-events-none z-10" />
               <select
-                className="border border-neutral-200 rounded-lg pl-10 pr-10 py-2.5 text-sm w-full sm:w-44 focus:border-primary-500 focus:outline-none appearance-none bg-white cursor-pointer"
+                className="border border-neutral-200 rounded-lg pl-10 pr-10 py-2.5 text-sm w-full sm:w-55 focus:border-primary-500 focus:outline-none appearance-none bg-white cursor-pointer"
                 value={memberCountFilter}
                 onChange={(e) => setMemberCountFilter(e.target.value)}
               >
@@ -550,7 +544,7 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
               >
                 <option value="all">All Submissions</option>
                 <option value="submitted">Submitted</option>
-                <option value="pending">Pending</option>
+                <option value="not_submitted">Not Submitted</option>
               </select>
             </div>
           </div>

@@ -39,7 +39,7 @@ const SubmissionModal: FC<SubmissionModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-neutral-200">
@@ -56,14 +56,12 @@ const SubmissionModal: FC<SubmissionModalProps> = ({
               </p>
             </div>
           </div>
-          <Button
-            variant="secondary"
-            size="sm"
+          <button
+            className="p-2 hover:bg-neutral-100 rounded-lg transition-colors cursor-pointer"
             onClick={onClose}
-            className="shrink-0"
           >
-            <CloseOutlined />
-          </Button>
+            <CloseOutlined className="text-neutral-400 text-lg" />
+          </button>
         </div>
 
         {/* Content */}

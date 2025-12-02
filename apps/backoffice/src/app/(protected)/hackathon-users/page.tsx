@@ -14,7 +14,7 @@ import {
   FilterOutlined,
   PlusOutlined,
 } from '@ant-design/icons';
-// Removed unused SearchOutlined icon after schema revision
+import { CityFilterSelect } from '../../../components/city-filter-select';
 
 // Define interface outside component
 interface UserType {
@@ -89,7 +89,7 @@ export const HackathonUsersPage: FC = (): ReactElement => {
 
   // Advanced filtering states
   const [statusFilter, setStatusFilter] = useState('all');
-  const [locationFilter, setLocationFilter] = useState('all');
+  const [cityFilter, setCityFilter] = useState('all');
   const [skillsFilter, setSkillsFilter] = useState<string[]>([]);
 
   // Constants
@@ -123,8 +123,8 @@ export const HackathonUsersPage: FC = (): ReactElement => {
         if (user.is_active !== isActive) return false;
       }
 
-      // Location filter
-      if (locationFilter !== 'all' && user.location !== locationFilter) {
+      // City filter
+      if (cityFilter !== 'all' && user.location !== cityFilter) {
         return false;
       }
 
@@ -138,7 +138,7 @@ export const HackathonUsersPage: FC = (): ReactElement => {
 
       return true;
     });
-  }, [statusFilter, locationFilter, skillsFilter]);
+  }, [statusFilter, cityFilter, skillsFilter]);
 
   // Memoize columns to prevent recreation on every render
   const columns: ColumnDef<UserType>[] = useMemo(
@@ -315,22 +315,25 @@ export const HackathonUsersPage: FC = (): ReactElement => {
               </select>
             </div>
 
-            {/* Location Filter */}
-            <div className="relative">
-              <FilterOutlined className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 text-sm pointer-events-none z-10" />
-              <select
-                className="border border-neutral-200 rounded-lg pl-10 pr-10 py-2.5 text-sm w-full sm:w-44 focus:border-primary-500 focus:outline-none appearance-none bg-white cursor-pointer"
-                value={locationFilter}
-                onChange={(e) => setLocationFilter(e.target.value)}
-              >
-                <option value="all">All Locations</option>
-                {locations.map((location) => (
-                  <option key={location} value={location}>
-                    {location}
-                  </option>
-                ))}
-              </select>
-            </div>
+            {/* City Filter */}
+            <CityFilterSelect
+              value={cityFilter}
+              onChange={setCityFilter}
+              className="w-full sm:w-44"
+              placeholder="Search cities..."
+              allOptionLabel="All Cities"
+            />
+            {cityFilter !== 'all' && (
+              <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 rounded-2xl text-sm">
+                Location: {cityFilter}
+                <button
+                  onClick={() => setCityFilter('all')}
+                  className="text-green-600 hover:text-green-800 cursor-pointer"
+                >
+                  ✕
+                </button>
+              </span>
+            )}
 
             {/* Skills Filter with Icon */}
             <div className="relative">
@@ -378,7 +381,7 @@ export const HackathonUsersPage: FC = (): ReactElement => {
         {/* Active filters display */}
         {(skillsFilter.length > 0 ||
           statusFilter !== 'all' ||
-          locationFilter !== 'all') && (
+          cityFilter !== 'all') && (
           <div className="flex flex-wrap gap-2 items-center">
             <span className="text-sm text-neutral-600">Active filters:</span>
 
@@ -396,11 +399,11 @@ export const HackathonUsersPage: FC = (): ReactElement => {
             )}
 
             {/* Location filter badge */}
-            {locationFilter !== 'all' && (
+            {cityFilter !== 'all' && (
               <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 rounded-2xl text-sm">
-                Location: {locationFilter}
+                City: {cityFilter}
                 <button
-                  onClick={() => setLocationFilter('all')}
+                  onClick={() => setCityFilter('all')}
                   className="text-green-600 hover:text-green-800 cursor-pointer"
                 >
                   ✕
@@ -432,7 +435,7 @@ export const HackathonUsersPage: FC = (): ReactElement => {
               size="sm"
               onClick={() => {
                 setStatusFilter('all');
-                setLocationFilter('all');
+                setCityFilter('all');
                 setSkillsFilter([]);
                 setGlobalFilter('');
               }}
