@@ -119,9 +119,7 @@ export const DataTable = <T extends RowData>({
                       <span className="ml-2 text-xs text-gray-500">
                         {header.column.getIsSorted() === 'asc' && '▲'}
                         {header.column.getIsSorted() === 'desc' && '▼'}
-                        {!header.column.getIsSorted() && (
-                          <span className="opacity-50">⇅</span>
-                        )}
+                        {!header.column.getIsSorted() && <span>⇅</span>}
                       </span>
                     )}
                   </th>

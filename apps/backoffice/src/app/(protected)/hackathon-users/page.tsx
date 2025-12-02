@@ -178,13 +178,13 @@ export const HackathonUsersPage: FC = (): ReactElement => {
             {row.original.skills.slice(0, 2).map((skill, index) => (
               <span
                 key={index}
-                className="inline-flex items-center px-2 py-1 rounded-2xl text-xs font-medium bg-blue-100 text-blue-800"
+                className="inline-flex items-center px-2 py-1 rounded-2xl text-xs font-medium bg-success-100 text-success-800"
               >
                 {skill.replace(' Developer', '').replace(' Engineer', '')}
               </span>
             ))}
             {row.original.skills.length > 2 && (
-              <span className="inline-flex items-center px-2 py-1 rounded-2xl text-xs font-medium bg-neutral-100 text-neutral-600">
+              <span className="inline-flex items-center px-2 py-1 rounded-2xl text-xs font-medium bg-success-200 text-success-700">
                 +{row.original.skills.length - 2}
               </span>
             )}
@@ -287,14 +287,14 @@ export const HackathonUsersPage: FC = (): ReactElement => {
       {/* Filters and actions */}
       <section className="bg-white rounded-md shadow p-8 flex flex-col gap-6">
         <div className="flex flex-wrap gap-3 items-center justify-between">
-          {/* Left side - Filters */}
+          {/* Left side - Search & filters */}
           <div className="flex flex-wrap gap-3 items-center">
-            {/* Global Search with Icon */}
+            {/* Search bar */}
             <div className="relative">
               <SearchOutlined className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 text-sm" />
               <input
                 type="text"
-                className="border border-neutral-200 rounded-lg pl-10 pr-4 py-2.5 text-sm w-full sm:w-72 focus:border-primary-500 focus:outline-none"
+                className="border border-neutral-200 rounded-lg pl-10 pr-4 py-2.5 text-sm w-full sm:w-80 focus:border-primary-500 focus:outline-none"
                 placeholder="Search users by name or location..."
                 value={globalFilter}
                 onChange={(e) => setGlobalFilter(e.target.value)}
@@ -302,35 +302,41 @@ export const HackathonUsersPage: FC = (): ReactElement => {
             </div>
 
             {/* Status Filter */}
-            <select
-              className="border border-neutral-200 rounded-lg px-4 py-2.5 pr-10 text-sm w-full sm:w-36 focus:border-primary-500 focus:outline-none appearance-none bg-white"
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-            >
-              <option value="all">All Status</option>
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
-            </select>
+            <div className="relative">
+              <FilterOutlined className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 text-sm pointer-events-none z-10" />
+              <select
+                className="border border-neutral-200 rounded-lg pl-10 pr-10 py-2.5 text-sm w-full sm:w-36 focus:border-primary-500 focus:outline-none appearance-none bg-white cursor-pointer"
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+              >
+                <option value="all">All Status</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
 
             {/* Location Filter */}
-            <select
-              className="border border-neutral-200 rounded-lg px-4 py-2.5 pr-10 text-sm w-full sm:w-40 focus:border-primary-500 focus:outline-none appearance-none bg-white"
-              value={locationFilter}
-              onChange={(e) => setLocationFilter(e.target.value)}
-            >
-              <option value="all">All Locations</option>
-              {locations.map((location) => (
-                <option key={location} value={location}>
-                  {location}
-                </option>
-              ))}
-            </select>
+            <div className="relative">
+              <FilterOutlined className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 text-sm pointer-events-none z-10" />
+              <select
+                className="border border-neutral-200 rounded-lg pl-10 pr-10 py-2.5 text-sm w-full sm:w-44 focus:border-primary-500 focus:outline-none appearance-none bg-white cursor-pointer"
+                value={locationFilter}
+                onChange={(e) => setLocationFilter(e.target.value)}
+              >
+                <option value="all">All Locations</option>
+                {locations.map((location) => (
+                  <option key={location} value={location}>
+                    {location}
+                  </option>
+                ))}
+              </select>
+            </div>
 
             {/* Skills Filter with Icon */}
             <div className="relative">
               <FilterOutlined className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 text-sm pointer-events-none z-10" />
               <select
-                className="border border-neutral-200 rounded-lg pl-10 pr-10 py-2.5 text-sm w-full sm:w-44 focus:border-primary-500 focus:outline-none appearance-none bg-white"
+                className="border border-neutral-200 rounded-lg pl-10 pr-10 py-2.5 text-sm w-full sm:w-44 focus:border-primary-500 focus:outline-none appearance-none bg-white cursor-pointer"
                 value=""
                 onChange={(e) => {
                   if (
@@ -357,9 +363,6 @@ export const HackathonUsersPage: FC = (): ReactElement => {
 
           {/* Right side - Add User Button */}
           <div className="flex items-center gap-3">
-            <span className="text-sm text-neutral-500">
-              {filteredData.length} users found
-            </span>
             <Button
               variant="primary"
               size="md"
@@ -381,26 +384,26 @@ export const HackathonUsersPage: FC = (): ReactElement => {
 
             {/* Status filter badge */}
             {statusFilter !== 'all' && (
-              <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
+              <span className="inline-flex items-center gap-1 px-2 py-1 bg-info-100 text-info-800 rounded-2xl text-sm">
                 Status: {statusFilter}
                 <button
                   onClick={() => setStatusFilter('all')}
-                  className="text-blue-600 hover:text-blue-800"
+                  className="text-info-600 hover:text-info-800 cursor-pointer"
                 >
-                  ×
+                  ✕
                 </button>
               </span>
             )}
 
             {/* Location filter badge */}
             {locationFilter !== 'all' && (
-              <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">
+              <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 rounded-2xl text-sm">
                 Location: {locationFilter}
                 <button
                   onClick={() => setLocationFilter('all')}
-                  className="text-green-600 hover:text-green-800"
+                  className="text-green-600 hover:text-green-800 cursor-pointer"
                 >
-                  ×
+                  ✕
                 </button>
               </span>
             )}
@@ -409,16 +412,16 @@ export const HackathonUsersPage: FC = (): ReactElement => {
             {skillsFilter.map((skill) => (
               <span
                 key={skill}
-                className="inline-flex items-center gap-1 px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-xs"
+                className="inline-flex items-center gap-1 px-2 py-1 bg-purple-100 text-purple-800 rounded-2xl text-sm"
               >
                 {skill.replace(' Developer', '').replace(' Engineer', '')}
                 <button
                   onClick={() =>
                     setSkillsFilter((prev) => prev.filter((s) => s !== skill))
                   }
-                  className="text-purple-600 hover:text-purple-800"
+                  className="text-purple-600 hover:text-purple-800 cursor-pointer"
                 >
-                  ×
+                  ✕
                 </button>
               </span>
             ))}
@@ -433,7 +436,7 @@ export const HackathonUsersPage: FC = (): ReactElement => {
                 setSkillsFilter([]);
                 setGlobalFilter('');
               }}
-              className="text-xs text-neutral-600"
+              className="text-sm text-neutral-600"
             >
               Clear All
             </Button>
@@ -445,8 +448,7 @@ export const HackathonUsersPage: FC = (): ReactElement => {
           <div className="text-sm text-neutral-600">
             Showing {Math.min(pageSize, filteredData.length)} of{' '}
             {filteredData.length} users
-            {filteredData.length > pageSize &&
-              ' (filtered results paginated below)'}
+            {filteredData.length > pageSize}
           </div>
         )}
 

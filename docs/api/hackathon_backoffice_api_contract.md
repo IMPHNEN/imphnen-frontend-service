@@ -64,7 +64,7 @@ Retrieve paginated list of hackathon participants with filtering, searching, and
 | Parameter    | Type    | Required | Default      | Description                                                   |
 | ------------ | ------- | -------- | ------------ | ------------------------------------------------------------- |
 | `page`       | integer | No       | 1            | Page number (1-based)                                         |
-| `limit`      | integer | No       | 20           | Items per page (1-100)                                        |
+| `limit`      | integer | No       | 10           | Items per page (1-100)                                        |
 | `search`     | string  | No       | -            | Search by name or location (case-insensitive)                 |
 | `status`     | string  | No       | `all`        | Filter by status: `all`, `active`, `inactive`                 |
 | `location`   | string  | No       | `all`        | Filter by location or `all`                                   |
@@ -95,7 +95,7 @@ GET /api/v1/admin/users?sort_by=fullname&sort_order=asc
         "bio": "Passionate developer with 5+ years experience", // Optional
         "location": "Jakarta",
         "is_active": true,
-        "skills": ["Frontend Developer", "UI/UX Designer"],
+        "skills": ["Frontend Developer", "UI/UX Designer"], // Optional
         "created_at": "2024-11-15T08:30:00Z",
         "updated_at": "2024-11-30T14:22:00Z"
       }
@@ -123,7 +123,7 @@ GET /api/v1/admin/users?sort_by=fullname&sort_order=asc
 | ------------------------- | ------- | ------------------------------ |
 | `data.users[].id`         | string  | UUID format                    |
 | `data.users[].avatar`     | string  | URL, nullable                  |
-| `data.users[].fullname`   | string  | Required, 1-100 chars          |
+| `data.users[].fullname`   | string  | Required                       |
 | `data.users[].bio`        | string  | Optional, max 500 chars        |
 | `data.users[].location`   | string  | Required, from predefined list |
 | `data.users[].is_active`  | boolean | Account status                 |
@@ -195,7 +195,7 @@ Create a new user account in the hackathon system.
   "location": "Jakarta", // Required, from predefined list
   "is_active": true, // Required, boolean
   "skills": ["Backend Developer"], // Optional, array of valid skills
-  "avatar": "data:image/..." // Optional, base64 or URL
+  "avatar": "https://example.com/images/..." // Optional, URL
 }
 ```
 
@@ -211,7 +211,7 @@ Content-Type: application/json
   "location": "Jakarta",
   "is_active": true,
   "skills": ["Backend Developer", "Data Scientist"],
-  "avatar": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQ..."
+  "avatar": "https://example.com/images/..."
 }
 ```
 
@@ -260,7 +260,7 @@ Update an existing user's profile information.
   "location": "Bandung", // Optional, from predefined list
   "is_active": false, // Optional, boolean
   "skills": ["Full Stack Developer"], // Optional, array of valid skills
-  "avatar": "data:image/..." // Optional, base64/URL, null to remove
+  "avatar": "https://example.com/images/..." // Optional, URL, null to remove
 }
 ```
 
@@ -302,7 +302,7 @@ Content-Type: application/json
 
 ### Purpose
 
-Permanently delete a user account from the hackathon system.
+(Soft) Delete a user account from the hackathon system.
 
 ### Authentication & Authorization
 
@@ -387,7 +387,6 @@ DELETE /api/v1/admin/users/550e8400-e29b-41d4-a716-446655440000
 - **Max file size**: 5MB
 - **Recommended dimensions**: 400x400px
 - **Storage**: Uploaded avatars are processed and stored with generated URLs
-- **Base64 support**: Accept `data:image/*;base64,` format in requests
 - **URL response**: Always return publicly accessible HTTPS URLs
 
 ---
@@ -395,4 +394,4 @@ DELETE /api/v1/admin/users/550e8400-e29b-41d4-a716-446655440000
 **Revision History**
 
 - v1.0.0 (2025-11-30): Initial contract drafted.
-- v2.0.0 (2025-12-01): Added comprehensive user management endpoints with filtering, pagination, CRUD operations, and avatar handling.
+- v2.0.0 (2025-12-01): Added user management endpoints with filtering, pagination, CRUD operations, and avatar handling.

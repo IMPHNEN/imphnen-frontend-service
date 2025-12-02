@@ -195,7 +195,7 @@ const ModalUserDetail: FC<ModalProps> = ({ isOpen, onClose, user }) => {
           <div className="border-b border-neutral-200 px-8 py-6 flex justify-between items-start">
             <div className="flex items-center gap-4">
               {/* Interactive User Avatar */}
-              <div className="relative group">
+              <div className="relative group ">
                 <div className="w-16 h-16 rounded-full bg-neutral-200 flex items-center justify-center overflow-hidden border-2 border-transparent group-hover:border-primary-300 transition-colors">
                   {formData.avatar ? (
                     <img
@@ -211,7 +211,7 @@ const ModalUserDetail: FC<ModalProps> = ({ isOpen, onClose, user }) => {
                 {/* Avatar Hover Overlay */}
                 <button
                   onClick={() => setShowAvatarMenu(!showAvatarMenu)}
-                  className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+                  className="absolute inset-0 bg-neutral-400 cursor-pointer rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
                 >
                   <CameraOutlined className="text-white text-lg" />
                 </button>
@@ -221,7 +221,7 @@ const ModalUserDetail: FC<ModalProps> = ({ isOpen, onClose, user }) => {
                   <div className="absolute top-full left-0 mt-2 bg-white rounded-lg shadow-lg border border-neutral-200 py-2 min-w-[140px] z-10">
                     <button
                       onClick={triggerFileUpload}
-                      className="w-full px-4 py-2 text-left text-sm text-neutral-700 hover:bg-neutral-50 flex items-center gap-2"
+                      className="w-full px-4 py-2 text-left text-sm text-neutral-700 hover:bg-neutral-50 flex items-center gap-2 cursor-pointer"
                     >
                       <UploadOutlined className="text-sm" />
                       {formData.avatar ? 'Change Photo' : 'Upload Photo'}
@@ -229,7 +229,7 @@ const ModalUserDetail: FC<ModalProps> = ({ isOpen, onClose, user }) => {
                     {formData.avatar && (
                       <button
                         onClick={handleRemoveAvatar}
-                        className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
+                        className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 cursor-pointer"
                       >
                         <DeleteOutlined className="text-sm" />
                         Remove Photo
@@ -244,7 +244,7 @@ const ModalUserDetail: FC<ModalProps> = ({ isOpen, onClose, user }) => {
                     {user ? 'Edit User Profile' : 'Create New User'}
                   </h2>
                   {user && (
-                    <span className="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full">
+                    <span className="px-3 py-1 bg-info-100 text-info-700 text-xs font-medium rounded-2xl">
                       Hover avatar to change
                     </span>
                   )}
@@ -265,7 +265,7 @@ const ModalUserDetail: FC<ModalProps> = ({ isOpen, onClose, user }) => {
                 handleCancel();
               }}
             >
-              <CloseOutlined className="text-neutral-400 text-lg" />
+              <CloseOutlined className="text-neutral-400 text-lg cursor-pointer" />
             </button>
           </div>
 
@@ -397,7 +397,7 @@ const ModalUserDetail: FC<ModalProps> = ({ isOpen, onClose, user }) => {
                     <button
                       onClick={() => handleInputChange('is_active', true)}
                       className={cn(
-                        'flex-1 px-4 py-2 text-sm font-medium rounded-md transition-all duration-200',
+                        'flex-1 px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 cursor-pointer',
                         formData.is_active
                           ? 'bg-white text-success-700 shadow-sm ring-1 ring-success-200'
                           : 'text-neutral-600 hover:text-neutral-800'
@@ -418,7 +418,7 @@ const ModalUserDetail: FC<ModalProps> = ({ isOpen, onClose, user }) => {
                     <button
                       onClick={() => handleInputChange('is_active', false)}
                       className={cn(
-                        'flex-1 px-4 py-2 text-sm font-medium rounded-md transition-all duration-200',
+                        'flex-1 px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 cursor-pointer',
                         !formData.is_active
                           ? 'bg-white text-neutral-700 shadow-sm ring-1 ring-neutral-200'
                           : 'text-neutral-600 hover:text-neutral-800'
@@ -458,7 +458,7 @@ const ModalUserDetail: FC<ModalProps> = ({ isOpen, onClose, user }) => {
                         formData.skills.map((skill, index) => (
                           <span
                             key={index}
-                            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800"
+                            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-2xl text-sm font-medium bg-blue-100 text-blue-800"
                           >
                             {skill}
                             <button
@@ -467,9 +467,9 @@ const ModalUserDetail: FC<ModalProps> = ({ isOpen, onClose, user }) => {
                                   formData.skills.filter((_, i) => i !== index)
                                 )
                               }
-                              className="text-blue-600 hover:text-blue-800 ml-1"
+                              className="text-blue-600 hover:text-blue-800 ml-1 cursor-pointer"
                             >
-                              ×
+                              ✕
                             </button>
                           </span>
                         ))
@@ -558,7 +558,7 @@ const ModalUserDetail: FC<ModalProps> = ({ isOpen, onClose, user }) => {
                 {user && (
                   <button
                     onClick={() => setShowDeleteConfirm(true)}
-                    className="text-red-600 hover:text-red-700 text-sm font-medium transition-colors"
+                    className="text-red-600 hover:text-red-700 text-sm font-medium transition-colors cursor-pointer"
                   >
                     Delete Account
                   </button>
