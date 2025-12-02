@@ -150,21 +150,6 @@ const SubmissionViewPage: FC = (): ReactElement => {
                 </div>
               )}
 
-              {/* Presentation URL */}
-              {submission.presentation_url && (
-                <div>
-                  <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">Presentation</h3>
-                  <a
-                    href={submission.presentation_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center space-x-2 text-blue-600 dark:text-primary-400 hover:text-blue-800 dark:hover:text-primary-300"
-                  >
-                    <span>📊</span>
-                    <span className="break-all">{submission.presentation_url}</span>
-                  </a>
-                </div>
-              )}
             </div>
 
             {/* Screenshots */}
