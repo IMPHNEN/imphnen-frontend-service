@@ -88,7 +88,7 @@ export const middleware = async ({ request }: LoaderFunctionArgs) => {
     return null;
   }
 
-  if (!session) return redirect('/auth/login');
+  // if (!session) return redirect('/auth/login');
 
   const matchedRoute = mappingRoutePermissions.find(
     (route) => route.path === pathname
