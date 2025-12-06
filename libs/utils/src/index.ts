@@ -7,3 +7,5 @@ export * from './cookies';
 export * from './session';
 export * from './constants';
 export * from './logic';
+export * from './lib/crypto';
+export * from './lib/certificate';
