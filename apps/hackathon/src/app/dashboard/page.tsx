@@ -14,6 +14,9 @@ import ProfilePage from '../profile/page';
 // Team features deadline: 2025-11-30 23:59:00 WIB (UTC+7)
 const TEAM_FEATURES_DEADLINE = new Date('2025-11-30T16:59:00Z');
 
+// Submission deadline: 2025-12-07 23:59:00 WIB (UTC+7)
+const SUBMISSION_DEADLINE = new Date('2025-12-07T16:59:00Z');
+
 type Invitation = {
   id: string;
   team: {
@@ -37,9 +40,46 @@ type Invitation = {
 const DashboardPage: FC = (): ReactElement => {
   const { session } = useAuthStore();
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [timeLeft, setTimeLeft] = useState<{
+    days: number;
+    hours: number;
+    minutes: number;
+    seconds: number;
+  } | null>(null);
 
   // Check if team features are closed
   const isTeamFeaturesClosed = new Date() >= TEAM_FEATURES_DEADLINE;
+
+  // Check if submission deadline passed
+  const isSubmissionDeadlinePassed = new Date() >= SUBMISSION_DEADLINE;
+
+  // Countdown timer
+  useEffect(() => {
+    if (isSubmissionDeadlinePassed) return;
+
+    const calculateTimeLeft = () => {
+      const now = new Date();
+      const difference = SUBMISSION_DEADLINE.getTime() - now.getTime();
+
+      if (difference <= 0) {
+        setTimeLeft(null);
+        return;
+      }
+
+      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((difference / 1000 / 60) % 60);
+      const seconds = Math.floor((difference / 1000) % 60);
+
+      setTimeLeft({ days, hours, minutes, seconds });
+    };
+
+    calculateTimeLeft();
+    const timer = setInterval(calculateTimeLeft, 1000);
+
+    return () => clearInterval(timer);
+  }, [isSubmissionDeadlinePassed]);
+
   // Lock background scroll when profile modal is open
   useEffect(() => {
     if (showProfileModal) {
@@ -93,6 +133,57 @@ const DashboardPage: FC = (): ReactElement => {
             </p>
           )}
         </div>
+
+        {/* Countdown Timer */}
+        {timeLeft && !isSubmissionDeadlinePassed && (
+          <div className="mb-8 bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-500 rounded-lg p-6">
+            <div className="flex items-start space-x-3">
+              <span className="text-3xl">⏰</span>
+              <div className="flex-1">
+                <h3 className="font-bold text-blue-900 dark:text-blue-100 text-lg">
+                  Submission Deadline
+                </h3>
+                <p className="text-blue-800 dark:text-blue-200 mt-2 text-sm font-sans">
+                  Project submissions close on December 7, 2025 at 23:59 WIB
+                </p>
+                <div className="mt-4 grid grid-cols-4 gap-4">
+                  <div className="bg-white dark:bg-gray-800 rounded-lg p-3 text-center">
+                    <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                      {timeLeft.days}
+                    </div>
+                    <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                      Days
+                    </div>
+                  </div>
+                  <div className="bg-white dark:bg-gray-800 rounded-lg p-3 text-center">
+                    <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                      {timeLeft.hours.toString().padStart(2, '0')}
+                    </div>
+                    <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                      Hours
+                    </div>
+                  </div>
+                  <div className="bg-white dark:bg-gray-800 rounded-lg p-3 text-center">
+                    <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                      {timeLeft.minutes.toString().padStart(2, '0')}
+                    </div>
+                    <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                      Minutes
+                    </div>
+                  </div>
+                  <div className="bg-white dark:bg-gray-800 rounded-lg p-3 text-center">
+                    <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                      {timeLeft.seconds.toString().padStart(2, '0')}
+                    </div>
+                    <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                      Seconds
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {invitations.length > 0 && (
           <div className="mb-8 bg-primary-50 dark:bg-blue-900/20 border border-primary-200 dark:border-blue-800 rounded-lg p-6">
