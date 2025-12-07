@@ -335,6 +335,9 @@ const SubmitProjectPage: FC = (): ReactElement => {
               <label className="block text-[15px] font-medium text-gray-700 dark:text-gray-300">
                 Project Description <span className="text-red-500">*</span>
               </label>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                Describe your project, its features, and what problem it solves. You can also paste your demo video link here.
+              </p>
               <Controller
                 control={form.control}
                 name="description"
@@ -342,7 +345,7 @@ const SubmitProjectPage: FC = (): ReactElement => {
                   <div>
                     <Textarea
                       {...field}
-                      placeholder="Describe your project, its features, and what problem it solves..."
+                      placeholder="Describe your project, its features, and what problem it solves... You can paste your demo video link (YouTube, Loom, etc.) here as well."
                       rows={6}
                       className="w-full"
                       size="lg"
