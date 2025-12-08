@@ -5,6 +5,7 @@ import Link from 'next/link';
 import {
   FaDiscord,
   FaFacebook,
+  FaGithub,
   FaInstagram,
   FaLinkedinIn,
   FaTiktok,
@@ -36,6 +37,13 @@ export default function Footer() {
                 target="_blank"
               >
                 <FaDiscord className="size-6" />
+              </Link>
+              <Link
+                href="https://github.com/IMPHNEN/"
+                className="text-muted-foreground hover:text-foreground"
+                target="_blank"
+              >
+                <FaGithub className="size-6" />
               </Link>
               <Link
                 href="https://www.instagram.com/imphnen.dev"
@@ -92,7 +100,7 @@ export default function Footer() {
             </ul>
           </div>
           <div className="space-y-4">
-            <h3 className="text-lg font-bold">Patners</h3>
+            <h3 className="text-lg font-bold">Partners</h3>
             <ul className="space-y-2"></ul>
           </div>
         </div>

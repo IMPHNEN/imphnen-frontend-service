@@ -6,6 +6,7 @@ import { useRef } from 'react';
 import {
   FaArrowRight,
   FaDiscord,
+  FaGithub,
   FaFacebook,
   FaInstagram,
   FaLinkedin,
@@ -45,6 +46,8 @@ export function CommunitySection() {
         return FaFacebook;
       case 'FaDiscord':
         return FaDiscord;
+      case 'FaGithub':
+        return FaDiscord;
       case 'FaInstagram':
         return FaInstagram;
       case 'FaTiktok':
@@ -65,6 +68,10 @@ export function CommunitySection() {
       case 'FaDiscord':
         return {
           iconColor: 'text-[#5865F2]',
+        };
+      case 'FaGithub':
+        return {
+          iconColor: 'text-[#000000]',
         };
       case 'FaInstagram':
         return {
