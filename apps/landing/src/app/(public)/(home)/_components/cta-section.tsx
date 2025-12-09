@@ -78,7 +78,7 @@ export function CTASection() {
                 <div className="flex flex-col items-center gap-6 text-white">
                   <LogoSimple className="w-[240px]" />
                   <div className="text-center space-y-2">
-                    <h3 className="text-2xl font-bold">180.000+</h3>
+                    <h3 className="text-2xl font-bold">250.000+</h3>
                     <p className="text-lg">Programmer Sudah Bergabung</p>
                   </div>
                 </div>

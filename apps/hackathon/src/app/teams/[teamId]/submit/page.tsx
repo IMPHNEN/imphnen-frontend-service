@@ -1,4 +1,4 @@
-import { FC, ReactElement, useState } from 'react';
+import { FC, ReactElement, useState, useEffect } from 'react';
 import { ControlledInputField } from '@imphnen-frontend-service/ui/organisms';
 import { Button, Textarea } from '@imphnen-frontend-service/ui/atoms';
 import { useNavigate, useParams } from 'react-router';
@@ -14,9 +14,13 @@ import {
 } from '@imphnen-frontend-service/service';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
+import { Icon } from '@iconify/react';
 
 const MIN_TEAM_MEMBERS = 2; // Minimum members required to submit (including leader)
 const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
+
+// Submission deadline: 2025-12-07 23:59:00 WIB (UTC+7)
+const SUBMISSION_DEADLINE = new Date('2025-12-07T16:59:00Z');
 
 const SubmitProjectPage: FC = (): ReactElement => {
   const { teamId } = useParams<{ teamId: string }>();
@@ -25,6 +29,42 @@ const SubmitProjectPage: FC = (): ReactElement => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [confirmText, setConfirmText] = useState('');
   const [screenshots, setScreenshots] = useState<string[]>([]);
+  const [timeLeft, setTimeLeft] = useState<{
+    days: number;
+    hours: number;
+    minutes: number;
+    seconds: number;
+  } | null>(null);
+
+  // Check if deadline passed
+  const isDeadlinePassed = new Date() >= SUBMISSION_DEADLINE;
+
+  // Countdown timer
+  useEffect(() => {
+    if (isDeadlinePassed) return;
+
+    const calculateTimeLeft = () => {
+      const now = new Date();
+      const difference = SUBMISSION_DEADLINE.getTime() - now.getTime();
+
+      if (difference <= 0) {
+        setTimeLeft(null);
+        return;
+      }
+
+      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((difference / 1000 / 60) % 60);
+      const seconds = Math.floor((difference / 1000) % 60);
+
+      setTimeLeft({ days, hours, minutes, seconds });
+    };
+
+    calculateTimeLeft();
+    const timer = setInterval(calculateTimeLeft, 1000);
+
+    return () => clearInterval(timer);
+  }, [isDeadlinePassed]);
 
   const { data: teamData } = useTeamById(teamId || '');
   const { data: submissionData } = useTeamSubmission(teamId || '', !!teamId);
@@ -85,6 +125,50 @@ const SubmitProjectPage: FC = (): ReactElement => {
     );
   }
 
+  // Show deadline passed screen
+  if (isDeadlinePassed) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-gray-50 dark:bg-gray-950 p-4">
+        <div className="bg-white dark:bg-gray-900 w-full max-w-md p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 text-center">
+          <div className="mb-6">
+            <div className="mx-auto w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mb-4">
+              <Icon
+                icon="mdi:clock-alert"
+                className="text-3xl text-red-600 dark:text-red-400"
+              />
+            </div>
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+              Submission Closed
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400">
+              Project submissions are no longer accepted.
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              The submission deadline was December 7, 2025 at 23:59 WIB.
+            </p>
+
+            <button
+              onClick={() => navigate(`/teams/${teamId}`)}
+              className="w-full py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 transition-colors cursor-pointer"
+            >
+              Back to Team
+            </button>
+
+            <button
+              onClick={() => navigate('/dashboard')}
+              className="w-full py-3 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer"
+            >
+              Back to Dashboard
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const handleScreenshotUpload = async (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -138,6 +222,57 @@ const SubmitProjectPage: FC = (): ReactElement => {
       </div>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Countdown Timer */}
+        {timeLeft && (
+          <div className="bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-500 rounded-lg p-6 mb-6">
+            <div className="flex items-start space-x-3">
+              <span className="text-3xl">⏰</span>
+              <div className="flex-1">
+                <h3 className="font-bold text-blue-900 dark:text-blue-100 text-lg">
+                  Submission Deadline
+                </h3>
+                <p className="text-blue-800 dark:text-blue-200 mt-2 text-sm font-sans">
+                  Submissions close on December 7, 2025 at 23:59 WIB
+                </p>
+                <div className="mt-4 grid grid-cols-4 gap-4">
+                  <div className="bg-white dark:bg-gray-800 rounded-lg p-3 text-center">
+                    <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                      {timeLeft.days}
+                    </div>
+                    <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                      Days
+                    </div>
+                  </div>
+                  <div className="bg-white dark:bg-gray-800 rounded-lg p-3 text-center">
+                    <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                      {timeLeft.hours.toString().padStart(2, '0')}
+                    </div>
+                    <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                      Hours
+                    </div>
+                  </div>
+                  <div className="bg-white dark:bg-gray-800 rounded-lg p-3 text-center">
+                    <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                      {timeLeft.minutes.toString().padStart(2, '0')}
+                    </div>
+                    <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                      Minutes
+                    </div>
+                  </div>
+                  <div className="bg-white dark:bg-gray-800 rounded-lg p-3 text-center">
+                    <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                      {timeLeft.seconds.toString().padStart(2, '0')}
+                    </div>
+                    <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                      Seconds
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Minimum Members Warning */}
         {!hasEnoughMembers && (
           <div className="bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-500 rounded-lg p-6 mb-6">
@@ -200,6 +335,9 @@ const SubmitProjectPage: FC = (): ReactElement => {
               <label className="block text-[15px] font-medium text-gray-700 dark:text-gray-300">
                 Project Description <span className="text-red-500">*</span>
               </label>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                Describe your project, its features, and what problem it solves. You can also paste your demo video link here.
+              </p>
               <Controller
                 control={form.control}
                 name="description"
@@ -207,7 +345,7 @@ const SubmitProjectPage: FC = (): ReactElement => {
                   <div>
                     <Textarea
                       {...field}
-                      placeholder="Describe your project, its features, and what problem it solves..."
+                      placeholder="Describe your project, its features, and what problem it solves... You can paste your demo video link (YouTube, Loom, etc.) here as well."
                       rows={6}
                       className="w-full"
                       size="lg"
