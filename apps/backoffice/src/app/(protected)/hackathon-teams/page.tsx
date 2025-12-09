@@ -1,8 +1,14 @@
-import { FC, ReactElement, useState, useMemo, useCallback } from 'react';
+import {
+  FC,
+  ReactElement,
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+} from 'react';
 import ModalTeamDetail from './_components/modal-team-detail-new';
 import SubmissionModal from './_components/submission-modal';
 import { CityFilterSelect } from '../../../components/city-filter-select';
-import INDONESIAN_CITIES from '../../../constants/cities';
 import {
   BackofficeWrapper,
   DataTable,
@@ -16,205 +22,121 @@ import {
   SearchOutlined,
   FilterOutlined,
   PlusOutlined,
-  UserOutlined,
-  ArrowRightOutlined,
+  LoadingOutlined,
 } from '@ant-design/icons';
+import { useQuery } from '@tanstack/react-query';
+import {
+  getAdminTeams,
+  TAdminTeamItem,
+} from '@imphnen-frontend-service/service';
+import { useSearchParams } from 'react-router-dom';
 
-// Define interface outside component
-interface TeamMember {
-  id: string;
-  joined_at: string;
-  role: 'leader' | 'member';
-  status: 'pending' | 'accepted' | 'rejected';
-  team_id: string;
-  user: {
-    avatar?: string;
-    bio?: string;
-    created_at: string;
-    email: string;
-    fullname: string;
-    id: string;
-    is_active: boolean;
-    location: string;
-    phone_number?: string;
-    skills: string[];
-    updated_at: string;
-  };
-  user_id: string;
-}
-
-interface TeamType {
-  id: string;
-  name: string;
-  description?: string;
-  city: string;
-  banner?: string;
-  logo?: string;
-  visibility: 'public' | 'private';
-  member_count: number;
-  has_submission: boolean;
-  created_at: string;
-  updated_at: string;
-  leader_id: string;
-  members: TeamMember[];
-}
-
-// Move mock data outside component to prevent recreation
-// Sample data for popular cities from the INDONESIAN_CITIES constant
-const cities = INDONESIAN_CITIES.slice(0, 20); // Use first 20 cities for variety
-const teamNames = [
-  'Innovators',
-  'Hackers',
-  'Builders',
-  'Creators',
-  'Pioneers',
-  'Developers',
-  'Engineers',
-  'Coders',
-  'Tech Stars',
-  'Digital Wizards',
-];
-
-const descriptions = [
-  'Building innovative solutions for modern problems with cutting-edge technology',
-  'Passionate developers creating the next generation of web applications',
-  'Focused on sustainable tech solutions that make a positive impact',
-  'Experienced team working on scalable fintech innovations',
-  'Creative minds developing user-centric mobile applications',
-  'Full-stack developers building comprehensive business solutions',
-  'AI enthusiasts creating intelligent automation tools',
-  'Open source advocates building community-driven platforms',
-];
-
-const skills = [
-  'Frontend Developer',
-  'Backend Developer',
-  'Full Stack Developer',
-  'DevOps Engineer',
-  'UI/UX Designer',
-  'Product Manager',
-  'Data Scientist',
-  'Mobile Developer',
-];
-
-const generateMembers = (
-  count: number,
-  teamId: string,
-  leaderId: string
-): TeamMember[] => {
-  return Array.from({ length: count }, (_, i) => {
-    const isLeader = i === 0;
-    const memberId = isLeader ? leaderId : `user-${teamId}-${i}`;
-
-    return {
-      id: `member-${teamId}-${i}`,
-      joined_at: new Date(
-        Date.now() - (count - i) * 86400000 * Math.random() * 5
-      ).toISOString(),
-      role: isLeader ? 'leader' : 'member',
-      status: Math.random() > 0.8 ? 'pending' : 'accepted',
-      team_id: teamId,
-      user: {
-        id: memberId,
-        avatar:
-          Math.random() > 0.6
-            ? `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                `User ${i}`
-              )}`
-            : undefined,
-        bio:
-          Math.random() > 0.5
-            ? `Passionate ${skills[
-                Math.floor(Math.random() * skills.length)
-              ].toLowerCase()} with ${
-                Math.floor(Math.random() * 8) + 1
-              }+ years experience`
-            : undefined,
-        created_at: new Date(
-          Date.now() - Math.random() * 365 * 86400000
-        ).toISOString(),
-        email: `user${i}.team${teamId}@example.com`,
-        fullname: `${
-          ['Ahmad', 'Sofia', 'Budi', 'Sari', 'Rizki', 'Maya', 'Andi', 'Dina'][
-            Math.floor(Math.random() * 8)
-          ]
-        } ${
-          [
-            'Wijuana',
-            'Santoso',
-            'Pratama',
-            'Dewi',
-            'Nugroho',
-            'Sari',
-            'Putra',
-            'Lestari',
-          ][Math.floor(Math.random() * 8)]
-        }`,
-        is_active: true,
-        location: cities[Math.floor(Math.random() * cities.length)],
-        phone_number:
-          Math.random() > 0.7
-            ? `+62${Math.floor(Math.random() * 9000000000) + 1000000000}`
-            : undefined,
-        skills: skills.slice(0, Math.floor(Math.random() * 3) + 1),
-        updated_at: new Date().toISOString(),
-      },
-      user_id: memberId,
-    };
-  });
-};
-
-const mockData: TeamType[] = Array.from({ length: 50 }, (_, i) => {
-  const teamId = `team-${String(i + 1).padStart(3, '0')}`;
-  const memberCount = Math.floor(Math.random() * 5) + 1; // 1-5 members
-  const leaderId = `leader-${teamId}`;
-  const members = generateMembers(memberCount, teamId, leaderId);
-
-  return {
-    id: teamId,
-    name: `Team ${teamNames[i % teamNames.length]} ${
-      Math.floor(i / teamNames.length) + 1
-    }`,
-    description:
-      i % 4 === 0 ? undefined : descriptions[i % descriptions.length],
-    city: cities[i % cities.length],
-    banner:
-      i % 3 === 0 ? undefined : `https://picsum.photos/600/200?random=${i}`, // 3:1 aspect ratio
-    logo:
-      i % 4 === 0
-        ? undefined
-        : `https://ui-avatars.com/api/?name=${encodeURIComponent(
-            teamNames[i % teamNames.length]
-          )}&background=random&size=120`,
-    visibility: i % 4 === 0 ? 'private' : 'public',
-    member_count: memberCount,
-    has_submission: i % 3 !== 0,
-    created_at: new Date(
-      Date.now() - i * 86400000 * (Math.random() * 15 + 1)
-    ).toISOString(),
-    updated_at: new Date().toISOString(),
-    leader_id: leaderId,
-    members: members,
-  };
-});
+type TeamType = TAdminTeamItem;
 
 export const HackathonTeamsPage: FC = (): ReactElement => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentPage = Math.max(
+    1,
+    parseInt(searchParams.get('page') || '1', 10)
+  );
+  const searchQuery = searchParams.get('search') || '';
+  const perPage = parseInt(searchParams.get('per_page') || '10', 10);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showNewTeamModal, setShowNewTeamModal] = useState(false);
   const [showSubmissionModal, setShowSubmissionModal] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState<TeamType | null>(null);
   const [selectedSubmissionTeam, setSelectedSubmissionTeam] =
     useState<TeamType | null>(null);
-  const [globalFilter, setGlobalFilter] = useState('');
+  const [globalFilter, setGlobalFilter] = useState(searchQuery);
 
   // Advanced filtering states
   const [visibilityFilter, setVisibilityFilter] = useState('all');
   const [cityFilter, setCityFilter] = useState('all');
-  const [submissionFilter, setSubmissionFilter] = useState('all');
-  const [memberCountFilter, setMemberCountFilter] = useState('all');
 
-  // Constants
-  const pageSize = 10;
+  // Fetch teams from API
+  const {
+    data: teamsResponse,
+    isLoading,
+    isFetching,
+  } = useQuery({
+    queryKey: [
+      'admin-teams',
+      currentPage,
+      perPage,
+      cityFilter,
+      visibilityFilter,
+      searchQuery,
+    ],
+    queryFn: () =>
+      getAdminTeams({
+        page: currentPage,
+        per_page: perPage,
+        search: searchQuery || undefined,
+      }),
+    staleTime: 30000, // 30 seconds cache
+    gcTime: 5 * 60 * 1000, // 5 minutes
+  });
+
+  const totalData = teamsResponse?.meta?.total_data || 0;
+  const totalPages = teamsResponse?.meta?.total_page || 1;
+
+  // Handle page change - update URL query params
+  const handlePageChange = useCallback(
+    (newPage: number) => {
+      const params = new URLSearchParams();
+      params.set('page', newPage.toString());
+      if (perPage !== 10) params.set('per_page', perPage.toString());
+      if (searchQuery) params.set('search', searchQuery);
+      setSearchParams(params);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
+    [setSearchParams, perPage, searchQuery]
+  );
+
+  // Validate page number doesn't exceed total pages
+  useEffect(() => {
+    if (!isLoading && totalPages > 0 && currentPage > totalPages) {
+      setSearchParams({ page: totalPages.toString() });
+    }
+  }, [currentPage, totalPages, setSearchParams, isLoading]);
+
+  // Sync globalFilter with URL search param on mount
+  useEffect(() => {
+    setGlobalFilter(searchQuery);
+  }, [searchQuery]);
+
+  // Handle search submission
+  const handleSearch = useCallback(() => {
+    const params = new URLSearchParams();
+    params.set('page', '1');
+    if (perPage !== 10) params.set('per_page', perPage.toString());
+    if (globalFilter.trim()) {
+      params.set('search', globalFilter.trim());
+    }
+    setSearchParams(params);
+  }, [globalFilter, setSearchParams, perPage]);
+
+  // Handle Enter key press in search input
+  const handleSearchKeyPress = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter') {
+        handleSearch();
+      }
+    },
+    [handleSearch]
+  );
+
+  // Handle per page change
+  const handlePerPageChange = useCallback(
+    (newPerPage: number) => {
+      const params = new URLSearchParams();
+      params.set('page', '1');
+      params.set('per_page', newPerPage.toString());
+      if (searchQuery) params.set('search', searchQuery);
+      setSearchParams(params);
+    },
+    [setSearchParams, searchQuery]
+  );
 
   // Memoize the callback to prevent recreation
   const handleShowDetailModal = useCallback((team: TeamType) => {
@@ -235,67 +157,15 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
     setShowNewTeamModal(false);
   }, []);
 
-  const handleShowSubmissionModal = useCallback((team: TeamType) => {
-    setSelectedSubmissionTeam(team);
-    setShowSubmissionModal(true);
-  }, []);
-
   const handleCloseSubmissionModal = useCallback(() => {
     setShowSubmissionModal(false);
     setSelectedSubmissionTeam(null);
   }, []);
 
-  // Filter data based on current filter states
+  // Get teams data from API response
   const filteredData = useMemo(() => {
-    return mockData.filter((team) => {
-      // Global search filter
-      if (globalFilter) {
-        const searchTerm = globalFilter.toLowerCase();
-        const leaderName =
-          team.members.find((m) => m.role === 'leader')?.user.fullname || '';
-        const memberNames = team.members.map((m) => m.user.fullname).join(' ');
-
-        if (
-          !team.name.toLowerCase().includes(searchTerm) &&
-          !team.city.toLowerCase().includes(searchTerm) &&
-          !leaderName.toLowerCase().includes(searchTerm) &&
-          !memberNames.toLowerCase().includes(searchTerm)
-        ) {
-          return false;
-        }
-      }
-
-      // Visibility filter
-      if (visibilityFilter !== 'all' && team.visibility !== visibilityFilter) {
-        return false;
-      }
-
-      // City filter
-      if (cityFilter !== 'all' && team.city !== cityFilter) {
-        return false;
-      }
-
-      // Submission filter
-      if (submissionFilter !== 'all') {
-        const hasSubmission = submissionFilter === 'submitted';
-        if (team.has_submission !== hasSubmission) return false;
-      }
-
-      // Member count filter
-      if (memberCountFilter !== 'all') {
-        const count = parseInt(memberCountFilter);
-        if (team.member_count !== count) return false;
-      }
-
-      return true;
-    });
-  }, [
-    globalFilter,
-    visibilityFilter,
-    cityFilter,
-    submissionFilter,
-    memberCountFilter,
-  ]);
+    return teamsResponse?.data || [];
+  }, [teamsResponse]);
 
   // Memoize columns to prevent recreation on every render
   const columns: ColumnDef<TeamType>[] = useMemo(
@@ -319,9 +189,12 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
                   <TeamOutlined className="text-neutral-400 text-lg" />
                 )}
               </div>
-              {/* Team Name & Description */}
+              {/* Team Name */}
               <div className="min-w-0 flex-1">
-                <p className="font-medium text-neutral-900 truncate">
+                <p
+                  className="font-medium text-neutral-900 truncate max-w-sm"
+                  title={team.name}
+                >
                   {team.name}
                 </p>
               </div>
@@ -359,80 +232,14 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
         enableSorting: true,
       },
       {
-        accessorKey: 'member_count',
-        header: 'Members',
+        id: 'leader',
+        header: 'Leader ID',
         cell: ({ row }) => (
-          <div className="flex items-center gap-2">
-            <UserOutlined className="text-neutral-400 text-sm" />
-            <span className="text-sm text-neutral-700">
-              {row.original.member_count}
-            </span>
+          <div className="text-sm text-neutral-700 font-mono">
+            {row.original.leader_id}
           </div>
         ),
-        enableSorting: true,
-      },
-      {
-        id: 'leader',
-        header: 'Leader',
-        cell: ({ row }) => {
-          const leader = row.original.members.find(
-            (m) => m.role === 'leader'
-          )?.user;
-          return leader ? (
-            <div>
-              <div className="text-sm font-medium text-neutral-900">
-                {leader.fullname}
-              </div>
-              <div className="text-xs text-neutral-500">{leader.email}</div>
-            </div>
-          ) : (
-            <span className="text-neutral-400 italic">No leader</span>
-          );
-        },
         enableSorting: false,
-      },
-      {
-        accessorKey: 'has_submission',
-        header: 'Submission',
-        cell: ({ row }) => {
-          const hasSubmission = row.original.has_submission;
-          return (
-            <div className="flex items-center gap-2">
-              <div
-                className={cn(
-                  'w-2 h-2 rounded-full',
-                  hasSubmission ? 'bg-success-500' : 'bg-danger-500'
-                )}
-              />
-              <div className="flex flex-col">
-                <span
-                  className={cn(
-                    'text-sm font-medium',
-                    hasSubmission ? 'text-success-700' : 'text-danger-700'
-                  )}
-                >
-                  {hasSubmission ? 'Submitted' : 'Not Submitted'}
-                </span>
-                {hasSubmission && (
-                  <button
-                    className="text-xs text-primary-600 hover:text-primary-800 text-left cursor-pointer"
-                    onClick={() => handleShowSubmissionModal(row.original)}
-                  >
-                    View Submission <ArrowRightOutlined />
-                  </button>
-                )}
-              </div>
-            </div>
-          );
-        },
-        enableSorting: true,
-        sortingFn: (rowA, rowB) => {
-          const aSubmission = rowA.original.has_submission;
-          const bSubmission = rowB.original.has_submission;
-          if (aSubmission && !bSubmission) return -1;
-          if (!aSubmission && bSubmission) return 1;
-          return 0;
-        },
       },
       {
         accessorKey: 'created_at',
@@ -469,7 +276,7 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
         enableSorting: false,
       },
     ],
-    [handleShowDetailModal, handleShowSubmissionModal]
+    [handleShowDetailModal]
   );
 
   return (
@@ -488,14 +295,31 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
               <input
                 type="text"
                 className="border border-neutral-200 rounded-lg pl-10 pr-4 py-2.5 text-sm w-full sm:w-80 focus:border-primary-500 focus:outline-none"
-                placeholder="Search teams by name, city, or leader..."
+                placeholder="Search teams by name or city..."
                 value={globalFilter}
                 onChange={(e) => setGlobalFilter(e.target.value)}
+                onKeyPress={handleSearchKeyPress}
               />
             </div>
 
-            {/* Visibility Filter */}
+            {/* Per Page Dropdown */}
             <div className="relative">
+              <select
+                className="border border-neutral-200 rounded-lg px-4 py-2.5 text-sm w-28 focus:border-primary-500 focus:outline-none appearance-none bg-white cursor-pointer"
+                value={perPage}
+                onChange={(e) =>
+                  handlePerPageChange(parseInt(e.target.value, 10))
+                }
+              >
+                <option value={10}>10 / page</option>
+                <option value={20}>20 / page</option>
+                <option value={50}>50 / page</option>
+                <option value={100}>100 / page</option>
+              </select>
+            </div>
+
+            {/* Visibility Filter */}
+            {/* <div className="relative">
               <FilterOutlined className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 text-sm pointer-events-none z-10" />
               <select
                 className="border border-neutral-200 rounded-lg pl-10 pr-10 py-2.5 text-sm w-full sm:w-40 focus:border-primary-500 focus:outline-none appearance-none bg-white cursor-pointer"
@@ -506,47 +330,16 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
                 <option value="public">Public</option>
                 <option value="private">Private</option>
               </select>
-            </div>
+            </div> */}
 
             {/* City Filter */}
-            <CityFilterSelect
+            {/* <CityFilterSelect
               value={cityFilter}
               onChange={setCityFilter}
               className="w-full sm:w-44"
               placeholder="Search cities..."
               allOptionLabel="All Cities"
-            />
-
-            {/* Member Count Filter */}
-            <div className="relative">
-              <FilterOutlined className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 text-sm pointer-events-none z-10" />
-              <select
-                className="border border-neutral-200 rounded-lg pl-10 pr-10 py-2.5 text-sm w-full sm:w-55 focus:border-primary-500 focus:outline-none appearance-none bg-white cursor-pointer"
-                value={memberCountFilter}
-                onChange={(e) => setMemberCountFilter(e.target.value)}
-              >
-                <option value="all">All Member Count</option>
-                <option value="1">1 Member</option>
-                <option value="2">2 Members</option>
-                <option value="3">3 Members</option>
-                <option value="4">4 Members</option>
-                <option value="5">5 Members</option>
-              </select>
-            </div>
-
-            {/* Submission Filter */}
-            <div className="relative">
-              <FilterOutlined className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 text-sm pointer-events-none z-10" />
-              <select
-                className="border border-neutral-200 rounded-lg pl-10 pr-10 py-2.5 text-sm w-full sm:w-44 focus:border-primary-500 focus:outline-none appearance-none bg-white cursor-pointer"
-                value={submissionFilter}
-                onChange={(e) => setSubmissionFilter(e.target.value)}
-              >
-                <option value="all">All Submissions</option>
-                <option value="submitted">Submitted</option>
-                <option value="not_submitted">Not Submitted</option>
-              </select>
-            </div>
+            /> */}
           </div>
 
           {/* Right side - Add Team Button */}
@@ -564,10 +357,7 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
         </div>
 
         {/* Active filters display */}
-        {(visibilityFilter !== 'all' ||
-          cityFilter !== 'all' ||
-          submissionFilter !== 'all' ||
-          memberCountFilter !== 'all') && (
+        {(visibilityFilter !== 'all' || cityFilter !== 'all') && (
           <div className="flex flex-wrap gap-2 items-center">
             <span className="text-sm text-neutral-600">Active filters:</span>
 
@@ -597,32 +387,6 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
               </span>
             )}
 
-            {/* Member count filter badge */}
-            {memberCountFilter !== 'all' && (
-              <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-2xl text-sm">
-                Members: {memberCountFilter}
-                <button
-                  onClick={() => setMemberCountFilter('all')}
-                  className="text-blue-600 hover:text-blue-800 cursor-pointer"
-                >
-                  ✕
-                </button>
-              </span>
-            )}
-
-            {/* Submission filter badge */}
-            {submissionFilter !== 'all' && (
-              <span className="inline-flex items-center gap-1 px-2 py-1 bg-purple-100 text-purple-800 rounded-2xl text-sm">
-                Submission: {submissionFilter}
-                <button
-                  onClick={() => setSubmissionFilter('all')}
-                  className="text-purple-600 hover:text-purple-800 cursor-pointer"
-                >
-                  ✕
-                </button>
-              </span>
-            )}
-
             {/* Clear all filters */}
             <Button
               variant="secondary"
@@ -630,8 +394,6 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
               onClick={() => {
                 setVisibilityFilter('all');
                 setCityFilter('all');
-                setSubmissionFilter('all');
-                setMemberCountFilter('all');
                 setGlobalFilter('');
               }}
               className="text-sm text-neutral-600"
@@ -641,17 +403,36 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
           </div>
         )}
 
-        {/* Pagination-aware results display */}
-        {filteredData.length > 0 && (
-          <div className="text-sm text-neutral-600">
-            Showing {Math.min(pageSize, filteredData.length)} of{' '}
-            {filteredData.length} teams
-            {filteredData.length > pageSize}
+        {/* Loading & results display */}
+        {isLoading ? (
+          <div className="flex items-center justify-center py-12">
+            <LoadingOutlined className="text-3xl text-primary-500 animate-spin" />
+            <span className="ml-3 text-neutral-600">Loading teams...</span>
+          </div>
+        ) : filteredData.length > 0 ? (
+          <>
+            <div className="text-sm text-neutral-600">
+              Showing {filteredData.length} of {totalData} teams (Page{' '}
+              {currentPage} of {totalPages})
+              {isFetching && (
+                <span className="ml-2 text-primary-500">(Updating...)</span>
+              )}
+            </div>
+            <DataTable
+              data={filteredData}
+              columns={columns}
+              pageSize={perPage}
+              manualPagination={true}
+              pageCount={totalPages}
+              currentPage={currentPage}
+              onPageChange={handlePageChange}
+            />
+          </>
+        ) : (
+          <div className="text-center py-12 text-neutral-500">
+            No teams found. Try adjusting your filters.
           </div>
         )}
-
-        {/* Table */}
-        <DataTable data={filteredData} columns={columns} pageSize={10} />
       </section>
 
       {/* Modals component */}
