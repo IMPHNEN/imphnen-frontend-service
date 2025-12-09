@@ -10,13 +10,18 @@ const ADMIN_BASE_URL = '/admin';
 // Admin Users
 export const getAdminUsers = async (params?: {
   page?: number;
-  limit?: number;
+  per_page?: number;
   search?: string;
-  city?: string;
+  is_admin?: boolean;
 }) => {
   const response = await api.get<TAdminUsersResponse>(
     `${ADMIN_BASE_URL}/users`,
-    { params }
+    {
+      params: {
+        ...params,
+        is_admin: params?.is_admin ?? false,
+      },
+    }
   );
   return response.data;
 };
@@ -24,10 +29,8 @@ export const getAdminUsers = async (params?: {
 // Admin Teams
 export const getAdminTeams = async (params?: {
   page?: number;
-  limit?: number;
+  per_page?: number;
   search?: string;
-  city?: string;
-  visibility?: string;
 }) => {
   const response = await api.get<TAdminTeamsResponse>(
     `${ADMIN_BASE_URL}/teams`,
@@ -39,7 +42,7 @@ export const getAdminTeams = async (params?: {
 // Admin Submissions
 export const getAdminSubmissions = async (params?: {
   page?: number;
-  limit?: number;
+  per_page?: number;
   search?: string;
   status?: string;
 }) => {

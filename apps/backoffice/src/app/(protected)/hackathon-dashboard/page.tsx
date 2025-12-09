@@ -11,24 +11,24 @@ export const HackathonDashboardPage: FC = (): ReactElement => {
   // Fetch total participants
   const { data: usersData } = useQuery({
     queryKey: ['admin-users-count'],
-    queryFn: () => getAdminUsers({ page: 1, limit: 1 }),
+    queryFn: () => getAdminUsers({ page: 1, per_page: 1 }),
   });
 
   // Fetch total teams
   const { data: teamsData } = useQuery({
     queryKey: ['admin-teams-count'],
-    queryFn: () => getAdminTeams({ page: 1, limit: 1 }),
+    queryFn: () => getAdminTeams({ page: 1, per_page: 1 }),
   });
 
   // Fetch total submissions
   const { data: submissionsData } = useQuery({
     queryKey: ['admin-submissions-count'],
-    queryFn: () => getAdminSubmissions({ page: 1, limit: 1 }),
+    queryFn: () => getAdminSubmissions({ page: 1, per_page: 1 }),
   });
 
-  const totalParticipants = usersData?.meta?.total_data ?? 0;
-  const totalTeams = teamsData?.meta?.total_data ?? 0;
-  const totalSubmissions = submissionsData?.meta?.total_data ?? 0;
+  const totalParticipants = usersData?.meta?.total_data ?? '??';
+  const totalTeams = teamsData?.meta?.total_data ?? '??';
+  const totalSubmissions = submissionsData?.meta?.total_data ?? '??';
 
   return (
     <BackofficeWrapper title="IMPHNEN x Kolosal.ai Hackathon 2025">
