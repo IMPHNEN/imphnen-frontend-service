@@ -7,7 +7,6 @@ import {
   useCallback,
 } from 'react';
 import ModalTeamDetail from './_components/modal-team-detail-new';
-import SubmissionModal from './_components/submission-modal';
 import { CityFilterSelect } from '../../../components/city-filter-select';
 import {
   BackofficeWrapper,
@@ -43,10 +42,8 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
   const perPage = parseInt(searchParams.get('per_page') || '10', 10);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showNewTeamModal, setShowNewTeamModal] = useState(false);
-  const [showSubmissionModal, setShowSubmissionModal] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState<TeamType | null>(null);
-  const [selectedSubmissionTeam, setSelectedSubmissionTeam] =
-    useState<TeamType | null>(null);
+  useState<TeamType | null>(null);
   const [globalFilter, setGlobalFilter] = useState(searchQuery);
 
   // Advanced filtering states
@@ -105,7 +102,7 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
     setGlobalFilter(searchQuery);
   }, [searchQuery]);
 
-  // Handle search submission
+  // Handle search teams
   const handleSearch = useCallback(() => {
     const params = new URLSearchParams();
     params.set('page', '1');
@@ -155,11 +152,6 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
 
   const handleCloseNewTeamModal = useCallback(() => {
     setShowNewTeamModal(false);
-  }, []);
-
-  const handleCloseSubmissionModal = useCallback(() => {
-    setShowSubmissionModal(false);
-    setSelectedSubmissionTeam(null);
   }, []);
 
   // Get teams data from API response
@@ -448,16 +440,6 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
         onClose={handleCloseNewTeamModal}
         team={null} // null indicates creating new team
       />
-
-      {/* Submission Modal */}
-      {selectedSubmissionTeam && (
-        <SubmissionModal
-          isOpen={showSubmissionModal}
-          onClose={handleCloseSubmissionModal}
-          teamId={selectedSubmissionTeam.id}
-          teamName={selectedSubmissionTeam.name}
-        />
-      )}
     </BackofficeWrapper>
   );
 };
