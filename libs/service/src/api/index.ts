@@ -6,6 +6,7 @@ export * from './users';
 export * from './mentors';
 export * from './upload';
 export * from './hackathon';
+export * from './admin';
 
 // Common API response wrapper interface
 export interface ApiResponse<T> {
@@ -20,7 +21,9 @@ const getSessionTokenFromCookies = () => {
   if (typeof document === 'undefined') return null;
 
   const cookies = document.cookie.split(';');
-  const tokenCookie = cookies.find(cookie => cookie.trim().startsWith(`${TOKEN_KEY}=`));
+  const tokenCookie = cookies.find((cookie) =>
+    cookie.trim().startsWith(`${TOKEN_KEY}=`)
+  );
 
   if (!tokenCookie) return null;
 
@@ -32,13 +35,17 @@ const getSessionTokenFromCookies = () => {
   }
 };
 
-const setSessionTokenToCookies = (tokenData: { token: { access_token: string; refresh_token: string } }) => {
+const setSessionTokenToCookies = (tokenData: {
+  token: { access_token: string; refresh_token: string };
+}) => {
   if (typeof document === 'undefined') return;
 
   const expires = new Date();
   expires.setDate(expires.getDate() + 7);
 
-  document.cookie = `${TOKEN_KEY}=${encodeURIComponent(JSON.stringify(tokenData))}; expires=${expires.toUTCString()}; path=/; secure; samesite=strict`;
+  document.cookie = `${TOKEN_KEY}=${encodeURIComponent(
+    JSON.stringify(tokenData)
+  )}; expires=${expires.toUTCString()}; path=/; secure; samesite=strict`;
 };
 
 const removeSessionTokenFromCookies = () => {

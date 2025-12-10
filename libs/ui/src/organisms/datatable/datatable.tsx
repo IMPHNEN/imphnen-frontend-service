@@ -23,6 +23,11 @@ interface DataTableProps<T extends RowData> {
   columns?: ColumnDef<T, unknown>[];
   pageSize?: number;
   className?: string;
+  // server-side pagination props
+  manualPagination?: boolean;
+  pageCount?: number;
+  currentPage?: number;
+  onPageChange?: (page: number) => void;
 }
 
 export const DataTable = <T extends RowData>({
@@ -31,6 +36,10 @@ export const DataTable = <T extends RowData>({
   columns = [],
   pageSize = 9,
   className,
+  manualPagination = false,
+  pageCount,
+  currentPage = 1,
+  onPageChange,
 }: DataTableProps<T>) => {
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
@@ -75,10 +84,20 @@ export const DataTable = <T extends RowData>({
       getPaginationRowModel: getPaginationRowModel(),
       getSortedRowModel: getSortedRowModel(),
       getFilteredRowModel: getFilteredRowModel(),
+      // server-side pagination config
+      manualPagination,
+      pageCount: manualPagination ? pageCount : undefined,
     };
 
     return config;
-  }, [memoizedData, memoizedColumns, pagination, sorting]);
+  }, [
+    memoizedData,
+    memoizedColumns,
+    pagination,
+    sorting,
+    manualPagination,
+    pageCount,
+  ]);
 
   // Prefer external table instance if provided; otherwise create an internal one
   const internalTable = useReactTable(tableConfig);
@@ -166,7 +185,118 @@ export const DataTable = <T extends RowData>({
           </tbody>
         </table>
       </div>
-      <Pagination table={t} />
+      {manualPagination && onPageChange && pageCount ? (
+        // Server-side pagination controls with numbered pages
+        <div className="flex items-center justify-center gap-10">
+          <button
+            className="disabled:opacity-50 cursor-pointer"
+            onClick={() => onPageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            aria-label="Previous page"
+          >
+            <svg
+              className="w-4 h-4 text-neutral-800"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+          </button>
+
+          <div className="flex gap-4 items-baseline">
+            {pageCount <= 8 ? (
+              // Show all pages if 8 or fewer
+              Array.from({ length: pageCount }, (_, index) => (
+                <button
+                  key={index}
+                  className={`size-[30px] py-2 flex items-center justify-center rounded-md cursor-pointer ${
+                    currentPage === index + 1
+                      ? 'bg-primary-500 text-white'
+                      : 'bg-primary-100 hover:bg-primary-200'
+                  }`}
+                  onClick={() => onPageChange(index + 1)}
+                >
+                  {index + 1}
+                </button>
+              ))
+            ) : (
+              // Show ellipsis for many pages
+              <>
+                <button
+                  onClick={() => onPageChange(1)}
+                  className={`size-[30px] py-2 flex items-center justify-center rounded-md cursor-pointer ${
+                    currentPage === 1
+                      ? 'bg-primary-500 text-white'
+                      : 'bg-primary-100 hover:bg-primary-200'
+                  }`}
+                >
+                  1
+                </button>
+                {currentPage > 3 && <span>...</span>}
+                {Array.from(
+                  { length: 5 },
+                  (_, index) => currentPage - 2 + index
+                )
+                  .filter((page) => page > 1 && page < pageCount)
+                  .map((page) => (
+                    <button
+                      key={page}
+                      onClick={() => onPageChange(page)}
+                      className={`size-[30px] py-2 flex items-center justify-center rounded-md cursor-pointer ${
+                        currentPage === page
+                          ? 'bg-primary-500 text-white'
+                          : 'bg-primary-100 hover:bg-primary-200'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  ))}
+                {currentPage < pageCount - 2 && <span>...</span>}
+                <button
+                  onClick={() => onPageChange(pageCount)}
+                  className={`size-[30px] py-2 flex items-center justify-center rounded-md cursor-pointer ${
+                    currentPage === pageCount
+                      ? 'bg-primary-500 text-white'
+                      : 'bg-primary-100 hover:bg-primary-200'
+                  }`}
+                >
+                  {pageCount}
+                </button>
+              </>
+            )}
+          </div>
+
+          <button
+            className="disabled:opacity-50 cursor-pointer"
+            onClick={() => onPageChange(currentPage + 1)}
+            disabled={currentPage === pageCount}
+            aria-label="Next page"
+          >
+            <svg
+              className="w-4 h-4 text-neutral-800"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </button>
+        </div>
+      ) : (
+        // Client-side pagination (default)
+        <Pagination table={t} />
+      )}
     </div>
   );
 };

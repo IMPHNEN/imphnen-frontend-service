@@ -23,7 +23,7 @@ export const AppLayout: FC = (): ReactElement => {
             {/* Mobile menu button (shown on small screens) */}
             <button
               type="button"
-              className="lg:hidden p-2 rounded-md hover:bg-gray-100 text-gray-700"
+              className="lg:hidden p-2 rounded-md hover:bg-gray-100 text-gray-700 cursor-pointer"
               onClick={() => setMobileSidebarOpen(true)}
               aria-label="Open sidebar"
             >

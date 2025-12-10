@@ -1,0 +1,82 @@
+import { FC } from 'react';
+import { TeamOutlined } from '@ant-design/icons';
+import { cn } from '@imphnen-frontend-service/utils';
+
+interface TeamBannerPlaceholderProps {
+  banner?: string;
+  teamName: string;
+  className?: string;
+  showPlaceholder?: boolean;
+}
+
+const TeamBannerPlaceholder: FC<TeamBannerPlaceholderProps> = ({
+  banner,
+  teamName,
+  className = '',
+  showPlaceholder = true,
+}) => {
+  const aspectRatioClass = 'aspect-[3/1]'; // 3:1 aspect ratio
+
+  if (!banner && !showPlaceholder) {
+    return null;
+  }
+
+  if (banner) {
+    return (
+      <div
+        className={cn(
+          'w-full bg-gray-100 overflow-hidden relative',
+          aspectRatioClass,
+          className
+        )}
+      >
+        <img
+          src={banner}
+          alt={`${teamName} banner`}
+          className="w-full h-full object-cover"
+          onError={(e) => {
+            // Fallback to placeholder if image fails to load
+            const target = e.target as HTMLImageElement;
+            target.style.display = 'none';
+            const placeholder = target.nextElementSibling as HTMLElement;
+            if (placeholder) {
+              placeholder.style.display = 'flex';
+            }
+          }}
+        />
+        {/* Fallback placeholder (hidden by default, shown on image error) */}
+        <div
+          className={cn(
+            'absolute inset-0 bg-linear-to-r from-gray-100 to-gray-200 flex items-center justify-center',
+            'hidden' // Hidden by default
+          )}
+        >
+          <div className="text-center">
+            <TeamOutlined className="text-4xl text-gray-400 mb-2" />
+            <p className="text-sm text-gray-500 font-medium">{teamName}</p>
+            <p className="text-xs text-gray-400">Team Banner</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // No banner - show placeholder
+  return (
+    <div
+      className={cn(
+        'w-full bg-linear-to-r from-gray-100 to-gray-200 flex items-center justify-center',
+        aspectRatioClass,
+        className
+      )}
+    >
+      <div className="text-center">
+        <TeamOutlined className="text-4xl text-gray-400 mb-2" />
+        <p className="text-sm text-gray-500 font-medium">{teamName}</p>
+        <p className="text-xs text-gray-400">No Banner</p>
+      </div>
+    </div>
+  );
+};
+
+export default TeamBannerPlaceholder;

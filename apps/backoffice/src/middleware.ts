@@ -84,11 +84,11 @@ export const middleware = async ({ request }: LoaderFunctionArgs) => {
     session?.role?.permissions?.map?.((perm) => perm?.name) ?? [];
 
   if (mappingPublicRoutes.includes(pathname)) {
-    if (token) return redirect('/dashboard');
+    if (token) return redirect('/hackathon-dashboard');
     return null;
   }
 
-  // if (!session) return redirect('/auth/login');
+  if (!session) return redirect('/auth/login');
 
   const matchedRoute = mappingRoutePermissions.find(
     (route) => route.path === pathname
@@ -100,7 +100,7 @@ export const middleware = async ({ request }: LoaderFunctionArgs) => {
       matchedRoute.permissions.some((perm) => userPermissions.includes(perm));
 
     if (!hasPermission) {
-      return '/dashboard';
+      return '/hackathon-dashboard';
     }
   }
 

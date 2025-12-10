@@ -5,3 +5,4 @@ export * from './roles';
 export * from './permissions';
 export * from './mentors';
 export * from './teams';
+export * from './admin';

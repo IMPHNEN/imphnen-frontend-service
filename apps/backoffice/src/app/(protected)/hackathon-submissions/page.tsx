@@ -1,128 +1,375 @@
-import { FC, ReactElement, useState } from 'react';
+import {
+  FC,
+  ReactElement,
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+} from 'react';
+import SubmissionModal from './_components/submission-modal';
 import {
   BackofficeWrapper,
   DataTable,
 } from '@imphnen-frontend-service/ui/organisms';
-import {
-  ColumnDef,
-  getCoreRowModel,
-  getPaginationRowModel,
-  PaginationState,
-  RowSelectionState,
-  useReactTable,
-} from '@tanstack/react-table';
+import { ColumnDef } from '@tanstack/react-table';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { cn } from '@imphnen-frontend-service/utils';
-import { EditOutlined } from '@ant-design/icons';
+import {
+  SearchOutlined,
+  FilterOutlined,
+  LoadingOutlined,
+  EyeOutlined,
+} from '@ant-design/icons';
+import { useQuery } from '@tanstack/react-query';
+import {
+  getAdminSubmissions,
+  TAdminSubmissionItem,
+} from '@imphnen-frontend-service/service';
+import { useSearchParams } from 'react-router-dom';
 
-export const HackathonUsersPage: FC = (): ReactElement => {
-  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 9,
+type SubmissionType = TAdminSubmissionItem;
+
+export const HackathonSubmissionsPage: FC = (): ReactElement => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentPage = Math.max(
+    1,
+    parseInt(searchParams.get('page') || '1', 10)
+  );
+  const searchQuery = searchParams.get('search') || '';
+  const perPage = parseInt(searchParams.get('per_page') || '10', 10);
+  const statusFilter = searchParams.get('status') || 'all';
+
+  const [showSubmissionModal, setShowSubmissionModal] = useState(false);
+  const [selectedSubmission, setSelectedSubmission] =
+    useState<SubmissionType | null>(null);
+  const [globalFilter, setGlobalFilter] = useState(searchQuery);
+
+  // Fetch submissions from API
+  const {
+    data: submissionsResponse,
+    isLoading,
+    isFetching,
+  } = useQuery({
+    queryKey: [
+      'admin-submissions',
+      currentPage,
+      perPage,
+      statusFilter,
+      searchQuery,
+    ],
+    queryFn: () =>
+      getAdminSubmissions({
+        page: currentPage,
+        per_page: perPage,
+        status: statusFilter !== 'all' ? statusFilter : undefined,
+        search: searchQuery || undefined,
+      }),
+    staleTime: 30000, // 30 seconds cache
+    gcTime: 5 * 60 * 1000, // 5 minutes
   });
 
-  const mockData: any[] = Array.from({ length: 90 }, (_, i) => ({
-    id: i + 1,
-    project_name: `Project ${i + 1}`,
-    repository_url: `https://github.com/user/repo${i + 1}`,
-    demo_url: `https://demo.example.com/project${i + 1}`,
-    presentation_url: `https://slides.example.com/project${i + 1}`,
-  }));
+  const totalData = submissionsResponse?.meta?.total_data || 0;
+  const totalPages = submissionsResponse?.meta?.total_page || 1;
 
-  type UserStatus = 'active' | 'inactive';
+  // Handle page change
+  const handlePageChange = useCallback(
+    (newPage: number) => {
+      const params = new URLSearchParams();
+      params.set('page', newPage.toString());
+      if (perPage !== 10) params.set('per_page', perPage.toString());
+      if (searchQuery) params.set('search', searchQuery);
+      if (statusFilter !== 'all') params.set('status', statusFilter);
+      setSearchParams(params);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
+    [setSearchParams, perPage, searchQuery, statusFilter]
+  );
 
-  interface SubmissionType {
-    id: number;
-    project_name: string;
-    repository_url: string;
-    demo_url: string;
-    presentation_url: string;
-  }
+  // Validate page number
+  useEffect(() => {
+    if (!isLoading && totalPages > 0 && currentPage > totalPages) {
+      setSearchParams({ page: totalPages.toString() });
+    }
+  }, [currentPage, totalPages, setSearchParams, isLoading]);
 
-  const columns: ColumnDef<SubmissionType>[] = [
-    {
-      header: 'Project Name',
-      accessorKey: 'project_name',
-    },
-    {
-      header: 'Repository URL',
-      accessorKey: 'repository_url',
-    },
-    {
-      header: 'Demo URL',
-      accessorKey: 'demo_url',
-    },
-    {
-      header: 'Presentation URL',
-      accessorKey: 'presentation_url',
-    },
-    {
-      header: 'Action',
-      meta: { cellClassName: cn('w-72') },
-      cell: ({ row }) => (
-        <Button
-          variant="primary"
-          size="sm"
-          className="flex items-center gap-2 w-max"
-          onClick={() => {
-            // View detail logic
-          }}
-        >
-          <EditOutlined className="text-base" /> View & Manage
-        </Button>
-      ),
-    },
-  ];
+  // Sync globalFilter with URL
+  useEffect(() => {
+    setGlobalFilter(searchQuery);
+  }, [searchQuery]);
 
-  const table = useReactTable({
-    data: mockData,
-    columns,
-    state: {
-      pagination,
-      rowSelection,
+  // Handle search
+  const handleSearch = useCallback(() => {
+    const params = new URLSearchParams();
+    params.set('page', '1');
+    if (perPage !== 10) params.set('per_page', perPage.toString());
+    if (globalFilter.trim()) {
+      params.set('search', globalFilter.trim());
+    }
+    if (statusFilter !== 'all') params.set('status', statusFilter);
+    setSearchParams(params);
+  }, [globalFilter, setSearchParams, perPage, statusFilter]);
+
+  const handleSearchKeyPress = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter') {
+        handleSearch();
+      }
     },
-    enableRowSelection: true,
-    onRowSelectionChange: setRowSelection,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onPaginationChange: setPagination,
-    pageCount: Math.ceil(mockData.length / pagination.pageSize),
-    manualPagination: false,
-  });
+    [handleSearch]
+  );
+
+  // Handle per page change
+  const handlePerPageChange = useCallback(
+    (newPerPage: number) => {
+      const params = new URLSearchParams();
+      params.set('page', '1');
+      params.set('per_page', newPerPage.toString());
+      if (searchQuery) params.set('search', searchQuery);
+      if (statusFilter !== 'all') params.set('status', statusFilter);
+      setSearchParams(params);
+    },
+    [setSearchParams, searchQuery, statusFilter]
+  );
+
+  // Handle status filter change
+  // const handleStatusFilterChange = useCallback(
+  //   (newStatus: string) => {
+  //     const params = new URLSearchParams();
+  //     params.set('page', '1');
+  //     if (perPage !== 10) params.set('per_page', perPage.toString());
+  //     if (searchQuery) params.set('search', searchQuery);
+  //     if (newStatus !== 'all') params.set('status', newStatus);
+  //     setSearchParams(params);
+  //   },
+  //   [setSearchParams, perPage, searchQuery]
+  // );
+
+  // Handle modal
+  const handleShowSubmissionModal = useCallback(
+    (submission: SubmissionType) => {
+      setSelectedSubmission(submission);
+      setShowSubmissionModal(true);
+    },
+    []
+  );
+
+  const handleCloseSubmissionModal = useCallback(() => {
+    setShowSubmissionModal(false);
+    setSelectedSubmission(null);
+  }, []);
+
+  // Get submissions data
+  const filteredData = useMemo(() => {
+    return submissionsResponse?.data || [];
+  }, [submissionsResponse]);
+
+  // Memoize columns
+  const columns: ColumnDef<SubmissionType>[] = useMemo(
+    () => [
+      {
+        accessorKey: 'project_name',
+        header: 'Project Name',
+        cell: ({ row }) => (
+          <span className="font-medium text-neutral-900">
+            {row.original.project_name}
+          </span>
+        ),
+        enableSorting: true,
+      },
+      {
+        accessorKey: 'team_id',
+        header: 'Team ID',
+        cell: ({ row }) => (
+          <span className="text-sm text-neutral-700 font-mono">
+            {row.original.team_id}
+          </span>
+        ),
+        enableSorting: false,
+      },
+      {
+        accessorKey: 'status',
+        header: 'Status',
+        cell: ({ row }) => {
+          const status = row.original.status;
+          return (
+            <span
+              className={cn(
+                'inline-flex items-center gap-1 px-2 py-1 rounded-2xl text-xs font-medium',
+                status === 'submitted'
+                  ? 'bg-success-100 text-success-800'
+                  : status === 'pending'
+                  ? 'bg-orange-100 text-orange-800'
+                  : 'bg-neutral-100 text-neutral-700'
+              )}
+            >
+              {status.charAt(0).toUpperCase() + status.slice(1)}
+            </span>
+          );
+        },
+        enableSorting: true,
+      },
+      {
+        accessorKey: 'submitted_at',
+        header: 'Submitted',
+        cell: ({ row }) => (
+          <span className="text-neutral-900 text-sm">
+            {new Date(row.original.submitted_at).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+            })}
+          </span>
+        ),
+        enableSorting: true,
+        sortingFn: 'datetime',
+      },
+      {
+        id: 'actions',
+        header: 'Actions',
+        meta: { cellClassName: cn('w-48') },
+        cell: ({ row }) => (
+          <Button
+            variant="primary"
+            size="sm"
+            className="flex items-center gap-2 text-sm px-4 py-2"
+            onClick={() => handleShowSubmissionModal(row.original)}
+          >
+            <EyeOutlined className="text-sm" />
+            View
+          </Button>
+        ),
+        enableSorting: false,
+      },
+    ],
+    [handleShowSubmissionModal]
+  );
 
   return (
     <BackofficeWrapper title="IMPHNEN x Kolosal.ai Hackathon 2025">
       <h1 className="mb-8 text-p1 font-semibold text-neutral-700">
-        Project Submission
+        Project Submissions
       </h1>
-      {/* Filters and actions */}
       <section className="bg-white rounded-md shadow p-8 flex flex-col gap-6">
-        <div className="flex flex-wrap gap-3 items-center">
-          <input
-            type="text"
-            className="border border-neutral-200 rounded-md px-3 py-2 text-label1 w-full sm:w-64"
-            placeholder="Search name or email"
-          />
-          <select className="border border-neutral-200 rounded-md px-3 py-2 text-label1 w-full sm:w-40">
-            <option value="all">All Status</option>
-            <option value="active">Active</option>
-            <option value="suspended">Suspended</option>
-          </select>
-          <select className="border border-neutral-200 rounded-md px-3 py-2 text-label1 w-full sm:w-40">
-            <option value="all">All City</option>
-            <option value="jakarta">Jakarta</option>
-            <option value="bandung">Bandung</option>
-          </select>
+        <div className="flex flex-wrap gap-3 items-center justify-between">
+          <div className="flex flex-wrap gap-3 items-center">
+            {/* Search bar */}
+            <div className="relative">
+              <SearchOutlined className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 text-sm" />
+              <input
+                type="text"
+                className="border border-neutral-200 rounded-lg pl-10 pr-4 py-2.5 text-sm w-full sm:w-80 focus:border-primary-500 focus:outline-none"
+                placeholder="Search by project name..."
+                value={globalFilter}
+                onChange={(e) => setGlobalFilter(e.target.value)}
+                onKeyPress={handleSearchKeyPress}
+              />
+            </div>
+
+            {/* Per Page Dropdown */}
+            <div className="relative">
+              <select
+                className="border border-neutral-200 rounded-lg px-4 py-2.5 text-sm w-28 focus:border-primary-500 focus:outline-none appearance-none bg-white cursor-pointer"
+                value={perPage}
+                onChange={(e) =>
+                  handlePerPageChange(parseInt(e.target.value, 10))
+                }
+              >
+                <option value={10}>10 / page</option>
+                <option value={20}>20 / page</option>
+                <option value={50}>50 / page</option>
+                <option value={100}>100 / page</option>
+              </select>
+            </div>
+
+            {/* Status Filter */}
+            {/* <div className="relative">
+              <FilterOutlined className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 text-sm pointer-events-none z-10" />
+              <select
+                className="border border-neutral-200 rounded-lg pl-10 pr-10 py-2.5 text-sm w-full sm:w-40 focus:border-primary-500 focus:outline-none appearance-none bg-white cursor-pointer"
+                value={statusFilter}
+                onChange={(e) => handleStatusFilterChange(e.target.value)}
+              >
+                <option value="all">All Status</option>
+                <option value="submitted">Submitted</option>
+                <option value="pending">Pending</option>
+                <option value="approved">Approved</option>
+                <option value="rejected">Rejected</option>
+              </select>
+            </div> */}
+          </div>
         </div>
 
-        {/* Table */}
-        <DataTable data={mockData} columns={columns} table={table} />
+        {/* Active filters */}
+        {/* {statusFilter !== 'all' && (
+          <div className="flex flex-wrap gap-2 items-center">
+            <span className="text-sm text-neutral-600">Active filters:</span>
+            <span className="inline-flex items-center gap-1 px-2 py-1 bg-info-100 text-info-800 rounded-2xl text-sm">
+              Status: {statusFilter}
+              <button
+                onClick={() => handleStatusFilterChange('all')}
+                className="text-info-600 hover:text-info-800 cursor-pointer"
+              >
+                ✕
+              </button>
+            </span>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => {
+                handleStatusFilterChange('all');
+                setGlobalFilter('');
+              }}
+              className="text-sm text-neutral-600"
+            >
+              Clear All
+            </Button>
+          </div>
+        )} */}
+
+        {/* Loading & results */}
+        {isLoading ? (
+          <div className="flex items-center justify-center py-12">
+            <LoadingOutlined className="text-3xl text-primary-500 animate-spin" />
+            <span className="ml-3 text-neutral-600">
+              Loading submissions...
+            </span>
+          </div>
+        ) : filteredData.length > 0 ? (
+          <>
+            <div className="text-sm text-neutral-600">
+              Showing {filteredData.length} of {totalData} submissions (Page{' '}
+              {currentPage} of {totalPages})
+              {isFetching && (
+                <span className="ml-2 text-primary-500">(Updating...)</span>
+              )}
+            </div>
+            <DataTable
+              data={filteredData}
+              columns={columns}
+              pageSize={perPage}
+              manualPagination={true}
+              pageCount={totalPages}
+              currentPage={currentPage}
+              onPageChange={handlePageChange}
+            />
+          </>
+        ) : (
+          <div className="text-center py-12 text-neutral-500">
+            No submissions found. Try adjusting your filters.
+          </div>
+        )}
       </section>
 
-      {/* Modals extracted into shared backoffice components */}
+      {/* Submission Modal */}
+      {selectedSubmission && (
+        <SubmissionModal
+          isOpen={showSubmissionModal}
+          onClose={handleCloseSubmissionModal}
+          submission={selectedSubmission}
+        />
+      )}
     </BackofficeWrapper>
   );
 };
 
-export default HackathonUsersPage;
+export default HackathonSubmissionsPage;

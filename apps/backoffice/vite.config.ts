@@ -8,7 +8,7 @@ export default defineConfig(() => ({
   root: __dirname,
   cacheDir: '../../node_modules/.vite/apps/backoffice',
   server: {
-    port: 3000,
+    port: 3003,
     host: 'localhost',
   },
   preview: {

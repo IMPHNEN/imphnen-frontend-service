@@ -4,7 +4,7 @@ import { useLogin } from './_hooks/use-login';
 import { ControlledInputField } from '@imphnen-frontend-service/ui/organisms';
 
 export const Components: FC = (): ReactElement => {
-  const { form, onSubmit } = useLogin();
+  const { form, onSubmit, isLoading } = useLogin();
 
   return (
     <div className="flex justify-center items-center min-h-screen">
@@ -22,6 +22,7 @@ export const Components: FC = (): ReactElement => {
             name="email"
             size="lg"
             className="w-full"
+            disabled={isLoading}
           />
           <ControlledInputField
             control={form.control}
@@ -31,10 +32,11 @@ export const Components: FC = (): ReactElement => {
             name="password"
             size="lg"
             className="w-full"
+            disabled={isLoading}
           />
           <Button
             disabled={
-              form.formState.isSubmitting ||
+              isLoading ||
               form.formState.isValidating ||
               !form.formState.isValid
             }
@@ -42,7 +44,7 @@ export const Components: FC = (): ReactElement => {
             size="md"
             className="w-full"
           >
-            Login
+            {isLoading ? 'Loading...' : 'Login'}
           </Button>
         </form>
       </div>
