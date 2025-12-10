@@ -15,6 +15,41 @@ interface User {
   updated_at?: string;
 }
 
+// Certificate public data types
+interface CertificateUserData {
+  id: string;
+  fullname: string;
+  email: string;
+  avatar?: string;
+}
+
+interface CertificateTeamData {
+  id: string;
+  name: string;
+  logo?: string;
+  is_leader: boolean;
+}
+
+interface CertificateSubmissionData {
+  id: string;
+  title: string;
+  description: string;
+  repository_url?: string;
+  demo_url?: string;
+}
+
+interface CertificateWinnerData {
+  rank: number;
+  prize?: string;
+}
+
+export interface CertificatePublicData {
+  user: CertificateUserData;
+  team?: CertificateTeamData;
+  submission?: CertificateSubmissionData;
+  winner?: CertificateWinnerData;
+}
+
 // Update user request type
 interface UpdateUserRequest {
   fullname?: string;
@@ -116,5 +151,19 @@ export const useUserDetailsById = (userId: string) => {
       return { data: response.data.data };
     },
     enabled: !!userId,
+  });
+};
+
+// Public certificate data hook (no authentication required)
+export const useCertificatePublicData = (userId: string, enabled = true) => {
+  return useQuery({
+    queryKey: ['certificate-public-data', userId],
+    queryFn: async () => {
+      const response = await hackathonApi.get<HackathonApiResponse<CertificatePublicData>>(
+        `/certificates/${userId}`
+      );
+      return { data: response.data.data };
+    },
+    enabled: enabled && !!userId,
   });
 };
