@@ -15,10 +15,10 @@ import {
 
 interface UserType {
   id: string;
-  avatar?: string;
+  avatar?: string | null;
   fullname: string;
   bio?: string;
-  location: string;
+  location: string | null;
   is_active: boolean;
   skills: string[];
   created_at: string;
@@ -77,7 +77,7 @@ const ModalUserDetail: FC<ModalProps> = ({ isOpen, onClose, user }) => {
   // Check if required fields are filled
   const isFormValid = useMemo(() => {
     if (!formData) return false;
-    return formData.fullname.trim() !== '' && formData.location.trim() !== '';
+    return formData.fullname?.trim() !== '' && formData.location?.trim() !== '';
   }, [formData]);
 
   const canSave = hasChanges && isFormValid;
@@ -259,13 +259,13 @@ const ModalUserDetail: FC<ModalProps> = ({ isOpen, onClose, user }) => {
               </div>
             </div>
             <button
-              className="p-2 hover:bg-neutral-100 rounded-lg transition-colors"
+              className="p-2 hover:bg-neutral-100 rounded-lg transition-colors cursor-pointer"
               onClick={() => {
                 setShowAvatarMenu(false);
                 handleCancel();
               }}
             >
-              <CloseOutlined className="text-neutral-400 text-lg cursor-pointer" />
+              <CloseOutlined className="text-neutral-400 text-lg" />
             </button>
           </div>
 
@@ -294,13 +294,15 @@ const ModalUserDetail: FC<ModalProps> = ({ isOpen, onClose, user }) => {
                           }
                           className={cn(
                             'w-full border rounded-lg px-3 py-2 text-sm focus:border-primary-500 focus:outline-none',
-                            formData.fullname.trim() === ''
+                            !formData.fullname ||
+                              formData.fullname.trim() === ''
                               ? 'border-red-300 bg-red-50'
                               : 'border-neutral-300'
                           )}
                           placeholder="Enter full name"
                         />
-                        {formData.fullname.trim() === '' && (
+                        {(!formData.fullname ||
+                          formData.fullname.trim() === '') && (
                           <p className="text-red-500 text-xs mt-1">
                             Full name is required
                           </p>
@@ -316,13 +318,14 @@ const ModalUserDetail: FC<ModalProps> = ({ isOpen, onClose, user }) => {
                           Location <span className="text-red-500">*</span>
                         </label>
                         <select
-                          value={formData.location}
+                          value={formData.location || ''}
                           onChange={(e) =>
                             handleInputChange('location', e.target.value)
                           }
                           className={cn(
                             'w-full border rounded-lg px-3 py-2 text-sm focus:border-primary-500 focus:outline-none bg-white',
-                            formData.location.trim() === ''
+                            !formData.location ||
+                              formData.location.trim() === ''
                               ? 'border-red-300 bg-red-50'
                               : 'border-neutral-300'
                           )}
@@ -334,7 +337,8 @@ const ModalUserDetail: FC<ModalProps> = ({ isOpen, onClose, user }) => {
                           <option value="Medan">Medan</option>
                           <option value="Yogyakarta">Yogyakarta</option>
                         </select>
-                        {formData.location.trim() === '' && (
+                        {(!formData.location ||
+                          formData.location.trim() === '') && (
                           <p className="text-red-500 text-xs mt-1">
                             Location is required
                           </p>

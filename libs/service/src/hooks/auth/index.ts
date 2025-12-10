@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { hackathonApi, HackathonApiResponse } from '../../api/hackathon';
+import { backofficeApi, BackofficeApiResponse } from '../../api/backoffice';
 import { useAuthStore } from './use-auth-store';
 
 export * from './use-auth-store';
@@ -77,10 +78,9 @@ export const useLogin = () => {
 
   return useMutation({
     mutationFn: async (data: LoginRequest) => {
-      const response = await hackathonApi.post<HackathonApiResponse<AuthResponse>>(
-        '/auth/login',
-        data
-      );
+      const response = await hackathonApi.post<
+        HackathonApiResponse<AuthResponse>
+      >('/auth/login', data);
       return response.data.data;
     },
     onSuccess: (data) => {
@@ -115,10 +115,9 @@ export const useLogin = () => {
 export const useSignup = () => {
   return useMutation({
     mutationFn: async (data: SignupRequest) => {
-      const response = await hackathonApi.post<HackathonApiResponse<MessageResponse>>(
-        '/auth/signup',
-        data
-      );
+      const response = await hackathonApi.post<
+        HackathonApiResponse<MessageResponse>
+      >('/auth/signup', data);
       return response.data.data;
     },
   });
@@ -130,10 +129,9 @@ export const useGitHubCallback = () => {
 
   return useMutation({
     mutationFn: async (data: GitHubAuthRequest) => {
-      const response = await hackathonApi.post<HackathonApiResponse<AuthResponse>>(
-        '/auth/github',
-        data
-      );
+      const response = await hackathonApi.post<
+        HackathonApiResponse<AuthResponse>
+      >('/auth/github', data);
       return response.data.data;
     },
     onSuccess: (data) => {
@@ -171,9 +169,9 @@ export const useSession = () => {
   return useQuery({
     queryKey: ['auth-session'],
     queryFn: async () => {
-      const response = await hackathonApi.get<HackathonApiResponse<SessionResponse>>(
-        '/auth/session'
-      );
+      const response = await hackathonApi.get<
+        HackathonApiResponse<SessionResponse>
+      >('/auth/session');
       return response.data.data;
     },
     enabled: !!session?.token,
@@ -184,10 +182,9 @@ export const useSession = () => {
 export const useForgotPassword = () => {
   return useMutation({
     mutationFn: async (data: ForgotPasswordRequest) => {
-      const response = await hackathonApi.post<HackathonApiResponse<MessageResponse>>(
-        '/auth/forgot-password',
-        data
-      );
+      const response = await hackathonApi.post<
+        HackathonApiResponse<MessageResponse>
+      >('/auth/forgot-password', data);
       return response.data.data;
     },
   });
@@ -197,10 +194,9 @@ export const useForgotPassword = () => {
 export const useResetPassword = () => {
   return useMutation({
     mutationFn: async (data: ResetPasswordRequest) => {
-      const response = await hackathonApi.post<HackathonApiResponse<MessageResponse>>(
-        '/auth/reset-password',
-        data
-      );
+      const response = await hackathonApi.post<
+        HackathonApiResponse<MessageResponse>
+      >('/auth/reset-password', data);
       return response.data.data;
     },
   });
@@ -215,6 +211,45 @@ export const useSignOut = () => {
       // No backend call needed - just clear local session
       clearSession();
       return { success: true };
+    },
+  });
+};
+
+// Backoffice Login
+export const useBackofficeLogin = () => {
+  const { setSession } = useAuthStore();
+
+  return useMutation({
+    mutationFn: async (data: LoginRequest) => {
+      const response = await backofficeApi.post<
+        BackofficeApiResponse<AuthResponse>
+      >('/auth/login', data);
+      return response.data.data;
+    },
+    onSuccess: (data) => {
+      setSession({
+        token: data.token,
+        user: {
+          id: data.user.id,
+          email: data.user.email,
+          fullname: data.user.fullname,
+          phone_number: data.user.phone_number || '',
+          avatar: data.user.avatar || '',
+          birthdate: data.user.birthdate || '',
+          gender: data.user.gender || '',
+          is_active: data.user.is_active,
+          location: data.user.location,
+          bio: data.user.bio,
+          skills: data.user.skills,
+          role: {
+            id: data.user.role_id || '',
+            name: 'admin',
+            permissions: [],
+            created_at: '',
+            updated_at: '',
+          },
+        },
+      });
     },
   });
 };
@@ -239,7 +274,9 @@ export const useGitHubAuth = () => {
     // Get GitHub client ID from environment
     const clientId = import.meta.env.VITE_GITHUB_CLIENT_ID || '';
     if (!clientId) {
-      throw new Error('GitHub Client ID not configured. Set VITE_GITHUB_CLIENT_ID environment variable.');
+      throw new Error(
+        'GitHub Client ID not configured. Set VITE_GITHUB_CLIENT_ID environment variable.'
+      );
     }
 
     const redirectUri = `${globalThis.location.origin}/auth/callback`;
@@ -270,8 +307,16 @@ export const useEmailAuth = () => {
     };
   };
 
-  const signUpWithEmail = async (email: string, password: string, fullname: string) => {
-    const result = await signupMutation.mutateAsync({ email, password, fullname });
+  const signUpWithEmail = async (
+    email: string,
+    password: string,
+    fullname: string
+  ) => {
+    const result = await signupMutation.mutateAsync({
+      email,
+      password,
+      fullname,
+    });
     // Signup only returns a message (user needs to verify email first)
     return {
       message: result.message,
@@ -295,10 +340,9 @@ export const useEmailAuth = () => {
 export const usePostLogin = () => {
   return useMutation({
     mutationFn: async (data: LoginRequest) => {
-      const response = await hackathonApi.post<HackathonApiResponse<AuthResponse>>(
-        '/auth/login',
-        data
-      );
+      const response = await hackathonApi.post<
+        HackathonApiResponse<AuthResponse>
+      >('/auth/login', data);
       return { data: response.data.data };
     },
   });
@@ -308,10 +352,9 @@ export const usePostLogin = () => {
 export const usePostRegister = () => {
   return useMutation({
     mutationFn: async (data: SignupRequest) => {
-      const response = await hackathonApi.post<HackathonApiResponse<AuthResponse>>(
-        '/auth/signup',
-        data
-      );
+      const response = await hackathonApi.post<
+        HackathonApiResponse<AuthResponse>
+      >('/auth/signup', data);
       return { data: response.data.data };
     },
   });
