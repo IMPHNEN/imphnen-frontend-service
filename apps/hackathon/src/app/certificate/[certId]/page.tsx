@@ -44,7 +44,9 @@ const CertificatePage: FC = (): ReactElement => {
   // Generate QR Code
   useEffect(() => {
     if (certId) {
-      const certificateUrl = `${window.location.origin}/certificate/${certId}`;
+      // Use encodeURIComponent to properly encode the certId for the URL
+      const encodedCertId = encodeURIComponent(certId);
+      const certificateUrl = `${window.location.origin}/certificate/${encodedCertId}`;
       QRCode.toDataURL(certificateUrl, {
         width: 200,
         margin: 1,
