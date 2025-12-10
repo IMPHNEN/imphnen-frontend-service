@@ -3,10 +3,7 @@ import { useParams, useNavigate } from 'react-router';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { decodeCertificateId } from '../../../utils/certificate';
 import {
-  useTeamById,
-  useTeamSubmission,
-  useAuthStore,
-  useUserById,
+  useCertificatePublicData,
 } from '@imphnen-frontend-service/service';
 import QRCode from 'qrcode';
 import html2canvas from 'html2canvas';
@@ -20,7 +17,6 @@ interface DecodedCert {
 const CertificatePage: FC = (): ReactElement => {
   const { certId } = useParams<{ certId: string }>();
   const navigate = useNavigate();
-  const { session } = useAuthStore();
   const [decodedInfo, setDecodedInfo] = useState<DecodedCert | null>(null);
   const [error, setError] = useState<string | null>(null);
   const teamNameRef = useRef<HTMLHeadingElement>(null);
@@ -43,6 +39,12 @@ const CertificatePage: FC = (): ReactElement => {
     }
   }, [certId]);
 
+  // Fetch certificate data using the new endpoint
+  const { data: certificateData, isLoading: isLoadingCertificate } = useCertificatePublicData(
+    decodedInfo?.userId || '',
+    !!decodedInfo?.userId
+  );
+
   // Generate QR Code
   useEffect(() => {
     if (certId) {
@@ -62,28 +64,15 @@ const CertificatePage: FC = (): ReactElement => {
     }
   }, [certId]);
 
-  const { data: teamData, isLoading: isLoadingTeam } = useTeamById(
-    decodedInfo?.teamId || '',
-    !!decodedInfo?.teamId
-  );
-  const { data: submissionData, isLoading: isLoadingSubmission } =
-    useTeamSubmission(decodedInfo?.teamId || '', !!decodedInfo?.teamId);
+  const certificate = certificateData?.data;
+  const team = certificate?.team;
+  const submission = certificate?.submission;
+  const certificateUser = certificate?.user;
 
-  // Fetch the certificate owner's user data
-  const { data: certificateUserData, isLoading: isLoadingCertUser } = useUserById(
-    decodedInfo?.userId || '',
-    !!decodedInfo?.userId
-  );
+  const isLoading = (!decodedInfo && !error) || isLoadingCertificate;
 
-  const team = teamData?.data;
-  const submission = submissionData?.data;
-  const certificateUser = certificateUserData?.data;
-
-  const isLoading =
-    (!decodedInfo && !error) || isLoadingTeam || isLoadingSubmission || isLoadingCertUser;
-
-  // Certificate name: Use the user from the certificate ID, fallback to team leader
-  const certificateName = certificateUser?.fullname || team?.leader?.fullname;
+  // Certificate name from the user data
+  const certificateName = certificateUser?.fullname;
 
   // Dynamic font sizing: shrink by 2px if height exceeds 80px
   useEffect(() => {
@@ -216,7 +205,7 @@ const CertificatePage: FC = (): ReactElement => {
     );
   }
 
-  if (!submission || submission.id !== decodedInfo?.submissionId) {
+  if (!certificateUser) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-950">
         <div className="text-6xl mb-4">📄</div>
@@ -224,7 +213,7 @@ const CertificatePage: FC = (): ReactElement => {
           Certificate Not Found
         </h2>
         <p className="text-gray-600 dark:text-gray-400 mb-6">
-          The submission associated with this certificate could not be found.
+          The user associated with this certificate could not be found.
         </p>
         <Button onClick={() => navigate('/')}>Back to Home</Button>
       </div>
@@ -292,14 +281,16 @@ const CertificatePage: FC = (): ReactElement => {
                 {team?.name}
               </p>
             </div>
-            <Button
-              variant="secondary"
-              onClick={() =>
-                navigate(`/teams/${decodedInfo?.teamId}/submission`)
-              }
-            >
-              Back to Submission
-            </Button>
+            {team && (
+              <Button
+                variant="secondary"
+                onClick={() =>
+                  navigate(`/teams/${team.id}/submission`)
+                }
+              >
+                Back to Submission
+              </Button>
+            )}
           </div>
         </div>
       </div>
@@ -445,16 +436,14 @@ const CertificatePage: FC = (): ReactElement => {
                   margin: 0,
                 }}
               >
-                {submission.submitted_at
-                  ? new Date(submission.submitted_at).toLocaleDateString(
-                      'id-ID',
-                      {
-                        day: 'numeric',
-                        month: 'long',
-                        year: 'numeric',
-                      }
-                    )
-                  : 'N/A'}
+                {new Date().toLocaleDateString(
+                  'id-ID',
+                  {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                  }
+                )}
               </p>
             </div>
           </div>
@@ -500,15 +489,17 @@ const CertificatePage: FC = (): ReactElement => {
             >
               {isGenerating ? '⏳ Generating...' : '🖨️ Print'}
             </Button>
-            <Button
-              onClick={() =>
-                navigate(`/teams/${decodedInfo?.teamId}/submission`)
-              }
-              variant="secondary"
-              className="col-span-2 flex items-center gap-2 xl:col-span-1"
-            >
-              View Submission
-            </Button>
+            {team && (
+              <Button
+                onClick={() =>
+                  navigate(`/teams/${team.id}/submission`)
+                }
+                variant="secondary"
+                className="col-span-2 flex items-center gap-2 xl:col-span-1"
+              >
+                View Submission
+              </Button>
+            )}
           </div>
         </div>
 
