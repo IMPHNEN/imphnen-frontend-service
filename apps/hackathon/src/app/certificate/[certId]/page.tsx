@@ -5,6 +5,8 @@ import { decodeCertificateId } from '../../../utils/certificate';
 import {
   useTeamById,
   useTeamSubmission,
+  useAuthStore,
+  useUserById,
 } from '@imphnen-frontend-service/service';
 import QRCode from 'qrcode';
 import html2canvas from 'html2canvas';
@@ -12,11 +14,13 @@ import html2canvas from 'html2canvas';
 interface DecodedCert {
   teamId: string;
   submissionId: string;
+  userId: string;
 }
 
 const CertificatePage: FC = (): ReactElement => {
   const { certId } = useParams<{ certId: string }>();
   const navigate = useNavigate();
+  const { session } = useAuthStore();
   const [decodedInfo, setDecodedInfo] = useState<DecodedCert | null>(null);
   const [error, setError] = useState<string | null>(null);
   const teamNameRef = useRef<HTMLHeadingElement>(null);
@@ -65,11 +69,21 @@ const CertificatePage: FC = (): ReactElement => {
   const { data: submissionData, isLoading: isLoadingSubmission } =
     useTeamSubmission(decodedInfo?.teamId || '', !!decodedInfo?.teamId);
 
+  // Fetch the certificate owner's user data
+  const { data: certificateUserData, isLoading: isLoadingCertUser } = useUserById(
+    decodedInfo?.userId || '',
+    !!decodedInfo?.userId
+  );
+
   const team = teamData?.data;
   const submission = submissionData?.data;
+  const certificateUser = certificateUserData?.data;
 
   const isLoading =
-    (!decodedInfo && !error) || isLoadingTeam || isLoadingSubmission;
+    (!decodedInfo && !error) || isLoadingTeam || isLoadingSubmission || isLoadingCertUser;
+
+  // Certificate name: Use the user from the certificate ID, fallback to team leader
+  const certificateName = certificateUser?.fullname || team?.leader?.fullname;
 
   // Dynamic font sizing: shrink by 2px if height exceeds 80px
   useEffect(() => {
@@ -98,7 +112,7 @@ const CertificatePage: FC = (): ReactElement => {
     }, 0);
 
     return () => clearTimeout(timer);
-  }, [team?.name, team?.leader?.fullname]);
+  }, [team?.name, certificateName]);
 
   // Generate certificate canvas screenshot
   useEffect(() => {
@@ -335,7 +349,7 @@ const CertificatePage: FC = (): ReactElement => {
                   margin: 0,
                 }}
               >
-                {team?.leader?.fullname || 'N/A'}
+                {certificateName || 'N/A'}
               </h3>
             </div>
 

@@ -1,12 +1,13 @@
 import { FC, ReactElement } from 'react';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { useNavigate, useParams } from 'react-router';
-import { useTeamById, useTeamSubmission } from '@imphnen-frontend-service/service';
+import { useTeamById, useTeamSubmission, useAuthStore } from '@imphnen-frontend-service/service';
 import { encodeCertificateId } from '../../../../utils/certificate';
 
 const SubmissionViewPage: FC = (): ReactElement => {
   const { teamId } = useParams<{ teamId: string }>();
   const navigate = useNavigate();
+  const { session } = useAuthStore();
 
   const { data: teamData } = useTeamById(teamId || '');
   const { data: submissionData, isLoading } = useTeamSubmission(teamId || '', !!teamId);
@@ -113,13 +114,17 @@ const SubmissionViewPage: FC = (): ReactElement => {
                     View Your Certificate
                   </h3>
                   <p className="text-amber-700 dark:text-amber-300 text-sm">
-                    Congratulations! Your certificate is ready to download and share.
+                    Congratulations! Your personalized certificate is ready to download and share.
                   </p>
                 </div>
               </div>
               <button
                 onClick={async () => {
-                  const certId = await encodeCertificateId(teamId || '', submission.id);
+                  const certId = await encodeCertificateId(
+                    teamId || '',
+                    submission.id,
+                    session?.user?.id || ''
+                  );
                   navigate(`/certificate/${encodeURIComponent(certId)}`);
                 }}
                 className="shrink-0 px-6 py-2 bg-amber-600 hover:bg-amber-700 dark:bg-amber-600 dark:hover:bg-amber-700 text-white font-medium rounded-lg transition-colors"

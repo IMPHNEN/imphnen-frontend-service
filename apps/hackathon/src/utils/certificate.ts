@@ -3,27 +3,38 @@ import { decryptText, encryptText } from "./aesclient";
 const SECRET_KEY = 'imphnen-hackathon-2025';
 
 /**
- * Encode teamId and submissionId into a certificate ID
- * Uses base64 encoding for simple obfuscation
+ * Encode teamId, submissionId, and userId into a certificate ID
+ * Uses AES encryption for secure encoding
  * @param teamId - The team ID
  * @param submissionId - The submission ID
+ * @param userId - The user ID (team member)
  * @returns Encoded certificate ID
  */
-export const encodeCertificateId = async (teamId: string, submissionId: string): Promise<string> => {
-  const combined = `${teamId}::${submissionId}`;
+export const encodeCertificateId = async (teamId: string, submissionId: string, userId: string): Promise<string> => {
+  const combined = `${teamId}::${submissionId}::${userId}`;
   return encryptText(combined, SECRET_KEY);
 };
 
 /**
- * Decode certificate ID back to teamId and submissionId
+ * Decode certificate ID back to teamId, submissionId, and userId
  * @param certId - The encoded certificate ID
- * @returns Object containing teamId and submissionId
+ * @returns Object containing teamId, submissionId, and userId
  */
-export const decodeCertificateId = async (certId: string): Promise<{ teamId: string; submissionId: string }> => {
+export const decodeCertificateId = async (certId: string): Promise<{ teamId: string; submissionId: string; userId: string }> => {
   try {
     const decoded = await decryptText(certId, SECRET_KEY);
-    const [teamId, submissionId] = decoded.split('::');
-    return { teamId, submissionId };
+    const parts = decoded.split('::');
+
+    // Handle both old format (teamId::submissionId) and new format (teamId::submissionId::userId)
+    if (parts.length === 2) {
+      const [teamId, submissionId] = parts;
+      return { teamId, submissionId, userId: '' };
+    } else if (parts.length === 3) {
+      const [teamId, submissionId, userId] = parts;
+      return { teamId, submissionId, userId };
+    }
+
+    throw new Error('Invalid certificate format');
   } catch {
     throw new Error('Invalid certificate ID');
   }
