@@ -4,6 +4,7 @@ import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { decodeCertificateId } from '../../../utils/certificate';
 import {
   useCertificatePublicData,
+  useAuthStore,
 } from '@imphnen-frontend-service/service';
 import QRCode from 'qrcode';
 import html2canvas from 'html2canvas';
@@ -17,6 +18,7 @@ interface DecodedCert {
 const CertificatePage: FC = (): ReactElement => {
   const { certId } = useParams<{ certId: string }>();
   const navigate = useNavigate();
+  const { session } = useAuthStore();
   const [decodedInfo, setDecodedInfo] = useState<DecodedCert | null>(null);
   const [error, setError] = useState<string | null>(null);
   const teamNameRef = useRef<HTMLHeadingElement>(null);
@@ -73,6 +75,9 @@ const CertificatePage: FC = (): ReactElement => {
 
   // Certificate name from the user data
   const certificateName = certificateUser?.fullname;
+
+  // Check if current user is viewing their own certificate (team member)
+  const isTeamMember = session?.user?.id === decodedInfo?.userId;
 
   // Dynamic font sizing: shrink by 2px if height exceeds 80px
   useEffect(() => {
@@ -281,7 +286,7 @@ const CertificatePage: FC = (): ReactElement => {
                 {team?.name}
               </p>
             </div>
-            {team && (
+            {team && isTeamMember && (
               <Button
                 variant="secondary"
                 onClick={() =>
@@ -472,35 +477,37 @@ const CertificatePage: FC = (): ReactElement => {
           )}
 
           {/* Actions */}
-          <div className="bg-gray-50 dark:bg-gray-800 p-6 grid grid-cols-2 xl:grid-cols-3 gap-3 justify-center no-print">
-            <Button
-              variant="secondary"
-              onClick={handleDownloadCertificate}
-              className="flex items-center gap-2"
-              disabled={isGenerating}
-            >
-              {isGenerating ? '⏳ Generating...' : '📥 Download'}
-            </Button>
-            <Button
-              variant="secondary"
-              onClick={handlePrintCertificate}
-              className="flex items-center gap-2"
-              disabled={isGenerating}
-            >
-              {isGenerating ? '⏳ Generating...' : '🖨️ Print'}
-            </Button>
-            {team && (
+          {isTeamMember && (
+            <div className="bg-gray-50 dark:bg-gray-800 p-6 grid grid-cols-2 xl:grid-cols-3 gap-3 justify-center no-print">
               <Button
-                onClick={() =>
-                  navigate(`/teams/${team.id}/submission`)
-                }
                 variant="secondary"
-                className="col-span-2 flex items-center gap-2 xl:col-span-1"
+                onClick={handleDownloadCertificate}
+                className="flex items-center gap-2"
+                disabled={isGenerating}
               >
-                View Submission
+                {isGenerating ? '⏳ Generating...' : '📥 Download'}
               </Button>
-            )}
-          </div>
+              <Button
+                variant="secondary"
+                onClick={handlePrintCertificate}
+                className="flex items-center gap-2"
+                disabled={isGenerating}
+              >
+                {isGenerating ? '⏳ Generating...' : '🖨️ Print'}
+              </Button>
+              {team && (
+                <Button
+                  onClick={() =>
+                    navigate(`/teams/${team.id}/submission`)
+                  }
+                  variant="secondary"
+                  className="col-span-2 flex items-center gap-2 xl:col-span-1"
+                >
+                  View Submission
+                </Button>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Info Box */}
