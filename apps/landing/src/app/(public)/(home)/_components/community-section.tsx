@@ -47,7 +47,7 @@ export function CommunitySection() {
       case 'FaDiscord':
         return FaDiscord;
       case 'FaGithub':
-        return FaDiscord;
+        return FaGithub;
       case 'FaInstagram':
         return FaInstagram;
       case 'FaTiktok':
