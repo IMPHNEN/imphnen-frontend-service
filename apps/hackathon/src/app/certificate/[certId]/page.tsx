@@ -5,7 +5,6 @@ import { decodeCertificateId } from '../../../utils/certificate';
 import {
   useTeamById,
   useTeamSubmission,
-  useAuthStore,
 } from '@imphnen-frontend-service/service';
 import QRCode from 'qrcode';
 import html2canvas from 'html2canvas';
@@ -18,7 +17,6 @@ interface DecodedCert {
 const CertificatePage: FC = (): ReactElement => {
   const { certId } = useParams<{ certId: string }>();
   const navigate = useNavigate();
-  const { session } = useAuthStore();
   const [decodedInfo, setDecodedInfo] = useState<DecodedCert | null>(null);
   const [error, setError] = useState<string | null>(null);
   const teamNameRef = useRef<HTMLHeadingElement>(null);
@@ -100,7 +98,7 @@ const CertificatePage: FC = (): ReactElement => {
     }, 0);
 
     return () => clearTimeout(timer);
-  }, [team?.name, session?.user?.fullname]);
+  }, [team?.name, team?.leader?.fullname]);
 
   // Generate certificate canvas screenshot
   useEffect(() => {
@@ -132,7 +130,7 @@ const CertificatePage: FC = (): ReactElement => {
     };
 
     generateCertificate();
-  }, [team, submission, qrCodeUrl, session?.user?.fullname]);
+  }, [team, submission, qrCodeUrl]);
 
   // Download certificate
   const handleDownloadCertificate = () => {
@@ -337,7 +335,7 @@ const CertificatePage: FC = (): ReactElement => {
                   margin: 0,
                 }}
               >
-                {session?.user?.fullname || 'N/A'}
+                {team?.leader?.fullname || 'N/A'}
               </h3>
             </div>
 

@@ -52,6 +52,12 @@ export default function RootLayout() {
         return;
       }
 
+      // Certificate page - allow public access
+      if (pathname.startsWith('/certificate/')) {
+        setIsChecking(false);
+        return;
+      }
+
       // Require authentication for all other routes
       if (!session) {
         navigate('/auth/login', { replace: true });
