@@ -115,19 +115,22 @@ const CertificatePage: FC = (): ReactElement => {
 
       setIsGenerating(true);
       try {
-        // Wait a bit for fonts and images to load
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        // Wait longer for fonts and images to load properly
+        await new Promise((resolve) => setTimeout(resolve, 1500));
 
         const canvas = await html2canvas(certificateRef.current, {
-          scale: 2,
+          scale: 4,
           useCORS: true,
           backgroundColor: '#ffffff',
           logging: false,
           width: 1000,
           height: (1000 * 2480) / 3508,
+          allowTaint: true,
+          imageTimeout: 0,
+          removeContainer: true,
         });
 
-        const imageUrl = canvas.toDataURL('image/png');
+        const imageUrl = canvas.toDataURL('image/png', 1.0);
         setCertificateImage(imageUrl);
         setShowTemplate(false);
       } catch (error) {
@@ -315,57 +318,30 @@ const CertificatePage: FC = (): ReactElement => {
             id="certificate-template"
             style={{
               position: 'relative',
-              backgroundImage: 'url(/images/blank_cert.png)',
+              backgroundImage: 'url(/images/blank_cert.svg)',
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               width: '1000px',
               height: `${(1000 * 2480) / 3508}px`,
             }}
           >
-            {/* User Name (from session) */}
+            {/* Team Name - positioned in middle between "Diberikan Kepada" and "Telah Berpartisipasi" */}
             <div
               style={{
                 position: 'absolute',
-                top: '40%',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                width: '80%',
-              }}
-            >
-              <h3
-                ref={userNameRef}
-                style={{
-                  fontWeight: 'bold',
-                  color: '#111827',
-                  textAlign: 'center',
-                  fontSize: userNameFontSize,
-                  lineHeight: '1.2',
-                  wordBreak: 'break-word',
-                  textShadow: '0 1px 2px rgba(0,0,0,0.1)',
-                  margin: 0,
-                }}
-              >
-                {certificateName || 'N/A'}
-              </h3>
-            </div>
-
-            {/* Team Name */}
-            <div
-              style={{
-                position: 'absolute',
-                top: '46%',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                width: '70%',
+                top: '41%',
+                left: '3.5%',
+                width: '55%',
               }}
             >
               <h3
                 ref={teamNameRef}
                 style={{
-                  fontWeight: '600',
-                  color: '#1f2937',
-                  textAlign: 'center',
-                  fontSize: teamNameFontSize,
+                  fontFamily: 'Poppins, sans-serif',
+                  fontWeight: 'bold',
+                  color: '#59bef5',
+                  textAlign: 'left',
+                  fontSize: '32px',
                   lineHeight: '1.2',
                   wordBreak: 'break-word',
                   margin: 0,
@@ -375,81 +351,52 @@ const CertificatePage: FC = (): ReactElement => {
               </h3>
             </div>
 
-            {/* Participation Text */}
+            {/* User Name - positioned below team name */}
             <div
               style={{
                 position: 'absolute',
-                top: '60%',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                width: '70%',
+                top: '45%',
+                left: '3.5%',
+                width: '55%',
               }}
             >
-              <p
+              <h3
+                ref={userNameRef}
                 style={{
-                  textAlign: 'center',
-                  color: '#374151',
-                  fontSize: '18px',
-                  fontWeight: '500',
+                  fontFamily: 'Poppins, sans-serif',
+                  fontWeight: 'bold',
+                  color: '#59bef5',
+                  textAlign: 'left',
+                  fontSize: '40px',
+                  lineHeight: '1.2',
+                  wordBreak: 'break-word',
                   margin: 0,
                 }}
               >
-                <span style={{ fontWeight: 'bold' }}>
-                  Peserta Hackathon IMPHNEN x KOLOSAL AI
-                </span>
-              </p>
+                {certificateName || 'N/A'}
+              </h3>
             </div>
 
-            {/* QR Code */}
+            {/* QR Code - positioned in the white box area */}
             <div
               style={{
                 position: 'absolute',
-                bottom: '8%',
-                left: '8%',
+                top: '33%',
+                right: '9.3%',
+                width: '190px',
+                height: '190px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
               }}
             >
               {qrCodeUrl && (
-                <div
-                  style={{
-                    backgroundColor: '#ffffff',
-                    padding: '8px',
-                    borderRadius: '4px',
-                    boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-                  }}
-                >
-                  <img
-                    src={qrCodeUrl}
-                    alt="Certificate QR Code"
-                    style={{ width: '96px', height: '96px' }}
-                  />
-                </div>
+                <img
+                  src={qrCodeUrl}
+                  alt="Certificate QR Code"
+                  style={{ width: '190px', height: '190px', display: 'block' }}
+                />
               )}
-            </div>
-
-            {/* Date */}
-            <div
-              style={{
-                position: 'absolute',
-                bottom: '8%',
-                right: '8%',
-              }}
-            >
-              <p
-                style={{
-                  fontSize: '14px',
-                  color: '#374151',
-                  margin: 0,
-                }}
-              >
-                {new Date().toLocaleDateString(
-                  'id-ID',
-                  {
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric',
-                  }
-                )}
-              </p>
             </div>
           </div>
         </div>
