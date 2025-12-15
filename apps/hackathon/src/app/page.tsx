@@ -554,7 +554,7 @@ export default function HomePage() {
             {/* Judge 2 */}
             <div className="flex flex-col justify-between bg-white dark:bg-gray-800 rounded-xl px-4 py-8 shadow-lg text-center">
               <h3 className="text-p3 font-bold mb-1 dark:text-white">
-                Anka Tama
+                Muhammad Alif Ramadhan
               </h3>
               <div>
                 <p className="text-primary-500 font-semibold mb-1">Admin</p>
