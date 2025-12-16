@@ -1,5 +1,5 @@
-﻿import { FC, ReactElement, useEffect, useState } from 'react';
-import { Link } from 'react-router';
+﻿import { FC, ReactElement, useEffect, useMemo, useState } from 'react';
+import { Link, useNavigate } from 'react-router';
 import {
   useMyTeams,
   useMyInvitations,
@@ -10,6 +10,8 @@ import { toast } from 'sonner';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { Icon } from '@iconify/react';
 import ProfilePage from '../profile/page';
+import winnerData from '../certificate/winner-data.json';
+import { encodeWinnerCertificateId } from '../../utils/certificate';
 
 // Team features deadline: 2025-11-30 23:59:00 WIB (UTC+7)
 const TEAM_FEATURES_DEADLINE = new Date('2025-11-30T16:59:00Z');
@@ -39,6 +41,7 @@ type Invitation = {
 
 const DashboardPage: FC = (): ReactElement => {
   const { session } = useAuthStore();
+  const navigate = useNavigate();
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [timeLeft, setTimeLeft] = useState<{
     days: number;
@@ -99,6 +102,13 @@ const DashboardPage: FC = (): ReactElement => {
   const invitations: Invitation[] = (invitationsData?.data ||
     []) as Invitation[];
 
+  const winnerEntry = useMemo(() => {
+    const team = (myTeams[0] as any) || null;
+    const winners = (winnerData as any)?.data || [];
+    if (!team?.id || !Array.isArray(winners)) return null;
+    return winners.find((w: any) => w?.team_id === team.id) || null;
+  }, [myTeams]);
+
   const handleAcceptInvitation = async (invitationId: string) => {
     try {
       await respondToInvitation({ invitationId, action: 'accept' });
@@ -133,6 +143,35 @@ const DashboardPage: FC = (): ReactElement => {
             </p>
           )}
         </div>
+
+        {/* Winner Banner */}
+        {winnerEntry && myTeams.length > 0 && (
+          <div className="mb-8 bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-400 dark:border-amber-500 rounded-lg p-6">
+            <div className="flex items-center justify-between flex-wrap gap-4">
+              <div className="flex items-center space-x-3 flex-1 min-w-0">
+                <span className="text-4xl shrink-0">🏆</span>
+                <div className="min-w-0">
+                  <h3 className="font-bold text-amber-900 dark:text-amber-100 text-lg">
+                    Selamat! Tim Anda meraih JUARA {winnerEntry.rank}
+                  </h3>
+                  <p className="text-amber-700 dark:text-amber-300 text-sm">
+                    Anda dapat generate sertifikat penghargaan dan membagikannya.
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={async () => {
+                  const team = myTeams[0] as any;
+                  const certId = await encodeWinnerCertificateId(team.id);
+                  navigate(`/certificate/winner/${encodeURIComponent(certId)}`);
+                }}
+                className="shrink-0 px-6 py-2 bg-amber-600 hover:bg-amber-700 dark:bg-amber-600 dark:hover:bg-amber-700 text-white font-medium rounded-lg transition-colors"
+              >
+                Generate Sertifikat Juara
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Countdown Timer */}
         {timeLeft && !isSubmissionDeadlinePassed && (
