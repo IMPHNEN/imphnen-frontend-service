@@ -7,6 +7,7 @@ import {
   useAuthStore,
   useMyTeams,
   useTeamById,
+  useTeamSubmission,
   useWinners,
 } from '@imphnen-frontend-service/service';
 import QRCode from 'qrcode';
@@ -37,8 +38,20 @@ const formatOrdinalRank = (rank: number): string => {
   }
 };
 
-const CERT_WIDTH = 1000;
-const CERT_HEIGHT = (CERT_WIDTH * 595) / 842; // matches blank_winner_cert.svg aspect ratio
+// Keep the template size aligned with the SVG native size (842x595) using an integer multiplier.
+// This reduces sub-pixel scaling artifacts (blur) on thin lines when rasterizing with html2canvas.
+const CERT_WIDTH = 842 * 2;
+const CERT_HEIGHT = 595 * 2;
+
+// Balance between output sharpness and file size.
+// Output resolution will be (CERT_WIDTH * EXPORT_SCALE) x (CERT_HEIGHT * EXPORT_SCALE).
+const EXPORT_SCALE = 2;
+
+// The original layout was tuned around a ~1000px-wide template.
+// We keep the same visual proportions by scaling fixed pixel values.
+const LAYOUT_BASE_WIDTH = 1000;
+const LAYOUT_SCALE = CERT_WIDTH / LAYOUT_BASE_WIDTH;
+const s = (px: number) => Math.round(px * LAYOUT_SCALE);
 
 const CertificateWinnerPage: FC = (): ReactElement => {
   const { certId } = useParams<{ certId: string }>();
@@ -87,7 +100,12 @@ const CertificateWinnerPage: FC = (): ReactElement => {
     !!decodedTeamId
   );
 
+  const { data: submissionData, isLoading: isLoadingSubmission } =
+    useTeamSubmission(decodedTeamId, !!decodedTeamId);
+
   const team = teamData?.data;
+  const submission = submissionData?.data;
+  const submissionName = submission?.project_name || '(Submission unavailable)';
 
   const memberNames = useMemo(() => {
     const members = team?.members || [];
@@ -112,7 +130,7 @@ const CertificateWinnerPage: FC = (): ReactElement => {
     const certificateUrl = `${window.location.origin}/certificate/winner/${encodedCertId}`;
 
     QRCode.toDataURL(certificateUrl, {
-      width: 200,
+      width: s(200),
       margin: 1,
       color: {
         dark: '#000000',
@@ -130,13 +148,15 @@ const CertificateWinnerPage: FC = (): ReactElement => {
       if (!team?.name) return;
       if (!qrCodeUrl) return;
       if (!winnerEntry?.rank) return;
+      if (isLoadingSubmission) return;
 
       setIsGenerating(true);
       try {
+        setShowTemplate(true);
         await new Promise((resolve) => setTimeout(resolve, 1500));
 
         const canvas = await html2canvas(certificateRef.current, {
-          scale: 4,
+          scale: EXPORT_SCALE,
           useCORS: true,
           backgroundColor: '#ffffff',
           logging: false,
@@ -158,7 +178,14 @@ const CertificateWinnerPage: FC = (): ReactElement => {
     };
 
     generateCertificate();
-  }, [team?.name, memberNames, qrCodeUrl, winnerEntry?.rank]);
+  }, [
+    team?.name,
+    memberNames,
+    qrCodeUrl,
+    winnerEntry?.rank,
+    isLoadingSubmission,
+    submissionName,
+  ]);
 
   const handleDownloadCertificate = () => {
     if (!certificateImage) return;
@@ -323,7 +350,8 @@ const CertificateWinnerPage: FC = (): ReactElement => {
             style={{
               position: 'relative',
               backgroundImage: 'url(/images/blank_winner_cert.svg)',
-              backgroundSize: 'cover',
+              backgroundSize: '100% 100%',
+              backgroundRepeat: 'no-repeat',
               backgroundPosition: 'center',
               width: `${CERT_WIDTH}px`,
               height: `${CERT_HEIGHT}px`,
@@ -339,7 +367,7 @@ const CertificateWinnerPage: FC = (): ReactElement => {
             <div
               style={{
                 position: 'absolute',
-                top: '37%',
+                top: '35%',
                 left: '3.5%',
                 width: '55%',
               }}
@@ -350,7 +378,7 @@ const CertificateWinnerPage: FC = (): ReactElement => {
                   fontWeight: 'bold',
                   color: '#59bef5',
                   textAlign: 'left',
-                  fontSize: '28px',
+                  fontSize: `${s(28)}px`,
                   lineHeight: '1.2',
                   wordBreak: 'break-word',
                   margin: 0,
@@ -364,7 +392,7 @@ const CertificateWinnerPage: FC = (): ReactElement => {
             <div
               style={{
                 position: 'absolute',
-                top: '42.5%',
+                top: '40.5%',
                 left: '3.5%',
                 width: '55%',
               }}
@@ -374,7 +402,7 @@ const CertificateWinnerPage: FC = (): ReactElement => {
                 style={{
                   margin: 0,
                   fontFamily: 'Poppins, sans-serif',
-                  fontSize: '18px',
+                  fontSize: `${s(18)}px`,
                   lineHeight: '1.35',
                   color: '#59bef5',
                 }}
@@ -392,7 +420,7 @@ const CertificateWinnerPage: FC = (): ReactElement => {
             <div
               style={{
                 position: 'absolute',
-                top: '62%',
+                top: '60%',
                 left: '3.5%',
                 width: '60%',
               }}
@@ -401,7 +429,7 @@ const CertificateWinnerPage: FC = (): ReactElement => {
                 style={{
                   margin: 0,
                   fontFamily: 'Poppins, sans-serif',
-                  fontSize: '18px',
+                  fontSize: `${s(18)}px`,
                   lineHeight: '1.35',
                   color: '#6B6B6B',
                 }}
@@ -410,6 +438,10 @@ const CertificateWinnerPage: FC = (): ReactElement => {
                 <br />
                 <b>JUARA {winnerEntry.rank}</b> pada Hackathon IMPHNEN x
                 Kolosal.ai
+                <br />
+                <span>
+                  dengan nama project: <b>{submissionName}</b>
+                </span>
               </p>
             </div>
 
@@ -420,7 +452,7 @@ const CertificateWinnerPage: FC = (): ReactElement => {
                   position: 'absolute',
                   top: '8%',
                   right: '8.5%',
-                  width: '190px',
+                  width: `${s(190)}px`,
                   display: 'flex',
                   justifyContent: 'center',
                 }}
@@ -430,12 +462,12 @@ const CertificateWinnerPage: FC = (): ReactElement => {
                     display: 'inline-flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    padding: '6px 16px',
+                    padding: `${s(6)}px ${s(16)}px`,
                     textAlign: 'center',
                     fontFamily: 'Poppins, sans-serif',
                     fontWeight: 700,
                     color: '#78350F',
-                    fontSize: '24px',
+                    fontSize: `${s(24)}px`,
                     lineHeight: '1',
                   }}
                 >
@@ -450,8 +482,8 @@ const CertificateWinnerPage: FC = (): ReactElement => {
                 position: 'absolute',
                 top: '33%',
                 right: '9.3%',
-                width: '190px',
-                height: '190px',
+                width: `${s(190)}px`,
+                height: `${s(190)}px`,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -461,7 +493,11 @@ const CertificateWinnerPage: FC = (): ReactElement => {
                 <img
                   src={qrCodeUrl}
                   alt="Certificate QR Code"
-                  style={{ width: '190px', height: '190px', display: 'block' }}
+                  style={{
+                    width: `${s(190)}px`,
+                    height: `${s(190)}px`,
+                    display: 'block',
+                  }}
                 />
               )}
             </div>
