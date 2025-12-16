@@ -42,10 +42,8 @@ const CertificatePage: FC = (): ReactElement => {
   }, [certId]);
 
   // Fetch certificate data using the new endpoint
-  const { data: certificateData, isLoading: isLoadingCertificate } = useCertificatePublicData(
-    decodedInfo?.userId || '',
-    !!decodedInfo?.userId
-  );
+  const { data: certificateData, isLoading: isLoadingCertificate } =
+    useCertificatePublicData(decodedInfo?.userId || '', !!decodedInfo?.userId);
 
   // Generate QR Code
   useEffect(() => {
@@ -292,9 +290,7 @@ const CertificatePage: FC = (): ReactElement => {
             {team && isTeamMember && (
               <Button
                 variant="secondary"
-                onClick={() =>
-                  navigate(`/teams/${team.id}/submission`)
-                }
+                onClick={() => navigate(`/teams/${team.id}/submission`)}
               >
                 Back to Submission
               </Button>
@@ -425,7 +421,7 @@ const CertificatePage: FC = (): ReactElement => {
 
           {/* Actions */}
           {isTeamMember && (
-            <div className="bg-gray-50 dark:bg-gray-800 p-6 grid grid-cols-2 xl:grid-cols-3 gap-3 justify-center no-print">
+            <div className="bg-gray-50 dark:bg-gray-900 p-6 grid grid-cols-2 xl:grid-cols-3 gap-3 justify-center no-print">
               <Button
                 variant="secondary"
                 onClick={handleDownloadCertificate}
@@ -444,9 +440,7 @@ const CertificatePage: FC = (): ReactElement => {
               </Button>
               {team && (
                 <Button
-                  onClick={() =>
-                    navigate(`/teams/${team.id}/submission`)
-                  }
+                  onClick={() => navigate(`/teams/${team.id}/submission`)}
                   variant="secondary"
                   className="col-span-2 flex items-center gap-2 xl:col-span-1"
                 >

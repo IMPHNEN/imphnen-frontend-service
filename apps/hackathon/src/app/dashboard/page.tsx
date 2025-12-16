@@ -1,15 +1,17 @@
-﻿import { FC, ReactElement, useEffect, useState } from 'react';
-import { Link } from 'react-router';
+﻿import { FC, ReactElement, useEffect, useMemo, useState } from 'react';
+import { Link, useNavigate } from 'react-router';
 import {
   useMyTeams,
   useMyInvitations,
   useRespondToInvitation,
   useAuthStore,
+  useWinners,
 } from '@imphnen-frontend-service/service';
 import { toast } from 'sonner';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { Icon } from '@iconify/react';
 import ProfilePage from '../profile/page';
+import { encodeWinnerCertificateId } from '../../utils/certificate';
 
 // Team features deadline: 2025-11-30 23:59:00 WIB (UTC+7)
 const TEAM_FEATURES_DEADLINE = new Date('2025-11-30T16:59:00Z');
@@ -39,6 +41,7 @@ type Invitation = {
 
 const DashboardPage: FC = (): ReactElement => {
   const { session } = useAuthStore();
+  const navigate = useNavigate();
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [timeLeft, setTimeLeft] = useState<{
     days: number;
@@ -91,6 +94,7 @@ const DashboardPage: FC = (): ReactElement => {
     }
   }, [showProfileModal]);
   const { data: teamsData } = useMyTeams();
+  const { data: winnersResponse } = useWinners();
   const { data: invitationsData } = useMyInvitations();
   const { mutateAsync: respondToInvitation } = useRespondToInvitation();
 
@@ -98,6 +102,13 @@ const DashboardPage: FC = (): ReactElement => {
   const myTeams = teamsData?.data || [];
   const invitations: Invitation[] = (invitationsData?.data ||
     []) as Invitation[];
+
+  const winnerEntry = useMemo(() => {
+    const team = (myTeams[0] as { id?: string } | null | undefined) || null;
+    const winners = winnersResponse?.data || [];
+    if (!team?.id) return null;
+    return winners.find((w) => w.team_id === team.id) || null;
+  }, [myTeams, winnersResponse?.data]);
 
   const handleAcceptInvitation = async (invitationId: string) => {
     try {
@@ -133,6 +144,37 @@ const DashboardPage: FC = (): ReactElement => {
             </p>
           )}
         </div>
+
+        {/* Winner Banner */}
+        {winnerEntry && myTeams.length > 0 && (
+          <div className="mb-8 bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-400 dark:border-amber-500 rounded-lg p-6">
+            <div className="flex items-center justify-between flex-wrap gap-4">
+              <div className="flex items-center space-x-3 flex-1 min-w-0">
+                <span className="text-4xl shrink-0">🏆</span>
+                <div className="min-w-0">
+                  <h3 className="font-bold text-amber-900 dark:text-amber-100 text-lg">
+                    Selamat! Tim Anda meraih JUARA {winnerEntry.rank}
+                  </h3>
+                  <p className="text-amber-700 dark:text-amber-300 text-sm">
+                    Anda dapat generate sertifikat penghargaan dan
+                    membagikannya.
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={async () => {
+                  const team = myTeams[0] as { id?: string } | null | undefined;
+                  if (!team?.id) return;
+                  const certId = await encodeWinnerCertificateId(team.id);
+                  navigate(`/certificate/winner/${encodeURIComponent(certId)}`);
+                }}
+                className="shrink-0 px-6 py-2 bg-amber-600 hover:bg-amber-700 dark:bg-amber-600 dark:hover:bg-amber-700 text-white font-medium rounded-lg transition-colors cursor-pointer"
+              >
+                Generate Sertifikat Juara
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Countdown Timer */}
         {timeLeft && !isSubmissionDeadlinePassed && (
@@ -194,7 +236,8 @@ const DashboardPage: FC = (): ReactElement => {
               <div className="mb-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-3">
                 <p className="text-sm text-amber-700 dark:text-amber-300 flex items-center gap-2">
                   <Icon icon="mdi:clock-alert" className="text-lg shrink-0" />
-                  Team features are closed. You can no longer accept invitations.
+                  Team features are closed. You can no longer accept
+                  invitations.
                 </p>
               </div>
             )}
@@ -263,7 +306,10 @@ const DashboardPage: FC = (): ReactElement => {
                         />
                       ) : (
                         <div className="w-16 h-16 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center shrink-0">
-                          <Icon icon="mdi:account-group" className="text-gray-500 dark:text-gray-400 text-2xl" />
+                          <Icon
+                            icon="mdi:account-group"
+                            className="text-gray-500 dark:text-gray-400 text-2xl"
+                          />
                         </div>
                       )}
                       <div className="flex-1 min-w-0">
@@ -273,19 +319,33 @@ const DashboardPage: FC = (): ReactElement => {
                         <div className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-3 font-sans mt-2">
                           {team.has_submission && (
                             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 shrink-0">
-                              <Icon icon="mdi:check-circle" className="text-sm" />
+                              <Icon
+                                icon="mdi:check-circle"
+                                className="text-sm"
+                              />
                               Submitted
                             </span>
                           )}
                           {team.city && (
                             <span className="flex items-center gap-1 truncate">
-                              <Icon icon="mdi:map-marker" className="shrink-0" />
+                              <Icon
+                                icon="mdi:map-marker"
+                                className="shrink-0"
+                              />
                               <span className="truncate">{team.city}</span>
                             </span>
                           )}
                           <span className="flex items-center gap-1 shrink-0">
                             <Icon icon="mdi:account-group" />
-                            {team.member_count || team.members?.length || 0} member{(team.member_count || team.members?.length || 0) !== 1 ? 's' : ''}
+                            {team.member_count ||
+                              team.members?.length ||
+                              0}{' '}
+                            member
+                            {(team.member_count ||
+                              team.members?.length ||
+                              0) !== 1
+                              ? 's'
+                              : ''}
                           </span>
                         </div>
                       </div>
