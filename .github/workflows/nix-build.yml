@@ -1,0 +1,40 @@
+name: Nix Build & Cache
+
+on:
+  push:
+    branches: ['develop']
+  pull_request:
+    branches: ['develop']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Setup Cachix
+        uses: cachix/cachix-action@v15
+        with:
+          name: msdqn
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+
+      - name: Build all packages
+        run: |
+          nix build .#landing -o result-landing
+          nix build .#backoffice -o result-backoffice
+          nix build .#gacha -o result-gacha
+          nix build .#dimentorin -o result-dimentorin
+          nix build .#hackathon -o result-hackathon
+          nix build .#infra -o result-infra
+
+      - name: Show build outputs
+        run: |
+          echo "Landing: $(readlink result-landing)"
+          echo "Backoffice: $(readlink result-backoffice)"
+          echo "Gacha: $(readlink result-gacha)"
+          echo "Dimentorin: $(readlink result-dimentorin)"
+          echo "Hackathon: $(readlink result-hackathon)"
+          echo "Infra: $(readlink result-infra)"
