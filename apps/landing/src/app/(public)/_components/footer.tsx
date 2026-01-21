@@ -104,10 +104,20 @@ export default function Footer() {
             <ul className="space-y-2"></ul>
           </div>
         </div>
-        <div className="mt-8 border-t pt-8 text-center">
+        <div className="mt-8 border-t pt-8 text-center space-y-2">
           <p className="text-xs text-muted-foreground">
             © {new Date().getFullYear()} IMPHNEN - Ingin Menjadi Programmer
             Handal, Namun Enggan Ngoding. All rights reserved.
+          </p>
+          <p className="text-xs text-muted-foreground">
+            Powered by{' '}
+            <Link
+              href="https://ancikri.com"
+              target="_blank"
+              className="font-medium text-foreground hover:underline"
+            >
+              Ancikri
+            </Link>
           </p>
         </div>
       </div>
