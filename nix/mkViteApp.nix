@@ -28,10 +28,9 @@ pkgs.buildNpmPackage {
     export NX_NATIVE=false
     ${pkgs.lib.concatStringsSep "\n" (pkgs.lib.mapAttrsToList (k: v: "export ${k}=\"${v}\"") envVars)}
     # Run nx build, ignore terminal crash after successful build
-    # Disable errexit to handle SIGABRT from Nx terminal crash
-    set +e
-    ./node_modules/.bin/nx build ${name} --output-style=static
-    set -e
+    # Run in background and wait to handle SIGABRT from Nx terminal crash
+    ./node_modules/.bin/nx build ${name} --output-style=static &
+    wait $! || true
     # Verify the build output exists
     test -d dist/apps/${name}
     runHook postBuild
