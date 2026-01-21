@@ -20,6 +20,10 @@ pkgs.buildNpmPackage {
     runHook preBuild
     export NX_DAEMON=false
     export HOME=$TMPDIR
+    export CI=true
+    export NO_COLOR=1
+    export TERM=dumb
+    export NX_SKIP_NX_CACHE=true
     ${pkgs.lib.concatStringsSep "\n" (pkgs.lib.mapAttrsToList (k: v: "export ${k}=\"${v}\"") envVars)}
     npm run ${buildScript}
     runHook postBuild

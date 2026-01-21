@@ -19,6 +19,10 @@ pkgs.buildNpmPackage {
     runHook preBuild
     export NX_DAEMON=false
     export HOME=$TMPDIR
+    export CI=true
+    export NO_COLOR=1
+    export TERM=dumb
+    export NX_SKIP_NX_CACHE=true
     npm run landing:build
     runHook postBuild
   '';
