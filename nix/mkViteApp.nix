@@ -8,6 +8,9 @@ pkgs.buildNpmPackage {
   version = "0.0.1";
   inherit src npmDepsHash;
 
+  npmFlags = [ "--legacy-peer-deps" ];
+  makeCacheWritable = true;
+
   nativeBuildInputs = with pkgs; [
     nodejs_22
     nodePackages.npm
