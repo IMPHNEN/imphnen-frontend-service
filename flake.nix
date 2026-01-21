@@ -12,7 +12,7 @@
         pkgs = import nixpkgs { inherit system; };
 
         # NPM dependencies hash (update with: nix run nixpkgs#prefetch-npm-deps -- package-lock.json)
-        npmDepsHash = "sha256-bz8Q/d08FZtVElksXMvi90xrCCetTMQmzWCwU0W/vbg=";
+        npmDepsHash = "sha256-xmG0ej6GJk1HIFFmrB9CpovNA20sJ7RanFLMBCxKdy0=";
 
         # Import helpers
         mkViteApp = import ./nix/mkViteApp.nix {
@@ -111,7 +111,7 @@
           mkHackathonWithEnv = envVars: import ./nix/mkViteApp.nix {
             pkgs = final;
             src = self;
-            npmDepsHash = "sha256-bz8Q/d08FZtVElksXMvi90xrCCetTMQmzWCwU0W/vbg=";
+            npmDepsHash = "sha256-xmG0ej6GJk1HIFFmrB9CpovNA20sJ7RanFLMBCxKdy0=";
           } { name = "hackathon"; buildScript = "hackathon:build"; inherit envVars; };
         };
       };
