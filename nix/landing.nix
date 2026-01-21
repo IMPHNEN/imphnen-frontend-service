@@ -9,6 +9,9 @@ pkgs.buildNpmPackage {
   npmFlags = [ "--legacy-peer-deps" ];
   makeCacheWritable = true;
 
+  # Allow network access for Google Fonts fetching during Next.js build
+  __noChroot = true;
+
   nativeBuildInputs = with pkgs; [
     nodejs_22
     nodePackages.npm
