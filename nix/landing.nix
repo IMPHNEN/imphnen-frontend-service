@@ -46,7 +46,7 @@ pkgs.buildNpmPackage {
 
     # Create wrapper script
     cat > $out/bin/imphnen-landing <<EOF
-    #!/usr/bin/env bash
+    #!${pkgs.bash}/bin/bash
     cd $out/share/landing
     exec ${pkgs.nodejs_22}/bin/node apps/landing/server.js "\$@"
     EOF
