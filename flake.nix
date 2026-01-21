@@ -32,6 +32,7 @@
           gacha = mkViteApp { name = "gacha"; buildScript = "gacha:build"; };
           dimentorin = mkViteApp { name = "dimentorin"; buildScript = "dimentorin:build"; };
           hackathon = mkViteApp { name = "hackathon"; buildScript = "hackathon:build"; };
+          infra = mkViteApp { name = "infra"; buildScript = "infra:build"; };
 
           # Next.js app
           landing = landingApp;
@@ -82,6 +83,7 @@
         gacha = import ./nix/modules/static-app.nix { inherit self; } { appName = "gacha"; };
         dimentorin = import ./nix/modules/static-app.nix { inherit self; } { appName = "dimentorin"; };
         hackathon = import ./nix/modules/static-app.nix { inherit self; } { appName = "hackathon"; };
+        infra = import ./nix/modules/static-app.nix { inherit self; } { appName = "infra"; };
 
         # All-in-one module that enables all apps
         all = { config, lib, pkgs, ... }: {
@@ -91,6 +93,7 @@
             self.nixosModules.gacha
             self.nixosModules.dimentorin
             self.nixosModules.hackathon
+            self.nixosModules.infra
           ];
         };
       };
@@ -103,6 +106,7 @@
           gacha = self.packages.${final.system}.gacha;
           dimentorin = self.packages.${final.system}.dimentorin;
           hackathon = self.packages.${final.system}.hackathon;
+          infra = self.packages.${final.system}.infra;
           # Function to build hackathon with custom environment variables (e.g., Supabase)
           mkHackathonWithEnv = envVars: import ./nix/mkViteApp.nix {
             pkgs = final;
