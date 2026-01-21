@@ -54,9 +54,19 @@ export function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <span className="inline-flex items-center rounded-full border px-3 py-1 text-sm w-fit">
-              {communityLabel}
-            </span>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center rounded-full border px-3 py-1 text-sm">
+                {communityLabel}
+              </span>
+              <a
+                href="https://ancikri.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center rounded-full border px-3 py-1 text-sm hover:bg-muted transition-colors"
+              >
+                Powered By Ancikri
+              </a>
+            </div>
 
             <div className="space-y-4">
               <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-foreground via-foreground to-foreground/70">
