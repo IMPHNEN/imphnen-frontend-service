@@ -27,7 +27,7 @@ pkgs.buildNpmPackage {
     export NX_TASKS_RUNNER_DYNAMIC_OUTPUT=false
     export NX_NATIVE=false
     ${pkgs.lib.concatStringsSep "\n" (pkgs.lib.mapAttrsToList (k: v: "export ${k}=\"${v}\"") envVars)}
-    npm run ${buildScript}
+    ./node_modules/.bin/nx build ${name} --output-style=static
     runHook postBuild
   '';
 
