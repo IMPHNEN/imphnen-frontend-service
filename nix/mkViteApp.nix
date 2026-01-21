@@ -14,6 +14,7 @@ pkgs.buildNpmPackage {
   nativeBuildInputs = with pkgs; [
     nodejs_22
     nodePackages.npm
+    util-linux  # For script command to create pseudo-terminal
   ];
 
   buildPhase = ''
@@ -27,10 +28,9 @@ pkgs.buildNpmPackage {
     export NX_TASKS_RUNNER_DYNAMIC_OUTPUT=false
     export NX_NATIVE=false
     ${pkgs.lib.concatStringsSep "\n" (pkgs.lib.mapAttrsToList (k: v: "export ${k}=\"${v}\"") envVars)}
-    # Run nx build, ignore terminal crash after successful build
-    # Run in background and wait to handle SIGABRT from Nx terminal crash
-    ./node_modules/.bin/nx build ${name} --output-style=static &
-    wait $! || true
+    # Run nx build with pseudo-terminal to prevent terminal access errors
+    # Use script to create a pty, preventing Nx from crashing on raw terminal mode
+    script -q -c "./node_modules/.bin/nx build ${name} --output-style=static" /dev/null || true
     # Verify the build output exists
     test -d dist/apps/${name}
     runHook postBuild
