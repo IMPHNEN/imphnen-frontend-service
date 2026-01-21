@@ -1,13 +1,23 @@
-import { Bai_Jamjuree, Poppins } from 'next/font/google';
+import localFont from 'next/font/local';
 
-export const baiJamjureeFont = Bai_Jamjuree({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
+export const baiJamjureeFont = localFont({
+  src: [
+    { path: '../../public/fonts/BaiJamjuree-Light.ttf', weight: '300', style: 'normal' },
+    { path: '../../public/fonts/BaiJamjuree-Regular.ttf', weight: '400', style: 'normal' },
+    { path: '../../public/fonts/BaiJamjuree-Medium.ttf', weight: '500', style: 'normal' },
+    { path: '../../public/fonts/BaiJamjuree-SemiBold.ttf', weight: '600', style: 'normal' },
+    { path: '../../public/fonts/BaiJamjuree-Bold.ttf', weight: '700', style: 'normal' },
+  ],
   display: 'swap',
 });
 
-export const poppinsFont = Poppins({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
+export const poppinsFont = localFont({
+  src: [
+    { path: '../../public/fonts/Poppins-Light.ttf', weight: '300', style: 'normal' },
+    { path: '../../public/fonts/Poppins-Regular.ttf', weight: '400', style: 'normal' },
+    { path: '../../public/fonts/Poppins-Medium.ttf', weight: '500', style: 'normal' },
+    { path: '../../public/fonts/Poppins-SemiBold.ttf', weight: '600', style: 'normal' },
+    { path: '../../public/fonts/Poppins-Bold.ttf', weight: '700', style: 'normal' },
+  ],
   display: 'swap',
 });
