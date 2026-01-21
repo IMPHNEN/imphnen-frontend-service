@@ -24,6 +24,8 @@ pkgs.buildNpmPackage {
     export NO_COLOR=1
     export TERM=dumb
     export NX_SKIP_NX_CACHE=true
+    export NX_TASKS_RUNNER_DYNAMIC_OUTPUT=false
+    export NX_NATIVE=false
     ${pkgs.lib.concatStringsSep "\n" (pkgs.lib.mapAttrsToList (k: v: "export ${k}=\"${v}\"") envVars)}
     npm run ${buildScript}
     runHook postBuild
