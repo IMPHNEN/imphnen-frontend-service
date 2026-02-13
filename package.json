@@ -27,6 +27,10 @@
     "landing:build": "nx build landing",
     "landing:prod": "cd ./dist/apps/landing && npx next start",
     "landing:openapi": "npx openapi-typescript https://api.imphnen.dev/openapi.json -o ./apps/landing/src/openapi-types.ts",
+    "qrcampaign:dev": "nx dev qrcampaign",
+    "qrcampaign:build": "nx build qrcampaign",
+    "qrcampaign:test": "nx test qrcampaign",
+    "qrcampaign:prod": "serve ./dist/apps/qrcampaign",
     "ui:test": "nx test ui",
     "ui:build": "nx build ui"
   },
@@ -84,6 +88,7 @@
     "@nx/playwright": "22.1.1",
     "@nx/react": "22.1.1",
     "@nx/vite": "22.1.1",
+    "@nx/vitest": "22.1.1",
     "@nx/web": "22.1.1",
     "@nx/workspace": "22.1.1",
     "@playwright/test": "^1.36.0",
@@ -94,7 +99,7 @@
     "@tailwindcss/postcss": "^4.0.13",
     "@testing-library/dom": "10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "^16.1.0",
+    "@testing-library/react": "16.3.0",
     "@testing-library/user-event": "^14.6.1",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^22.12.0",
@@ -132,7 +137,7 @@
     "verdaccio": "^6.0.5",
     "vite": "7.1.3",
     "vite-plugin-dts": "~4.5.0",
-    "vitest": "^3.0.8"
+    "vitest": "^4.0.0"
   },
   "nx": {
     "includedScripts": []
