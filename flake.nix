@@ -33,6 +33,7 @@
           dimentorin = mkViteApp { name = "dimentorin"; buildScript = "dimentorin:build"; };
           hackathon = mkViteApp { name = "hackathon"; buildScript = "hackathon:build"; };
           infra = mkViteApp { name = "infra"; buildScript = "infra:build"; };
+          qrcampaign = mkViteApp { name = "qrcampaign"; buildScript = "qrcampaign:build"; };
 
           # Next.js app
           landing = landingApp;
@@ -63,7 +64,7 @@
             echo "  nx dev <app>    - Start development server"
             echo "  nx build <app>  - Build an app"
             echo ""
-            echo "Apps: landing, backoffice, gacha, dimentorin, hackathon"
+            echo "Apps: landing, backoffice, gacha, dimentorin, hackathon, qrcampaign"
             echo ""
             echo "Build packages with:"
             echo "  nix build .#landing"
@@ -71,6 +72,7 @@
             echo "  nix build .#gacha"
             echo "  nix build .#dimentorin"
             echo "  nix build .#hackathon"
+            echo "  nix build .#qrcampaign"
           '';
         };
       }
@@ -84,6 +86,7 @@
         dimentorin = import ./nix/modules/static-app.nix { inherit self; } { appName = "dimentorin"; };
         hackathon = import ./nix/modules/static-app.nix { inherit self; } { appName = "hackathon"; };
         infra = import ./nix/modules/static-app.nix { inherit self; } { appName = "infra"; };
+        qrcampaign = import ./nix/modules/static-app.nix { inherit self; } { appName = "qrcampaign"; };
 
         # All-in-one module that enables all apps
         all = { config, lib, pkgs, ... }: {
@@ -94,6 +97,7 @@
             self.nixosModules.dimentorin
             self.nixosModules.hackathon
             self.nixosModules.infra
+            self.nixosModules.qrcampaign
           ];
         };
       };
@@ -107,6 +111,7 @@
           dimentorin = self.packages.${final.system}.dimentorin;
           hackathon = self.packages.${final.system}.hackathon;
           infra = self.packages.${final.system}.infra;
+          qrcampaign = self.packages.${final.system}.qrcampaign;
           # Function to build hackathon with custom environment variables (e.g., Supabase)
           mkHackathonWithEnv = envVars: import ./nix/mkViteApp.nix {
             pkgs = final;

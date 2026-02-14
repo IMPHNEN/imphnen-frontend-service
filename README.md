@@ -10,6 +10,7 @@ This repository is a **monorepo** for all frontend services of IMPHNEN. The mono
 2. **Backoffice** - Application for <a href="https://gacha.imphnen.dev/" target="_blank">Internal Management Website</a>.
 3. **Dimentorin** - Application for <a href="https://dimentorin.imphnen.dev/" target="_blank">Mentoring Service</a>.
 4. **Landing Page** - Application for <a href="https://imphnen.dev/" target="_blank">Landing Page</a>.
+5. **QR Campaign** - Application for QR Campaign Management.
 
 ## How to install
 
@@ -54,6 +55,10 @@ Use the following commands to run in development mode:
   ```sh
   npm run landing:dev
   ```
+- **QR Campaign**:
+  ```sh
+  npm run qrcampaign:dev
+  ```
 
 ### Build
 
@@ -75,6 +80,10 @@ Use the following commands to build the applications:
   ```sh
   npm run landing:build
   ```
+- **QR Campaign**:
+  ```sh
+  npm run qrcampaign:build
+  ```
 
 ### Production
 
@@ -95,6 +104,10 @@ Use the following commands to run the applications in production mode:
 - **Landing Page**:
   ```sh
   npm run landing:prod
+  ```
+- **QR Campaign**:
+  ```sh
+  npm run qrcampaign:prod
   ```
 
 ### Storybook
