@@ -1,18 +1,23 @@
 const apps = [
   { name: 'Landing', domain: 'imphnen.dev', type: 'Next.js', color: 'blue' },
+  { name: 'WWW', domain: 'www.imphnen.dev', type: 'Redirect', color: 'purple' },
   { name: 'Gacha', domain: 'gacha.imphnen.dev', type: 'Vite', color: 'green' },
   { name: 'Backoffice', domain: 'backoffice.imphnen.dev', type: 'Vite', color: 'green' },
   { name: 'Dimentorin', domain: 'dimentorin.imphnen.dev', type: 'Vite', color: 'green' },
   { name: 'Hackathon', domain: 'hackathon.imphnen.dev', type: 'Vite', color: 'green' },
+  { name: 'QR Campaign', domain: 'qr.imphnen.dev', type: 'Vite', color: 'green' },
   { name: 'Infra', domain: 'infra.imphnen.dev', type: 'Vite', color: 'green' },
+  { name: 'API QR', domain: 'api-qr.imphnen.dev', type: 'Backend', color: 'orange' },
 ];
 
 const techStack = [
-  { category: 'OS', items: ['NixOS 24.11'] },
+  { category: 'OS', items: ['NixOS 25.05'] },
   { category: 'Web Server', items: ['Nginx'] },
   { category: 'SSL', items: ['Let\'s Encrypt (ACME)'] },
   { category: 'Build', items: ['Nix Flakes', 'Nx Monorepo'] },
+  { category: 'CI/CD', items: ['GitHub Actions', 'Cachix'] },
   { category: 'Frontend', items: ['React', 'Next.js', 'Vite', 'TailwindCSS'] },
+  { category: 'Backend', items: ['Go', 'Supabase'] },
   { category: 'Secrets', items: ['sops-nix'] },
 ];
 
@@ -171,15 +176,23 @@ export default function App() {
                 <div className="w-12 h-12 bg-zinc-800 rounded-full flex items-center justify-center mx-auto mb-2">
                   <span>2</span>
                 </div>
-                <p className="text-sm font-medium">Update Flake</p>
-                <p className="text-xs text-zinc-500">nix flake update</p>
+                <p className="text-sm font-medium">GitHub Actions</p>
+                <p className="text-xs text-zinc-500">nix build</p>
+              </div>
+              <div className="hidden md:block text-zinc-600">→</div>
+              <div className="text-center">
+                <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-2">
+                  <span>3</span>
+                </div>
+                <p className="text-sm font-medium">Push to Cachix</p>
+                <p className="text-xs text-zinc-500">binary cache</p>
               </div>
               <div className="hidden md:block text-zinc-600">→</div>
               <div className="text-center">
                 <div className="w-12 h-12 bg-zinc-800 rounded-full flex items-center justify-center mx-auto mb-2">
-                  <span>3</span>
+                  <span>4</span>
                 </div>
-                <p className="text-sm font-medium">Remote Build</p>
+                <p className="text-sm font-medium">Server Pull</p>
                 <p className="text-xs text-zinc-500">nixos-rebuild</p>
               </div>
               <div className="hidden md:block text-zinc-600">→</div>
