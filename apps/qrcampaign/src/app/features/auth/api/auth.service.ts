@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Define the base URL for the API
-const API_URL = 'http://api-qr.imphnen.dev/api/v1';
+const API_URL = 'https://api-qr.imphnen.dev/api/v1';
 
 // Create a configured axios instance
 export const api = axios.create({
