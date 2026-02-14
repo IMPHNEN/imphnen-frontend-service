@@ -45,7 +45,7 @@
         # Development shell
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
-            nodejs_22
+            nodejs
             nodePackages.npm
             bun
 
