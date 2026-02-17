@@ -10,6 +10,7 @@ import {
   DeleteOutlined,
   CheckCircleOutlined,
   PlusOutlined,
+  FileOutlined,
 } from '@ant-design/icons';
 
 export default function CampaignsPage() {
@@ -195,7 +196,30 @@ export default function CampaignsPage() {
         </button>
       </div>
 
-      <DataTable data={campaigns} columns={columns} pageSize={10} />
+      {!campaigns || campaigns.length === 0 ? (
+        <div className="bg-white rounded-lg border border-gray-200 p-12 text-center shadow-sm">
+          <div className="max-w-sm mx-auto">
+            <div className="text-gray-400 mb-4">
+              <FileOutlined className="text-[48px] mx-auto" />
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              No campaigns yet
+            </h3>
+            <p className="text-gray-500 mb-6">
+              Get started by creating your first QR campaign.
+            </p>
+            <button
+              onClick={() => setShowCreateModal(true)}
+              className="inline-flex items-center gap-2 bg-primary-500 text-white px-4 py-2 rounded-lg hover:bg-primary-600 transition-colors cursor-pointer"
+            >
+              <PlusOutlined />
+              Create Your First Campaign
+            </button>
+          </div>
+        </div>
+      ) : (
+        <DataTable data={campaigns} columns={columns} pageSize={10} />
+      )}
 
       {/* Create Campaign Modal */}
       {showCreateModal && (
