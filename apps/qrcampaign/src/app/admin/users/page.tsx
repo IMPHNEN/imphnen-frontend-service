@@ -193,7 +193,7 @@ export default function UsersPage() {
         <p className="text-gray-600 mt-1">Manage users and their roles</p>
       </div>
 
-      {!users || users.length > 0 ? (
+      {!users || users.length === 0 ? (
         <div className="bg-white rounded-lg border border-gray-200 p-12 text-center shadown-sm">
           <div className="max-w-sm mx-auto">
             <div className="text-gray-400 mb-4">
