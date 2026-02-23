@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { DataTable } from '@imphnen-frontend-service/ui/organisms';
 import { userService, User } from '../../features/admin/api/user.service';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, UserOutlined } from '@ant-design/icons';
 
 export default function UsersPage() {
   const [users, setUsers] = useState<User[]>([]);
@@ -193,7 +193,23 @@ export default function UsersPage() {
         <p className="text-gray-600 mt-1">Manage users and their roles</p>
       </div>
 
-      <DataTable data={users} columns={columns} pageSize={10} />
+      {!users || users.length === 0 ? (
+        <div className="bg-white rounded-lg border border-gray-200 p-12 text-center shadown-sm">
+          <div className="max-w-sm mx-auto">
+            <div className="text-gray-400 mb-4">
+              <UserOutlined className="text-[48px]" />
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              No users found
+            </h3>
+            <p className="text-gray-500">
+              There are currently no users in the system.
+            </p>
+          </div>
+        </div>
+      ) : (
+        <DataTable data={users} columns={columns} pageSize={10} />
+      )}
     </div>
   );
 }
