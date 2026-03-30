@@ -1,10 +1,15 @@
-import { useSendOTP } from '@imphnen-frontend-service/utils';
+import { usePostSendOtp } from '@imphnen-frontend-service/service';
 
 export const useResendOtpHook = () => {
 
-  const { resendOTP, isLoading } = useSendOTP();
+  const { mutate, isPending: isLoading } = usePostSendOtp();
+
+  const resendOTP = (_data?: { email: string }) => {
+    mutate();
+  };
 
   return {
-    resendOTP
+    resendOTP,
+    isLoading
   };
 };

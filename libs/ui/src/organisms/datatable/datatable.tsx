@@ -23,7 +23,6 @@ interface DataTableProps<T extends RowData> {
   columns?: ColumnDef<T, unknown>[];
   pageSize?: number;
   className?: string;
-  // server-side pagination props
   manualPagination?: boolean;
   pageCount?: number;
   currentPage?: number;
@@ -47,7 +46,6 @@ export const DataTable = <T extends RowData>({
   });
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
-  // Update pagination state when pageSize prop changes
   React.useEffect(() => {
     setPagination((prev) => ({
       ...prev,
@@ -55,7 +53,6 @@ export const DataTable = <T extends RowData>({
     }));
   }, [pageSize]);
 
-  // Reset pagination when data changes to prevent out-of-bounds errors
   React.useEffect(() => {
     if (data.length > 0) {
       setPagination((prev) => ({
@@ -65,11 +62,9 @@ export const DataTable = <T extends RowData>({
     }
   }, [data.length]);
 
-  // Memoize data and columns to prevent unnecessary re-renders
   const memoizedData = React.useMemo(() => data, [data]);
   const memoizedColumns = React.useMemo(() => columns, [columns]);
 
-  // Memoize table configuration to prevent recreation on every render
   const tableConfig = React.useMemo(() => {
     const config: TableOptions<T> = {
       data: memoizedData,
@@ -84,7 +79,6 @@ export const DataTable = <T extends RowData>({
       getPaginationRowModel: getPaginationRowModel(),
       getSortedRowModel: getSortedRowModel(),
       getFilteredRowModel: getFilteredRowModel(),
-      // server-side pagination config
       manualPagination,
       pageCount: manualPagination ? pageCount : undefined,
     };
@@ -99,11 +93,9 @@ export const DataTable = <T extends RowData>({
     pageCount,
   ]);
 
-  // Prefer external table instance if provided; otherwise create an internal one
   const internalTable = useReactTable(tableConfig);
   const t = table ?? internalTable;
 
-  // Handle empty data state
   const isEmpty = t.getRowModel().rows.length === 0;
 
   return (
@@ -186,7 +178,6 @@ export const DataTable = <T extends RowData>({
         </table>
       </div>
       {manualPagination && onPageChange && pageCount ? (
-        // Server-side pagination controls with numbered pages
         <div className="flex items-center justify-center gap-10">
           <button
             className="disabled:opacity-50 cursor-pointer"
@@ -211,7 +202,6 @@ export const DataTable = <T extends RowData>({
 
           <div className="flex gap-4 items-baseline">
             {pageCount <= 8 ? (
-              // Show all pages if 8 or fewer
               Array.from({ length: pageCount }, (_, index) => (
                 <button
                   key={index}
@@ -226,7 +216,6 @@ export const DataTable = <T extends RowData>({
                 </button>
               ))
             ) : (
-              // Show ellipsis for many pages
               <>
                 <button
                   onClick={() => onPageChange(1)}
@@ -294,7 +283,6 @@ export const DataTable = <T extends RowData>({
           </button>
         </div>
       ) : (
-        // Client-side pagination (default)
         <Pagination table={t} />
       )}
     </div>

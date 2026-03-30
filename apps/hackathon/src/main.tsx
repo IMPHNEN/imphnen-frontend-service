@@ -24,10 +24,6 @@ add404PageToRoutesChildren(notFoundFiles, routes);
 const router = createBrowserRouter([
   {
     ...routes,
-    // MIDDLEWARE TEMPORARILY DISABLED - causing infinite loops with React Router v7
-    // TODO: Implement auth checks at component level or use different pattern
-    // loader: middleware,
-    // shouldRevalidate: () => false,
   },
 ]);
 

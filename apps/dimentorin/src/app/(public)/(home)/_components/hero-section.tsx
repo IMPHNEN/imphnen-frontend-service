@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 export function HeroSection() {
   return (
     <section className="relative w-full z-0 py-20 md:py-28 lg:py-32">
-      {/* Background gradients and shapes */}
+
       <div className="absolute inset-0 -z-10 overflow-x-clip hidden md:block">
         <motion.div
           initial={{ scale: 0 }}

@@ -54,7 +54,6 @@ const ManageMembersPage: FC = (): ReactElement => {
     mode: 'all',
   });
 
-  // Show loading state while fetching team data
   if (isLoadingTeam) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-950">
@@ -153,7 +152,6 @@ const ManageMembersPage: FC = (): ReactElement => {
       </div>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-        {/* Submission Lock Warning */}
         {hasSubmission && (
           <div className="bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-500 rounded-lg p-4">
             <div className="flex items-start space-x-3">
@@ -170,7 +168,6 @@ const ManageMembersPage: FC = (): ReactElement => {
           </div>
         )}
 
-        {/* Join Requests */}
         {joinRequests.length > 0 && (
           <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md dark:shadow-gray-950/50 p-6">
             <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
@@ -239,7 +236,6 @@ const ManageMembersPage: FC = (): ReactElement => {
           </div>
         )}
 
-        {/* Current Members */}
         <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md dark:shadow-gray-950/50 p-6">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
             Current Members ({members.length})
@@ -311,7 +307,6 @@ const ManageMembersPage: FC = (): ReactElement => {
           )}
         </div>
 
-        {/* Warning */}
         {!hasSubmission && (
           <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
             <p className="text-sm text-yellow-800 dark:text-yellow-200">
@@ -322,7 +317,6 @@ const ManageMembersPage: FC = (): ReactElement => {
         )}
       </div>
 
-      {/* Invite Member Modal */}
       {showInviteModal && (
         <div className="fixed inset-0 bg-black/20 dark:bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white dark:bg-gray-900 rounded-lg shadow-xl dark:shadow-gray-950/50 max-w-md w-full p-6">

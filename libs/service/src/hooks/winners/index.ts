@@ -1,13 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { hackathonApi, HackathonApiResponse } from '../../api/hackathon';
 
-// Query keys
 export const winnerKeys = {
   all: ['winners'] as const,
   lists: () => [...winnerKeys.all, 'list'] as const,
 };
 
-// API response types
 interface Team {
   id: string;
   name: string;

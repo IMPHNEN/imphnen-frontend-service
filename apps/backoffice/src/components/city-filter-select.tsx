@@ -24,12 +24,10 @@ export const CityFilterSelect: FC<CityFilterSelectProps> = ({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Filter cities based on search query
   const filteredCities = INDONESIAN_CITIES.filter((city) =>
     city.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -102,7 +100,6 @@ export const CityFilterSelect: FC<CityFilterSelectProps> = ({
 
       {isOpen && (
         <div className="absolute z-50 w-full mt-1 bg-white border border-neutral-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
-          {/* All Cities Option */}
           <div
             onClick={() => handleSelectCity('all')}
             className={`px-3 py-2 cursor-pointer hover:bg-neutral-50 border-b border-neutral-100 ${
@@ -114,7 +111,6 @@ export const CityFilterSelect: FC<CityFilterSelectProps> = ({
             {allOptionLabel}
           </div>
 
-          {/* Filtered Cities */}
           {filteredCities.length > 0 ? (
             <div className="py-1">
               {filteredCities.slice(0, 100).map((city) => (

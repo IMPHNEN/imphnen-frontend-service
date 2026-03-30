@@ -75,7 +75,6 @@ const ProfileByIdContent: FC = (): ReactElement => {
     setIsEditProfileModalOpen(false);
   };
 
-  // Set isViewOnly to true for this page
   const isViewOnly = true;
 
   if (isLoading) {
@@ -151,7 +150,6 @@ const ProfileByIdContent: FC = (): ReactElement => {
         message={notification.message}
         header="Profile"
       />
-      {/* Only render EditProfileModal if not in view-only mode */}
       {!isViewOnly && (
         <EditProfileModal
           isOpen={isEditProfileModalOpen}

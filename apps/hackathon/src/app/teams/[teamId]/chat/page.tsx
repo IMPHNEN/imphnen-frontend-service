@@ -28,7 +28,6 @@ const TeamChatPage: FC = (): ReactElement => {
   const team = teamData?.data;
   const currentUserId = session?.user?.id;
 
-  // Message type used for UI rendering
   interface ChatMessage {
     id: string;
     user_id: string;
@@ -40,10 +39,8 @@ const TeamChatPage: FC = (): ReactElement => {
     created_at: string;
   }
 
-  // Inline delete confirmation UI state
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
 
-  // Prepare messages: de-duplicate by id and sort by created_at
   const displayMessages = useMemo(() => {
     const raw: ChatMessage[] = Array.isArray(messages)
       ? (messages as ChatMessage[])
@@ -64,7 +61,6 @@ const TeamChatPage: FC = (): ReactElement => {
     return dedup;
   }, [messages]);
 
-  // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [displayMessages]);
@@ -108,7 +104,6 @@ const TeamChatPage: FC = (): ReactElement => {
 
   return (
     <div className="flex flex-col h-screen bg-gray-50 dark:bg-gray-950">
-      {/* Header */}
       <div className="bg-white dark:bg-gray-900 border-b dark:border-gray-700 shadow-sm dark:shadow-gray-950/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
@@ -130,7 +125,6 @@ const TeamChatPage: FC = (): ReactElement => {
         </div>
       </div>
 
-      {/* Messages Container */}
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           {isLoading ? (
@@ -156,7 +150,6 @@ const TeamChatPage: FC = (): ReactElement => {
                         isOwnMessage ? 'flex-row-reverse' : 'flex-row'
                       }`}
                     >
-                      {/* Avatar */}
                       <div className="shrink-0">
                         {msg.user?.avatar ? (
                           <img
@@ -171,7 +164,6 @@ const TeamChatPage: FC = (): ReactElement => {
                         )}
                       </div>
 
-                      {/* Message Bubble */}
                       <div className={`flex-1 text-left`}>
                         <div
                           className={`inline-block ${
@@ -197,7 +189,6 @@ const TeamChatPage: FC = (): ReactElement => {
                               {msg.message}
                             </p>
 
-                            {/* Delete button */}
                             {canDelete && (
                               <button
                                 onClick={() =>
@@ -214,7 +205,6 @@ const TeamChatPage: FC = (): ReactElement => {
                                 }`}
                                 title="Delete message"
                               >
-                                {/* Icon trash */}
                                 <Icon
                                   icon="mdi:trash-can-outline"
                                   className="w-4 h-4"
@@ -267,7 +257,6 @@ const TeamChatPage: FC = (): ReactElement => {
         </div>
       </div>
 
-      {/* Message Input */}
       <div className="bg-white dark:bg-gray-900 border-t dark:border-gray-700 shadow-lg dark:shadow-gray-950/50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <form onSubmit={handleSendMessage} className="flex gap-3">

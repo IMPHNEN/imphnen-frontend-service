@@ -17,7 +17,7 @@ interface EducationSectionProps {
   onSave: (newEducation: Education[]) => Promise<void>;
   showNotification: (type: NotificationType['type'], title: string, message?: string) => void;
   isLoading?: boolean;
-  isViewOnly?: boolean; // Add isViewOnly prop
+  isViewOnly?: boolean;
 }
 
 export const EducationSection: FC<EducationSectionProps> = ({
@@ -25,7 +25,7 @@ export const EducationSection: FC<EducationSectionProps> = ({
   onSave,
   showNotification,
   isLoading = false,
-  isViewOnly = false, // Default to false
+  isViewOnly = false,
 }) => {
   const [isEducationModalOpen, setIsEducationModalOpen] = useState(false);
   const [education, setEducation] = useState<Education[]>(initialEducation);
@@ -36,7 +36,7 @@ export const EducationSection: FC<EducationSectionProps> = ({
   }, [initialEducation]);
 
   const handleSave = async (newEducation: Education[]) => {
-    if (isViewOnly) return; // Prevent save if in view-only mode
+    if (isViewOnly) return;
     await onSave(newEducation);
   };
 
@@ -44,7 +44,7 @@ export const EducationSection: FC<EducationSectionProps> = ({
     <SectionWrapper
       title="Education"
       editButton={
-        !isViewOnly ? ( // Conditionally render the edit button
+        !isViewOnly ? (
           <div className="flex gap-2">
             <EditSectionButton
               onClick={() => setIsEducationModalOpen(true)}
@@ -73,7 +73,7 @@ export const EducationSection: FC<EducationSectionProps> = ({
       </div>
 
       <EducationModal
-        isOpen={isEducationModalOpen && !isViewOnly} // Only open if not in view-only mode
+        isOpen={isEducationModalOpen && !isViewOnly}
         onClose={() => setIsEducationModalOpen(false)}
         initialValue={education}
         onSave={handleSave}

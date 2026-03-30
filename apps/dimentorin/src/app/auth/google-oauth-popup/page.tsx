@@ -179,7 +179,6 @@ export const GoogleOAuthPopupPage: FC = (): ReactElement => {
       setTimeout(checkForJson, 1000);
     };
 
-    // Small delay to ensure DOM is ready
     setTimeout(handleOAuthResponse, 100);
   }, []);
 

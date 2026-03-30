@@ -18,7 +18,7 @@ import { CitySelect } from '../../../../components/city-select';
 import { Icon } from '@iconify/react';
 import { toast } from 'sonner';
 
-const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
+const MAX_FILE_SIZE = 2 * 1024 * 1024;
 
 const EditTeamPage: FC = (): ReactElement => {
   const { teamId } = useParams<{ teamId: string }>();
@@ -162,7 +162,6 @@ const EditTeamPage: FC = (): ReactElement => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md dark:shadow-gray-950/50 p-8">
           <form onSubmit={onSubmit} className="space-y-6">
-            {/* Banner Upload */}
             <div>
               <label className="block text-label1 font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Team Banner
@@ -209,7 +208,6 @@ const EditTeamPage: FC = (): ReactElement => {
               )}
             </div>
 
-            {/* Logo Upload */}
             <div>
               <label className="block text-label1 font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Team Logo
@@ -261,7 +259,6 @@ const EditTeamPage: FC = (): ReactElement => {
               </div>
             </div>
 
-            {/* Team Name */}
             <ControlledInputField
               control={form.control}
               label="Team Name"
@@ -271,7 +268,6 @@ const EditTeamPage: FC = (): ReactElement => {
               isRequired={true}
             />
 
-            {/* City */}
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                 City
@@ -290,7 +286,6 @@ const EditTeamPage: FC = (): ReactElement => {
               />
             </div>
 
-            {/* Description */}
             <div className="space-y-2">
               <label className="block text-label1 font-medium text-gray-700 dark:text-gray-300">
                 Description
@@ -318,7 +313,6 @@ const EditTeamPage: FC = (): ReactElement => {
               />
             </div>
 
-            {/* Visibility */}
             <div className="space-y-2">
               <label className="block text-label1 font-medium text-gray-700 dark:text-gray-300">
                 Team Visibility
@@ -367,7 +361,6 @@ const EditTeamPage: FC = (): ReactElement => {
               />
             </div>
 
-            {/* Submit Button */}
             <div className="flex space-x-3 pt-4">
               <Button
                 type="button"

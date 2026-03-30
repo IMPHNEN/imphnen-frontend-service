@@ -1,6 +1,5 @@
 import { api } from '../../auth/api/auth.service';
 
-// Types
 export interface User {
   id: string;
   email: string;

@@ -73,7 +73,7 @@ export const Dropzone: React.FC<DropzoneProps> = ({ onImageDropped }) => {
       />
       <div className="space-y-2">
         <div className="flex justify-center">
-          {/* Simple upload icon */}
+
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

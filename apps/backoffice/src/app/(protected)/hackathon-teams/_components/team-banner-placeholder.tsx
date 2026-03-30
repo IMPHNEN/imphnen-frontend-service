@@ -15,7 +15,7 @@ const TeamBannerPlaceholder: FC<TeamBannerPlaceholderProps> = ({
   className = '',
   showPlaceholder = true,
 }) => {
-  const aspectRatioClass = 'aspect-[3/1]'; // 3:1 aspect ratio
+  const aspectRatioClass = 'aspect-[3/1]';
 
   if (!banner && !showPlaceholder) {
     return null;
@@ -35,7 +35,6 @@ const TeamBannerPlaceholder: FC<TeamBannerPlaceholderProps> = ({
           alt={`${teamName} banner`}
           className="w-full h-full object-cover"
           onError={(e) => {
-            // Fallback to placeholder if image fails to load
             const target = e.target as HTMLImageElement;
             target.style.display = 'none';
             const placeholder = target.nextElementSibling as HTMLElement;
@@ -44,11 +43,10 @@ const TeamBannerPlaceholder: FC<TeamBannerPlaceholderProps> = ({
             }
           }}
         />
-        {/* Fallback placeholder (hidden by default, shown on image error) */}
         <div
           className={cn(
             'absolute inset-0 bg-linear-to-r from-gray-100 to-gray-200 flex items-center justify-center',
-            'hidden' // Hidden by default
+            'hidden'
           )}
         >
           <div className="text-center">
@@ -61,7 +59,6 @@ const TeamBannerPlaceholder: FC<TeamBannerPlaceholderProps> = ({
     );
   }
 
-  // No banner - show placeholder
   return (
     <div
       className={cn(

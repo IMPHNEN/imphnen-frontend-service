@@ -40,7 +40,7 @@ const SubmissionModal: FC<SubmissionModalProps> = ({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
-        {/* Header */}
+
         <div className="flex items-center justify-between p-6 border-b border-neutral-200">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-success-100 flex items-center justify-center">
@@ -68,9 +68,8 @@ const SubmissionModal: FC<SubmissionModalProps> = ({
           </button>
         </div>
 
-        {/* Content */}
         <div className="p-6 space-y-6">
-          {/* Submission Status */}
+
           <div
             className={cn(
               'flex items-center gap-3 p-4 border rounded-lg',
@@ -96,7 +95,6 @@ const SubmissionModal: FC<SubmissionModalProps> = ({
             </div>
           </div>
 
-          {/* Project Description */}
           <div>
             <h3 className="text-sm font-medium text-neutral-700 mb-2">
               Project Description
@@ -106,13 +104,11 @@ const SubmissionModal: FC<SubmissionModalProps> = ({
             </p>
           </div>
 
-          {/* Project Links */}
           <div className="space-y-3">
             <h3 className="text-sm font-medium text-neutral-700">
               Project Links
             </h3>
 
-            {/* Repository URL */}
             <div className="flex items-start gap-3 p-3 bg-neutral-50 rounded-lg">
               <LinkOutlined className="text-primary-500 mt-1" />
               <div className="flex-1 min-w-0">
@@ -130,7 +126,6 @@ const SubmissionModal: FC<SubmissionModalProps> = ({
               </div>
             </div>
 
-            {/* Demo URL */}
             {submission.demo_url && (
               <div className="flex items-start gap-3 p-3 bg-neutral-50 rounded-lg">
                 <LinkOutlined className="text-primary-500 mt-1" />
@@ -150,7 +145,6 @@ const SubmissionModal: FC<SubmissionModalProps> = ({
               </div>
             )}
 
-            {/* Presentation URL */}
             {submission.presentation_url && (
               <div className="flex items-start gap-3 p-3 bg-neutral-50 rounded-lg">
                 <LinkOutlined className="text-primary-500 mt-1" />
@@ -171,7 +165,6 @@ const SubmissionModal: FC<SubmissionModalProps> = ({
             )}
           </div>
 
-          {/* Screenshots */}
           {submission.screenshots && submission.screenshots.length > 0 && (
             <div className="space-y-3">
               <h3 className="text-sm font-medium text-neutral-700 flex items-center gap-2">
@@ -198,7 +191,6 @@ const SubmissionModal: FC<SubmissionModalProps> = ({
             </div>
           )}
 
-          {/* Metadata */}
           <div className="grid grid-cols-2 gap-4 pt-4 border-t border-neutral-200">
             <div>
               <p className="text-xs text-neutral-500 mb-1">Created</p>
@@ -227,19 +219,11 @@ const SubmissionModal: FC<SubmissionModalProps> = ({
           </div>
         </div>
 
-        {/* Footer */}
         <div className="flex items-center justify-end gap-3 p-6 border-t border-neutral-200 bg-neutral-50">
           <Button variant="secondary" onClick={onClose}>
             Close
           </Button>
-          {/* <Button
-            variant="primary"
-            onClick={() => {
-              console.log('Edit submission:', submission.id);
-            }}
-          >
-            Edit Status
-          </Button> */}
+
         </div>
       </div>
     </div>

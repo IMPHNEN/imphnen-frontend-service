@@ -1,10 +1,8 @@
 import axios from 'axios';
 import { useAuthStore } from '../hooks/auth';
 
-// Hackathon Backend API Base URL
 const HACKATHON_API_URL = 'https://api.hackathon.imphnen.dev/api/v1';
 
-// Create axios instance for hackathon backend
 export const hackathonApi = axios.create({
   baseURL: HACKATHON_API_URL,
   headers: {
@@ -12,7 +10,6 @@ export const hackathonApi = axios.create({
   },
 });
 
-// Add auth token interceptor
 hackathonApi.interceptors.request.use(
   (config) => {
     const { session } = useAuthStore.getState();
@@ -26,17 +23,13 @@ hackathonApi.interceptors.request.use(
   }
 );
 
-// Error handling interceptor
 hackathonApi.interceptors.response.use(
   (response) => response,
   (error) => {
-    // Handle 401 - clear session and redirect to login
-    // But skip redirect if already on auth pages or certificate pages (to avoid reload on login failure)
     if (error.response?.status === 401) {
       const isAuthPage = globalThis.window !== undefined && globalThis.location.pathname.startsWith('/auth');
       const isCertificatePage = globalThis.window !== undefined && globalThis.location.pathname.startsWith('/certificate/');
 
-      // Only clear session and redirect if not on auth page or certificate page
       if (!isAuthPage && !isCertificatePage) {
         useAuthStore.getState().clearSession();
         if (globalThis.window !== undefined) {
@@ -45,7 +38,6 @@ hackathonApi.interceptors.response.use(
       }
     }
 
-    // If backend sends a message, use it
     const backendMsg = error?.response?.data?.message;
     if (backendMsg && typeof backendMsg === 'string') {
       return Promise.reject(new Error(backendMsg));
@@ -55,7 +47,6 @@ hackathonApi.interceptors.response.use(
   }
 );
 
-// API Response wrapper type
 export interface HackathonApiResponse<T> {
   data: T;
   message?: string;

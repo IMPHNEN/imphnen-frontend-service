@@ -32,7 +32,6 @@ import { useSearchParams } from 'react-router-dom';
 
 type UserType = TAdminUserItem;
 
-// Skills options for filter
 const skillsOptions = [
   'Frontend Developer',
   'Backend Developer',
@@ -57,12 +56,10 @@ export const HackathonUsersPage: FC = (): ReactElement => {
   const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
   const [globalFilter, setGlobalFilter] = useState(searchQuery);
 
-  // Advanced filtering states
   const [statusFilter, setStatusFilter] = useState('all');
   const [cityFilter, setCityFilter] = useState('all');
   const [skillsFilter, setSkillsFilter] = useState<string[]>([]);
 
-  // Fetch users from API
   const {
     data: usersResponse,
     isLoading,
@@ -82,14 +79,13 @@ export const HackathonUsersPage: FC = (): ReactElement => {
         per_page: perPage,
         search: searchQuery || undefined,
       }),
-    staleTime: 30000, // 30 seconds cache
-    gcTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 30000,
+    gcTime: 5 * 60 * 1000,
   });
 
   const totalData = usersResponse?.meta?.total_data || 0;
   const totalPages = usersResponse?.meta?.total_page || 1;
 
-  // Handle page change - update URL query params
   const handlePageChange = useCallback(
     (newPage: number) => {
       const params = new URLSearchParams();
@@ -102,19 +98,16 @@ export const HackathonUsersPage: FC = (): ReactElement => {
     [setSearchParams, perPage, searchQuery]
   );
 
-  // Validate page number doesn't exceed total pages
   useEffect(() => {
     if (!isLoading && totalPages > 0 && currentPage > totalPages) {
       setSearchParams({ page: totalPages.toString() });
     }
   }, [currentPage, totalPages, setSearchParams, isLoading]);
 
-  // Sync globalFilter with URL search param on mount
   useEffect(() => {
     setGlobalFilter(searchQuery);
   }, [searchQuery]);
 
-  // Handle search users
   const handleSearch = useCallback(() => {
     const params = new URLSearchParams();
     params.set('page', '1');
@@ -125,7 +118,6 @@ export const HackathonUsersPage: FC = (): ReactElement => {
     setSearchParams(params);
   }, [globalFilter, setSearchParams, perPage]);
 
-  // Handle Enter key press in search input
   const handleSearchKeyPress = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') {
@@ -135,7 +127,6 @@ export const HackathonUsersPage: FC = (): ReactElement => {
     [handleSearch]
   );
 
-  // Handle per page change
   const handlePerPageChange = useCallback(
     (newPerPage: number) => {
       const params = new URLSearchParams();
@@ -147,7 +138,6 @@ export const HackathonUsersPage: FC = (): ReactElement => {
     [setSearchParams, searchQuery]
   );
 
-  // Memoize the callback to prevent recreation
   const handleShowDetailModal = useCallback((user: UserType) => {
     setSelectedUser(user);
     setShowDetailModal(true);
@@ -166,17 +156,14 @@ export const HackathonUsersPage: FC = (): ReactElement => {
     setShowNewUserModal(false);
   }, []);
 
-  // Filter data based on current filter states
   const filteredData = useMemo(() => {
     const usersData = usersResponse?.data || [];
     return usersData.filter((user: UserType) => {
-      // Status filter
       if (statusFilter !== 'all') {
         const isActive = statusFilter === 'active';
         if (user.is_active !== isActive) return false;
       }
 
-      // Skills filter
       if (skillsFilter.length > 0) {
         const userSkills = user.skills || [];
         const hasMatchingSkill = skillsFilter.some((skill) =>
@@ -189,7 +176,6 @@ export const HackathonUsersPage: FC = (): ReactElement => {
     });
   }, [usersResponse, statusFilter, skillsFilter]);
 
-  // Memoize columns to prevent recreation on every render
   const columns: ColumnDef<UserType>[] = useMemo(
     () => [
       {
@@ -197,7 +183,6 @@ export const HackathonUsersPage: FC = (): ReactElement => {
         header: 'User',
         cell: ({ row }) => (
           <div className="flex items-center gap-3">
-            {/* Avatar */}
             <div className="w-10 h-10 rounded-full bg-neutral-200 flex items-center justify-center overflow-hidden shrink-0">
               {row.original.avatar ? (
                 <img
@@ -209,7 +194,6 @@ export const HackathonUsersPage: FC = (): ReactElement => {
                 <UserOutlined className="text-neutral-500 text-lg" />
               )}
             </div>
-            {/* Name only */}
             <div className="min-w-0 flex-1">
               <p className="font-medium text-neutral-900 truncate">
                 {row.original.fullname}
@@ -318,17 +302,8 @@ export const HackathonUsersPage: FC = (): ReactElement => {
               <EditOutlined className="text-sm" />
               Manage
             </Button>
-            {/* <Button
-              variant="secondary"
-              size="sm"
-              className="text-sm px-4 py-2"
-              onClick={() => {
-                // Toggle user status - implement later
-                console.log(`Toggle status for ${row.original.fullname}`);
-              }}
-            >
-              {row.original.is_active ? 'Deactivate' : 'Activate'}
-            </Button> */}
+            {
+}
           </div>
         ),
         enableSorting: false,
@@ -342,12 +317,9 @@ export const HackathonUsersPage: FC = (): ReactElement => {
       <h1 className="mb-8 text-p1 font-semibold text-neutral-700">
         User Management
       </h1>
-      {/* Filters and actions */}
       <section className="bg-white rounded-md shadow p-8 flex flex-col gap-6">
         <div className="flex flex-wrap gap-3 items-center justify-between">
-          {/* Left side - Search & filters */}
           <div className="flex flex-wrap gap-3 items-center">
-            {/* Search bar */}
             <div className="relative">
               <SearchOutlined className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 text-sm" />
               <input
@@ -360,7 +332,6 @@ export const HackathonUsersPage: FC = (): ReactElement => {
               />
             </div>
 
-            {/* Per Page Dropdown */}
             <div className="relative">
               <select
                 className="border border-neutral-200 rounded-lg px-4 py-2.5 text-sm w-28 focus:border-primary-500 focus:outline-none appearance-none bg-white cursor-pointer"
@@ -376,70 +347,19 @@ export const HackathonUsersPage: FC = (): ReactElement => {
               </select>
             </div>
 
-            {/* Status Filter */}
-            {/* <div className="relative">
-              <FilterOutlined className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 text-sm pointer-events-none z-10" />
-              <select
-                className="border border-neutral-200 rounded-lg pl-10 pr-10 py-2.5 text-sm w-full sm:w-36 focus:border-primary-500 focus:outline-none appearance-none bg-white cursor-pointer"
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-              >
-                <option value="all">All Status</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-              </select>
-            </div> */}
+            {}
+            {
+}
 
-            {/* City Filter */}
-            {/* <CityFilterSelect
-              value={cityFilter}
-              onChange={setCityFilter}
-              className="w-full sm:w-44"
-              placeholder="Search cities..."
-              allOptionLabel="All Cities"
-            />
-            {cityFilter !== 'all' && (
-              <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 rounded-2xl text-sm">
-                Location: {cityFilter}
-                <button
-                  onClick={() => setCityFilter('all')}
-                  className="text-green-600 hover:text-green-800 cursor-pointer"
-                >
-                  ✕
-                </button>
-              </span>
-            )} */}
+            {}
+            {
+}
 
-            {/* Skills Filter with Icon */}
-            {/* <div className="relative">
-              <FilterOutlined className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 text-sm pointer-events-none z-10" />
-              <select
-                className="border border-neutral-200 rounded-lg pl-10 pr-10 py-2.5 text-sm w-full sm:w-44 focus:border-primary-500 focus:outline-none appearance-none bg-white cursor-pointer"
-                value=""
-                onChange={(e) => {
-                  if (
-                    e.target.value &&
-                    !skillsFilter.includes(e.target.value)
-                  ) {
-                    setSkillsFilter((prev) => [...prev, e.target.value]);
-                  }
-                }}
-              >
-                <option value="">Add Skill Filter</option>
-                {skillsOptions.map((skill) => (
-                  <option
-                    key={skill}
-                    value={skill}
-                    disabled={skillsFilter.includes(skill)}
-                  >
-                    {skill}
-                  </option>
-                ))}
-              </select>
-            </div> */}
+            {}
+            {
+}
           </div>
 
-          {/* Right side - Add User Button */}
           <div className="flex items-center gap-3">
             <Button
               variant="primary"
@@ -453,14 +373,12 @@ export const HackathonUsersPage: FC = (): ReactElement => {
           </div>
         </div>
 
-        {/* Active filters display */}
         {(skillsFilter.length > 0 ||
           statusFilter !== 'all' ||
           cityFilter !== 'all') && (
           <div className="flex flex-wrap gap-2 items-center">
             <span className="text-sm text-neutral-600">Active filters:</span>
 
-            {/* Status filter badge */}
             {statusFilter !== 'all' && (
               <span className="inline-flex items-center gap-1 px-2 py-1 bg-info-100 text-info-800 rounded-2xl text-sm">
                 Status: {statusFilter}
@@ -473,7 +391,6 @@ export const HackathonUsersPage: FC = (): ReactElement => {
               </span>
             )}
 
-            {/* Location filter badge */}
             {cityFilter !== 'all' && (
               <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 rounded-2xl text-sm">
                 City: {cityFilter}
@@ -486,7 +403,6 @@ export const HackathonUsersPage: FC = (): ReactElement => {
               </span>
             )}
 
-            {/* Skills filter badges */}
             {skillsFilter.map((skill) => (
               <span
                 key={skill}
@@ -504,7 +420,6 @@ export const HackathonUsersPage: FC = (): ReactElement => {
               </span>
             ))}
 
-            {/* Clear all filters */}
             <Button
               variant="secondary"
               size="sm"
@@ -521,7 +436,6 @@ export const HackathonUsersPage: FC = (): ReactElement => {
           </div>
         )}
 
-        {/* Loading & results display */}
         {isLoading ? (
           <div className="flex items-center justify-center py-12">
             <LoadingOutlined className="text-3xl text-primary-500 animate-spin" />
@@ -553,18 +467,16 @@ export const HackathonUsersPage: FC = (): ReactElement => {
         )}
       </section>
 
-      {/* Modals component */}
       <ModalUserDetail
         isOpen={showDetailModal}
         onClose={handleCloseDetailModal}
         user={selectedUser}
       />
 
-      {/* New User Modal */}
       <ModalUserDetail
         isOpen={showNewUserModal}
         onClose={handleCloseNewUserModal}
-        user={null} // null indicates creating new user
+        user={null}
       />
     </BackofficeWrapper>
   );

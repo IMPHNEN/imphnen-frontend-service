@@ -2,9 +2,9 @@ import { useForm } from 'react-hook-form';
 import {
   TVerifyOtpRequest,
   verifyEmailSchema,
+  usePostVerifyEmail,
 } from '@imphnen-frontend-service/service';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useOtp } from '@imphnen-frontend-service/utils';
 
 export const useOtpHook = () => {
   const form = useForm<TVerifyOtpRequest>({
@@ -12,9 +12,9 @@ export const useOtpHook = () => {
     mode: 'all',
   });
 
-  const { otp, isLoading } = useOtp();
+  const { mutate, isPending: isLoading } = usePostVerifyEmail();
 
-  const onSubmit = form.handleSubmit((data) => otp(data));
+  const onSubmit = form.handleSubmit(() => mutate());
 
   return {
     form,

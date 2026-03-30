@@ -31,7 +31,6 @@ export default function UsersPage() {
 
   const handleUpdateRole = async (userId: string, currentRole: string) => {
     if (editingUserId === userId) {
-      // Save the role
       try {
         await userService.updateUserRole(userId, selectedRole);
         setEditingUserId(null);
@@ -42,7 +41,6 @@ export default function UsersPage() {
         alert('Failed to update user role');
       }
     } else {
-      // Start editing
       setEditingUserId(userId);
       setSelectedRole(currentRole);
     }

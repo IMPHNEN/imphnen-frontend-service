@@ -147,7 +147,6 @@ export const Components: FC = (): ReactElement => {
             </section>
           </div>
 
-          {/* Right-side illustration */}
           <img
             src="gacha.webp"
             alt=""
@@ -156,7 +155,6 @@ export const Components: FC = (): ReactElement => {
         </div>
       </main>
 
-      {/* Modal Add Item */}
       <ModalAddItem
         currentStep={currentStep}
         isOpen={showModalAddItem}
@@ -166,7 +164,6 @@ export const Components: FC = (): ReactElement => {
         resetStep={resetStep}
       />
 
-      {/* Modal Edit Item */}
       <ModalEditItem
         currentStep={currentStep}
         isOpen={showModalEditItem}
@@ -176,7 +173,6 @@ export const Components: FC = (): ReactElement => {
         resetStep={resetStep}
       />
 
-      {/* Modal Delete Item */}
       <ModalDeleteItem
         isOpen={showModalDeleteItem}
         onClose={() => setShowModalDeleteItem(false)}

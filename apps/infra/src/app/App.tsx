@@ -24,7 +24,7 @@ const techStack = [
 export default function App() {
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
-      {/* Header */}
+
       <header className="border-b border-zinc-800 bg-[#0a0a0a]/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
@@ -47,7 +47,7 @@ export default function App() {
       </header>
 
       <main className="container mx-auto px-6 py-12">
-        {/* Hero */}
+
         <section className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             Infrastructure Overview
@@ -58,33 +58,29 @@ export default function App() {
           </p>
         </section>
 
-        {/* Architecture Diagram */}
         <section className="mb-16">
           <h2 className="text-2xl font-semibold mb-6">Architecture</h2>
           <div className="card bg-[#141414] border-zinc-800 p-8">
             <div className="flex flex-col items-center gap-6">
-              {/* Internet */}
+
               <div className="flex items-center gap-2 text-zinc-400">
                 <span className="text-2xl">🌐</span>
                 <span>Internet</span>
               </div>
               <div className="w-px h-8 bg-zinc-700" />
 
-              {/* Cloudflare */}
               <div className="card bg-orange-500/10 border-orange-500/30 px-6 py-3">
                 <span className="badge badge-orange">Cloudflare</span>
                 <p className="text-sm text-zinc-400 mt-1">DNS + CDN + DDoS Protection</p>
               </div>
               <div className="w-px h-8 bg-zinc-700" />
 
-              {/* Hetzner VPS */}
               <div className="card bg-[#1a1a1a] border-zinc-700 w-full max-w-3xl">
                 <div className="text-center mb-4">
                   <span className="badge badge-purple">Hetzner Cloud VPS</span>
                   <p className="text-sm text-zinc-400 mt-1">NixOS | 167.235.70.37</p>
                 </div>
 
-                {/* Nginx */}
                 <div className="card bg-green-500/10 border-green-500/30 mb-4">
                   <div className="text-center">
                     <span className="badge badge-green">Nginx</span>
@@ -92,7 +88,6 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Apps Grid */}
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   {apps.map((app) => (
                     <div
@@ -112,7 +107,6 @@ export default function App() {
           </div>
         </section>
 
-        {/* Deployed Apps */}
         <section className="mb-16">
           <h2 className="text-2xl font-semibold mb-6">Deployed Applications</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -138,7 +132,6 @@ export default function App() {
           </div>
         </section>
 
-        {/* Tech Stack */}
         <section className="mb-16">
           <h2 className="text-2xl font-semibold mb-6">Technology Stack</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -159,7 +152,6 @@ export default function App() {
           </div>
         </section>
 
-        {/* Deployment Flow */}
         <section className="mb-16">
           <h2 className="text-2xl font-semibold mb-6">Deployment Flow</h2>
           <div className="card bg-[#141414] border-zinc-800">
@@ -207,7 +199,6 @@ export default function App() {
           </div>
         </section>
 
-        {/* Repositories */}
         <section>
           <h2 className="text-2xl font-semibold mb-6">Repositories</h2>
           <div className="grid md:grid-cols-2 gap-4">
@@ -237,7 +228,6 @@ export default function App() {
         </section>
       </main>
 
-      {/* Footer */}
       <footer className="border-t border-zinc-800 mt-16">
         <div className="container mx-auto px-6 py-8 text-center text-zinc-500 text-sm">
           <p>IMPHNEN Infrastructure &copy; {new Date().getFullYear()}</p>

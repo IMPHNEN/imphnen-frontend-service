@@ -61,7 +61,7 @@ const SubmissionViewPage: FC = (): ReactElement => {
       </div>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Status Banner */}
+
         {submission.status === 'submitted' ? (
           <div className="bg-green-50 dark:bg-green-900/20 border border-green-500 rounded-lg p-6 mb-6">
             <div className="flex items-center space-x-3">
@@ -103,7 +103,6 @@ const SubmissionViewPage: FC = (): ReactElement => {
           </div>
         )}
 
-        {/* Certificate Banner - Only show when submission is submitted */}
         {submission.status === 'submitted' && (
           <div className="bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-400 dark:border-amber-500 rounded-lg p-6 mb-6">
             <div className="flex items-center justify-between flex-wrap gap-4">
@@ -136,15 +135,14 @@ const SubmissionViewPage: FC = (): ReactElement => {
         )}
 
         <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md dark:shadow-gray-950/50 overflow-hidden">
-          {/* Project Header */}
+
           <div className="bg-linear-to-r from-blue-600 to-blue-800 text-white p-8">
             <h2 className="text-3xl font-bold mb-2">{submission.project_name}</h2>
             <p className="text-blue-100">Team: {team?.name}</p>
           </div>
 
-          {/* Project Details */}
           <div className="p-8 space-y-6">
-            {/* Description */}
+
             <div>
               <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">Project Description</h3>
               <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
@@ -152,9 +150,8 @@ const SubmissionViewPage: FC = (): ReactElement => {
               </div>
             </div>
 
-            {/* Links */}
             <div className="grid gap-6 md:grid-cols-2">
-              {/* Repository */}
+
               <div>
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">Repository</h3>
                 <a
@@ -168,7 +165,6 @@ const SubmissionViewPage: FC = (): ReactElement => {
                 </a>
               </div>
 
-              {/* Demo URL */}
               {submission.demo_url && (
                 <div>
                   <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">Live Demo</h3>
@@ -186,7 +182,6 @@ const SubmissionViewPage: FC = (): ReactElement => {
 
             </div>
 
-            {/* Screenshots */}
             {submission.screenshots && submission.screenshots.length > 0 && (
               <div>
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">
@@ -212,7 +207,6 @@ const SubmissionViewPage: FC = (): ReactElement => {
               </div>
             )}
 
-            {/* Submission Info */}
             <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 border-t-4 border-blue-600 dark:border-primary-500">
               <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-2">Submission Information</h3>
               <div className="grid gap-2 text-sm">
@@ -245,7 +239,6 @@ const SubmissionViewPage: FC = (): ReactElement => {
               </div>
             </div>
 
-            {/* Read-only Notice */}
             <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
               <p className="text-sm text-yellow-800 dark:text-yellow-200">
                 <strong>Note:</strong> This submission is now locked and cannot be edited or deleted.

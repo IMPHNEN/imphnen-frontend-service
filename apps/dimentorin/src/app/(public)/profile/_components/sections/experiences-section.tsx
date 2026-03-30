@@ -17,7 +17,7 @@ interface ExperiencesSectionProps {
   onSave: (newExperiences: Experience[]) => Promise<void>;
   showNotification: (type: NotificationType['type'], title: string, message?: string) => void;
   isLoading?: boolean;
-  isViewOnly?: boolean; // Add isViewOnly prop
+  isViewOnly?: boolean;
 }
 
 export const ExperiencesSection: FC<ExperiencesSectionProps> = ({
@@ -25,7 +25,7 @@ export const ExperiencesSection: FC<ExperiencesSectionProps> = ({
   onSave,
   showNotification,
   isLoading = false,
-  isViewOnly = false, // Default to false
+  isViewOnly = false,
 }) => {
   const [isExperienceModalOpen, setIsExperienceModalOpen] = useState(false);
   const [experiences, setExperiences] = useState<Experience[]>(initialExperiences);
@@ -36,7 +36,7 @@ export const ExperiencesSection: FC<ExperiencesSectionProps> = ({
   }, [initialExperiences]);
 
   const handleSave = async (newExperiences: Experience[]) => {
-    if (isViewOnly) return; // Prevent save if in view-only mode
+    if (isViewOnly) return;
     await onSave(newExperiences);
   };
 
@@ -44,7 +44,7 @@ export const ExperiencesSection: FC<ExperiencesSectionProps> = ({
     <SectionWrapper
       title="Experiences"
       editButton={
-        !isViewOnly ? ( // Conditionally render the edit button
+        !isViewOnly ? (
           <div className="flex gap-2">
             <EditSectionButton
               onClick={() => setIsExperienceModalOpen(true)}
@@ -73,7 +73,7 @@ export const ExperiencesSection: FC<ExperiencesSectionProps> = ({
       </div>
 
       <ExperienceModal
-        isOpen={isExperienceModalOpen && !isViewOnly} // Only open if not in view-only mode
+        isOpen={isExperienceModalOpen && !isViewOnly}
         onClose={() => setIsExperienceModalOpen(false)}
         initialValue={experiences}
         onSave={handleSave}

@@ -44,12 +44,9 @@ async function deriveKeyFromPassphrase(passphrase: string, salt: Uint8Array, ite
   );
 }
 
-/**
- * Encrypts plaintext with passphrase -> returns base64(salt||iv||ciphertext)
- */
 export async function encryptText(plaintext: string, passphrase: string) {
-  const salt = randBytes(16); // 128-bit salt
-  const iv = randBytes(12);   // 96-bit IV recommended for GCM
+  const salt = randBytes(16);
+  const iv = randBytes(12);
   const key = await deriveKeyFromPassphrase(passphrase, salt);
 
   const cipher = await crypto.subtle.encrypt(
@@ -58,7 +55,6 @@ export async function encryptText(plaintext: string, passphrase: string) {
     enc.encode(plaintext)
   );
 
-  // concat salt + iv + ciphertext
   const out = new Uint8Array(salt.length + iv.length + cipher.byteLength);
   out.set(salt, 0);
   out.set(iv, salt.length);
@@ -67,9 +63,6 @@ export async function encryptText(plaintext: string, passphrase: string) {
   return bufToBase64(out.buffer);
 }
 
-/**
- * Decrypts base64(salt||iv||ciphertext) with passphrase -> plaintext
- */
 export async function decryptText(b64combined: string, passphrase: string) {
   const combined = new Uint8Array(base64ToBuf(b64combined));
   const salt = combined.slice(0, 16);

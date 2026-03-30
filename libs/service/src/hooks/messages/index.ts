@@ -17,13 +17,11 @@ export type Message = {
   };
 };
 
-// Query keys
 export const messageKeys = {
   all: ['messages'] as const,
   team: (teamId: string) => [...messageKeys.all, 'team', teamId] as const,
 };
 
-// Fetch messages for a team with polling
 export const useTeamMessages = (teamId: string) => {
   return useQuery({
     queryKey: messageKeys.team(teamId),
@@ -34,14 +32,11 @@ export const useTeamMessages = (teamId: string) => {
       return response.data.data || [];
     },
     enabled: !!teamId,
-    // Poll every 3 seconds for new messages
     refetchInterval: 3000,
-    // Keep refetching even when window loses focus
     refetchIntervalInBackground: true,
   });
 };
 
-// Send a message
 export const useSendMessage = (teamId: string) => {
   const queryClient = useQueryClient();
   const { session } = useAuthStore();
@@ -60,13 +55,11 @@ export const useSendMessage = (teamId: string) => {
       return response.data.data;
     },
     onSuccess: () => {
-      // Invalidate to trigger immediate refetch
       queryClient.invalidateQueries({ queryKey: messageKeys.team(teamId) });
     },
   });
 };
 
-// Delete a message
 export const useDeleteMessage = (teamId: string) => {
   const queryClient = useQueryClient();
 

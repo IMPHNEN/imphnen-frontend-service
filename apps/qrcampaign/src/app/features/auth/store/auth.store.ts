@@ -73,7 +73,7 @@ export const useAuthStore = create<AuthState>()(
       setUser: (user) => set({ user }),
     }),
     {
-      name: 'auth-storage', // name of the item in the storage (must be unique)
+      name: 'auth-storage',
       partialize: (state) => ({ 
         user: state.user, 
         token: state.token, 

@@ -19,7 +19,8 @@ import {
 import { Button } from '../../atoms';
 import { FC, ReactElement, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { cn, For, useSession } from '@imphnen-frontend-service/utils';
+import { cn, For } from '@imphnen-frontend-service/utils';
+import { useSession } from '@imphnen-frontend-service/service';
 
 type MenuItem = {
   label: string;
@@ -274,20 +275,16 @@ export const BackofficeSidebar: FC<SidebarProps> = ({
 
   return (
     <>
-      {/* Desktop Sidebar - visible on lg+, sticky */}
       <div className="hidden lg:block sticky top-0 h-screen overflow-y-auto shadow">
         {sidebarContent}
       </div>
 
-      {/* Mobile Sidebar - overlay */}
       {isOpen && (
         <div className="lg:hidden fixed inset-0 z-50">
-          {/* Backdrop */}
           <div
             className="fixed inset-0 bg-black/50 transition-opacity"
             onClick={onClose}
           />
-          {/* Sidebar */}
           <div className="fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-in-out">
             {sidebarContent}
           </div>

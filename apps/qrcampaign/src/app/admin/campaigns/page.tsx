@@ -221,7 +221,6 @@ export default function CampaignsPage() {
         <DataTable data={campaigns} columns={columns} pageSize={10} />
       )}
 
-      {/* Create Campaign Modal */}
       {showCreateModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md">

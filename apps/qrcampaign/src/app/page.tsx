@@ -11,7 +11,7 @@ export default function HomePage() {
 
   const handleImageDropped = (file: File) => {
     setImageFile(file);
-    setGeneratedImage(null); // Reset previous result
+    setGeneratedImage(null);
     toast.success('Image selected ready for generation!');
   };
 

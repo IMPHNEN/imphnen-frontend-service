@@ -2,7 +2,8 @@ import { MenuOutlined } from '@ant-design/icons';
 import { FC, ReactElement, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../../atoms/button';
-import { useModalLogin, useSession } from '@imphnen-frontend-service/utils';
+import { useModalLogin } from '@imphnen-frontend-service/utils';
+import { useSession } from '@imphnen-frontend-service/service';
 
 export const Navbar: FC = (): ReactElement => {
   const { session, signOut, isAuthenticated } = useSession();

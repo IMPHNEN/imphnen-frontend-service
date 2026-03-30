@@ -3,9 +3,6 @@ import { useForm } from 'react-hook-form';
 import { useAuthStore } from '../store/auth.store';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-// Reusing UI components logic or standard HTML for now to keep it simple and dependency-free if UI lib issues arise
-// But user mentioned shared UI libs, let's try to use standard Tailwind first to ensure speed.
-
 interface LoginFormInputs {
   email: string;
   pass: string;
@@ -33,11 +30,9 @@ export const LoginPage = () => {
   const onSubmit = async (data: LoginFormInputs) => {
     const success = await login(data.email, data.pass);
     if (success) {
-      // Get user from store to check role
       const user = useAuthStore.getState().user;
       const userRole = user?.role?.name;
 
-      // Redirect admin to admin dashboard
       if (userRole === 'Admin' || userRole === 'Super Admin') {
         navigate('/admin/campaigns', { replace: true });
       } else {

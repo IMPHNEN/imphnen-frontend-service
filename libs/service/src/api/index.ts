@@ -8,7 +8,6 @@ export * from './upload';
 export * from './hackathon';
 export * from './admin';
 
-// Common API response wrapper interface
 export interface ApiResponse<T> {
   data: T;
   version: string;
@@ -16,7 +15,6 @@ export interface ApiResponse<T> {
 
 const TOKEN_KEY = 'token';
 
-// Helper functions for session management (avoiding circular dependency)
 const getSessionTokenFromCookies = () => {
   if (typeof document === 'undefined') return null;
 
@@ -54,13 +52,25 @@ const removeSessionTokenFromCookies = () => {
   document.cookie = `${TOKEN_KEY}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
 };
 
+export const getBaseURL = () => {
+  if (typeof process !== 'undefined' && process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL;
+  }
+  try {
+    const meta = import.meta as unknown as Record<string, Record<string, string>>;
+    if (meta.env?.VITE_API_URL) return meta.env.VITE_API_URL;
+  } catch {
+    // not in Vite context
+  }
+  return '';
+};
+
 const config: AxiosRequestConfig = {
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: getBaseURL(),
 };
 
 export const api = axios.create(config);
 
-// Add request interceptor to include authentication token
 api.interceptors.request.use(
   (config) => {
     const sessionData = getSessionTokenFromCookies();
@@ -77,7 +87,6 @@ api.interceptors.request.use(
   }
 );
 
-// Add response interceptor to handle token refresh
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -88,7 +97,6 @@ api.interceptors.response.use(
       return handleTokenRefresh(originalRequest);
     }
 
-    // If backend sends a message, use it
     const backendMsg = error?.response?.data?.message;
     if (backendMsg && typeof backendMsg === 'string') {
       return Promise.reject(new Error(backendMsg));
@@ -98,7 +106,6 @@ api.interceptors.response.use(
   }
 );
 
-// Helper function to handle token refresh
 async function handleTokenRefresh(originalRequest: AxiosRequestConfig) {
   const sessionData = getSessionTokenFromCookies();
   const refreshToken = sessionData?.token?.refresh_token;
@@ -112,7 +119,6 @@ async function handleTokenRefresh(originalRequest: AxiosRequestConfig) {
     const response = await refreshAccessToken(refreshToken);
 
     if (response.data?.access_token) {
-      // Update session in cookies
       setSessionTokenToCookies({
         token: {
           access_token: response.data.access_token,
@@ -120,7 +126,6 @@ async function handleTokenRefresh(originalRequest: AxiosRequestConfig) {
         },
       });
 
-      // Retry original request with new token
       originalRequest.headers ??= {};
       originalRequest.headers.Authorization = `Bearer ${response.data.access_token}`;
       return api(originalRequest);
@@ -134,14 +139,12 @@ async function handleTokenRefresh(originalRequest: AxiosRequestConfig) {
   }
 }
 
-// Helper function to refresh access token
 async function refreshAccessToken(refreshToken: string) {
-  return axios.post(`${import.meta.env.VITE_API_URL}/auth/refresh`, {
+  return axios.post(`${getBaseURL()}/auth/refresh`, {
     refresh_token: refreshToken,
   });
 }
 
-// Helper function to clear session and redirect
 function clearSessionAndRedirect() {
   removeSessionTokenFromCookies();
   if (typeof window !== 'undefined') {

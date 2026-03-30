@@ -70,3 +70,6 @@ out
 # Nix
 .direnv
 result
+
+.claude/worktrees
+.claude/settings.local.json

@@ -18,56 +18,45 @@ const CallbackPage: FC = (): ReactElement => {
       hasRunRef.current = true;
 
       try {
-        // Check URL hash for Supabase email confirmation callback
         const hashParams = new URLSearchParams(globalThis.location.hash.substring(1));
         const urlParams = new URLSearchParams(globalThis.location.search);
 
         const type = hashParams.get('type') || urlParams.get('type');
         const accessToken = hashParams.get('access_token') || urlParams.get('access_token');
 
-        // Debug: log what we received
         console.log('[Callback] Params:', { type, accessToken: !!accessToken, hash: globalThis.location.hash, search: globalThis.location.search });
 
-        // Handle Supabase email callbacks (has access_token in hash or query)
-        // This includes: signup confirmation, email confirmation, password recovery
         if (accessToken) {
           setIsProcessing(false);
 
-          // Password recovery - type is 'recovery' or we have access_token from reset email
           if (type === 'recovery' || type === 'magiclink') {
             toast.success('Email verified! Please set your new password.');
             navigate('/auth/reset-password?access_token=' + accessToken);
             return;
           }
 
-          // Signup/Email confirmation
           if (type === 'signup' || type === 'email_confirmation') {
             toast.success('Email verified successfully! Please log in to continue.');
             navigate('/auth/login');
             return;
           }
 
-          // If we have access_token but unknown type, assume it's password recovery
-          // (Supabase sometimes sends without explicit type)
           toast.success('Email verified! Please set your new password.');
           navigate('/auth/reset-password?access_token=' + accessToken);
           return;
         }
 
-        // Get the code from URL query params (GitHub OAuth)
         const code = urlParams.get('code');
 
         if (!code) {
           throw new Error('No authorization code received');
         }
 
-        // Exchange the code for tokens using backend API (GitHub OAuth)
         const result = await exchangeGitHubCode({ code });
 
         toast.success('Login successful!');
         setIsProcessing(false);
 
-        // Check if user has completed onboarding (has location)
         if (result.user.location) {
           globalThis.location.replace('/dashboard');
         } else {
@@ -90,7 +79,6 @@ const CallbackPage: FC = (): ReactElement => {
   }, []);
 
   if (error) {
-    // Check if error is related to private email
     const isPrivateEmailError =
       error.toLowerCase().includes('failed to create user') ||
       error.toLowerCase().includes('email') ||

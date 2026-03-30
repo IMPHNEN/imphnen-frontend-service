@@ -23,10 +23,15 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@components": ["../../libs/shadcn-ui/src/atoms/index.ts"],
-      "@utils": ["../../libs/shadcn-ui/src/lib/index.ts"],
+      "@components": ["../../libs/ui/src/atoms/index.ts"],
+      "@utils": ["../../libs/utils/src/tailwind-merge/index.ts"],
       "@schemas": ["../../libs/service/src/schemas/index.ts"],
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@imphnen-frontend-service/service": ["../../libs/service/src/index.ts"],
+      "@imphnen-frontend-service/ui/atoms": ["../../libs/ui/src/atoms/index.ts"],
+      "@imphnen-frontend-service/ui/molecules": ["../../libs/ui/src/molecules/index.ts"],
+      "@imphnen-frontend-service/ui/organisms": ["../../libs/ui/src/organisms/index.ts"],
+      "@imphnen-frontend-service/utils": ["../../libs/utils/src/index.ts"]
     }
   },
   "include": [

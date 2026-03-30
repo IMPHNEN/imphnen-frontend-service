@@ -7,7 +7,6 @@ import type {
 
 const ADMIN_BASE_URL = '/admin';
 
-// Admin Users
 export const getAdminUsers = async (params?: {
   page?: number;
   per_page?: number;
@@ -26,7 +25,6 @@ export const getAdminUsers = async (params?: {
   return response.data;
 };
 
-// Admin Teams
 export const getAdminTeams = async (params?: {
   page?: number;
   per_page?: number;
@@ -39,7 +37,6 @@ export const getAdminTeams = async (params?: {
   return response.data;
 };
 
-// Admin Submissions
 export const getAdminSubmissions = async (params?: {
   page?: number;
   per_page?: number;

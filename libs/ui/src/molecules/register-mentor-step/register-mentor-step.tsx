@@ -16,13 +16,11 @@ export const RegisterMentorStep: FC<TRegisterMentorStep> = ({ step }): ReactElem
 
   return (
     <div className="relative w-full px-8">
-      {/* Garis dasar (abu/biru muda) */}
       <div className="absolute top-5 left-8 right-8 h-0.5 bg-blue-100 z-0" />
 
-      {/* Garis progress biru (dinamis) */}
       <div
         className="absolute top-5 left-8 h-0.5 bg-blue-500 z-0 transition-all duration-300"
-        style={{ width: `calc(${progressPercent}% - 0.5rem)` }} // -0.5rem agar tidak overlap ke lingkaran
+        style={{ width: `calc(${progressPercent}% - 0.5rem)` }}
       />
 
       <div className="flex justify-between relative z-10">
@@ -32,7 +30,6 @@ export const RegisterMentorStep: FC<TRegisterMentorStep> = ({ step }): ReactElem
 
           return (
             <div key={index} className="flex flex-col items-center flex-1 text-center">
-              {/* Lingkaran angka */}
               <div
                 className={`w-10 h-10 rounded-full flex items-center justify-center border-2 ${
                   isActive
@@ -42,7 +39,6 @@ export const RegisterMentorStep: FC<TRegisterMentorStep> = ({ step }): ReactElem
               >
                 <span className="font-bold">{currentStep}</span>
               </div>
-              {/* Label */}
               <span className="text-xs text-blue-600 mt-2 leading-tight">{label}</span>
             </div>
           );

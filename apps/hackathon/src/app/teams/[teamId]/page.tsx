@@ -17,10 +17,8 @@ import { Icon } from '@iconify/react';
 
 const MAX_TEAM_MEMBERS = 5;
 
-// Team features deadline: 2025-11-30 23:59:00 WIB (UTC+7)
 const TEAM_FEATURES_DEADLINE = new Date('2025-11-30T16:59:00Z');
 
-// Image component with loading state
 const ImageWithLoader: FC<{
   src: string;
   alt: string;
@@ -56,7 +54,6 @@ const TeamDashboardPage: FC = (): ReactElement => {
   const navigate = useNavigate();
   const { session } = useAuthStore();
 
-  // Check if team features are closed
   const isTeamFeaturesClosed = new Date() >= TEAM_FEATURES_DEADLINE;
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [showJoinRequestsModal, setShowJoinRequestsModal] = useState(false);
@@ -67,8 +64,7 @@ const TeamDashboardPage: FC = (): ReactElement => {
   const [imagesLoaded, setImagesLoaded] = useState(false);
   const [imageLoadCount, setImageLoadCount] = useState(0);
 
-  // Calculate total images to load (banner + logo + member avatars)
-  const totalImagesToLoad = 0; // Simplified - disable image loading overlay
+  const totalImagesToLoad = 0;
 
   const handleImageLoad = () => {
     setImageLoadCount((prev) => {
@@ -81,11 +77,9 @@ const TeamDashboardPage: FC = (): ReactElement => {
   };
 
   const handleImageError = () => {
-    // Treat error as loaded to not block the UI
     handleImageLoad();
   };
 
-  // Set images as loaded immediately since we disabled the loading overlay
   useEffect(() => {
     setImagesLoaded(true);
   }, []);
@@ -102,7 +96,6 @@ const TeamDashboardPage: FC = (): ReactElement => {
   const currentUserId = session?.user?.id;
   const isLeader = currentUserId === team?.leader_id;
 
-  // Only fetch join requests if user is the team leader
   const { data: joinRequestsData } = useTeamJoinRequests(
     teamId || '',
     !!teamId && isLeader
@@ -183,7 +176,6 @@ const TeamDashboardPage: FC = (): ReactElement => {
   if (isLoadingTeam || isLoadingMembers) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
-        {/* Skeleton Header */}
         <div className="bg-white dark:bg-gray-950 border-b">
           <div className="w-full h-48 bg-gray-200 dark:bg-gray-800 animate-pulse" />
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -202,7 +194,6 @@ const TeamDashboardPage: FC = (): ReactElement => {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="grid gap-6 lg:grid-cols-3">
-            {/* Main Content Skeleton */}
             <div className="lg:col-span-2 space-y-6">
               <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-6">
                 <div className="h-6 w-32 bg-gray-300 dark:bg-gray-700 rounded animate-pulse mb-4" />
@@ -214,7 +205,6 @@ const TeamDashboardPage: FC = (): ReactElement => {
               </div>
             </div>
 
-            {/* Sidebar Skeleton */}
             <div className="space-y-6">
               <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-6">
                 <div className="h-6 w-40 bg-gray-300 dark:bg-gray-700 rounded animate-pulse mb-4" />
@@ -234,7 +224,6 @@ const TeamDashboardPage: FC = (): ReactElement => {
           </div>
         </div>
 
-        {/* Loading Overlay */}
         <div className="fixed inset-0 bg-white/60 dark:bg-black/50 flex items-center justify-center z-50">
           <div className="text-center">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent"></div>
@@ -262,7 +251,6 @@ const TeamDashboardPage: FC = (): ReactElement => {
 
   return (
     <div className="min-h-screen bg-gray-50 relative dark:bg-gray-950">
-      {/* Loading overlay while images are loading */}
       {!imagesLoaded && totalImagesToLoad > 0 && (
         <div className="fixed inset-0 bg-white/80 flex items-center justify-center z-50">
           <div className="text-center">
@@ -275,7 +263,6 @@ const TeamDashboardPage: FC = (): ReactElement => {
         </div>
       )}
 
-      {/* Header with Banner */}
       <div className="bg-white dark:bg-gray-900 border-b dark:border-gray-700">
         {team.banner && (
           <div className="relative w-full aspect-3/1 overflow-hidden">
@@ -356,9 +343,7 @@ const TeamDashboardPage: FC = (): ReactElement => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8">
         <div className="grid gap-4 md:gap-6 xl:grid-cols-3">
-          {/* Main Content */}
           <div className="lg:col-span-2 space-y-4 md:space-y-6">
-            {/* Team Description */}
             <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 md:p-6">
               <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
                 About Team
@@ -368,14 +353,12 @@ const TeamDashboardPage: FC = (): ReactElement => {
               </p>
             </div>
 
-            {/* Team Actions - Only for Leader */}
             {isLeader && (
               <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 md:p-6">
                 <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
                   Team Management
                 </h2>
                 <div className="grid gap-3 sm:grid-cols-2">
-                  {/* Hide invite/join management after submission or deadline */}
                   {!team.has_submission && !isTeamFeaturesClosed && (
                     <>
                       <Button
@@ -447,7 +430,6 @@ const TeamDashboardPage: FC = (): ReactElement => {
                     Maximum team size reached ({MAX_TEAM_MEMBERS} members)
                   </p>
                 )}
-                {/* Danger Zone - Only show when leader is alone, no submission, and features not closed */}
                 {members.length === 1 && !team.has_submission && !isTeamFeaturesClosed && (
                   <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
                     <h3 className="text-sm font-medium text-red-600 dark:text-red-400 mb-3">
@@ -465,7 +447,6 @@ const TeamDashboardPage: FC = (): ReactElement => {
               </div>
             )}
 
-            {/* Quick Actions for Members (non-leaders) */}
             {!isLeader && isMember && (
               <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 md:p-6">
                 <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
@@ -499,7 +480,6 @@ const TeamDashboardPage: FC = (): ReactElement => {
               </div>
             )}
 
-            {/* Warning for single member teams */}
             {members.length === 1 && !team.has_submission && isMember && (
               <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4 md:p-6">
                 <div className="flex items-center space-x-3">
@@ -516,7 +496,6 @@ const TeamDashboardPage: FC = (): ReactElement => {
               </div>
             )}
 
-            {/* Submission Status - Only show to members */}
             {team.has_submission && isMember && (
               <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 md:p-6">
                 <div className="flex items-center space-x-3">
@@ -539,9 +518,7 @@ const TeamDashboardPage: FC = (): ReactElement => {
             )}
           </div>
 
-          {/* Sidebar */}
           <div className="space-y-4 md:space-y-6">
-            {/* Team Leader */}
             <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 md:p-6">
               <h3 className="text-base md:text-lg font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
                 Team Leader
@@ -576,7 +553,6 @@ const TeamDashboardPage: FC = (): ReactElement => {
               )}
             </div>
 
-            {/* Team Members */}
             <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 md:p-6">
               <h3 className="text-base md:text-lg font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
                 Members ({members.length})
@@ -621,7 +597,6 @@ const TeamDashboardPage: FC = (): ReactElement => {
         </div>
       </div>
 
-      {/* Invite Member Modal */}
       {showInviteModal && (
         <div className="fixed inset-0 bg-black/20 dark:bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white dark:bg-gray-900 rounded-lg shadow-xl max-w-md w-full p-6">
@@ -684,7 +659,6 @@ const TeamDashboardPage: FC = (): ReactElement => {
         </div>
       )}
 
-      {/* Join Requests Modal */}
       {showJoinRequestsModal && (
         <div className="fixed inset-0 bg-black/30 dark:bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white dark:bg-gray-900 rounded-lg shadow-xl max-w-2xl w-full p-6 max-h-[80vh] overflow-y-auto">
@@ -797,7 +771,6 @@ const TeamDashboardPage: FC = (): ReactElement => {
         </div>
       )}
 
-      {/* Leave Team Confirmation Modal */}
       {showLeaveModal && (
         <div className="fixed inset-0 bg-black/30 dark:bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white dark:bg-gray-900 rounded-lg shadow-xl max-w-md w-full p-6">
@@ -841,7 +814,6 @@ const TeamDashboardPage: FC = (): ReactElement => {
         </div>
       )}
 
-      {/* Delete Team Confirmation Modal */}
       {showDeleteModal && (
         <div className="fixed inset-0 bg-black/30 dark:bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white dark:bg-gray-900 rounded-lg shadow-xl max-w-md w-full p-6">

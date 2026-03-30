@@ -1,9 +1,7 @@
 import axios from 'axios';
 
-// Define the base URL for the API
 const API_URL = 'https://api-qr.imphnen.dev/api/v1';
 
-// Create a configured axios instance
 export const api = axios.create({
   baseURL: API_URL,
   headers: {
@@ -11,7 +9,6 @@ export const api = axios.create({
   },
 });
 
-// Add interceptor to add token to requests
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -23,7 +20,6 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Types
 export interface LoginRequest {
   email: string;
   password: string;
@@ -35,7 +31,6 @@ export interface RegisterRequest {
   password: string;
 }
 
-// Backend user response
 interface BackendUser {
   id: string;
   email: string;
@@ -46,7 +41,6 @@ interface BackendUser {
   updated_at: string;
 }
 
-// Frontend user type
 export interface User {
   id: string;
   email: string;
@@ -58,7 +52,6 @@ export interface User {
   };
 }
 
-// Backend auth response
 interface BackendAuthResponse {
   success: boolean;
   message: string;
@@ -83,7 +76,6 @@ export interface AuthResponse {
   };
 }
 
-// Helper to transform backend user to frontend user
 const transformUser = (backendUser: BackendUser): User => {
   return {
     id: backendUser.id,

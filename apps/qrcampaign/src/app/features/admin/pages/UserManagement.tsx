@@ -13,7 +13,6 @@ interface User {
 export const UserManagement = () => {
   const queryClient = useQueryClient();
 
-  // Fetch Users
   const {
     data: users,
     isLoading,
@@ -26,7 +25,6 @@ export const UserManagement = () => {
     },
   });
 
-  // Update Role
   const updateRoleMutation = useMutation({
     mutationFn: async ({ id, role }: { id: string; role: string }) => {
       await axios.put(`http://localhost:8080/api/v1/users/${id}/role`, {
@@ -40,7 +38,6 @@ export const UserManagement = () => {
     onError: () => toast.error('Failed to update user role'),
   });
 
-  // Delete User
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
       await axios.delete(`http://localhost:8080/api/v1/users/${id}`);
@@ -87,7 +84,7 @@ export const UserManagement = () => {
                         role: e.target.value,
                       })
                     }
-                    disabled={user.email === 'admin@demo.com'} // Prevent changing main admin role for safety in demo
+                    disabled={user.email === 'admin@demo.com'}
                     className="bg-transparent border border-slate-300 rounded text-sm px-2 py-1 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="user">User</option>

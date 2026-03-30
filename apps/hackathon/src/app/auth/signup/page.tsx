@@ -32,13 +32,11 @@ const signupSchema = z
 
 type SignupFormData = z.infer<typeof signupSchema>;
 
-// Registration deadline: 2025-11-30 23:29:00 WIB (UTC+7)
 const REGISTRATION_DEADLINE = new Date('2025-11-30T16:29:00Z');
 
 export default function SignupPage() {
   const navigate = useNavigate();
 
-  // Check if registration is closed
   const isRegistrationClosed = new Date() >= REGISTRATION_DEADLINE;
   const { signInWithGitHub } = useGitHubAuth();
   const signupMutation = useSignup();
@@ -76,7 +74,6 @@ export default function SignupPage() {
     }
   };
 
-  // Show closed registration screen
   if (isRegistrationClosed) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-gray-50 dark:bg-gray-950 p-4">
@@ -119,7 +116,6 @@ export default function SignupPage() {
     );
   }
 
-  // Show success screen after registration
   if (registrationSuccess) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-gray-50 dark:bg-gray-950 p-4">

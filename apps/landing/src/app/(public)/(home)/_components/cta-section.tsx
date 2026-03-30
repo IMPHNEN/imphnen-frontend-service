@@ -11,7 +11,7 @@ export function CTASection() {
 
   return (
     <section className="w-full py-20 md:py-32 bg-gradient-to-br from-primary-500 to-primary-600 relative overflow-hidden">
-      {/* Background pattern */}
+
       <div
         className="absolute inset-0 opacity-10"
         style={{
@@ -21,7 +21,7 @@ export function CTASection() {
 
       <div className="container relative" ref={ref}>
         <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
-          {/* Text Content */}
+
           <div className="flex-1 text-center lg:text-left space-y-8">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -65,7 +65,6 @@ export function CTASection() {
             </motion.div>
           </div>
 
-          {/* Illustration */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}

@@ -77,7 +77,7 @@ export const Footer: FC = () => {
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
       >
-        {/* Mascot */}
+
         <motion.div
           className="hidden absolute bottom-0 right-0 size-40 md:block lg:size-72"
           variants={mascotVariants}

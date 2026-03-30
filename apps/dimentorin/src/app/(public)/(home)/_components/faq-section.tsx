@@ -39,7 +39,7 @@ export const FAQSection: FC = () => {
 
   return (
     <section ref={ref} className="relative mx-auto py-4 px-8 overflow-x-clip md:py-8 md:px-[60px] lg:px-20 md:pb-8">
-      {/* Background shapes */}
+
       <div className="absolute inset-0">
         <motion.div
           initial={{ scale: 0 }}

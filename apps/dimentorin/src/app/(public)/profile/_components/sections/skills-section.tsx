@@ -14,7 +14,7 @@ interface SkillsSectionProps {
   onSave: (newSkills: string[]) => Promise<void>;
   showNotification: (type: NotificationType['type'], title: string, message?: string) => void;
   isLoading?: boolean;
-  isViewOnly?: boolean; // Add isViewOnly prop
+  isViewOnly?: boolean;
 }
 
 export const SkillsSection: FC<SkillsSectionProps> = ({
@@ -22,18 +22,17 @@ export const SkillsSection: FC<SkillsSectionProps> = ({
   onSave,
   showNotification,
   isLoading = false,
-  isViewOnly = false, // Default to false
+  isViewOnly = false,
 }) => {
   const [isSkillsModalOpen, setIsSkillsModalOpen] = useState(false);
   const [skills, setSkills] = useState<string[]>(initialSkills);
-
 
   useEffect(() => {
     setSkills(initialSkills);
   }, [initialSkills]);
 
   const handleSave = async (newSkills: Skill[]) => {
-    if (isViewOnly) return; // Prevent save if in view-only mode
+    if (isViewOnly) return;
     const stringSkills = newSkills.map(skill => skill.name);
 
     await onSave(stringSkills);
@@ -43,7 +42,7 @@ export const SkillsSection: FC<SkillsSectionProps> = ({
     <SectionWrapper
       title="Skills"
       editButton={
-        !isViewOnly ? ( // Conditionally render the edit button
+        !isViewOnly ? (
           <EditSectionButton
             onClick={() => setIsSkillsModalOpen(true)}
             disabled={isLoading}
@@ -64,7 +63,7 @@ export const SkillsSection: FC<SkillsSectionProps> = ({
       </div>
 
       <SkillsModal
-        isOpen={isSkillsModalOpen && !isViewOnly} // Only open if not in view-only mode
+        isOpen={isSkillsModalOpen && !isViewOnly}
         onClose={() => setIsSkillsModalOpen(false)}
         initialValue={skills.map(skill => ({ id: skill, name: skill }))}
         onSave={handleSave}

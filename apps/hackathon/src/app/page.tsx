@@ -67,7 +67,7 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen bg-white dark:bg-gray-950">
-      {/* Navigation */}
+
       <div id="#top" className="hidden"></div>
       <nav className="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 sticky top-0 z-50">
         <div className="flex items-center justify-between max-w-7xl mx-auto px-4 md:px-8 py-4">
@@ -82,7 +82,7 @@ export default function HomePage() {
               Hackathon
             </a>
           </div>
-          {/* Desktop Menu */}
+
           <div className="hidden md:flex text-label1 items-center gap-4 lg:gap-8">
             <a
               href="#timeline"
@@ -131,7 +131,7 @@ export default function HomePage() {
               </>
             )}
           </div>
-          {/* Mobile Menu Button */}
+
           <div className="flex items-center gap-2 md:hidden">
             <ThemeToggle />
             <button
@@ -156,7 +156,6 @@ export default function HomePage() {
         </div>
       </nav>
 
-      {/* Mobile Menu */}
       {mobileMenuOpen && (
         <nav className="md:hidden sticky top-18 border-b border-gray-200 dark:border-gray-800 bg-white z-40 dark:bg-gray-900">
           <div className="flex flex-col items-start gap-4 px-4 py-4">
@@ -205,7 +204,6 @@ export default function HomePage() {
         </nav>
       )}
 
-      {/* Hero Section */}
       <section className="relative w-full overflow-hidden py-20">
         <div className="absolute inset-0 overflow-hidden">
           <div
@@ -219,7 +217,7 @@ export default function HomePage() {
           <div className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.05)_1px,transparent_1px),linear-gradient(to_right,rgba(59,130,246,0.05)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(59,130,246,0.1)_1px,transparent_1px),linear-gradient(to_right,rgba(59,130,246,0.1)_1px,transparent_1px)] bg-size-[40px_40px]"></div>
         </div>
         <div className="mx-auto container px-4 relative flex flex-col items-center">
-          {/* Logos */}
+
           <div className="flex items-center gap-4 md:gap-8 lg:gap-12 mb-8 md:mb-12 lg:mb-16 flex-wrap justify-center">
             <div className="flex items-center">
               <img
@@ -239,20 +237,20 @@ export default function HomePage() {
               />
             </div>
           </div>
-          {/* Title */}
+
           <h1 className="text-h1 font-bold text-gray-900 dark:text-white mb-4 text-center">
             Hackathon
           </h1>
-          {/* Subtitle */}
+
           <p className="text-p1 text-primary-500 font-semibold mb-6 md:mb-8 text-center px-4">
             "Inovasi AI: Mendorong Usaha Lokal dengan AI Inklusif"
           </p>
-          {/* Description */}
+
           <p className="text-p3 text-gray-600 dark:text-gray-200 max-w-lg md:max-w-xl text-center mb-8 md:mb-12 px-4 font-sans">
             Kompetisi pengembangan teknologi untuk menciptakan solusi inovatif
             yang menghadirkan dampak nyata
           </p>
-          {/* Status */}
+
           <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8 mb-10 md:mb-16 text-base text-gray-600 dark:text-gray-200">
             <div className="flex items-center gap-2 md:gap-3">
               <Icon icon="streamline-plump:web" className="w-4 h-4" />
@@ -263,7 +261,7 @@ export default function HomePage() {
               <span>Pendaftaran hingga 30 November 2025</span>
             </div>
           </div>
-          {/* CTA Buttons */}
+
           <div className="flex flex-col md:flex-row items-center gap-4 px-4">
             <Button
               onClick={() => navigate('/auth/signup')}
@@ -280,7 +278,7 @@ export default function HomePage() {
               Gabung Grup WA Hackathon
             </a>
           </div>
-          {/* Scroll indicator */}
+
           <div className="mt-12 md:mt-20">
             <svg
               className="w-6 h-6 text-gray-400 dark:text-gray-500 animate-bounce"
@@ -299,7 +297,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* About Section */}
       <section className="py-16 md:py-24 px-4 md:px-8 bg-white dark:bg-gray-950">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl md:text-5xl font-bold mb-10 dark:text-white">
@@ -322,7 +319,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Prizes Section */}
       <section
         id="hadiah"
         className="py-16 md:py-24 px-4 md:px-8 bg-gray-50 dark:bg-linear-to-b dark:from-gray-950 dark:to-gray-900"
@@ -338,7 +334,7 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Prize 1 */}
+
             <div className="bg-white dark:bg-gray-900 rounded-xl px-4 py-8 shadow-lg border-2 border-gray-300 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500 transition-colors">
               <div className="flex justify-center mb-4">
                 <div className="w-16 h-16 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center">
@@ -356,7 +352,6 @@ export default function HomePage() {
               </p>
             </div>
 
-            {/* Prize 2 */}
             <div className="bg-white dark:bg-gray-900 rounded-xl px-4 py-8 shadow-lg border-2 border-gray-300 dark:border-gray-700 hover:border-gray-500 dark:hover:border-gray-500 transition-colors">
               <div className="flex justify-center mb-4">
                 <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
@@ -374,7 +369,6 @@ export default function HomePage() {
               </p>
             </div>
 
-            {/* Prize 3 */}
             <div className="bg-white dark:bg-gray-900 rounded-xl px-4 py-8 shadow-lg border-2 border-gray-300 dark:border-gray-700 hover:border-orange-300 dark:hover:border-orange-500 transition-colors">
               <div className="flex justify-center mb-4">
                 <div className="w-16 h-16 bg-orange-100 dark:bg-orange-900/30 rounded-full flex items-center justify-center">
@@ -392,7 +386,6 @@ export default function HomePage() {
               </p>
             </div>
 
-            {/* Special Prize */}
             <div className="bg-white dark:bg-gray-900 rounded-xl px-4 py-8 shadow-lg border-2 border-gray-300 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-500 transition-colors">
               <div className="flex justify-center mb-4">
                 <div className="w-16 h-16 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center">
@@ -413,7 +406,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Timeline Section */}
       <section
         id="timeline"
         className="py-16 md:py-24 px-4 md:px-8 bg-white dark:bg-gray-950"
@@ -429,7 +421,7 @@ export default function HomePage() {
           </div>
 
           <div>
-            {/* Timeline Item 1 */}
+
             <div className="flex gap-6">
               <div className="flex flex-col items-center">
                 <div className="w-4 h-4 bg-primary-500 rounded-full"></div>
@@ -448,7 +440,6 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Timeline Item 2 */}
             <div className="flex gap-6">
               <div className="flex flex-col items-center">
                 <div className="w-4 h-4 bg-primary-500 rounded-full"></div>
@@ -468,7 +459,6 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Timeline Item 3 */}
             <div className="flex gap-6">
               <div className="flex flex-col items-center">
                 <div className="w-4 h-4 bg-primary-500 rounded-full"></div>
@@ -487,7 +477,6 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Timeline Item 4 */}
             <div className="flex gap-6">
               <div className="flex flex-col items-center">
                 <div className="w-4 h-4 bg-primary-500 rounded-full"></div>
@@ -506,7 +495,6 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Timeline Item 5 */}
             <div className="flex gap-6">
               <div className="flex flex-col items-center">
                 <div className="w-4 h-4 bg-primary-500 rounded-full"></div>
@@ -527,7 +515,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Judges Section */}
       <section className="py-16 md:py-24 px-4 md:px-8 bg-gray-50 dark:bg-gray-900 font-sans">
         <div className="md:max-w-6xl mx-auto">
           <div className="text-center mb-12 font-bai-jamjuree">
@@ -540,7 +527,7 @@ export default function HomePage() {
           </div>
 
           <div className="w-full max-w-md md:max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Judge 1 */}
+
             <div className="flex flex-col justify-between bg-white dark:bg-gray-800 rounded-xl px-4 py-8 shadow-lg text-center">
               <h3 className="text-p3 font-bold mb-1 dark:text-white">
                 Alifais Farrel Ramdhani
@@ -551,7 +538,6 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Judge 2 */}
             <div className="flex flex-col justify-between bg-white dark:bg-gray-800 rounded-xl px-4 py-8 shadow-lg text-center">
               <h3 className="text-p3 font-bold mb-1 dark:text-white">
                 Muhammad Alif Ramadhan
@@ -562,7 +548,6 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Judge 3 */}
             <div className="flex flex-col justify-between bg-white dark:bg-gray-800 rounded-xl px-4 py-8 shadow-lg text-center">
               <h3 className="text-p3 font-bold mb-1 dark:text-white">
                 Hafid Nur
@@ -576,7 +561,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* FAQ Section */}
       <section
         id="faq"
         className="py-16 md:py-24 px-4 md:px-8 bg-white dark:bg-gray-950"
@@ -631,7 +615,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Sponsors Section */}
       <section className="py-20 md:py-28 px-4 md:px-8 bg-gray-50 dark:bg-gray-900">
         <div className="max-w-6xl mx-auto text-center">
           <h2 className="text-3xl md:text-5xl font-bold mb-4 dark:text-white">
@@ -658,7 +641,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CTA Section */}
       <section
         id="masuk"
         className="py-20 md:py-28 px-4 md:px-8 bg-linear-to-b from-white to-blue-50 dark:from-gray-950 dark:to-gray-900"
@@ -700,11 +682,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="bg-gray-950 text-white py-12 px-4 md:px-8 font-sans">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-            {/* Brand */}
+
             <div>
               <div className="flex items-center gap-2 mb-4 font-bai-jamjuree">
                 <span className="text-2xl font-bold">IMPHNEN</span>
@@ -768,7 +749,6 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Quick Links */}
             <div>
               <h3 className="font-bold text-lg mb-4 font-bai-jamjuree">
                 Quick Links
@@ -806,7 +786,6 @@ export default function HomePage() {
               </ul>
             </div>
 
-            {/* Contact */}
             <div>
               <h3 className="font-bold text-lg mb-4 font-bai-jamjuree">
                 Contact

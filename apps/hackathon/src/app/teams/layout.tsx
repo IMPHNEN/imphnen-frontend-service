@@ -10,7 +10,7 @@ const TeamsLayout: FC = (): ReactElement => {
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <div className="flex-1 flex flex-col">
-        {/* Mobile Header with Hamburger */}
+
         <div className="lg:hidden sticky top-0 bg-white dark:bg-gray-900 border-b dark:border-gray-700 px-4 py-3 z-10">
           <div className="flex items-center">
             <button

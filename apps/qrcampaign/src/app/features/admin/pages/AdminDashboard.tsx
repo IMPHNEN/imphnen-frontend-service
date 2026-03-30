@@ -9,7 +9,7 @@ export const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-slate-100 flex">
-      {/* Sidebar */}
+
       <aside className="w-64 bg-white border-r border-slate-200 flex flex-col">
         <div className="p-6 border-b border-slate-200">
           <h1 className="text-xl font-bold text-slate-800">Admin Panel</h1>
@@ -55,7 +55,6 @@ export const AdminDashboard = () => {
         </div>
       </aside>
 
-      {/* Main Content */}
       <main className="flex-1 p-8 overflow-auto">
         <Outlet />
       </main>

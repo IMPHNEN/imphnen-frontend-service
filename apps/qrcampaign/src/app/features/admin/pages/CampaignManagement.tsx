@@ -8,7 +8,7 @@ interface Campaign {
   id: string;
   name: string;
   url: string;
-  image_url?: string; // QR code image URL if we want to show it
+  image_url?: string;
   is_active: boolean;
   created_at: string;
 }
@@ -28,7 +28,6 @@ export const CampaignManagement = () => {
     formState: { errors },
   } = useForm<CreateCampaignInputs>();
 
-  // Fetch Campaigns
   const {
     data: campaigns,
     isLoading,
@@ -41,7 +40,6 @@ export const CampaignManagement = () => {
     },
   });
 
-  // Create Campaign
   const createMutation = useMutation({
     mutationFn: async (data: CreateCampaignInputs) => {
       await axios.post('http://localhost:8080/api/v1/campaigns', data);
@@ -57,7 +55,6 @@ export const CampaignManagement = () => {
     },
   });
 
-  // Activate Campaign
   const activateMutation = useMutation({
     mutationFn: async (id: string) => {
       await axios.put(`http://localhost:8080/api/v1/campaigns/${id}/activate`);
@@ -65,13 +62,11 @@ export const CampaignManagement = () => {
     onSuccess: () => {
       toast.success('Campaign activated');
       queryClient.invalidateQueries({ queryKey: ['campaigns'] });
-      // Also invalidate active QR for the main app
       queryClient.invalidateQueries({ queryKey: ['active-campaign-qr'] });
     },
     onError: () => toast.error('Failed to activate campaign'),
   });
 
-  // Delete Campaign
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
       await axios.delete(`http://localhost:8080/api/v1/campaigns/${id}`);
@@ -172,7 +167,6 @@ export const CampaignManagement = () => {
         </table>
       </div>
 
-      {/* Basic Create Modal */}
       {isCreateModalOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">

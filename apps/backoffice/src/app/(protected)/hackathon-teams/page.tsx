@@ -46,11 +46,9 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
   useState<TeamType | null>(null);
   const [globalFilter, setGlobalFilter] = useState(searchQuery);
 
-  // Advanced filtering states
   const [visibilityFilter, setVisibilityFilter] = useState('all');
   const [cityFilter, setCityFilter] = useState('all');
 
-  // Fetch teams from API
   const {
     data: teamsResponse,
     isLoading,
@@ -70,14 +68,13 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
         per_page: perPage,
         search: searchQuery || undefined,
       }),
-    staleTime: 30000, // 30 seconds cache
-    gcTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 30000,
+    gcTime: 5 * 60 * 1000,
   });
 
   const totalData = teamsResponse?.meta?.total_data || 0;
   const totalPages = teamsResponse?.meta?.total_page || 1;
 
-  // Handle page change - update URL query params
   const handlePageChange = useCallback(
     (newPage: number) => {
       const params = new URLSearchParams();
@@ -90,19 +87,16 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
     [setSearchParams, perPage, searchQuery]
   );
 
-  // Validate page number doesn't exceed total pages
   useEffect(() => {
     if (!isLoading && totalPages > 0 && currentPage > totalPages) {
       setSearchParams({ page: totalPages.toString() });
     }
   }, [currentPage, totalPages, setSearchParams, isLoading]);
 
-  // Sync globalFilter with URL search param on mount
   useEffect(() => {
     setGlobalFilter(searchQuery);
   }, [searchQuery]);
 
-  // Handle search teams
   const handleSearch = useCallback(() => {
     const params = new URLSearchParams();
     params.set('page', '1');
@@ -113,7 +107,6 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
     setSearchParams(params);
   }, [globalFilter, setSearchParams, perPage]);
 
-  // Handle Enter key press in search input
   const handleSearchKeyPress = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') {
@@ -123,7 +116,6 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
     [handleSearch]
   );
 
-  // Handle per page change
   const handlePerPageChange = useCallback(
     (newPerPage: number) => {
       const params = new URLSearchParams();
@@ -135,7 +127,6 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
     [setSearchParams, searchQuery]
   );
 
-  // Memoize the callback to prevent recreation
   const handleShowDetailModal = useCallback((team: TeamType) => {
     setSelectedTeam(team);
     setShowDetailModal(true);
@@ -154,12 +145,10 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
     setShowNewTeamModal(false);
   }, []);
 
-  // Get teams data from API response
   const filteredData = useMemo(() => {
     return teamsResponse?.data || [];
   }, [teamsResponse]);
 
-  // Memoize columns to prevent recreation on every render
   const columns: ColumnDef<TeamType>[] = useMemo(
     () => [
       {
@@ -169,7 +158,6 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
           const team = row.original;
           return (
             <div className="flex items-center gap-3">
-              {/* Team Logo */}
               <div className="w-10 h-10 rounded-full bg-neutral-100 flex items-center justify-center shrink-0 overflow-hidden">
                 {team.logo ? (
                   <img
@@ -181,7 +169,6 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
                   <TeamOutlined className="text-neutral-400 text-lg" />
                 )}
               </div>
-              {/* Team Name */}
               <div className="min-w-0 flex-1">
                 <p
                   className="font-medium text-neutral-900 truncate max-w-sm"
@@ -276,12 +263,9 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
       <h1 className="mb-8 text-p1 font-semibold text-neutral-700">
         Team Management
       </h1>
-      {/* Filters and actions */}
       <section className="bg-white rounded-md shadow p-8 flex flex-col gap-6">
         <div className="flex flex-wrap gap-3 items-center justify-between">
-          {/* Left side - Search & filters */}
           <div className="flex flex-wrap gap-3 items-center">
-            {/* Search bar */}
             <div className="relative">
               <SearchOutlined className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 text-sm" />
               <input
@@ -294,7 +278,6 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
               />
             </div>
 
-            {/* Per Page Dropdown */}
             <div className="relative">
               <select
                 className="border border-neutral-200 rounded-lg px-4 py-2.5 text-sm w-28 focus:border-primary-500 focus:outline-none appearance-none bg-white cursor-pointer"
@@ -310,31 +293,15 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
               </select>
             </div>
 
-            {/* Visibility Filter */}
-            {/* <div className="relative">
-              <FilterOutlined className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 text-sm pointer-events-none z-10" />
-              <select
-                className="border border-neutral-200 rounded-lg pl-10 pr-10 py-2.5 text-sm w-full sm:w-40 focus:border-primary-500 focus:outline-none appearance-none bg-white cursor-pointer"
-                value={visibilityFilter}
-                onChange={(e) => setVisibilityFilter(e.target.value)}
-              >
-                <option value="all">All Visibility</option>
-                <option value="public">Public</option>
-                <option value="private">Private</option>
-              </select>
-            </div> */}
+            {}
+            {
+}
 
-            {/* City Filter */}
-            {/* <CityFilterSelect
-              value={cityFilter}
-              onChange={setCityFilter}
-              className="w-full sm:w-44"
-              placeholder="Search cities..."
-              allOptionLabel="All Cities"
-            /> */}
+            {}
+            {
+}
           </div>
 
-          {/* Right side - Add Team Button */}
           <div className="flex items-center gap-3">
             <Button
               variant="primary"
@@ -348,12 +315,10 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
           </div>
         </div>
 
-        {/* Active filters display */}
         {(visibilityFilter !== 'all' || cityFilter !== 'all') && (
           <div className="flex flex-wrap gap-2 items-center">
             <span className="text-sm text-neutral-600">Active filters:</span>
 
-            {/* Visibility filter badge */}
             {visibilityFilter !== 'all' && (
               <span className="inline-flex items-center gap-1 px-2 py-1 bg-info-100 text-info-800 rounded-2xl text-sm">
                 Visibility: {visibilityFilter}
@@ -366,7 +331,6 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
               </span>
             )}
 
-            {/* City filter badge */}
             {cityFilter !== 'all' && (
               <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 rounded-2xl text-sm">
                 City: {cityFilter}
@@ -379,7 +343,6 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
               </span>
             )}
 
-            {/* Clear all filters */}
             <Button
               variant="secondary"
               size="sm"
@@ -395,7 +358,6 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
           </div>
         )}
 
-        {/* Loading & results display */}
         {isLoading ? (
           <div className="flex items-center justify-center py-12">
             <LoadingOutlined className="text-3xl text-primary-500 animate-spin" />
@@ -427,18 +389,16 @@ export const HackathonTeamsPage: FC = (): ReactElement => {
         )}
       </section>
 
-      {/* Modals component */}
       <ModalTeamDetail
         isOpen={showDetailModal}
         onClose={handleCloseDetailModal}
         team={selectedTeam}
       />
 
-      {/* New Team Modal */}
       <ModalTeamDetail
         isOpen={showNewTeamModal}
         onClose={handleCloseNewTeamModal}
-        team={null} // null indicates creating new team
+        team={null}
       />
     </BackofficeWrapper>
   );

@@ -1,8 +1,5 @@
 import { useTeamById, useTeamMembers, useUserMe, useTeamSubmission } from '@imphnen-frontend-service/service';
 
-/**
- * Hook to check if current user is a member of the team
- */
 export const useTeamMembership = (teamId: string) => {
   const { data: userData } = useUserMe();
   const { data: membersData } = useTeamMembers(teamId);
@@ -21,9 +18,6 @@ export const useTeamMembership = (teamId: string) => {
   };
 };
 
-/**
- * Hook to check if current user is the team leader
- */
 export const useIsTeamLeader = (teamId: string) => {
   const { data: teamData } = useTeamById(teamId);
   const { data: userData } = useUserMe();
@@ -39,9 +33,6 @@ export const useIsTeamLeader = (teamId: string) => {
   };
 };
 
-/**
- * Hook to get team submission status
- */
 export const useTeamSubmissionStatus = (teamId: string) => {
   const { data: submissionData, isLoading } = useTeamSubmission(teamId, !!teamId);
 
@@ -57,9 +48,6 @@ export const useTeamSubmissionStatus = (teamId: string) => {
   };
 };
 
-/**
- * Hook to check if current user can perform team actions
- */
 export const useTeamPermissions = (teamId: string) => {
   const { isLeader } = useIsTeamLeader(teamId);
   const { isMember } = useTeamMembership(teamId);

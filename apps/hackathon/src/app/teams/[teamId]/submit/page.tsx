@@ -16,10 +16,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import { Icon } from '@iconify/react';
 
-const MIN_TEAM_MEMBERS = 2; // Minimum members required to submit (including leader)
-const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
+const MIN_TEAM_MEMBERS = 2;
+const MAX_FILE_SIZE = 2 * 1024 * 1024;
 
-// Submission deadline: 2025-12-07 23:59:00 WIB (UTC+7)
 const SUBMISSION_DEADLINE = new Date('2025-12-07T16:59:00Z');
 
 const SubmitProjectPage: FC = (): ReactElement => {
@@ -36,10 +35,8 @@ const SubmitProjectPage: FC = (): ReactElement => {
     seconds: number;
   } | null>(null);
 
-  // Check if deadline passed
   const isDeadlinePassed = new Date() >= SUBMISSION_DEADLINE;
 
-  // Countdown timer
   useEffect(() => {
     if (isDeadlinePassed) return;
 
@@ -125,7 +122,6 @@ const SubmitProjectPage: FC = (): ReactElement => {
     );
   }
 
-  // Show deadline passed screen
   if (isDeadlinePassed) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-gray-50 dark:bg-gray-950 p-4">
@@ -175,7 +171,6 @@ const SubmitProjectPage: FC = (): ReactElement => {
     const files = e.target.files;
     if (!files) return;
 
-    // Validate file sizes
     const oversizedFiles = Array.from(files).filter(file => file.size > MAX_FILE_SIZE);
     if (oversizedFiles.length > 0) {
       toast.error(`${oversizedFiles.length} file(s) are too large. Maximum size is 2MB per file.`);
@@ -222,7 +217,6 @@ const SubmitProjectPage: FC = (): ReactElement => {
       </div>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Countdown Timer */}
         {timeLeft && (
           <div className="bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-500 rounded-lg p-6 mb-6">
             <div className="flex items-start space-x-3">
@@ -273,7 +267,6 @@ const SubmitProjectPage: FC = (): ReactElement => {
           </div>
         )}
 
-        {/* Minimum Members Warning */}
         {!hasEnoughMembers && (
           <div className="bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-500 rounded-lg p-6 mb-6">
             <div className="flex items-start space-x-3">
@@ -292,7 +285,6 @@ const SubmitProjectPage: FC = (): ReactElement => {
           </div>
         )}
 
-        {/* Warning Banner */}
         <div className="bg-red-50 dark:bg-red-900/20 border-2 border-red-500 rounded-lg p-6 mb-6">
           <div className="flex items-start space-x-3">
             <span className="text-3xl">⚠️</span>
@@ -320,7 +312,6 @@ const SubmitProjectPage: FC = (): ReactElement => {
             }}
             className="space-y-6"
           >
-            {/* Project Name */}
             <ControlledInputField
               control={form.control}
               label="Project Name"
@@ -330,7 +321,6 @@ const SubmitProjectPage: FC = (): ReactElement => {
               isRequired={true}
             />
 
-            {/* Description */}
             <div className="space-y-2">
               <label className="block text-[15px] font-medium text-gray-700 dark:text-gray-300">
                 Project Description <span className="text-red-500">*</span>
@@ -360,7 +350,6 @@ const SubmitProjectPage: FC = (): ReactElement => {
               />
             </div>
 
-            {/* Repository URL */}
             <ControlledInputField
               control={form.control}
               label="Repository URL (GitHub, GitLab, etc.)"
@@ -371,7 +360,6 @@ const SubmitProjectPage: FC = (): ReactElement => {
               isRequired={true}
             />
 
-            {/* Demo URL */}
             <ControlledInputField
               control={form.control}
               label="Demo URL (Optional)"
@@ -381,7 +369,6 @@ const SubmitProjectPage: FC = (): ReactElement => {
               size="lg"
             />
 
-            {/* Screenshots */}
             <div>
               <label className="block text-label1 font-medium text-neutral-800 dark:text-gray-300">
                 Project Screenshots (Optional)
@@ -424,7 +411,6 @@ const SubmitProjectPage: FC = (): ReactElement => {
               </label>
             </div>
 
-            {/* Submit Button */}
             <div className="flex space-x-3 pt-4">
               <Button
                 type="button"
@@ -451,7 +437,6 @@ const SubmitProjectPage: FC = (): ReactElement => {
         </div>
       </div>
 
-      {/* Confirmation Modal */}
       {showConfirmModal && (
         <div className="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50 p-4">
           <div className="bg-white dark:bg-gray-900 rounded-lg shadow-xl dark:shadow-gray-950/50 max-w-md w-full p-6">

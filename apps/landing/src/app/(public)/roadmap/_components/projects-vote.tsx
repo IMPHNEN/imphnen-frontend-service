@@ -79,7 +79,7 @@ export default function ProjectsVote() {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-      {/* Vote Now Column */}
+
       <div className="space-y-6">
         <div className="flex items-center gap-3 px-2">
           <div className="flex items-center justify-center w-10 h-10 bg-amber-100 text-amber-600 rounded-lg">
@@ -144,7 +144,6 @@ export default function ProjectsVote() {
         </AnimatePresence>
       </div>
 
-      {/* In Progress Column */}
       <div className="space-y-6">
         <div className="flex items-center gap-3 px-2">
           <div className="flex items-center justify-center w-10 h-10 bg-primary-100 text-primary-600 rounded-lg">
@@ -189,7 +188,6 @@ export default function ProjectsVote() {
         </AnimatePresence>
       </div>
 
-      {/* Completed Column */}
       <div className="space-y-6">
         <div className="flex items-center gap-3 px-2">
           <div className="flex items-center justify-center w-10 h-10 bg-green-100 text-green-600 rounded-lg">

@@ -1,4 +1,4 @@
-import { api } from '../';
+import { api, getBaseURL } from '../';
 import {
   TLoginRequest,
   TLoginResponse,
@@ -54,7 +54,7 @@ export const postSendOtp = async (
 };
 
 export const getGoogleAuthUrl = async (): Promise<string> => {
-  const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+  const baseUrl = getBaseURL() || 'http://localhost:8080';
   return `${baseUrl}/auth/google/login`;
 };
 
@@ -67,7 +67,7 @@ export const postGoogleCallback = async (code: string, state: string): Promise<T
 };
 
 export const getGitHubAuthUrl = async (): Promise<string> => {
-  const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+  const baseUrl = getBaseURL() || 'http://localhost:8080';
   return `${baseUrl}/auth/github/login`;
 };
 

@@ -17,10 +17,8 @@ import { Icon } from '@iconify/react';
 const DEFAULT_PER_PAGE = 12;
 const PER_PAGE_OPTIONS = [6, 12, 24, 48];
 
-// Team features deadline: 2025-11-30 23:59:00 WIB (UTC+7)
 const TEAM_FEATURES_DEADLINE = new Date('2025-11-30T16:59:00Z');
 
-// Member filter options
 const MEMBER_FILTER_OPTIONS = [
   { label: 'All Teams', value: '', minMembers: undefined, maxMembers: undefined },
   { label: 'Looking for Members (1-4)', value: 'looking', minMembers: 1, maxMembers: 4 },
@@ -31,14 +29,12 @@ const MEMBER_FILTER_OPTIONS = [
   { label: '5 Members (Full)', value: '5', minMembers: 5, maxMembers: 5 },
 ];
 
-// Submission status filter options
 const SUBMISSION_FILTER_OPTIONS = [
   { label: 'All Teams', value: '' },
   { label: 'Submitted', value: 'true' },
   { label: 'Not Submitted', value: 'false' },
 ];
 
-// Skeleton card component for loading state
 const TeamCardSkeleton: FC = () => (
   <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md overflow-hidden flex flex-col border dark:border-gray-800 animate-pulse">
     <div className="w-full aspect-3/1 bg-gray-200 dark:bg-gray-700" />
@@ -67,10 +63,8 @@ const BrowseTeamsPage: FC = (): ReactElement => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Check if team features are closed
   const isTeamFeaturesClosed = new Date() >= TEAM_FEATURES_DEADLINE;
 
-  // Initialize state from URL params
   const initialPage = parseInt(searchParams.get('page') || '1', 10);
   const initialPerPage = parseInt(
     searchParams.get('per_page') || String(DEFAULT_PER_PAGE),
@@ -95,7 +89,6 @@ const BrowseTeamsPage: FC = (): ReactElement => {
     PER_PAGE_OPTIONS.includes(initialPerPage) ? initialPerPage : DEFAULT_PER_PAGE
   );
 
-  // Update URL when pagination state changes
   const updateUrlParams = useCallback(
     (params: {
       page?: number;
@@ -160,7 +153,6 @@ const BrowseTeamsPage: FC = (): ReactElement => {
     [searchParams, setSearchParams]
   );
 
-  // Debounce search term and reset page
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(searchTerm);
@@ -172,7 +164,6 @@ const BrowseTeamsPage: FC = (): ReactElement => {
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
-  // Update URL when city filter changes
   useEffect(() => {
     if (selectedCity !== initialCity) {
       setCurrentPage(1);
@@ -180,12 +171,10 @@ const BrowseTeamsPage: FC = (): ReactElement => {
     }
   }, [selectedCity]);
 
-  // Get member filter values
   const memberFilter = MEMBER_FILTER_OPTIONS.find(
     (opt) => opt.value === selectedMembers
   );
 
-  // Convert submission filter value to boolean
   const hasSubmissionFilter = selectedSubmission === 'true' ? true : selectedSubmission === 'false' ? false : undefined;
 
   const {
@@ -216,7 +205,6 @@ const BrowseTeamsPage: FC = (): ReactElement => {
   const total = teamsData?.total || 0;
   const myTeams = myTeamsData?.data || [];
 
-  // Helper function to check if user is a member of a team
   const isMyTeam = (teamId: string) => {
     return myTeams.some((team: any) => team.id === teamId);
   };
@@ -239,25 +227,21 @@ const BrowseTeamsPage: FC = (): ReactElement => {
     }
   });
 
-  // Generate page numbers to display
   const getPageNumbers = () => {
     const pages: (number | string)[] = [];
     const maxVisible = 5;
 
     if (totalPages <= maxVisible + 2) {
-      // Show all pages if total is small
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
       }
     } else {
-      // Always show first page
       pages.push(1);
 
       if (currentPage > 3) {
         pages.push('...');
       }
 
-      // Show pages around current
       const start = Math.max(2, currentPage - 1);
       const end = Math.min(totalPages - 1, currentPage + 1);
 
@@ -269,7 +253,6 @@ const BrowseTeamsPage: FC = (): ReactElement => {
         pages.push('...');
       }
 
-      // Always show last page
       pages.push(totalPages);
     }
 
@@ -278,7 +261,6 @@ const BrowseTeamsPage: FC = (): ReactElement => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
-      {/* Header */}
       <div className="bg-white dark:bg-gray-900 border-b dark:border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
@@ -297,7 +279,6 @@ const BrowseTeamsPage: FC = (): ReactElement => {
         </div>
       </div>
 
-      {/* Filters */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-sm mb-6 border dark:border-gray-800">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -366,7 +347,6 @@ const BrowseTeamsPage: FC = (): ReactElement => {
           </div>
         </div>
 
-        {/* Teams Count */}
         {!isLoading && total > 0 && (
           <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
             Showing {(currentPage - 1) * perPage + 1}-
@@ -374,7 +354,6 @@ const BrowseTeamsPage: FC = (): ReactElement => {
           </div>
         )}
 
-        {/* Teams List */}
         {isLoading || isFetching ? (
           <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             {Array.from({ length: perPage }).map((_, index) => (
@@ -488,7 +467,6 @@ const BrowseTeamsPage: FC = (): ReactElement => {
               ))}
             </div>
 
-            {/* Pagination */}
             {(totalPages > 1 || total > 6) && (
               <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
                 {totalPages > 1 && (
@@ -583,7 +561,6 @@ const BrowseTeamsPage: FC = (): ReactElement => {
         )}
       </div>
 
-      {/* Join Request Modal */}
       {showJoinModal && (
         <div className="fixed inset-0 bg-black/30 dark:bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white dark:bg-gray-900 rounded-lg shadow-xl max-w-md w-full p-6">

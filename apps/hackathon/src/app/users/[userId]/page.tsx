@@ -44,7 +44,7 @@ const UserProfilePage: FC = (): ReactElement => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
-      {/* Header */}
+
       <div className="bg-white dark:bg-gray-900 border-b dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-6">
           <div className="flex items-start justify-between">
@@ -91,9 +91,9 @@ const UserProfilePage: FC = (): ReactElement => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8">
         <div className="grid gap-4 md:gap-6 lg:grid-cols-3">
-          {/* Main Content */}
+
           <div className="lg:col-span-2 space-y-4 md:space-y-6">
-            {/* About Section */}
+
             {user.bio && (
               <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md dark:shadow-gray-950/50 p-4 md:p-6 overflow-hidden">
                 <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
@@ -105,7 +105,6 @@ const UserProfilePage: FC = (): ReactElement => {
               </div>
             )}
 
-            {/* Skills Section */}
             {user.skills && user.skills.length > 0 && (
               <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md dark:shadow-gray-950/50 p-4 md:p-6">
                 <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
@@ -124,7 +123,6 @@ const UserProfilePage: FC = (): ReactElement => {
               </div>
             )}
 
-            {/* Team Section */}
             {userTeams.length > 0 ? (
               <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md dark:shadow-gray-950/50 p-4 md:p-6">
                 <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
@@ -202,9 +200,8 @@ const UserProfilePage: FC = (): ReactElement => {
             )}
           </div>
 
-          {/* Sidebar */}
           <div className="space-y-4 md:space-y-6">
-            {/* Contact Info */}
+
             <div className="bg-white dark:bg-gray-900 rounded-lg shadow-md dark:shadow-gray-950/50 p-4 md:p-6">
               <h3 className="text-base md:text-lg font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
                 Contact Information

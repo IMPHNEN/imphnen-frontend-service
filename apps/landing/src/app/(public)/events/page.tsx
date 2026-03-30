@@ -39,7 +39,7 @@ export default function EventsPage() {
   return (
     <section className="min-h-screen bg-background container py-10">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {/* Featured Card */}
+
         <div className="col-span-full">
           <div className="rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden bg-card">
             <div className="grid md:grid-cols-2">
@@ -119,7 +119,6 @@ export default function EventsPage() {
           </div>
         </div>
 
-        {/* Regular Cards */}
         {sortedEvents.slice(1).map((event) => (
           <div
             key={event.name}

@@ -38,17 +38,11 @@ const formatOrdinalRank = (rank: number): string => {
   }
 };
 
-// Keep the template size aligned with the SVG native size (842x595) using an integer multiplier.
-// This reduces sub-pixel scaling artifacts (blur) on thin lines when rasterizing with html2canvas.
 const CERT_WIDTH = 842 * 2;
 const CERT_HEIGHT = 595 * 2;
 
-// Balance between output sharpness and file size.
-// Output resolution will be (CERT_WIDTH * EXPORT_SCALE) x (CERT_HEIGHT * EXPORT_SCALE).
 const EXPORT_SCALE = 2;
 
-// The original layout was tuned around a ~1000px-wide template.
-// We keep the same visual proportions by scaling fixed pixel values.
 const LAYOUT_BASE_WIDTH = 1000;
 const LAYOUT_SCALE = CERT_WIDTH / LAYOUT_BASE_WIDTH;
 const s = (px: number) => Math.round(px * LAYOUT_SCALE);
@@ -122,7 +116,6 @@ const CertificateWinnerPage: FC = (): ReactElement => {
       (t) => (t as { id?: string } | null | undefined)?.id === decodedTeamId
     );
 
-  // Generate QR Code (public link)
   useEffect(() => {
     if (!certId) return;
 
@@ -141,7 +134,6 @@ const CertificateWinnerPage: FC = (): ReactElement => {
       .catch((err) => console.error('QR Code generation failed:', err));
   }, [certId]);
 
-  // Generate certificate canvas screenshot
   useEffect(() => {
     const generateCertificate = async () => {
       if (!certificateRef.current) return;
@@ -311,7 +303,6 @@ const CertificateWinnerPage: FC = (): ReactElement => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
-      {/* Header */}
       <div className="bg-white dark:bg-gray-900 border-b dark:border-gray-700 no-print">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
@@ -339,7 +330,6 @@ const CertificateWinnerPage: FC = (): ReactElement => {
         className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12"
         id="certificate-wrapper"
       >
-        {/* Hidden Template for Canvas Generation */}
         <div
           className={showTemplate ? 'block' : 'hidden'}
           style={{ position: 'absolute', left: '-9999px' }}
@@ -363,7 +353,6 @@ const CertificateWinnerPage: FC = (): ReactElement => {
               }
             `}</style>
 
-            {/* Team Name */}
             <div
               style={{
                 position: 'absolute',
@@ -388,7 +377,6 @@ const CertificateWinnerPage: FC = (): ReactElement => {
               </h3>
             </div>
 
-            {/* Members list */}
             <div
               style={{
                 position: 'absolute',
@@ -416,7 +404,6 @@ const CertificateWinnerPage: FC = (): ReactElement => {
               </ul>
             </div>
 
-            {/* Award text */}
             <div
               style={{
                 position: 'absolute',
@@ -445,7 +432,6 @@ const CertificateWinnerPage: FC = (): ReactElement => {
               </p>
             </div>
 
-            {/* Rank badge */}
             {!!rankLabel && (
               <div
                 style={{
@@ -476,7 +462,6 @@ const CertificateWinnerPage: FC = (): ReactElement => {
               </div>
             )}
 
-            {/* QR Code (same placement as existing certificate page) */}
             <div
               style={{
                 position: 'absolute',
@@ -504,7 +489,6 @@ const CertificateWinnerPage: FC = (): ReactElement => {
           </div>
         </div>
 
-        {/* Display Certificate Image */}
         <div className="bg-white dark:bg-gray-900 rounded-lg shadow-xl dark:shadow-gray-950/50 overflow-hidden p-2">
           {isGenerating && (
             <div className="flex items-center justify-center p-12">
@@ -526,7 +510,6 @@ const CertificateWinnerPage: FC = (): ReactElement => {
             />
           )}
 
-          {/* Actions */}
           {isTeamMember && (
             <div className="bg-gray-50 dark:bg-gray-900 p-6 grid grid-cols-2 xl:grid-cols-3 gap-3 justify-center no-print">
               <Button
@@ -588,7 +571,6 @@ const CertificateWinnerPage: FC = (): ReactElement => {
           )}
         </div>
 
-        {/* Info Box */}
         <div className="mt-8 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6 no-print">
           <h3 className="font-bold text-blue-900 dark:text-blue-100 mb-2">
             Certificate Information

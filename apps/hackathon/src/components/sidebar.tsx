@@ -32,7 +32,6 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen = true, onClose }) => {
   const myTeams = teamsData?.data || [];
   const hasTeam = myTeams.length > 0;
 
-  // Close sidebar on route change (mobile)
   useEffect(() => {
     if (onClose) {
       onClose();
@@ -159,7 +158,6 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen = true, onClose }) => {
 
   const sidebarContent = (
     <div className="w-64 bg-white dark:bg-gray-900 border-r dark:border-gray-800 min-h-screen flex flex-col">
-      {/* Logo / Brand with Close Button */}
       <div className="p-6 flex items-center justify-between border-b dark:border-gray-800">
         <h1 className="text-xl font-bold text-gray-900 dark:text-white">
           Hackathon
@@ -186,7 +184,6 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen = true, onClose }) => {
         )}
       </div>
 
-      {/* User Info */}
       <div className="p-4 border-b dark:border-gray-800">
         <div className="flex items-center space-x-3">
           {user?.avatar ? (
@@ -216,7 +213,6 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen = true, onClose }) => {
         </div>
       </div>
 
-      {/* Navigation */}
       <nav className="flex-1 p-4">
         <ul className="space-y-2">
           {navItems
@@ -242,7 +238,6 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen = true, onClose }) => {
         </ul>
       </nav>
 
-      {/* Theme Toggle & Logout */}
       <div className="p-4 border-t dark:border-gray-800 space-y-2">
         <button
           onClick={cycleTheme}
@@ -267,20 +262,16 @@ export const Sidebar: FC<SidebarProps> = ({ isOpen = true, onClose }) => {
 
   return (
     <>
-      {/* Desktop Sidebar - Always visible on lg+, sticky position */}
       <div className="hidden lg:block sticky top-0 h-screen overflow-y-auto">
         {sidebarContent}
       </div>
 
-      {/* Mobile Sidebar - Overlay */}
       {isOpen && (
         <div className="lg:hidden fixed inset-0 z-50">
-          {/* Backdrop */}
           <div
             className="fixed inset-0 bg-black/50 transition-opacity"
             onClick={onClose}
           />
-          {/* Sidebar */}
           <div className="fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-in-out">
             {sidebarContent}
           </div>

@@ -45,9 +45,6 @@ export const BackofficeWrapper: FC<TBackofficeWrapperProps> = ({
         </h1>
 
         <div className="flex items-center gap-x-6">
-          {/* <Button type="button" variant="secondary" className="max-h-full p-3">
-            <Icon icon="mdi:bell-outline" className="size-6" />
-          </Button> */}
           <div className="flex items-center gap-x-6">
             <div className="text-neutral-600 font-medium">
               <p className="text-p3">{user?.fullname || 'Full Name'}</p>

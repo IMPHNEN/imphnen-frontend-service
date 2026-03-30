@@ -96,7 +96,6 @@ export type TProjectSubmissionItem = {
   updated_at: string;
 };
 
-// Request/Response DTOs
 export type TCreateTeamRequest = {
   name: string;
   logo: string | null;

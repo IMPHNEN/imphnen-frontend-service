@@ -1,9 +1,4 @@
 import { useForm } from 'react-hook-form';
-// import { zodResolver } from '@hookform/resolvers/zod';
-// import {
-//   gachaRollItemSchema,
-//   TGachaRollItem
-// } from '@imphnen-frontend-service/service';
 import { toast } from 'sonner';
 
 export const useItem = (
@@ -11,7 +6,6 @@ export const useItem = (
   initialValues?: any
 ) => {
   const form = useForm<any>({
-    // resolver: zodResolver(),
     mode: 'all',
     defaultValues: initialValues,
   });
@@ -38,8 +32,6 @@ export const useConfirmItem = (
 ) => {
   const onConfirm = async () => {
     try {
-      // const result = await actionFunction?.();
-      // result ? toast.success(messages?.success) : toast.error(messages?.error);
       toast.success(messages?.success);
       onClose();
       resetStep();

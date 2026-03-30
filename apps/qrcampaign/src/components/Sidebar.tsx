@@ -17,7 +17,7 @@ type MenuItem = {
   href?: string;
   icon?: ReactElement;
   children?: Array<{ label: string; href: string; icon?: ReactElement }>;
-  roles?: string[]; // Roles that can see this menu
+  roles?: string[];
 };
 
 const MENUS: MenuItem[] = [
@@ -65,7 +65,6 @@ export const Sidebar: FC<SidebarProps> = ({
     setOpenGroups((prev) => ({ ...prev, [groupLabel]: !prev[groupLabel] }));
   };
 
-  // Filter menus based on role
   const filteredMenus = MENUS.filter((menu) => {
     if (!menu.roles) return true;
     return menu.roles.includes(userRole);
@@ -104,7 +103,6 @@ export const Sidebar: FC<SidebarProps> = ({
         </div>
       </div>
 
-      {/* Navigation - Scrollable area */}
       <nav className="flex-1 flex flex-col gap-4 w-full overflow-y-auto min-h-0 pb-4">
         <For data={filteredMenus}>
           {(menu) =>
@@ -174,7 +172,6 @@ export const Sidebar: FC<SidebarProps> = ({
         </For>
       </nav>
 
-      {/* Footer - Fixed at bottom */}
       <div className="shrink-0 w-full pb-10 lg:pb-[60px]">
         <hr className="mb-5 border-gray-100" />
         <div className="px-2 mb-4">

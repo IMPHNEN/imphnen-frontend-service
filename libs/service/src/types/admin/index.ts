@@ -10,7 +10,6 @@ export type TAdminListResponse<T = unknown> = {
   meta: TAdminMetaResponse;
 };
 
-// Admin Users
 export type TAdminUserItem = {
   id: string;
   email: string;
@@ -27,7 +26,6 @@ export type TAdminUserItem = {
 
 export type TAdminUsersResponse = TAdminListResponse<TAdminUserItem>;
 
-// Admin Teams
 export type TAdminTeamItem = {
   id: string;
   name: string;
@@ -43,7 +41,6 @@ export type TAdminTeamItem = {
 
 export type TAdminTeamsResponse = TAdminListResponse<TAdminTeamItem>;
 
-// Admin Submissions
 export type TAdminSubmissionItem = {
   id: string;
   team_id: string;

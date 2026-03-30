@@ -41,14 +41,11 @@ const CertificatePage: FC = (): ReactElement => {
     }
   }, [certId]);
 
-  // Fetch certificate data using the new endpoint
   const { data: certificateData, isLoading: isLoadingCertificate } =
     useCertificatePublicData(decodedInfo?.userId || '', !!decodedInfo?.userId);
 
-  // Generate QR Code
   useEffect(() => {
     if (certId) {
-      // Use encodeURIComponent to properly encode the certId for the URL
       const encodedCertId = encodeURIComponent(certId);
       const certificateUrl = `${window.location.origin}/certificate/${encodedCertId}`;
       QRCode.toDataURL(certificateUrl, {
@@ -71,13 +68,10 @@ const CertificatePage: FC = (): ReactElement => {
 
   const isLoading = (!decodedInfo && !error) || isLoadingCertificate;
 
-  // Certificate name from the user data
   const certificateName = certificateUser?.fullname;
 
-  // Check if current user is viewing their own certificate (team member)
   const isTeamMember = session?.user?.id === decodedInfo?.userId;
 
-  // Dynamic font sizing: shrink by 2px if height exceeds 80px
   useEffect(() => {
     const adjustFontSize = (
       element: HTMLElement | null,
@@ -106,14 +100,12 @@ const CertificatePage: FC = (): ReactElement => {
     return () => clearTimeout(timer);
   }, [team?.name, certificateName]);
 
-  // Generate certificate canvas screenshot
   useEffect(() => {
     const generateCertificate = async () => {
       if (!certificateRef.current || !team || !submission || !qrCodeUrl) return;
 
       setIsGenerating(true);
       try {
-        // Wait longer for fonts and images to load properly
         await new Promise((resolve) => setTimeout(resolve, 1500));
 
         const canvas = await html2canvas(certificateRef.current, {
@@ -141,7 +133,6 @@ const CertificatePage: FC = (): ReactElement => {
     generateCertificate();
   }, [team, submission, qrCodeUrl]);
 
-  // Download certificate
   const handleDownloadCertificate = () => {
     if (!certificateImage) return;
 
@@ -151,7 +142,6 @@ const CertificatePage: FC = (): ReactElement => {
     link.click();
   };
 
-  // Print certificate
   const handlePrintCertificate = () => {
     if (!certificateImage) return;
 
@@ -228,7 +218,6 @@ const CertificatePage: FC = (): ReactElement => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
-      {/* Print Styles */}
       <style>{`
         @media print {
           @page {
@@ -267,7 +256,6 @@ const CertificatePage: FC = (): ReactElement => {
           }
         }
 
-        /* Mobile responsive - zoom out to fit */
         @media (max-width: 768px) {
           #certificate-container {
             transform-origin: top center;
@@ -275,7 +263,6 @@ const CertificatePage: FC = (): ReactElement => {
         }
       `}</style>
 
-      {/* Header */}
       <div className="bg-white dark:bg-gray-900 border-b dark:border-gray-700 no-print">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
@@ -299,12 +286,10 @@ const CertificatePage: FC = (): ReactElement => {
         </div>
       </div>
 
-      {/* Certificate Content */}
       <div
         className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12"
         id="certificate-wrapper"
       >
-        {/* Hidden Template for Canvas Generation */}
         <div
           className={showTemplate ? 'block' : 'hidden'}
           style={{ position: 'absolute', left: '-9999px' }}
@@ -321,7 +306,6 @@ const CertificatePage: FC = (): ReactElement => {
               height: `${(1000 * 2480) / 3508}px`,
             }}
           >
-            {/* Team Name - positioned in middle between "Diberikan Kepada" and "Telah Berpartisipasi" */}
             <div
               style={{
                 position: 'absolute',
@@ -347,7 +331,6 @@ const CertificatePage: FC = (): ReactElement => {
               </h3>
             </div>
 
-            {/* User Name - positioned below team name */}
             <div
               style={{
                 position: 'absolute',
@@ -373,7 +356,6 @@ const CertificatePage: FC = (): ReactElement => {
               </h3>
             </div>
 
-            {/* QR Code - positioned in the white box area */}
             <div
               style={{
                 position: 'absolute',
@@ -397,7 +379,6 @@ const CertificatePage: FC = (): ReactElement => {
           </div>
         </div>
 
-        {/* Display Certificate Image */}
         <div className="bg-white dark:bg-gray-900 rounded-lg shadow-xl dark:shadow-gray-950/50 overflow-hidden p-2">
           {isGenerating && (
             <div className="flex items-center justify-center p-12">
@@ -419,7 +400,6 @@ const CertificatePage: FC = (): ReactElement => {
             />
           )}
 
-          {/* Actions */}
           {isTeamMember && (
             <div className="bg-gray-50 dark:bg-gray-900 p-6 grid grid-cols-2 xl:grid-cols-3 gap-3 justify-center no-print">
               <Button
@@ -451,7 +431,6 @@ const CertificatePage: FC = (): ReactElement => {
           )}
         </div>
 
-        {/* Info Box */}
         <div className="mt-8 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6 no-print">
           <h3 className="font-bold text-blue-900 dark:text-blue-100 mb-2">
             Certificate Information

@@ -38,8 +38,6 @@ export const useConfirmItem = (
 ) => {
   const onConfirm = async () => {
     try {
-      // const result = await actionFunction?.();
-      // result ? toast.success(messages?.success) : toast.error(messages?.error);
       toast.success(messages?.success);
       onClose();
       resetStep();

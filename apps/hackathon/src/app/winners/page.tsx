@@ -35,10 +35,8 @@ const WinnerPage: FC = (): ReactElement => {
     );
   }
 
-  // Sort winners by rank
   const sortedWinners = [...winners].sort((a, b) => a.rank - b.rank);
 
-  // Medal emojis for top 3
   const getMedalEmoji = (rank: number) => {
     switch (rank) {
       case 1:
@@ -52,7 +50,6 @@ const WinnerPage: FC = (): ReactElement => {
     }
   };
 
-  // Get rank color
   const getRankColor = (rank: number) => {
     switch (rank) {
       case 1:
@@ -68,7 +65,6 @@ const WinnerPage: FC = (): ReactElement => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
-      {/* Header */}
       <div className="bg-white dark:bg-gray-900 border-b dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center">
@@ -83,7 +79,6 @@ const WinnerPage: FC = (): ReactElement => {
         </div>
       </div>
 
-      {/* Winners List */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {winners.length === 0 ? (
           <div className="text-center py-16">
@@ -97,7 +92,6 @@ const WinnerPage: FC = (): ReactElement => {
           </div>
         ) : (
           <div className="space-y-8">
-            {/* Top 3 Winners - Mobile View */}
             <div className="md:hidden space-y-6">
               {[1, 2, 3].map((position) => {
                 const winner = sortedWinners[position - 1];
@@ -148,7 +142,6 @@ const WinnerPage: FC = (): ReactElement => {
               })}
             </div>
 
-            {/* Top 3 Winners - Tablet/Desktop Podium View */}
             <div className="hidden md:flex gap-8 items-end justify-center w-full">
               {[2, 1, 3].map((position) => {
                 const winner = sortedWinners[position - 1];
@@ -160,7 +153,6 @@ const WinnerPage: FC = (): ReactElement => {
                   >
                     <div className="text-5xl">{getMedalEmoji(winner.rank)}</div>
 
-                    {/* Team Logo */}
                     {winner.team.logo && (
                       <img
                         src={winner.team.logo}
@@ -178,7 +170,6 @@ const WinnerPage: FC = (): ReactElement => {
                       </p>
                     </div>
 
-                    {/* Podium */}
                     <div
                       className={`${
                         winner.rank === 1
@@ -197,7 +188,6 @@ const WinnerPage: FC = (): ReactElement => {
               })}
             </div>
 
-            {/* Ranks 4-23: Prize Winners */}
             {sortedWinners.filter((w) => w.rank >= 4 && w.rank <= 23).length >
               0 && (
               <div className="mt-12">
@@ -247,7 +237,6 @@ const WinnerPage: FC = (): ReactElement => {
               </div>
             )}
 
-            {/* Rank 24+: Remaining Participants */}
             {sortedWinners.filter((w) => w.rank >= 24).length > 0 && (
               <div className="mt-12">
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">
@@ -296,7 +285,6 @@ const WinnerPage: FC = (): ReactElement => {
         )}
       </div>
 
-      {/* Footer Info */}
       {winners.length > 0 && (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
           <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6">

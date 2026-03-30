@@ -48,11 +48,9 @@ export const ThemeProvider: FC<ThemeProviderProps> = ({ children, defaultTheme =
   useEffect(() => {
     const root = document.documentElement;
 
-    // Calculate the resolved theme
     const resolved = theme === 'system' ? getSystemTheme() : theme;
     setResolvedTheme(resolved);
 
-    // Apply dark class to root
     if (resolved === 'dark') {
       root.classList.add('dark');
     } else {
@@ -60,7 +58,6 @@ export const ThemeProvider: FC<ThemeProviderProps> = ({ children, defaultTheme =
     }
   }, [theme]);
 
-  // Listen for system theme changes
   useEffect(() => {
     if (theme !== 'system') return;
 

@@ -1,3 +1,129 @@
 @import 'tailwindcss';
-@import "../../../../libs/shadcn-ui/src/index.css";
-@source "../../../../libs/shadcn-ui/src/atoms/**/*.{ts,tsx}";
+@import 'tw-animate-css';
+@source "../../../../libs/ui/src/**/*.{ts,tsx}";
+
+@custom-variant dark (&:is(.dark *));
+
+.container {
+  margin-inline: auto;
+}
+
+@theme inline {
+  --color-primary-50: #f0f8ff;
+  --color-primary-100: #e1f0fd;
+  --color-primary-200: #bce1fb;
+  --color-primary-300: #81cbf8;
+  --color-primary-400: #3eb0f2;
+  --color-primary-500: #23a1eb;
+  --color-primary-600: #0877c1;
+  --color-primary-700: #085f9c;
+  --color-primary-800: #0b5181;
+  --color-primary-900: #0f446b;
+  --color-primary-950: #0a2b47;
+
+  --color-neutral-50: #f6f6f6;
+  --color-neutral-100: #e7e7e7;
+  --color-neutral-200: #d1d1d1;
+  --color-neutral-300: #b0b0b0;
+  --color-neutral-400: #888888;
+  --color-neutral-500: #6d6d6d;
+  --color-neutral-600: #5d5d5d;
+  --color-neutral-700: #4f4f4f;
+  --color-neutral-800: #454545;
+  --color-neutral-900: #3d3d3d;
+  --color-neutral-950: #2b2b2b;
+
+  --color-success-100: #e0fbd8;
+  --color-success-200: #bcf8b0;
+  --color-success-300: #8eea85;
+  --color-success-400: #63d564;
+  --color-success-500: #35ba43;
+  --color-success-600: #269f3e;
+  --color-success-700: #1a8439;
+  --color-success-800: #106b32;
+  --color-success-900: #0b592f;
+
+  --color-info-100: #ccfcfe;
+  --color-info-200: #9bf3fd;
+  --color-info-300: #67e3fb;
+  --color-info-400: #42cdf8;
+  --color-info-500: #04acf3;
+  --color-info-600: #0185d0;
+  --color-info-700: #0264af;
+  --color-info-800: #01478d;
+  --color-info-900: #003375;
+
+  --color-warning-100: #fffcd3;
+  --color-warning-200: #fffaa9;
+  --color-warning-300: #fff67d;
+  --color-warning-400: #fff25d;
+  --color-warning-500: #ffed27;
+  --color-warning-600: #dbc91d;
+  --color-warning-700: #b7a714;
+  --color-warning-800: #93850b;
+  --color-warning-900: #7a6d07;
+
+  --color-danger-100: #ffe8da;
+  --color-danger-200: #ffcbb3;
+  --color-danger-300: #ffaa8d;
+  --color-danger-400: #ff8870;
+  --color-danger-500: #ff5242;
+  --color-danger-600: #da3030;
+  --color-danger-700: #b7212d;
+  --color-danger-800: #93152a;
+  --color-danger-900: #7a0c27;
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+:root {
+  --radius: 1rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.141 0.005 285.823);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.141 0.005 285.823);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.141 0.005 285.823);
+  --primary: oklch(0.623 0.214 259.815);
+  --primary-foreground: oklch(0.97 0.014 254.604);
+  --secondary: oklch(0.967 0.001 286.375);
+  --secondary-foreground: oklch(0.21 0.006 285.885);
+  --muted: oklch(0.967 0.001 286.375);
+  --muted-foreground: oklch(0.552 0.016 285.938);
+  --accent: oklch(0.967 0.001 286.375);
+  --accent-foreground: oklch(0.21 0.006 285.885);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.92 0.004 286.32);
+  --input: oklch(0.92 0.004 286.32);
+  --ring: oklch(0.623 0.214 259.815);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

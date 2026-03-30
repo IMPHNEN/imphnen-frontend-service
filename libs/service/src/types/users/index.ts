@@ -15,5 +15,4 @@ export type TUserItem = {
   skills?: string[];
 };
 
-// Re-export types from API for convenience
 export type { UserDetailResponseDto, UserUpdateRequestDto } from '../../api/users';

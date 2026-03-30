@@ -18,8 +18,6 @@ export default function ResetPasswordPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
-    // Get the access_token from URL hash (Supabase sends it as hash fragment)
-    // or from query params (when redirected from callback page)
     const hashParams = new URLSearchParams(
       globalThis.location.hash.substring(1)
     );
@@ -61,7 +59,6 @@ export default function ResetPasswordPage() {
 
       toast.success('Password updated successfully!');
 
-      // Clear session and redirect to login
       clearSession();
       navigate('/auth/login');
     } catch (err) {

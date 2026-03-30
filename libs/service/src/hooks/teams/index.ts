@@ -9,7 +9,6 @@ import type {
   TSubmitProjectRequest,
 } from '../../types/teams';
 
-// Query keys
 export const teamKeys = {
   all: ['teams'] as const,
   lists: () => [...teamKeys.all, 'list'] as const,
@@ -23,7 +22,6 @@ export const teamKeys = {
   myInvitations: () => [...teamKeys.all, 'my-invitations'] as const,
 };
 
-// API response types
 interface TeamMember {
   id: string;
   team_id: string;
@@ -106,7 +104,6 @@ interface Submission {
   created_at: string;
 }
 
-// List response type with pagination
 interface ListResponseWithMeta<T> {
   message: string;
   data: T[];
@@ -118,7 +115,6 @@ interface ListResponseWithMeta<T> {
   };
 }
 
-// Team CRUD Hooks
 export const useTeams = (params?: {
   page?: number;
   limit?: number;
@@ -158,7 +154,6 @@ export const useTeams = (params?: {
   });
 };
 
-// Infinite scroll teams hook
 const TEAMS_PAGE_SIZE = 12;
 
 export const useInfiniteTeams = (params?: {
@@ -258,7 +253,6 @@ export const useUpdateTeam = (teamId: string) => {
   });
 };
 
-// Team Members Hooks - using team detail endpoint which includes members
 export const useTeamMembers = (teamId: string, enabled = true) => {
   return useQuery({
     queryKey: teamKeys.members(teamId),
@@ -298,8 +292,6 @@ export const useManageMember = (teamId: string) => {
 
   return useMutation({
     mutationFn: async ({ userId, data }: { userId: string; data: { role?: string; status?: string } }) => {
-      // This endpoint may not exist in the backend yet
-      // For now, we'll throw an error indicating it's not implemented
       throw new Error('Manage member functionality not yet implemented in backend');
     },
     onSuccess: () => {
@@ -329,7 +321,6 @@ export const useRemoveMember = (teamId: string) => {
   });
 };
 
-// Join Requests Hooks
 export const useJoinTeam = () => {
   const queryClient = useQueryClient();
   const { session } = useAuthStore();
@@ -376,7 +367,6 @@ export const useRespondToJoinRequest = (teamId: string) => {
         throw new Error('You must be logged in to respond to join requests');
       }
 
-      // Backend uses 'accept' instead of 'approve'
       const backendAction = action === 'approve' ? 'accept' : 'reject';
 
       await hackathonApi.post(`/join-requests/${requestId}/respond`, {
@@ -393,7 +383,6 @@ export const useRespondToJoinRequest = (teamId: string) => {
   });
 };
 
-// Invitations Hooks
 export const useMyInvitations = () => {
   const { session } = useAuthStore();
 
@@ -429,7 +418,6 @@ export const useRespondToInvitation = () => {
   });
 };
 
-// User's Teams
 export const useMyTeams = () => {
   const { session } = useAuthStore();
 
@@ -438,7 +426,6 @@ export const useMyTeams = () => {
     queryFn: async () => {
       const response = await hackathonApi.get<HackathonApiResponse<any[]>>('/teams/my');
       const rawData = response.data.data || [];
-      // Unwrap nested team data if present (API returns [{team: {...}}] or [{id, name, ...}])
       const teams = rawData.map((item: any) => item.team || item);
       return { data: teams };
     },
@@ -446,7 +433,6 @@ export const useMyTeams = () => {
   });
 };
 
-// Project Submission Hooks
 export const useSubmitProject = (teamId: string) => {
   const queryClient = useQueryClient();
 
@@ -454,14 +440,12 @@ export const useSubmitProject = (teamId: string) => {
     mutationFn: async (data: TSubmitProjectRequest) => {
       let submissionId: string;
 
-      // First, check if submission exists
       try {
         const existingResponse = await hackathonApi.get<HackathonApiResponse<Submission | null>>(
           `/submissions/teams/${teamId}`
         );
 
         if (existingResponse.data.data?.id) {
-          // Update existing submission
           const response = await hackathonApi.put<HackathonApiResponse<Submission>>(
             `/submissions/${existingResponse.data.data.id}`,
             {
@@ -479,7 +463,6 @@ export const useSubmitProject = (teamId: string) => {
           throw new Error('No existing submission');
         }
       } catch {
-        // No existing submission, create new one
         const response = await hackathonApi.post<HackathonApiResponse<Submission>>(
           `/submissions/teams/${teamId}`,
           {
@@ -495,12 +478,10 @@ export const useSubmitProject = (teamId: string) => {
         submissionId = response.data.data.id;
       }
 
-      // Step 2: Submit the project (draft -> pending_verification)
       await hackathonApi.post<HackathonApiResponse<Submission>>(
         `/submissions/${submissionId}/submit`
       );
 
-      // Step 3: Confirm the submission (pending_verification -> submitted)
       const finalResponse = await hackathonApi.post<HackathonApiResponse<Submission>>(
         `/submissions/${submissionId}/confirm`
       );
@@ -527,7 +508,6 @@ export const useTeamSubmission = (teamId: string, enabled = true) => {
   });
 };
 
-// Leave Team Hook
 export const useLeaveTeam = () => {
   const queryClient = useQueryClient();
   const { session } = useAuthStore();
@@ -538,7 +518,6 @@ export const useLeaveTeam = () => {
         throw new Error('You must be logged in to leave a team');
       }
 
-      // Use the dedicated leave team endpoint
       await hackathonApi.post(`/teams/${teamId}/leave`);
       return { success: true };
     },
@@ -549,7 +528,6 @@ export const useLeaveTeam = () => {
   });
 };
 
-// Delete Team Hook (Leader only)
 export const useDeleteTeam = () => {
   const queryClient = useQueryClient();
   const { session } = useAuthStore();
@@ -570,14 +548,12 @@ export const useDeleteTeam = () => {
   });
 };
 
-// Get Teams by User ID - uses /users/{user_id}/teams
 export const useTeamsByUserId = (userId: string) => {
   return useQuery({
     queryKey: ['teams-by-user', userId],
     queryFn: async () => {
       const response = await hackathonApi.get<HackathonApiResponse<any[]>>(`/users/${userId}/teams`);
       const rawData = response.data.data || [];
-      // Unwrap nested team data if present (API returns [{team: {...}}] or [{id, name, ...}])
       const teams = rawData.map((item: any) => item.team || item);
       return { data: teams };
     },

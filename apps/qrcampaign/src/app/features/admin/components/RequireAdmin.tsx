@@ -15,11 +15,8 @@ export const RequireAdmin = ({ children }: RequireAdminProps) => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // Check if user has admin role
-  // user.role is now an object { id, name, permissions }
   const userRole = user?.role?.name;
   if (userRole !== 'Admin' && userRole !== 'Super Admin') {
-    // Redirect non-admins to home
     return <Navigate to="/" replace />;
   }
 

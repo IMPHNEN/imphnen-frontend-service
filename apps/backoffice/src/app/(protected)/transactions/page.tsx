@@ -27,7 +27,6 @@ interface Transaction {
   status: TransactionStatus;
 }
 
-// Mock data for transactions
 const mockTransactions: Transaction[] = Array.from({ length: 20 }, (_, i) => ({
   id: i + 1,
   name: i === 0 ? 'Ahmad Wijuana' : 'Nama Lengkap',
@@ -149,14 +148,11 @@ export const Components: FC = (): ReactElement => {
   return (
     <Fragment>
       <main className="w-full px-[48px] py-[40px] flex flex-col gap-8">
-        {/* Header */}
         <header className="bg-white py-4 px-8 rounded-lg shadow p-4">
           <h1 className="text-p2 font-semibold">Validasi Transaksi</h1>
         </header>
 
-        {/* Account Table Section */}
         <section className="flex flex-col gap-6 p-8 bg-white rounded-md">
-          {/* Search and Filter */}
           <div className="flex justify-between items-center gap-8 mb-2">
             <div className="relative w-full">
               <Input
@@ -185,7 +181,6 @@ export const Components: FC = (): ReactElement => {
                     onClose={() => setShowFilter(false)}
                     onFilterChange={(value) => {
                       console.log('Selected filter:', value);
-                      // Filter logic di sini
                     }}
                   />
                 </div>
@@ -193,7 +188,6 @@ export const Components: FC = (): ReactElement => {
             </div>
           </div>
 
-          {/* Table */}
           <DataTable data={mockTransactions} columns={columns} table={table} />
         </section>
       </main>

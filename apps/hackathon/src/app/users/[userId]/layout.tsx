@@ -10,7 +10,7 @@ const UserDetailLayout: FC = (): ReactElement => {
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <div className="flex-1 flex flex-col overflow-auto">
-        {/* Mobile Header with Hamburger */}
+
         <div className="lg:hidden bg-white dark:bg-gray-900 border-b dark:border-neutral-700 px-4 py-3 flex items-center">
           <button
             onClick={() => setSidebarOpen(true)}

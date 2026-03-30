@@ -10,15 +10,13 @@ import { Icon } from '@iconify/react';
 
 import { CitySelect } from '../../../components/city-select';
 
-const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
+const MAX_FILE_SIZE = 2 * 1024 * 1024;
 
-// Team features deadline: 2025-11-30 23:59:00 WIB (UTC+7)
 const TEAM_FEATURES_DEADLINE = new Date('2025-11-30T16:59:00Z');
 
 const CreateTeamPage: FC = (): ReactElement => {
   const navigate = useNavigate();
 
-  // Check if team features are closed
   const isTeamFeaturesClosed = new Date() >= TEAM_FEATURES_DEADLINE;
 
   const [logoFile, setLogoFile] = useState<File | null>(null);
@@ -99,7 +97,6 @@ const CreateTeamPage: FC = (): ReactElement => {
     } catch (error: any) {
       console.error('Failed to create team:', error);
 
-      // Handle specific error messages
       const message = error?.message || '';
       if (message.includes('413') || message.includes('length limit') || message.includes('too large')) {
         toast.error('Image file is too large. Please use smaller images (max 2MB each).');
@@ -111,7 +108,6 @@ const CreateTeamPage: FC = (): ReactElement => {
     }
   });
 
-  // Show closed screen if team features are closed
   if (isTeamFeaturesClosed) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-gray-50 dark:bg-gray-950 p-4">
@@ -157,7 +153,6 @@ const CreateTeamPage: FC = (): ReactElement => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-neutral-950">
-      {/* Header */}
       <div className="bg-white dark:bg-neutral-900 border-b dark:border-neutral-700">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Create Your Team</h1>
@@ -168,7 +163,6 @@ const CreateTeamPage: FC = (): ReactElement => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md dark:shadow-neutral-900/50 p-8">
           <form onSubmit={onSubmit} className="space-y-6">
-            {/* Banner Upload */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-2">
                 Team Banner <span className="text-gray-400 dark:text-neutral-500">(Optional)</span>
@@ -207,7 +201,6 @@ const CreateTeamPage: FC = (): ReactElement => {
               )}
             </div>
 
-            {/* Logo Upload */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300 mb-2">
                 Team Logo <span className="text-gray-400 dark:text-neutral-500">(Optional, but highly recommended)</span>
@@ -256,7 +249,6 @@ const CreateTeamPage: FC = (): ReactElement => {
               </div>
             </div>
 
-            {/* Team Name */}
             <ControlledInputField
               control={form.control}
               label="Team Name"
@@ -264,7 +256,6 @@ const CreateTeamPage: FC = (): ReactElement => {
               name="name"
             />
 
-            {/* City */}
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300">
                 City <span className="text-red-500">*</span>
@@ -283,7 +274,6 @@ const CreateTeamPage: FC = (): ReactElement => {
               />
             </div>
 
-            {/* Description */}
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300">
                 Description <span className="text-red-500">*</span>
@@ -307,7 +297,6 @@ const CreateTeamPage: FC = (): ReactElement => {
               />
             </div>
 
-            {/* Visibility */}
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700 dark:text-neutral-300">
                 Team Visibility <span className="text-red-500">*</span>
@@ -352,14 +341,12 @@ const CreateTeamPage: FC = (): ReactElement => {
               />
             </div>
 
-            {/* Warning */}
             <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
               <p className="text-sm text-yellow-800 dark:text-yellow-200">
                 <strong>Note:</strong> As team leader, you cannot leave or join another team after creating this team.
               </p>
             </div>
 
-            {/* Submit Button */}
             <div className="flex space-x-3 pt-4">
               <Button
                 type="button"

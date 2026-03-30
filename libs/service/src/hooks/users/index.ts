@@ -2,7 +2,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { hackathonApi, HackathonApiResponse } from '../../api/hackathon';
 import { useAuthStore } from '../auth';
 
-// User type
 interface User {
   id: string;
   email: string;
@@ -15,7 +14,6 @@ interface User {
   updated_at?: string;
 }
 
-// Certificate public data types
 interface CertificateUserData {
   id: string;
   fullname: string;
@@ -50,7 +48,6 @@ export interface CertificatePublicData {
   winner?: CertificateWinnerData;
 }
 
-// Update user request type
 interface UpdateUserRequest {
   fullname?: string;
   bio?: string;
@@ -58,8 +55,6 @@ interface UpdateUserRequest {
   avatar?: string;
   skills?: string[];
 }
-
-// Backend API-based user hooks
 
 export const useUserMe = () => {
   const { session } = useAuthStore();
@@ -107,7 +102,6 @@ export const useUpdateUserMe = () => {
       return { data: response.data.data };
     },
     onSuccess: (result) => {
-      // Update Zustand session store with new user data
       if (session?.user && result.data) {
         setSession({
           token: session.token,
@@ -132,8 +126,6 @@ export const useUpdateUserById = () => {
   return useMutation({
     mutationKey: ['update-user-by-id'],
     mutationFn: async ({ id, data }: { id: string; data: UpdateUserRequest }) => {
-      // Note: This might not be supported by backend (only /users/me for updates)
-      // Keeping for API compatibility but it will likely fail
       const response = await hackathonApi.put<HackathonApiResponse<User>>(`/users/${id}`, data);
       return { data: response.data.data };
     },
@@ -154,7 +146,6 @@ export const useUserDetailsById = (userId: string) => {
   });
 };
 
-// Public certificate data hook (no authentication required)
 export const useCertificatePublicData = (userId: string, enabled = true) => {
   return useQuery({
     queryKey: ['certificate-public-data', userId],

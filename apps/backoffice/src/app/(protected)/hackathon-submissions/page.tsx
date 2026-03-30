@@ -44,7 +44,6 @@ export const HackathonSubmissionsPage: FC = (): ReactElement => {
     useState<SubmissionType | null>(null);
   const [globalFilter, setGlobalFilter] = useState(searchQuery);
 
-  // Fetch submissions from API
   const {
     data: submissionsResponse,
     isLoading,
@@ -64,14 +63,13 @@ export const HackathonSubmissionsPage: FC = (): ReactElement => {
         status: statusFilter !== 'all' ? statusFilter : undefined,
         search: searchQuery || undefined,
       }),
-    staleTime: 30000, // 30 seconds cache
-    gcTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 30000,
+    gcTime: 5 * 60 * 1000,
   });
 
   const totalData = submissionsResponse?.meta?.total_data || 0;
   const totalPages = submissionsResponse?.meta?.total_page || 1;
 
-  // Handle page change
   const handlePageChange = useCallback(
     (newPage: number) => {
       const params = new URLSearchParams();
@@ -85,19 +83,16 @@ export const HackathonSubmissionsPage: FC = (): ReactElement => {
     [setSearchParams, perPage, searchQuery, statusFilter]
   );
 
-  // Validate page number
   useEffect(() => {
     if (!isLoading && totalPages > 0 && currentPage > totalPages) {
       setSearchParams({ page: totalPages.toString() });
     }
   }, [currentPage, totalPages, setSearchParams, isLoading]);
 
-  // Sync globalFilter with URL
   useEffect(() => {
     setGlobalFilter(searchQuery);
   }, [searchQuery]);
 
-  // Handle search
   const handleSearch = useCallback(() => {
     const params = new URLSearchParams();
     params.set('page', '1');
@@ -118,7 +113,6 @@ export const HackathonSubmissionsPage: FC = (): ReactElement => {
     [handleSearch]
   );
 
-  // Handle per page change
   const handlePerPageChange = useCallback(
     (newPerPage: number) => {
       const params = new URLSearchParams();
@@ -131,20 +125,6 @@ export const HackathonSubmissionsPage: FC = (): ReactElement => {
     [setSearchParams, searchQuery, statusFilter]
   );
 
-  // Handle status filter change
-  // const handleStatusFilterChange = useCallback(
-  //   (newStatus: string) => {
-  //     const params = new URLSearchParams();
-  //     params.set('page', '1');
-  //     if (perPage !== 10) params.set('per_page', perPage.toString());
-  //     if (searchQuery) params.set('search', searchQuery);
-  //     if (newStatus !== 'all') params.set('status', newStatus);
-  //     setSearchParams(params);
-  //   },
-  //   [setSearchParams, perPage, searchQuery]
-  // );
-
-  // Handle modal
   const handleShowSubmissionModal = useCallback(
     (submission: SubmissionType) => {
       setSelectedSubmission(submission);
@@ -158,12 +138,10 @@ export const HackathonSubmissionsPage: FC = (): ReactElement => {
     setSelectedSubmission(null);
   }, []);
 
-  // Get submissions data
   const filteredData = useMemo(() => {
     return submissionsResponse?.data || [];
   }, [submissionsResponse]);
 
-  // Memoize columns
   const columns: ColumnDef<SubmissionType>[] = useMemo(
     () => [
       {
@@ -252,7 +230,6 @@ export const HackathonSubmissionsPage: FC = (): ReactElement => {
       <section className="bg-white rounded-md shadow p-8 flex flex-col gap-6">
         <div className="flex flex-wrap gap-3 items-center justify-between">
           <div className="flex flex-wrap gap-3 items-center">
-            {/* Search bar */}
             <div className="relative">
               <SearchOutlined className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 text-sm" />
               <input
@@ -265,7 +242,6 @@ export const HackathonSubmissionsPage: FC = (): ReactElement => {
               />
             </div>
 
-            {/* Per Page Dropdown */}
             <div className="relative">
               <select
                 className="border border-neutral-200 rounded-lg px-4 py-2.5 text-sm w-28 focus:border-primary-500 focus:outline-none appearance-none bg-white cursor-pointer"
@@ -281,52 +257,16 @@ export const HackathonSubmissionsPage: FC = (): ReactElement => {
               </select>
             </div>
 
-            {/* Status Filter */}
-            {/* <div className="relative">
-              <FilterOutlined className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 text-sm pointer-events-none z-10" />
-              <select
-                className="border border-neutral-200 rounded-lg pl-10 pr-10 py-2.5 text-sm w-full sm:w-40 focus:border-primary-500 focus:outline-none appearance-none bg-white cursor-pointer"
-                value={statusFilter}
-                onChange={(e) => handleStatusFilterChange(e.target.value)}
-              >
-                <option value="all">All Status</option>
-                <option value="submitted">Submitted</option>
-                <option value="pending">Pending</option>
-                <option value="approved">Approved</option>
-                <option value="rejected">Rejected</option>
-              </select>
-            </div> */}
+            {}
+            {
+}
           </div>
         </div>
 
-        {/* Active filters */}
-        {/* {statusFilter !== 'all' && (
-          <div className="flex flex-wrap gap-2 items-center">
-            <span className="text-sm text-neutral-600">Active filters:</span>
-            <span className="inline-flex items-center gap-1 px-2 py-1 bg-info-100 text-info-800 rounded-2xl text-sm">
-              Status: {statusFilter}
-              <button
-                onClick={() => handleStatusFilterChange('all')}
-                className="text-info-600 hover:text-info-800 cursor-pointer"
-              >
-                ✕
-              </button>
-            </span>
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => {
-                handleStatusFilterChange('all');
-                setGlobalFilter('');
-              }}
-              className="text-sm text-neutral-600"
-            >
-              Clear All
-            </Button>
-          </div>
-        )} */}
+        {}
+        {
+}
 
-        {/* Loading & results */}
         {isLoading ? (
           <div className="flex items-center justify-center py-12">
             <LoadingOutlined className="text-3xl text-primary-500 animate-spin" />
@@ -360,7 +300,6 @@ export const HackathonSubmissionsPage: FC = (): ReactElement => {
         )}
       </section>
 
-      {/* Submission Modal */}
       {selectedSubmission && (
         <SubmissionModal
           isOpen={showSubmissionModal}

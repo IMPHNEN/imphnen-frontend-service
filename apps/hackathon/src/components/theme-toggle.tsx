@@ -5,7 +5,6 @@ interface ThemeToggleProps {
   className?: string;
 }
 
-// Sun icon for light mode
 const SunIcon = () => (
   <svg
     className="w-5 h-5"
@@ -22,7 +21,6 @@ const SunIcon = () => (
   </svg>
 );
 
-// Moon icon for dark mode
 const MoonIcon = () => (
   <svg
     className="w-5 h-5"
@@ -39,7 +37,6 @@ const MoonIcon = () => (
   </svg>
 );
 
-// System icon (monitor)
 const SystemIcon = () => (
   <svg
     className="w-5 h-5"

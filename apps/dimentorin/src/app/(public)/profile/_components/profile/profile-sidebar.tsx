@@ -9,12 +9,11 @@ import { useProfile } from '../contexts/profile-context';
 
 interface ProfileSidebarProps {
   showNotification: (type: NotificationType['type'], title: string, message?: string) => void;
-  isViewOnly?: boolean; // Add isViewOnly prop
+  isViewOnly?: boolean;
 }
 
 export const ProfileSidebar: FC<ProfileSidebarProps> = ({ showNotification, isViewOnly = false }) => {
   const { profileData, updateProfile, profileType, isLoading, isUpdating } = useProfile();
-
 
   const getCareerStatus = useCallback(() => {
     if (!profileData) {
@@ -114,7 +113,6 @@ export const ProfileSidebar: FC<ProfileSidebarProps> = ({ showNotification, isVi
     }
   }, [profileData, profileType, isLoading, isInitialized, getCareerStatus, getEmail, getPhone, getLocation, getSkills, isUpdatingCareerStatus]);
 
-
   const tryParseJsonMessage = (msg: string): string => {
     if (msg.trim().startsWith('{') && msg.trim().endsWith('}')) {
       try {
@@ -128,7 +126,6 @@ export const ProfileSidebar: FC<ProfileSidebarProps> = ({ showNotification, isVi
     }
     return msg;
   };
-
 
   const extractApiMessage = (err: unknown): string => {
     if (typeof err !== 'object' || err === null) return '';
@@ -147,7 +144,7 @@ export const ProfileSidebar: FC<ProfileSidebarProps> = ({ showNotification, isVi
   };
 
   const handleProfileUpdate = async (updates: Partial<MentorUpdateRequestDto | UserUpdateRequestDto>) => {
-    if (isViewOnly) { // Prevent updates if in view-only mode
+    if (isViewOnly) {
       showNotification('error', 'Akses Ditolak', 'Anda tidak memiliki izin untuk mengedit profil ini.');
       return;
     }
@@ -167,7 +164,7 @@ export const ProfileSidebar: FC<ProfileSidebarProps> = ({ showNotification, isVi
         <Select
           value={careerStatus}
           onChange={async (e) => {
-            if (isUpdatingCareerStatus) return; // Prevent multiple clicks
+            if (isUpdatingCareerStatus) return;
             const newStatus = e.target.value;
             console.log('ProfileSidebar: User selected career status:', newStatus);
             setCareerStatus(newStatus);
@@ -190,7 +187,7 @@ export const ProfileSidebar: FC<ProfileSidebarProps> = ({ showNotification, isVi
             }
           }}
           className="w-full min-w-[200px]"
-          disabled={isUpdatingCareerStatus || isViewOnly} // Disable if in view-only mode
+          disabled={isUpdatingCareerStatus || isViewOnly}
         >
           <option value="Career Status">Career Status</option>
           <option value="Student">Student</option>
@@ -214,7 +211,7 @@ export const ProfileSidebar: FC<ProfileSidebarProps> = ({ showNotification, isVi
         }}
         showNotification={showNotification}
         isLoading={isUpdating}
-        isViewOnly={isViewOnly} // Pass isViewOnly
+        isViewOnly={isViewOnly}
       />
 
       <SkillsSection
@@ -232,7 +229,7 @@ export const ProfileSidebar: FC<ProfileSidebarProps> = ({ showNotification, isVi
         }}
         showNotification={showNotification}
         isLoading={isUpdating}
-        isViewOnly={isViewOnly} // Pass isViewOnly
+        isViewOnly={isViewOnly}
       />
     </div>
   );

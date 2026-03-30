@@ -16,7 +16,6 @@ import type {
 
 const TEAMS_BASE_URL = '/teams';
 
-// Team CRUD
 export const getTeams = async (params?: {
   page?: number;
   limit?: number;
@@ -43,7 +42,6 @@ export const updateTeam = async (teamId: string, data: TUpdateTeamRequest) => {
   return response.data;
 };
 
-// Team Members
 export const getTeamMembers = async (teamId: string) => {
   const response = await api.get<TTeamMembersResponse>(`${TEAMS_BASE_URL}/${teamId}/members`);
   return response.data;
@@ -64,7 +62,6 @@ export const removeMember = async (teamId: string, userId: string) => {
   return response.data;
 };
 
-// Join Requests
 export const joinTeam = async (teamId: string, data: TJoinTeamRequest) => {
   const response = await api.post(`${TEAMS_BASE_URL}/${teamId}/join-request`, data);
   return response.data;
@@ -80,7 +77,6 @@ export const respondToJoinRequest = async (teamId: string, requestId: string, ac
   return response.data;
 };
 
-// Invitations
 export const getMyInvitations = async () => {
   const response = await api.get<TTeamInvitationsResponse>(`${TEAMS_BASE_URL}/invitations/me`);
   return response.data;
@@ -91,13 +87,11 @@ export const respondToInvitation = async (invitationId: string, action: 'accept'
   return response.data;
 };
 
-// User's Teams
 export const getMyTeams = async () => {
   const response = await api.get<TTeamListResponse>(`${TEAMS_BASE_URL}/me`);
   return response.data;
 };
 
-// Project Submission
 export const submitProject = async (teamId: string, data: TSubmitProjectRequest) => {
   const response = await api.post<TProjectSubmissionResponse>(`${TEAMS_BASE_URL}/${teamId}/submission`, data);
   return response.data;

@@ -18,12 +18,6 @@ export default defineConfig(() => ({
       tsconfigPath: path.join(__dirname, 'tsconfig.lib.json'),
     }),
   ],
-  // Uncomment this if you are using workers.
-  // worker: {
-  //  plugins: [ nxViteTsPaths() ],
-  // },
-  // Configuration for building your library.
-  // See: https://vitejs.dev/guide/build.html#library-mode
   build: {
     outDir: '../../dist/libs/ui',
     emptyOutDir: true,
@@ -32,7 +26,6 @@ export default defineConfig(() => ({
       transformMixedEsModules: true,
     },
     lib: {
-      // Could also be a dictionary or array of multiple entry points.
       entry: [
         'src/atoms/index.ts',
         'src/molecules/index.ts',
@@ -40,13 +33,18 @@ export default defineConfig(() => ({
       ],
       name: 'ui',
       fileName: 'index',
-      // Change this to the formats you want to support.
-      // Don't forget to update your package.json as well.
       formats: ['es' as const],
     },
     rollupOptions: {
-      // External packages that should not be bundled into your library.
-      external: ['react', 'react-dom', 'react/jsx-runtime'],
+      external: [
+            'react',
+            'react-dom',
+            'react/jsx-runtime',
+            'react-router-dom',
+            '@ant-design/icons',
+            '@imphnen-frontend-service/service',
+            '@imphnen-frontend-service/utils',
+          ],
     },
   },
   test: {

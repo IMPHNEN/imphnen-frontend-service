@@ -23,7 +23,6 @@ export default function LoginPage() {
     }
   }, [isAuthenticated, navigate]);
 
-  // Check for password reset tokens in URL and redirect to reset-password page
   useEffect(() => {
     const hashParams = new URLSearchParams(
       globalThis.location.hash.substring(1)
@@ -34,13 +33,11 @@ export default function LoginPage() {
       hashParams.get('access_token') || urlParams.get('access_token');
     const type = hashParams.get('type') || urlParams.get('type');
 
-    // If we have an access_token, this is likely a password reset redirect that landed on the wrong page
     if (accessToken) {
       console.log(
         '[Login] Detected access_token, redirecting to reset-password page'
       );
 
-      // Check if it's a password recovery
       if (type === 'recovery' || type === 'magiclink' || !type) {
         toast.info('Redirecting to password reset...');
         navigate('/auth/reset-password?access_token=' + accessToken);
@@ -76,22 +73,14 @@ export default function LoginPage() {
   };
 
   const handleGithubLogin = async () => {
-    // TODO: Implement GitHub login with new auth service if needed
     toast.info('GitHub login coming soon');
   };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-50 p-4">
       <div className="bg-white w-full max-w-md p-8 rounded-2xl shadow-lg border border-gray-200">
-        {/* <div className="flex items-center justify-between mb-6">
-          <button
-            onClick={() => navigate('/')}
-            className="cursor-pointer text-primary-500 hover:text-primary-600 text-base font-sans flex items-center"
-          >
-            <Icon icon="ic:baseline-chevron-left" width="24" height="24" />
-            Back to Homepage
-          </button>
-        </div> */}
+        {
+}
 
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-gray-900 mb-2">
@@ -106,7 +95,6 @@ export default function LoginPage() {
           </div>
         )}
 
-        {/* Traditional Login Form */}
         <form onSubmit={handleEmailLogin} className="space-y-4 mb-6">
           <div>
             <label

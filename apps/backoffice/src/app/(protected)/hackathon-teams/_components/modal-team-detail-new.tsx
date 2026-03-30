@@ -33,7 +33,6 @@ const ModalTeamDetail: FC<ModalProps> = ({ isOpen, onClose, team }) => {
   const logoInputRef = useRef<HTMLInputElement>(null);
   const bannerInputRef = useRef<HTMLInputElement>(null);
 
-  // Initialize form data when modal opens
   useEffect(() => {
     if (isOpen) {
       if (team) {
@@ -55,7 +54,6 @@ const ModalTeamDetail: FC<ModalProps> = ({ isOpen, onClose, team }) => {
     }
   }, [isOpen, team]);
 
-  // Check if form has changes
   const hasChanges = useMemo(() => {
     if (!formData || !team) return !!formData;
     return (
@@ -68,7 +66,6 @@ const ModalTeamDetail: FC<ModalProps> = ({ isOpen, onClose, team }) => {
     );
   }, [formData, team]);
 
-  // Check if required fields are filled
   const isFormValid = useMemo(() => {
     if (!formData) return false;
     return (
@@ -144,7 +141,6 @@ const ModalTeamDetail: FC<ModalProps> = ({ isOpen, onClose, team }) => {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-        {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-neutral-200">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center">
@@ -172,7 +168,6 @@ const ModalTeamDetail: FC<ModalProps> = ({ isOpen, onClose, team }) => {
           </button>
         </div>
 
-        {/* Content */}
         <div className="p-6 space-y-6" onClick={() => setShowLogoMenu(false)}>
           <input
             type="file"
@@ -189,7 +184,6 @@ const ModalTeamDetail: FC<ModalProps> = ({ isOpen, onClose, team }) => {
             className="hidden"
           />
 
-          {/* Banner Section */}
           <div className="space-y-2">
             <label className="block text-sm font-medium text-neutral-700">
               Team Banner{' '}
@@ -234,7 +228,6 @@ const ModalTeamDetail: FC<ModalProps> = ({ isOpen, onClose, team }) => {
             </div>
           </div>
 
-          {/* Logo & Name */}
           <div className="grid grid-cols-12 gap-4 items-start">
             <div className="col-span-2">
               <label className="block text-sm font-medium text-neutral-700 mb-2">
@@ -305,7 +298,6 @@ const ModalTeamDetail: FC<ModalProps> = ({ isOpen, onClose, team }) => {
             </div>
           </div>
 
-          {/* Description */}
           <div className="space-y-2">
             <label className="block text-sm font-medium text-neutral-700">
               Description <span className="text-danger-500">*</span>
@@ -319,7 +311,6 @@ const ModalTeamDetail: FC<ModalProps> = ({ isOpen, onClose, team }) => {
             />
           </div>
 
-          {/* City */}
           <div className="space-y-2">
             <label className="block text-sm font-medium text-neutral-700">
               City <span className="text-danger-500">*</span>
@@ -336,7 +327,6 @@ const ModalTeamDetail: FC<ModalProps> = ({ isOpen, onClose, team }) => {
             />
           </div>
 
-          {/* Visibility */}
           <div className="space-y-2">
             <label className="block text-sm font-medium text-neutral-700">
               Team Visibility
@@ -373,7 +363,6 @@ const ModalTeamDetail: FC<ModalProps> = ({ isOpen, onClose, team }) => {
             </div>
           </div>
 
-          {/* Team Details */}
           {team && (
             <div className="space-y-4 border-t border-neutral-200 pt-4">
               <div className="space-y-2">
@@ -429,7 +418,6 @@ const ModalTeamDetail: FC<ModalProps> = ({ isOpen, onClose, team }) => {
           )}
         </div>
 
-        {/* Footer */}
         <div className="flex items-center justify-between p-6 border-t border-neutral-200">
           <div>
             {team && (
@@ -463,7 +451,6 @@ const ModalTeamDetail: FC<ModalProps> = ({ isOpen, onClose, team }) => {
         </div>
       </div>
 
-      {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-60 p-4">
           <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6">

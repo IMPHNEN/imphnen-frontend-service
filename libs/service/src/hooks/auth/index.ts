@@ -5,7 +5,6 @@ import { useAuthStore } from './use-auth-store';
 
 export * from './use-auth-store';
 
-// Types matching backend response
 interface TokenInfo {
   access_token: string;
   refresh_token: string;
@@ -41,38 +40,30 @@ interface MessageResponse {
   message: string;
 }
 
-// Login request type
 interface LoginRequest {
   email: string;
   password: string;
 }
 
-// Signup request type
 interface SignupRequest {
   email: string;
   password: string;
   fullname: string;
 }
 
-// GitHub auth request type
 interface GitHubAuthRequest {
   code: string;
 }
 
-// Forgot password request type
 interface ForgotPasswordRequest {
   email: string;
 }
 
-// Reset password request type
 interface ResetPasswordRequest {
   access_token: string;
   new_password: string;
 }
 
-// Backend API-based auth hooks
-
-// Email/Password Login
 export const useLogin = () => {
   const { setSession } = useAuthStore();
 
@@ -111,7 +102,6 @@ export const useLogin = () => {
   });
 };
 
-// Email/Password Signup - returns message only (user needs to activate via email)
 export const useSignup = () => {
   return useMutation({
     mutationFn: async (data: SignupRequest) => {
@@ -123,7 +113,6 @@ export const useSignup = () => {
   });
 };
 
-// GitHub OAuth - exchange code for token
 export const useGitHubCallback = () => {
   const { setSession } = useAuthStore();
 
@@ -162,8 +151,7 @@ export const useGitHubCallback = () => {
   });
 };
 
-// Get current session (protected)
-export const useSession = () => {
+export const useSessionQuery = () => {
   const { session } = useAuthStore();
 
   return useQuery({
@@ -178,7 +166,6 @@ export const useSession = () => {
   });
 };
 
-// Forgot password
 export const useForgotPassword = () => {
   return useMutation({
     mutationFn: async (data: ForgotPasswordRequest) => {
@@ -190,7 +177,6 @@ export const useForgotPassword = () => {
   });
 };
 
-// Reset password
 export const useResetPassword = () => {
   return useMutation({
     mutationFn: async (data: ResetPasswordRequest) => {
@@ -202,20 +188,17 @@ export const useResetPassword = () => {
   });
 };
 
-// Sign out (clears local session)
 export const useSignOut = () => {
   const { clearSession } = useAuthStore();
 
   return useMutation({
     mutationFn: async () => {
-      // No backend call needed - just clear local session
       clearSession();
       return { success: true };
     },
   });
 };
 
-// Backoffice Login
 export const useBackofficeLogin = () => {
   const { setSession } = useAuthStore();
 
@@ -254,9 +237,6 @@ export const useBackofficeLogin = () => {
   });
 };
 
-// GitHub OAuth URL helper
-// The frontend needs to redirect to GitHub with the client_id
-// After GitHub redirects back with a code, use useGitHubCallback
 export const getGitHubOAuthUrl = (clientId: string, redirectUri: string) => {
   const params = new URLSearchParams({
     client_id: clientId,
@@ -266,16 +246,20 @@ export const getGitHubOAuthUrl = (clientId: string, redirectUri: string) => {
   return `https://github.com/login/oauth/authorize?${params.toString()}`;
 };
 
-// Backward compatibility hooks - these wrap the new backend API
-
-// GitHub OAuth hook (backward compatible)
 export const useGitHubAuth = () => {
   const signInWithGitHub = async () => {
-    // Get GitHub client ID from environment
-    const clientId = import.meta.env.VITE_GITHUB_CLIENT_ID || '';
+    let clientId = '';
+    if (typeof process !== 'undefined' && process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID) {
+      clientId = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
+    } else {
+      try {
+        const meta = import.meta as unknown as Record<string, Record<string, string>>;
+        if (meta.env?.VITE_GITHUB_CLIENT_ID) clientId = meta.env.VITE_GITHUB_CLIENT_ID;
+      } catch { /* not in Vite context */ }
+    }
     if (!clientId) {
       throw new Error(
-        'GitHub Client ID not configured. Set VITE_GITHUB_CLIENT_ID environment variable.'
+        'GitHub Client ID not configured.'
       );
     }
 
@@ -290,7 +274,6 @@ export const useGitHubAuth = () => {
   };
 };
 
-// Email/Password auth hook (backward compatible)
 export const useEmailAuth = () => {
   const loginMutation = useLogin();
   const signupMutation = useSignup();
@@ -317,7 +300,6 @@ export const useEmailAuth = () => {
       password,
       fullname,
     });
-    // Signup only returns a message (user needs to verify email first)
     return {
       message: result.message,
     };
@@ -334,9 +316,6 @@ export const useEmailAuth = () => {
   };
 };
 
-// Legacy hooks for old API compatibility (deprecated)
-
-/** @deprecated Use useLogin instead */
 export const usePostLogin = () => {
   return useMutation({
     mutationFn: async (data: LoginRequest) => {
@@ -348,7 +327,6 @@ export const usePostLogin = () => {
   });
 };
 
-/** @deprecated Use useSignup instead */
 export const usePostRegister = () => {
   return useMutation({
     mutationFn: async (data: SignupRequest) => {
@@ -360,7 +338,6 @@ export const usePostRegister = () => {
   });
 };
 
-/** @deprecated Not needed with new backend */
 export const usePostVerifyEmail = () => {
   return useMutation({
     mutationFn: async () => {
@@ -369,7 +346,6 @@ export const usePostVerifyEmail = () => {
   });
 };
 
-/** @deprecated Not needed with new backend */
 export const usePostSendOtp = () => {
   return useMutation({
     mutationFn: async () => {
@@ -378,7 +354,6 @@ export const usePostSendOtp = () => {
   });
 };
 
-/** @deprecated Use useGitHubCallback instead */
 export const useGoogleCallback = () => {
   return useMutation({
     mutationFn: async () => {

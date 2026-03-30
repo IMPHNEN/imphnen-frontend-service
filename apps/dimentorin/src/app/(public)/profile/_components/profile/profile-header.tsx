@@ -6,7 +6,7 @@ import { useProfile } from '../contexts/profile-context';
 
 interface ProfileHeaderProps {
   onEditProfileClick: () => void;
-  isViewOnly?: boolean; // Add isViewOnly prop
+  isViewOnly?: boolean;
 }
 
 export const ProfileHeader: FC<ProfileHeaderProps> = ({ onEditProfileClick, isViewOnly = false }) => {
@@ -16,7 +16,6 @@ export const ProfileHeader: FC<ProfileHeaderProps> = ({ onEditProfileClick, isVi
   const avatarSrc = (profileType === 'user' && profileData && 'avatar' in profileData)
     ? profileData.avatar || "/image/testimonial.webp"
     : "/image/testimonial.webp";
-
 
   const displayFullname = profileData?.fullname ||
     (profileType === 'mentor' && profileData && 'legal_name' in profileData
@@ -33,7 +32,6 @@ export const ProfileHeader: FC<ProfileHeaderProps> = ({ onEditProfileClick, isVi
       displayJob = profileData.current_role || 'Role';
     }
   }
-
 
   const joinDate = profileData && 'created_at' in profileData
     ? new Date(profileData.created_at).toLocaleDateString('id-ID', {
@@ -73,7 +71,7 @@ export const ProfileHeader: FC<ProfileHeaderProps> = ({ onEditProfileClick, isVi
               </p>
             </div>
 
-            {!isViewOnly && ( // Conditionally render the button
+            {!isViewOnly && (
               <Button
                 variant="secondary"
                 size="sm"

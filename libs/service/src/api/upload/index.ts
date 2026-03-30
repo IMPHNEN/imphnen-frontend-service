@@ -32,13 +32,11 @@ export const uploadService: UploadService = {
   },
 
   async uploadAvatar(file: File) {
-    // Validate file type
     if (!file.type.startsWith('image/')) {
       throw new Error('File harus berupa gambar');
     }
 
-    // Validate file size (max 5MB for images)
-    const maxSize = 5 * 1024 * 1024; // 5MB
+    const maxSize = 5 * 1024 * 1024;
     if (file.size > maxSize) {
       throw new Error('Ukuran file maksimal 5MB');
     }
@@ -47,13 +45,11 @@ export const uploadService: UploadService = {
   },
 
   async uploadCV(file: File) {
-    // Validate file type
     if (file.type !== 'application/pdf') {
       throw new Error('CV harus berupa file PDF');
     }
 
-    // Validate file size (max 10MB for PDFs)
-    const maxSize = 10 * 1024 * 1024; // 10MB
+    const maxSize = 10 * 1024 * 1024;
     if (file.size > maxSize) {
       throw new Error('Ukuran file maksimal 10MB');
     }

@@ -25,7 +25,7 @@ interface Education {
 
 interface ProfileFormProps {
   showNotification: (type: 'success' | 'error', title: string, message?: string) => void;
-  isViewOnly?: boolean; // Add isViewOnly prop
+  isViewOnly?: boolean;
 }
 
 export const ProfileForm: FC<ProfileFormProps> = ({ showNotification, isViewOnly = false }) => {
@@ -161,7 +161,7 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification, isViewOnly
   }
 
   const handleProfileUpdate = async (updates: Partial<MentorUpdateRequestDto | UserUpdateRequestDto>) => {
-    if (isViewOnly) { // Prevent updates if in view-only mode
+    if (isViewOnly) {
       showNotification('error', 'Akses Ditolak', 'Anda tidak memiliki izin untuk mengedit profil ini.');
       return;
     }
@@ -189,7 +189,7 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification, isViewOnly
         }}
         showNotification={showNotification}
         isLoading={isUpdating}
-        isViewOnly={isViewOnly} // Pass isViewOnly
+        isViewOnly={isViewOnly}
       />
       {}
       <CvResumeSection
@@ -202,7 +202,7 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification, isViewOnly
         }}
         showNotification={showNotification}
         isLoading={isUpdating}
-        isViewOnly={isViewOnly} // Pass isViewOnly
+        isViewOnly={isViewOnly}
       />
       {}
       <ExperiencesSection
@@ -218,7 +218,7 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification, isViewOnly
         }}
         showNotification={showNotification}
         isLoading={isUpdating}
-        isViewOnly={isViewOnly} // Pass isViewOnly
+        isViewOnly={isViewOnly}
       />
 
       {}
@@ -235,7 +235,7 @@ export const ProfileForm: FC<ProfileFormProps> = ({ showNotification, isViewOnly
         }}
         showNotification={showNotification}
         isLoading={isUpdating}
-        isViewOnly={isViewOnly} // Pass isViewOnly
+        isViewOnly={isViewOnly}
       />
 
       <NotificationModal

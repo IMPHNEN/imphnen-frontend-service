@@ -26,7 +26,6 @@ export const EditProfileModal: FC<EditProfileModalProps> = ({ isOpen, onClose, s
       const fullname = profileData.fullname ||
         (profileType === 'mentor' && 'legal_name' in profileData ? profileData.legal_name : '') || '';
 
-
       const avatar = (profileType === 'user' && 'avatar' in profileData)
         ? profileData.avatar || '/image/testimonial.webp'
         : '/image/testimonial.webp';
@@ -38,7 +37,6 @@ export const EditProfileModal: FC<EditProfileModalProps> = ({ isOpen, onClose, s
         fullname,
         avatar: (profileType === 'user' && 'avatar' in profileData) ? profileData.avatar || '' : ''
       });
-
 
       setPreviewUrl(avatar);
     } else {
@@ -60,7 +58,6 @@ export const EditProfileModal: FC<EditProfileModalProps> = ({ isOpen, onClose, s
     try {
       setIsUploading(true);
 
-
       const reader = new FileReader();
       reader.onload = () => {
         const result = reader.result as string;
@@ -68,11 +65,9 @@ export const EditProfileModal: FC<EditProfileModalProps> = ({ isOpen, onClose, s
       };
       reader.readAsDataURL(file);
 
-
       const uploadResult = await uploadAvatarMutation.mutateAsync(file);
 
       console.log('Avatar upload response:', uploadResult);
-
 
       interface UploadData {
         url?: string;
@@ -80,9 +75,7 @@ export const EditProfileModal: FC<EditProfileModalProps> = ({ isOpen, onClose, s
 
       const uploadData = ('data' in uploadResult ? (uploadResult as { data: UploadData }).data : uploadResult as UploadData);
 
-
       setFormData(prev => ({ ...prev, avatar: uploadData.url || '' }));
-
 
       setPreviewUrl(uploadData.url || '/image/testimonial.webp');
 
@@ -101,7 +94,6 @@ export const EditProfileModal: FC<EditProfileModalProps> = ({ isOpen, onClose, s
     try {
       const updates: Record<string, string> = {};
 
-
       if (formData.fullname.trim() !== '') {
         if (profileType === 'user') {
           updates.fullname = formData.fullname;
@@ -109,7 +101,6 @@ export const EditProfileModal: FC<EditProfileModalProps> = ({ isOpen, onClose, s
           updates.legal_name = formData.fullname;
         }
       }
-
 
       if (formData.avatar && formData.avatar !== (profileData && 'avatar' in profileData ? profileData.avatar : '')) {
         updates.avatar = formData.avatar;
@@ -141,7 +132,6 @@ export const EditProfileModal: FC<EditProfileModalProps> = ({ isOpen, onClose, s
               msg = parsed.message;
               }
             } catch {
-                // Ignore JSON parse errors
             }
           }
         }
@@ -185,7 +175,6 @@ export const EditProfileModal: FC<EditProfileModalProps> = ({ isOpen, onClose, s
                 onError={handleImageError}
               />
 
-              {/* Hover overlay */}
               <div className="absolute inset-0 rounded-full bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
                 <span className="text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   Change Photo

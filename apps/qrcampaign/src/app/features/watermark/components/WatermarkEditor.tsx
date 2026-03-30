@@ -17,7 +17,6 @@ export const WatermarkEditor: React.FC<WatermarkEditorProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const qrRef = useRef<HTMLDivElement>(null);
 
-  // State for QR code
   const [position, setPosition] = useState({ x: 20, y: 20 });
   const [size, setSize] = useState(100);
   const [isDragging, setIsDragging] = useState(false);
@@ -26,14 +25,12 @@ export const WatermarkEditor: React.FC<WatermarkEditorProps> = ({
   const [startResizePos, setStartResizePos] = useState({ x: 0, y: 0 });
   const [startResizeSize, setStartResizeSize] = useState(100);
 
-  // Load image
   useEffect(() => {
     const url = URL.createObjectURL(imageFile);
     setImageUrl(url);
     return () => URL.revokeObjectURL(url);
   }, [imageFile]);
 
-  // Drag handlers
   const handleMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -58,11 +55,7 @@ export const WatermarkEditor: React.FC<WatermarkEditorProps> = ({
         const newX = e.clientX - dragOffset.x;
         const newY = e.clientY - dragOffset.y;
 
-        // Boundaries check (optional, but good UX)
         if (containerRef.current) {
-          // const container = containerRef.current.getBoundingClientRect();
-          // Simple clamp? Or allow partial off-screen?
-          // Let's allow it to move freely within container
         }
 
         setPosition({ x: newX, y: newY });
@@ -70,7 +63,7 @@ export const WatermarkEditor: React.FC<WatermarkEditorProps> = ({
 
       if (isResizing) {
         const deltaX = e.clientX - startResizePos.x;
-        const newSize = Math.max(50, startResizeSize + deltaX); // Min size 50px
+        const newSize = Math.max(50, startResizeSize + deltaX);
         setSize(newSize);
       }
     },
@@ -101,7 +94,7 @@ export const WatermarkEditor: React.FC<WatermarkEditorProps> = ({
 
     try {
       const canvas = await html2canvas(containerRef.current, {
-        useCORS: true, // Important for QR if from external URL
+        useCORS: true,
         backgroundColor: null,
       });
 
@@ -164,13 +157,11 @@ export const WatermarkEditor: React.FC<WatermarkEditorProps> = ({
               src={qrCodeUrl}
               alt="QR Code"
               className="w-full h-full select-none pointer-events-none"
-              crossOrigin="anonymous" // Important for html2canvas
+              crossOrigin="anonymous"
             />
 
-            {/* Outline on hover/interaction */}
             <div className="absolute inset-0 border-2 border-transparent group-hover:border-blue-400 group-active:border-blue-500 pointer-events-none rounded-sm transition-colors" />
 
-            {/* Resize handle */}
             <div
               className="absolute bottom-0 right-0 w-4 h-4 bg-blue-500 rounded-full cursor-nwse-resize opacity-0 group-hover:opacity-100 transition-opacity"
               onMouseDown={handleResizeMouseDown}

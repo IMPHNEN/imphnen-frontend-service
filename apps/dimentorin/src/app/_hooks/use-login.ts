@@ -2,9 +2,9 @@ import { useForm } from 'react-hook-form';
 import {
   authLoginSchema,
   TLoginRequest,
+  usePostLogin,
 } from '@imphnen-frontend-service/service';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useSession } from '@imphnen-frontend-service/utils';
 
 export const useLogin = () => {
   const form = useForm<TLoginRequest>({
@@ -12,13 +12,13 @@ export const useLogin = () => {
     mode: 'all',
   });
 
-  const { signIn, isLoading } = useSession();
+  const loginMutation = usePostLogin();
 
-  const onSubmit = form.handleSubmit((data) => signIn(data));
+  const onSubmit = form.handleSubmit((data) => loginMutation.mutate(data));
 
   return {
     form,
     onSubmit,
-    isLoading
+    isLoading: loginMutation.isPending,
   };
 };

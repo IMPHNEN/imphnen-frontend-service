@@ -2,7 +2,7 @@ import {
   PERMISSIONS,
   SessionToken,
   SessionUser,
-} from '@imphnen-frontend-service/utils';
+} from '@imphnen-frontend-service/service';
 import { LoaderFunctionArgs, redirect } from 'react-router';
 
 const mappingPublicRoutes = [
@@ -80,14 +80,6 @@ const mappingPublicPrefixRoutes = [
   '/articles',
 ]
 
-//TODO : Fix this later
-// const redirectToFirstAccessibleRoute = (userPermissions: string[]) => {
-//   const fallback = mappingRoutePermissions.find((route) =>
-//     route.permissions.some((perm) => userPermissions.includes(perm))
-//   );
-//   return redirect(fallback?.path ?? '/auth/login');
-// };
-
 export const middleware = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
   const pathname = url.pathname;
@@ -97,9 +89,6 @@ export const middleware = async ({ request }: LoaderFunctionArgs) => {
   const userPermissions =
     session?.role?.permissions?.map?.((perm) => perm?.name) ?? [];
 
-  // Allow to access the landing page without authentication
-  // So, if the route prefix is in the mappingPublicPrefixRoutes, we return null
-  // to indicate that we don't need to authenticate the user
   if (mappingPublicPrefixRoutes.some((prefix) => pathname.startsWith(prefix))) {
     return null;
   }

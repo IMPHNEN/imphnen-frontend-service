@@ -19,12 +19,10 @@ export const CitySelect: FC<CitySelectProps> = ({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Filter cities based on search query
   const filteredCities = INDONESIAN_CITIES.filter((city) =>
     city.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (

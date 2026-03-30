@@ -13,10 +13,8 @@ import { Icon } from '@iconify/react';
 import ProfilePage from '../profile/page';
 import { encodeWinnerCertificateId } from '../../utils/certificate';
 
-// Team features deadline: 2025-11-30 23:59:00 WIB (UTC+7)
 const TEAM_FEATURES_DEADLINE = new Date('2025-11-30T16:59:00Z');
 
-// Submission deadline: 2025-12-07 23:59:00 WIB (UTC+7)
 const SUBMISSION_DEADLINE = new Date('2025-12-07T16:59:00Z');
 
 type Invitation = {
@@ -50,13 +48,10 @@ const DashboardPage: FC = (): ReactElement => {
     seconds: number;
   } | null>(null);
 
-  // Check if team features are closed
   const isTeamFeaturesClosed = new Date() >= TEAM_FEATURES_DEADLINE;
 
-  // Check if submission deadline passed
   const isSubmissionDeadlinePassed = new Date() >= SUBMISSION_DEADLINE;
 
-  // Countdown timer
   useEffect(() => {
     if (isSubmissionDeadlinePassed) return;
 
@@ -83,7 +78,6 @@ const DashboardPage: FC = (): ReactElement => {
     return () => clearInterval(timer);
   }, [isSubmissionDeadlinePassed]);
 
-  // Lock background scroll when profile modal is open
   useEffect(() => {
     if (showProfileModal) {
       const originalOverflow = document.body.style.overflow;
@@ -145,7 +139,6 @@ const DashboardPage: FC = (): ReactElement => {
           )}
         </div>
 
-        {/* Winner Banner */}
         {winnerEntry && myTeams.length > 0 && (
           <div className="mb-8 bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-400 dark:border-amber-500 rounded-lg p-6">
             <div className="flex items-center justify-between flex-wrap gap-4">
@@ -176,7 +169,6 @@ const DashboardPage: FC = (): ReactElement => {
           </div>
         )}
 
-        {/* Countdown Timer */}
         {timeLeft && !isSubmissionDeadlinePassed && (
           <div className="mb-8 bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-500 rounded-lg p-6">
             <div className="flex items-start space-x-3">

@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { useEffect, useMemo, useState } from 'react';
 import {
   SiCplusplus,
-  SiCss3,
+  SiCss,
   SiGo,
   SiHtml5,
   SiJavascript,
@@ -35,7 +35,7 @@ export function AnimatedBackground() {
       { Icon: SiGo, color: '#00ADD8' },
       { Icon: SiPhp, color: '#777BB4' },
       { Icon: SiHtml5, color: '#E34F26' },
-      { Icon: SiCss3, color: '#1572B6' },
+      { Icon: SiCss, color: '#1572B6' },
     ],
     []
   );

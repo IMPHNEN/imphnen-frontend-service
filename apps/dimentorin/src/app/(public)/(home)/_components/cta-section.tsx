@@ -49,7 +49,7 @@ export const CTASection: FC = () => {
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
       >
-        {/* Background gradients and shapes */}
+
         <div className="absolute inset-0">
           <motion.div
             className={cn("absolute top-8 -left-14 size-28 bg-gradient-to-tl from-primary-400 to-primary-300 rounded-full",

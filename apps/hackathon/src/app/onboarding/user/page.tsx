@@ -50,7 +50,6 @@ const UserOnboardingPage: FC = (): ReactElement => {
     },
   });
 
-  // Set initial avatar preview from GitHub avatar if available
   useEffect(() => {
     if (session?.user?.avatar && !avatarPreview) {
       setAvatarPreview(session.user.avatar);
@@ -60,14 +59,12 @@ const UserOnboardingPage: FC = (): ReactElement => {
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Validate file size (max 2MB)
       if (file.size > 2 * 1024 * 1024) {
         toast.error('The file is too large. Maximum size is 2MB.');
         e.target.value = '';
         return;
       }
 
-      // Validate file type
       if (!file.type.startsWith('image/')) {
         toast.error('The file must be an image');
         e.target.value = '';
@@ -87,13 +84,11 @@ const UserOnboardingPage: FC = (): ReactElement => {
     try {
       let avatarUrl = session?.user?.avatar || null;
 
-      // Upload avatar if a new file was selected
       if (avatarFile) {
         const uploadResult = await uploadAvatar(avatarFile);
         avatarUrl = uploadResult.data.url;
       }
 
-      // Update user in Supabase
       await updateUser({
         fullname: data.fullname,
         avatar: avatarUrl,
@@ -102,11 +97,8 @@ const UserOnboardingPage: FC = (): ReactElement => {
         skills: data.skills,
       });
 
-      // Wait a bit for the onSuccess handler to update localStorage
-      // The updateUser mutation's onSuccess handler updates the Zustand store and localStorage
       await new Promise((resolve) => setTimeout(resolve, 100));
 
-      // Use window.location for a full page reload to ensure middleware sees updated localStorage
       globalThis.location.href = '/dashboard';
     } catch (error) {
       toast.error(
@@ -130,7 +122,6 @@ const UserOnboardingPage: FC = (): ReactElement => {
         </div>
 
         <form onSubmit={onSubmit} className="space-y-6">
-          {/* Avatar Upload */}
           <div className="flex flex-col items-center space-y-4">
             <div className="relative">
               {avatarPreview ? (
@@ -169,7 +160,6 @@ const UserOnboardingPage: FC = (): ReactElement => {
             </div>
           </div>
 
-          {/* Full Name */}
           <ControlledInputField
             control={form.control}
             label="Full Name"
@@ -180,7 +170,6 @@ const UserOnboardingPage: FC = (): ReactElement => {
             isRequired={true}
           />
 
-          {/* City */}
           <div className="space-y-2">
             <label className="block text-base font-medium text-gray-700 dark:text-gray-300">
               City <span className="text-red-500">*</span>
@@ -199,7 +188,6 @@ const UserOnboardingPage: FC = (): ReactElement => {
             />
           </div>
 
-          {/* Role/Skills */}
           <div className="space-y-2">
             <label className="block text-base font-medium text-gray-700 dark:text-gray-300">
               Role / Skills
@@ -237,7 +225,6 @@ const UserOnboardingPage: FC = (): ReactElement => {
             />
           </div>
 
-          {/* Bio */}
           <div className="space-y-2">
             <label className="block text-base font-medium text-gray-700 dark:text-gray-300">
               Bio{' '}

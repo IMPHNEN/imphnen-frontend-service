@@ -16,7 +16,7 @@ interface PersonalInfoSectionProps {
   onSave: (newContactInfo: PersonalInfo) => Promise<void>;
   showNotification: (type: NotificationType['type'], title: string, message?: string) => void;
   isLoading?: boolean;
-  isViewOnly?: boolean; // Add isViewOnly prop
+  isViewOnly?: boolean;
 }
 
 export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
@@ -24,18 +24,17 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
   onSave,
   showNotification,
   isLoading = false,
-  isViewOnly = false, // Default to false
+  isViewOnly = false,
 }) => {
   const [isPersonalInfoModalOpen, setIsPersonalInfoModalOpen] = useState(false);
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo>(initialContactInfo);
-
 
   useEffect(() => {
     setPersonalInfo(initialContactInfo);
   }, [initialContactInfo]);
 
   const handleSave = async (newInfo: { email: string; phone: string; location: string }) => {
-    if (isViewOnly) return; // Prevent save if in view-only mode
+    if (isViewOnly) return;
     const newPersonalInfo = { email: newInfo.email, phone: newInfo.phone, location: newInfo.location };
 
     await onSave(newPersonalInfo);
@@ -45,7 +44,7 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
     <SectionWrapper
       title="Personal Informations"
       editButton={
-        !isViewOnly ? ( // Conditionally render the edit button
+        !isViewOnly ? (
           <EditSectionButton
             onClick={() => setIsPersonalInfoModalOpen(true)}
             disabled={isLoading}
@@ -87,7 +86,7 @@ export const PersonalInfoSection: FC<PersonalInfoSectionProps> = ({
       </div>
 
       <PersonalInfoModal
-        isOpen={isPersonalInfoModalOpen && !isViewOnly} // Only open if not in view-only mode
+        isOpen={isPersonalInfoModalOpen && !isViewOnly}
         onClose={() => setIsPersonalInfoModalOpen(false)}
         initialValue={personalInfo}
         onSave={handleSave}

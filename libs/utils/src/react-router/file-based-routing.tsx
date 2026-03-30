@@ -50,7 +50,6 @@ export function convertPagesToRoute(
         return 'loader' in result ? result.loader?.(args) : null;
       },
       async guard() {
-        // Permission checking removed - always allow access
         return true;
       },
     });

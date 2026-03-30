@@ -62,7 +62,6 @@ export default function SignupPage() {
       navigate('/');
     } catch (err: any) {
       console.error('[Signup] Email signup failed:', err);
-      // Construct a user-friendly error message
       const errorMessage =
         err.response?.data?.message || err.message || 'Signup failed';
       setError(errorMessage);

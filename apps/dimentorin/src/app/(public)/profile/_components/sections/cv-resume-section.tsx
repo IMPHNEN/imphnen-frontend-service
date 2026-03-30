@@ -6,14 +6,13 @@ import { SectionWrapper } from '../shared/section-wrapper';
 import { NotificationType } from '../modals/notification-modal';
 import { EditSectionButton } from '../buttons/edit-section-button';
 
-
 interface CvResumeSectionProps {
   initialFileName: string;
   fullname: string;
   onSave: (cvData: { fileName: string; fileUrl?: string }) => Promise<void>;
   showNotification: (type: NotificationType['type'], title: string, message?: string) => void;
   isLoading?: boolean;
-  isViewOnly?: boolean; // Add isViewOnly prop
+  isViewOnly?: boolean;
 }
 
 export const CvResumeSection: FC<CvResumeSectionProps> = ({
@@ -22,7 +21,7 @@ export const CvResumeSection: FC<CvResumeSectionProps> = ({
   onSave,
   showNotification,
   isLoading = false,
-  isViewOnly = false, // Default to false
+  isViewOnly = false,
 }) => {
   const [isCVModalOpen, setIsCVModalOpen] = useState(false);
   const [fileName, setFileName] = useState(initialFileName);
@@ -33,10 +32,9 @@ export const CvResumeSection: FC<CvResumeSectionProps> = ({
   }, [initialFileName]);
 
   const handleSave = async (cvData: { fileName: string; fileUrl?: string }) => {
-    if (isViewOnly) return; // Prevent save if in view-only mode
+    if (isViewOnly) return;
     await onSave(cvData);
   };
-
 
   let displayFileName = 'Belum ada CV';
   let fileUrl = '';
@@ -65,7 +63,7 @@ export const CvResumeSection: FC<CvResumeSectionProps> = ({
     <SectionWrapper
       title="CV/Resume"
       editButton={
-        !isViewOnly ? ( // Conditionally render the edit button
+        !isViewOnly ? (
           <EditSectionButton
             onClick={() => setIsCVModalOpen(true)}
             disabled={isLoading}
@@ -94,7 +92,7 @@ export const CvResumeSection: FC<CvResumeSectionProps> = ({
       </div>
 
       <CVModal
-        isOpen={isCVModalOpen && !isViewOnly} // Only open if not in view-only mode
+        isOpen={isCVModalOpen && !isViewOnly}
         onClose={() => setIsCVModalOpen(false)}
         initialValue={{ fileName, fileUrl: fileName }}
         onSave={handleSave}

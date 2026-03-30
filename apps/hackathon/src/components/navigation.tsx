@@ -1,7 +1,7 @@
 import { FC, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { useUserMe, useMyTeams } from '@imphnen-frontend-service/service';
-import { useSession } from '@imphnen-frontend-service/utils';
+import { useSession } from '@imphnen-frontend-service/service';
 
 export const Navigation: FC = () => {
   const navigate = useNavigate();
@@ -23,13 +23,12 @@ export const Navigation: FC = () => {
     <nav className="bg-white border-b shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
+
           <Link to="/dashboard" className="flex items-center space-x-2">
             <span className="text-2xl">🏆</span>
             <span className="text-xl font-bold text-gray-900">Hackathon</span>
           </Link>
 
-          {/* Navigation Links */}
           <div className="hidden md:flex items-center space-x-6">
             <Link
               to="/dashboard"
@@ -53,7 +52,6 @@ export const Navigation: FC = () => {
             )}
           </div>
 
-          {/* User Menu */}
           <div className="relative">
             <button
               onClick={() => setShowUserMenu(!showUserMenu)}
@@ -88,7 +86,6 @@ export const Navigation: FC = () => {
               </svg>
             </button>
 
-            {/* Dropdown Menu */}
             {showUserMenu && (
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
                 <div className="px-4 py-2 border-b border-gray-200">
@@ -132,7 +129,6 @@ export const Navigation: FC = () => {
         </div>
       </div>
 
-      {/* Close dropdown when clicking outside */}
       {showUserMenu && (
         <div
           className="fixed inset-0 z-40"

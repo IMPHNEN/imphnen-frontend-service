@@ -54,7 +54,6 @@ const ProfilePage: FC<ProfileModalProps> = ({
     },
   });
 
-  // Set initial avatar preview from current user avatar
   useEffect(() => {
     if (session?.user?.avatar && !avatarPreview) {
       setAvatarPreview(session.user.avatar);
@@ -84,14 +83,12 @@ const ProfilePage: FC<ProfileModalProps> = ({
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Validate file size (max 2MB)
       if (file.size > 2 * 1024 * 1024) {
         toast.error('The file is too large. Maximum size is 2MB.');
         e.target.value = '';
         return;
       }
 
-      // Validate file type
       if (!file.type.startsWith('image/')) {
         toast.error('The file must be an image');
         e.target.value = '';
@@ -111,13 +108,11 @@ const ProfilePage: FC<ProfileModalProps> = ({
     try {
       let avatarUrl = session?.user?.avatar || null;
 
-      // Upload avatar if a new file was selected
       if (avatarFile) {
         const uploadResult = await uploadAvatar(avatarFile);
         avatarUrl = uploadResult.data.url;
       }
 
-      // Update user profile
       await updateUser({
         fullname: data.fullname,
         avatar: avatarUrl,
@@ -128,10 +123,8 @@ const ProfilePage: FC<ProfileModalProps> = ({
 
       toast.success('Profile updated successfully!');
 
-      // Wait a bit for the onSuccess handler to update localStorage
       await new Promise((resolve) => setTimeout(resolve, 100));
 
-      // Close modal
       onClose();
     } catch (error) {
       console.error('Profile update failed:', error);
@@ -181,7 +174,6 @@ const ProfilePage: FC<ProfileModalProps> = ({
           </div>
 
           <form onSubmit={onSubmit} className="space-y-6">
-            {/* Avatar Upload */}
             <div className="flex flex-col items-center space-y-4">
               <div className="relative group">
                 {avatarPreview ? (
@@ -200,7 +192,6 @@ const ProfilePage: FC<ProfileModalProps> = ({
                     />
                   </div>
                 )}
-                {/* Camera overlay */}
                 <label
                   htmlFor="avatar"
                   className="absolute bottom-0 right-0 bg-primary-500 text-white p-2 rounded-full cursor-pointer hover:bg-primary-600 transition-colors shadow-lg"
@@ -241,7 +232,6 @@ const ProfilePage: FC<ProfileModalProps> = ({
               </p>
             </div>
 
-            {/* Full Name */}
             <ControlledInputField
               control={form.control}
               label="Full Name"
@@ -250,7 +240,6 @@ const ProfilePage: FC<ProfileModalProps> = ({
               size="lg"
             />
 
-            {/* City */}
             <div className="space-y-2">
               <label className="block text-label1 font-medium text-neutral-800 dark:text-neutral-300">
                 City
@@ -269,7 +258,6 @@ const ProfilePage: FC<ProfileModalProps> = ({
               />
             </div>
 
-            {/* Role/Skills */}
             <div className="space-y-2">
               <label className="block text-label1 font-medium text-gray-700 dark:text-neutral-300">
                 Role / Skills
@@ -307,7 +295,6 @@ const ProfilePage: FC<ProfileModalProps> = ({
               />
             </div>
 
-            {/* Bio */}
             <div className="space-y-2">
               <label className="block text-label1 font-medium text-gray-700 dark:text-neutral-300">
                 Bio{' '}
@@ -337,7 +324,6 @@ const ProfilePage: FC<ProfileModalProps> = ({
               />
             </div>
 
-            {/* Action Buttons */}
             <div className="flex space-x-3 pt-4">
               <Button
                 type="button"

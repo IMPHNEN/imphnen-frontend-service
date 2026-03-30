@@ -78,7 +78,6 @@ export const useGoogleLogin = () => {
           const user = payload.user;
 
           if (accessToken && refreshToken && user && typeof accessToken === 'string' && typeof refreshToken === 'string') {
-            // Convert Google user data to match TUserItem structure
             const convertedUser = {
               id: user.id,
               avatar: user.avatar || '',
@@ -97,7 +96,6 @@ export const useGoogleLogin = () => {
               }
             };
 
-            // Use setSession like credential login does
             setSession({
               token: {
                 access_token: accessToken,
@@ -107,7 +105,7 @@ export const useGoogleLogin = () => {
             });
 
             toast.success('Login berhasil!');
-            navigate(0); // Same as credential login
+            navigate(0);
           } else {
             toast.error('Data login tidak lengkap');
           }

@@ -13,14 +13,14 @@ export const AppLayout: FC = (): ReactElement => {
           onClose={() => setMobileSidebarOpen(false)}
         />
         <div className="flex-1 overflow-auto">
-          {/* Sticky top header */}
+
           <header
             className={
               'lg:hidden sticky top-0 bg-white border-b border-primary-200 px-4 py-3 flex items-center gap-3 ' +
               (mobileSidebarOpen ? 'z-0' : 'z-30')
             }
           >
-            {/* Mobile menu button (shown on small screens) */}
+
             <button
               type="button"
               className="lg:hidden p-2 rounded-md hover:bg-gray-100 text-gray-700 cursor-pointer"
