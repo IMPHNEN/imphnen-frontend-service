@@ -7,8 +7,44 @@ on:
     branches: ['develop']
 
 jobs:
-  build:
+  detect:
     runs-on: ubuntu-latest
+    outputs:
+      affected: ${{ steps.affected.outputs.apps }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Detect affected apps
+        id: affected
+        run: |
+          AFFECTED=$(npx nx show projects --affected --base=HEAD~1 --type=app 2>/dev/null | tr '\n' ' ')
+          echo "Affected apps: $AFFECTED"
+          APPS="[]"
+          for app in landing backoffice gacha dimentorin hackathon infra qrcampaign; do
+            if echo "$AFFECTED" | grep -qw "$app"; then
+              APPS=$(echo "$APPS" | jq -c ". + [\"$app\"]")
+            fi
+          done
+          echo "apps=$APPS" >> "$GITHUB_OUTPUT"
+          echo "Matrix: $APPS"
+
+  build:
+    needs: detect
+    if: needs.detect.outputs.affected != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        app: ${{ fromJson(needs.detect.outputs.affected) }}
     steps:
       - uses: actions/checkout@v4
 
@@ -21,33 +57,33 @@ jobs:
           name: msdqn
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
 
-      - name: Build all packages
-        run: |
-          nix build .#landing -o result-landing
-          nix build .#backoffice -o result-backoffice
-          nix build .#gacha -o result-gacha
-          nix build .#dimentorin -o result-dimentorin
-          nix build .#hackathon -o result-hackathon
-          nix build .#infra -o result-infra
-          nix build .#qrcampaign -o result-qrcampaign
+      - name: Build ${{ matrix.app }}
+        run: nix build .#${{ matrix.app }} -o result-${{ matrix.app }}
 
       - name: Push to Cachix
         if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
-        run: |
-          cachix push msdqn result-landing
-          cachix push msdqn result-backoffice
-          cachix push msdqn result-gacha
-          cachix push msdqn result-dimentorin
-          cachix push msdqn result-hackathon
-          cachix push msdqn result-infra
-          cachix push msdqn result-qrcampaign
+        run: cachix push msdqn result-${{ matrix.app }}
+
+  update-infra:
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
 
       - name: Update imphnen-infrastructure flake.lock
-        if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
         env:
-          INFRA_DEPLOY_TOKEN: ${{ secrets.INFRA_DEPLOY_TOKEN }}
+          INFRA_DEPLOY_KEY: ${{ secrets.INFRA_DEPLOY_KEY }}
         run: |
-          git clone https://x-access-token:${INFRA_DEPLOY_TOKEN}@github.com/IMPHNEN/imphnen-infrastructure.git /tmp/infra
+          mkdir -p ~/.ssh
+          echo "${INFRA_DEPLOY_KEY}" > ~/.ssh/infra_deploy
+          chmod 600 ~/.ssh/infra_deploy
+          ssh-keyscan github.com >> ~/.ssh/known_hosts 2>/dev/null
+          export GIT_SSH_COMMAND="ssh -i ~/.ssh/infra_deploy -o IdentitiesOnly=yes"
+          git clone git@github.com:IMPHNEN/imphnen-infrastructure.git /tmp/infra
           cd /tmp/infra
           nix flake update imphnen-frontend
           if git diff --quiet flake.lock; then
@@ -59,3 +95,4 @@ jobs:
             git commit -m "chore: update imphnen-frontend-service to ${GITHUB_SHA::7}"
             git push
           fi
+          rm -f ~/.ssh/infra_deploy
