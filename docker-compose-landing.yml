@@ -1,9 +1,0 @@
-services:
-  landing:
-    build:
-      context: .
-      dockerfile: docker/landing.Dockerfile
-    ports:
-      - '127.0.0.1:3005:3000'
-    restart: unless-stopped
-    container_name: landing

@@ -1,9 +1,0 @@
-services:
-  gacha:
-    build:
-      context: .
-      dockerfile: docker/gacha.Dockerfile
-    ports:
-      - '127.0.0.1:3003:80'
-    restart: unless-stopped
-    container_name: gacha

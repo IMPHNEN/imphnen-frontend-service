@@ -29,12 +29,15 @@ jobs:
           nix build .#dimentorin -o result-dimentorin
           nix build .#hackathon -o result-hackathon
           nix build .#infra -o result-infra
+          nix build .#qrcampaign -o result-qrcampaign
 
-      - name: Show build outputs
+      - name: Push to Cachix
+        if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
         run: |
-          echo "Landing: $(readlink result-landing)"
-          echo "Backoffice: $(readlink result-backoffice)"
-          echo "Gacha: $(readlink result-gacha)"
-          echo "Dimentorin: $(readlink result-dimentorin)"
-          echo "Hackathon: $(readlink result-hackathon)"
-          echo "Infra: $(readlink result-infra)"
+          cachix push msdqn result-landing
+          cachix push msdqn result-backoffice
+          cachix push msdqn result-gacha
+          cachix push msdqn result-dimentorin
+          cachix push msdqn result-hackathon
+          cachix push msdqn result-infra
+          cachix push msdqn result-qrcampaign

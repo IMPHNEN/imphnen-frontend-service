@@ -1,9 +1,0 @@
-services:
-  backoffice:
-    build:
-      context: .
-      dockerfile: docker/backoffice.Dockerfile
-    ports:
-      - '127.0.0.1:3001:80'
-    restart: unless-stopped
-    container_name: backoffice

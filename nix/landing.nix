@@ -10,8 +10,7 @@ pkgs.buildNpmPackage {
   makeCacheWritable = true;
 
   nativeBuildInputs = with pkgs; [
-    nodejs
-    nodePackages.npm
+    nodejs_22
     python3  # Required for node-gyp (sharp, etc.)
   ];
 
@@ -48,7 +47,7 @@ pkgs.buildNpmPackage {
     cat > $out/bin/imphnen-landing <<EOF
     #!${pkgs.bash}/bin/bash
     cd $out/share/landing
-    exec ${pkgs.nodejs}/bin/node --jitless apps/landing/server.js "\$@"
+    exec ${pkgs.nodejs_22}/bin/node --jitless apps/landing/server.js "\$@"
     EOF
     chmod +x $out/bin/imphnen-landing
 

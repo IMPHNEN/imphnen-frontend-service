@@ -1,9 +1,0 @@
-services:
-  dimentorin:
-    build:
-      context: .
-      dockerfile: docker/dimentorin.Dockerfile
-    ports:
-      - '127.0.0.1:3002:80'
-    restart: unless-stopped
-    container_name: dimentorin

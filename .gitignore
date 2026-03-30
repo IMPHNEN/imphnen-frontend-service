@@ -66,3 +66,7 @@ out
 .github/instructions/nx.instructions.md
 
 .env.local
+
+# Nix
+.direnv
+result

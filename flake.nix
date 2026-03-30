@@ -6,15 +6,20 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, flake-utils }:
-    flake-utils.lib.eachDefaultSystem (system:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      flake-utils,
+    }:
+    flake-utils.lib.eachDefaultSystem (
+      system:
       let
         pkgs = import nixpkgs { inherit system; };
 
         # NPM dependencies hash (update with: nix run nixpkgs#prefetch-npm-deps -- package-lock.json)
         npmDepsHash = "sha256-6O36QDvjiD7j5MgBhID3+5IeJ47MUeK/025ZTKD0ltU=";
 
-        # Import helpers
         mkViteApp = import ./nix/mkViteApp.nix {
           inherit pkgs npmDepsHash;
           src = ./.;
@@ -25,62 +30,54 @@
           src = ./.;
         };
 
-      in {
+      in
+      {
         packages = {
-          # Static Vite apps
-          backoffice = mkViteApp { name = "backoffice"; buildScript = "backoffice:build"; };
-          gacha = mkViteApp { name = "gacha"; buildScript = "gacha:build"; };
-          dimentorin = mkViteApp { name = "dimentorin"; buildScript = "dimentorin:build"; };
-          hackathon = mkViteApp { name = "hackathon"; buildScript = "hackathon:build"; };
-          infra = mkViteApp { name = "infra"; buildScript = "infra:build"; };
-          qrcampaign = mkViteApp { name = "qrcampaign"; buildScript = "qrcampaign:build"; };
-
-          # Next.js app
+          backoffice = mkViteApp {
+            name = "backoffice";
+            buildScript = "backoffice:build";
+          };
+          gacha = mkViteApp {
+            name = "gacha";
+            buildScript = "gacha:build";
+          };
+          dimentorin = mkViteApp {
+            name = "dimentorin";
+            buildScript = "dimentorin:build";
+          };
+          hackathon = mkViteApp {
+            name = "hackathon";
+            buildScript = "hackathon:build";
+          };
+          infra = mkViteApp {
+            name = "infra";
+            buildScript = "infra:build";
+          };
+          qrcampaign = mkViteApp {
+            name = "qrcampaign";
+            buildScript = "qrcampaign:build";
+          };
           landing = landingApp;
-
-          # Default package
           default = self.packages.${system}.landing;
         };
 
-        # Development shell
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
-            nodejs
-            nodePackages.npm
+            nodejs_22
             bun
-
-            # Useful dev tools
             git
             jq
           ];
 
           shellHook = ''
-            echo "🚀 Imphnen Frontend Development Shell"
-            echo "Node.js: $(node --version)"
-            echo "npm: $(npm --version)"
-            echo ""
-            echo "Available commands:"
-            echo "  npm install     - Install dependencies"
-            echo "  nx dev <app>    - Start development server"
-            echo "  nx build <app>  - Build an app"
-            echo ""
-            echo "Apps: landing, backoffice, gacha, dimentorin, hackathon, qrcampaign"
-            echo ""
-            echo "Build packages with:"
-            echo "  nix build .#landing"
-            echo "  nix build .#backoffice"
-            echo "  nix build .#gacha"
-            echo "  nix build .#dimentorin"
-            echo "  nix build .#hackathon"
-            echo "  nix build .#qrcampaign"
+            export PATH="$PWD/node_modules/.bin:$PATH"
           '';
         };
       }
-    ) // {
-      # NixOS modules for deployment
+    )
+    // {
       nixosModules = {
         landing = import ./nix/modules/landing.nix { inherit self; };
-
         backoffice = import ./nix/modules/static-app.nix { inherit self; } { appName = "backoffice"; };
         gacha = import ./nix/modules/static-app.nix { inherit self; } { appName = "gacha"; };
         dimentorin = import ./nix/modules/static-app.nix { inherit self; } { appName = "dimentorin"; };
@@ -88,21 +85,26 @@
         infra = import ./nix/modules/static-app.nix { inherit self; } { appName = "infra"; };
         qrcampaign = import ./nix/modules/static-app.nix { inherit self; } { appName = "qrcampaign"; };
 
-        # All-in-one module that enables all apps
-        all = { config, lib, pkgs, ... }: {
-          imports = [
-            self.nixosModules.landing
-            self.nixosModules.backoffice
-            self.nixosModules.gacha
-            self.nixosModules.dimentorin
-            self.nixosModules.hackathon
-            self.nixosModules.infra
-            self.nixosModules.qrcampaign
-          ];
-        };
+        all =
+          {
+            config,
+            lib,
+            pkgs,
+            ...
+          }:
+          {
+            imports = [
+              self.nixosModules.landing
+              self.nixosModules.backoffice
+              self.nixosModules.gacha
+              self.nixosModules.dimentorin
+              self.nixosModules.hackathon
+              self.nixosModules.infra
+              self.nixosModules.qrcampaign
+            ];
+          };
       };
 
-      # Overlay for easy integration
       overlays.default = final: prev: {
         imphnen = {
           landing = self.packages.${final.system}.landing;
@@ -112,12 +114,19 @@
           hackathon = self.packages.${final.system}.hackathon;
           infra = self.packages.${final.system}.infra;
           qrcampaign = self.packages.${final.system}.qrcampaign;
-          # Function to build hackathon with custom environment variables (e.g., Supabase)
-          mkHackathonWithEnv = envVars: import ./nix/mkViteApp.nix {
-            pkgs = final;
-            src = self;
-            npmDepsHash = "sha256-6O36QDvjiD7j5MgBhID3+5IeJ47MUeK/025ZTKD0ltU=";
-          } { name = "hackathon"; buildScript = "hackathon:build"; inherit envVars; };
+          mkHackathonWithEnv =
+            envVars:
+            import ./nix/mkViteApp.nix
+              {
+                pkgs = final;
+                src = self;
+                npmDepsHash = "sha256-6O36QDvjiD7j5MgBhID3+5IeJ47MUeK/025ZTKD0ltU=";
+              }
+              {
+                name = "hackathon";
+                buildScript = "hackathon:build";
+                inherit envVars;
+              };
         };
       };
     };

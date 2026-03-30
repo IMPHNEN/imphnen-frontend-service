@@ -1,9 +1,0 @@
-services:
-  qrcampaign:
-    build:
-      context: .
-      dockerfile: docker/qrcampaign.Dockerfile
-    ports:
-      - '127.0.0.1:3006:80'
-    restart: unless-stopped
-    container_name: qrcampaign

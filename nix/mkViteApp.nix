@@ -12,8 +12,7 @@ pkgs.buildNpmPackage {
   makeCacheWritable = true;
 
   nativeBuildInputs = with pkgs; [
-    nodejs
-    nodePackages.npm
+    nodejs_22
     util-linux  # For script command to create pseudo-terminal
   ];
 
