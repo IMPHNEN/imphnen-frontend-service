@@ -41,3 +41,21 @@ jobs:
           cachix push msdqn result-hackathon
           cachix push msdqn result-infra
           cachix push msdqn result-qrcampaign
+
+      - name: Update imphnen-infrastructure flake.lock
+        if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+        env:
+          INFRA_DEPLOY_TOKEN: ${{ secrets.INFRA_DEPLOY_TOKEN }}
+        run: |
+          git clone https://x-access-token:${INFRA_DEPLOY_TOKEN}@github.com/IMPHNEN/imphnen-infrastructure.git /tmp/infra
+          cd /tmp/infra
+          nix flake update imphnen-frontend
+          if git diff --quiet flake.lock; then
+            echo "flake.lock unchanged, skipping"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add flake.lock
+            git commit -m "chore: update imphnen-frontend-service to ${GITHUB_SHA::7}"
+            git push
+          fi
