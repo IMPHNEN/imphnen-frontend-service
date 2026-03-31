@@ -71,9 +71,11 @@ All Nix config is in a single `flake.nix`:
 
 1. **detect**: Uses `nx affected` to find changed apps
 2. **build**: Matrix strategy builds only affected apps with Nix, pushes to Cachix
-3. **update-infra**: Clones `imphnen-infrastructure`, runs `nix flake update`, pushes new `flake.lock`
+3. **deploy**: Clones `imphnen-infrastructure`, updates `flake.lock`, pushes, then runs `clan machines update hetzner` to deploy to the Hetzner server
 
-Required GitHub secrets: `CACHIX_AUTH_TOKEN`, `INFRA_DEPLOY_KEY`
+Required GitHub secrets: `CACHIX_AUTH_TOKEN`, `INFRA_DEPLOY_KEY`, `SERVER_SSH_KEY`
+
+Deployment uses [clan](https://clan.lol) via `imphnen-infrastructure` repo. The server (167.235.70.37) pulls pre-built packages from Cachix.
 
 ## Environment Variables
 

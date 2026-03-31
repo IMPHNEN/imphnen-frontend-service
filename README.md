@@ -98,7 +98,7 @@ GitHub Actions pipeline (`.github/workflows/nix-build.yml`):
 
 1. **detect** — uses `nx affected` to find changed apps
 2. **build** — matrix strategy builds only affected apps with Nix, pushes to [Cachix](https://app.cachix.org/cache/msdqn)
-3. **update-infra** — updates `flake.lock` in [imphnen-infrastructure](https://github.com/IMPHNEN/imphnen-infrastructure)
+3. **deploy** — updates `flake.lock` in [imphnen-infrastructure](https://github.com/IMPHNEN/imphnen-infrastructure) and deploys to the server using [clan](https://clan.lol)
 
 ## Tech Stack
 
