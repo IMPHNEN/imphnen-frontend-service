@@ -1,5 +1,9 @@
 # IMPHNEN Frontend Service
 
+<p align="center">
+  <img src="docs/logo.svg" alt="IMPHNEN">
+</p>
+
 Monorepo for all frontend services of [IMPHNEN](https://imphnen.dev) (Ingin Menjadi Programmer Handal Namun Enggan Ngoding) — Indonesia's largest programmer community.
 
 ## Apps
