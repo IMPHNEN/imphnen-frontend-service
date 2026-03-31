@@ -75,21 +75,16 @@ jobs:
       - name: Setup SSH
         env:
           INFRA_DEPLOY_KEY: ${{ secrets.INFRA_DEPLOY_KEY }}
-          SERVER_SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
         run: |
           mkdir -p ~/.ssh
-          echo "${INFRA_DEPLOY_KEY}" > ~/.ssh/infra_deploy
-          chmod 600 ~/.ssh/infra_deploy
-          if [ -n "${SERVER_SSH_KEY}" ]; then
-            echo "${SERVER_SSH_KEY}" > ~/.ssh/server_key
-            chmod 600 ~/.ssh/server_key
-          fi
+          echo "${INFRA_DEPLOY_KEY}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
           ssh-keyscan github.com >> ~/.ssh/known_hosts 2>/dev/null
           ssh-keyscan 167.235.70.37 >> ~/.ssh/known_hosts 2>/dev/null
 
       - name: Update infra flake.lock
         run: |
-          export GIT_SSH_COMMAND="ssh -i ~/.ssh/infra_deploy -o IdentitiesOnly=yes"
+          export GIT_SSH_COMMAND="ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes"
           git clone git@github.com:IMPHNEN/imphnen-infrastructure.git /tmp/infra
           cd /tmp/infra
           nix flake update imphnen-frontend
@@ -105,9 +100,9 @@ jobs:
 
       - name: Deploy to server
         run: |
-          ssh -i ~/.ssh/server_key -o StrictHostKeyChecking=accept-new root@167.235.70.37 \
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new root@167.235.70.37 \
             'nixos-rebuild switch --flake github:IMPHNEN/imphnen-infrastructure#hetzner --refresh 2>&1 | tail -30'
 
       - name: Cleanup
         if: always()
-        run: rm -f ~/.ssh/infra_deploy ~/.ssh/server_key
+        run: rm -f ~/.ssh/deploy_key
