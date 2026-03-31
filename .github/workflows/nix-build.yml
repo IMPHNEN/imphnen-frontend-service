@@ -72,12 +72,6 @@ jobs:
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@main
 
-      - name: Setup Cachix
-        uses: cachix/cachix-action@v15
-        with:
-          name: msdqn
-          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-
       - name: Setup SSH
         env:
           INFRA_DEPLOY_KEY: ${{ secrets.INFRA_DEPLOY_KEY }}
@@ -93,34 +87,27 @@ jobs:
           ssh-keyscan github.com >> ~/.ssh/known_hosts 2>/dev/null
           ssh-keyscan 167.235.70.37 >> ~/.ssh/known_hosts 2>/dev/null
 
-      - name: Clone infrastructure
+      - name: Update infra flake.lock
         run: |
           export GIT_SSH_COMMAND="ssh -i ~/.ssh/infra_deploy -o IdentitiesOnly=yes"
           git clone git@github.com:IMPHNEN/imphnen-infrastructure.git /tmp/infra
-
-      - name: Update flake.lock
-        working-directory: /tmp/infra
-        run: |
+          cd /tmp/infra
           nix flake update imphnen-frontend
           if git diff --quiet flake.lock; then
-            echo "flake.lock unchanged, skipping commit"
+            echo "flake.lock unchanged, skipping"
           else
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
-            export GIT_SSH_COMMAND="ssh -i ~/.ssh/infra_deploy -o IdentitiesOnly=yes"
             git add flake.lock
             git commit -m "chore: update imphnen-frontend-service to ${GITHUB_SHA::7}"
             git push
           fi
 
-      - name: Deploy with clan
-        working-directory: /tmp/infra
+      - name: Deploy to server
         run: |
-          if [ -f ~/.ssh/server_key ]; then
-            export NIX_SSHOPTS="-i $HOME/.ssh/server_key -o StrictHostKeyChecking=accept-new"
-          fi
-          nix develop .#default --command clan machines update hetzner
+          ssh -i ~/.ssh/server_key -o StrictHostKeyChecking=accept-new root@167.235.70.37 \
+            'nixos-rebuild switch --flake github:IMPHNEN/imphnen-infrastructure#hetzner --refresh 2>&1 | tail -30'
 
-      - name: Cleanup SSH keys
+      - name: Cleanup
         if: always()
         run: rm -f ~/.ssh/infra_deploy ~/.ssh/server_key
