@@ -99,8 +99,9 @@ jobs:
           fi
 
       - name: Deploy to server
+        continue-on-error: true
         run: |
-          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new root@167.235.70.37 \
+          ssh -i ~/.ssh/deploy_key -o ConnectTimeout=15 -o StrictHostKeyChecking=accept-new root@167.235.70.37 \
             'nixos-rebuild switch --flake github:IMPHNEN/imphnen-infrastructure#hetzner --refresh 2>&1 | tail -30'
 
       - name: Cleanup
