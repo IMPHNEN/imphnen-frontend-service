@@ -1,151 +1,116 @@
 # IMPHNEN Frontend Service
 
-<p align="center">
-  <img src="docs/logo.svg" alt="IMPHNEN">
-</p>
+Monorepo for all frontend services of [IMPHNEN](https://imphnen.dev) (Ingin Menjadi Programmer Handal Namun Enggan Ngoding) — Indonesia's largest programmer community.
 
-This repository is a **monorepo** for all frontend services of IMPHNEN. The monorepo includes three main applications:
+## Apps
 
-1. **Gacha** - Application for <a href="https://gacha.imphnen.dev/" target="_blank">Gacha Website</a>.
-2. **Backoffice** - Application for <a href="https://gacha.imphnen.dev/" target="_blank">Internal Management Website</a>.
-3. **Dimentorin** - Application for <a href="https://dimentorin.imphnen.dev/" target="_blank">Mentoring Service</a>.
-4. **Landing Page** - Application for <a href="https://imphnen.dev/" target="_blank">Landing Page</a>.
-5. **QR Campaign** - Application for QR Campaign Management.
+| App | Framework | URL |
+|-----|-----------|-----|
+| **Landing** | Next.js 16 | [imphnen.dev](https://imphnen.dev) |
+| **Backoffice** | Vite + React | Internal admin dashboard |
+| **Hackathon** | Vite + React | Hackathon platform |
+| **Dimentorin** | Vite + React | [dimentorin.imphnen.dev](https://dimentorin.imphnen.dev) |
+| **Gacha** | Vite + React | [gacha.imphnen.dev](https://gacha.imphnen.dev) |
+| **QR Campaign** | Vite + React | QR campaign management |
+| **Infra** | Vite + React | Infrastructure dashboard |
 
-## How to install
+## Shared Libraries
 
-1. Clone this repository:
-   ```sh
-   git clone https://github.com/IMPHNEN/imphnen-frontend-service.git
-   cd imphnen-frontend-service
-   ```
-2. Install all dependencies:
-   ```sh
-   npm install
-   ```
+| Lib | Purpose |
+|-----|---------|
+| `utils` | Pure utilities — `cn()`, `For`, `Show`, `useQueryState`, `useModalLogin` |
+| `service` | Business logic — API clients, auth hooks, storage, constants |
+| `ui` | UI components — atoms, molecules, organisms (atomic design) |
 
-## How to run
+## Getting Started
 
-### Setup Environment Variables
+### Prerequisites
 
-Before running the applications, you need to set up the environment variables. You can do this by copying the `.env.example` file to `.env` and modifying the values according to your needs.
+- Node.js 22
+- [Nix](https://nixos.org/download/) (optional, for reproducible builds)
+
+### Setup
 
 ```sh
-cd apps/{appname}
-cp .env.example .env
+git clone https://github.com/IMPHNEN/imphnen-frontend-service.git
+cd imphnen-frontend-service
+npm install
+```
+
+Or with Nix:
+
+```sh
+nix develop  # enters dev shell with node 22, bun, git, jq
+```
+
+### Environment Variables
+
+Copy `.env.example` to `.env` in the app directory:
+
+```sh
+cp apps/<app>/.env.example apps/<app>/.env
 ```
 
 ### Development
 
-Use the following commands to run in development mode:
-
-- **Gacha**:
-  ```sh
-  npm run gacha:dev
-  ```
-- **Backoffice**:
-  ```sh
-  npm run backoffice:dev
-  ```
-- **Dimentorin**:
-  ```sh
-  npm run dimentorin:dev
-  ```
-- **Landing Page**:
-  ```sh
-  npm run landing:dev
-  ```
-- **QR Campaign**:
-  ```sh
-  npm run qrcampaign:dev
-  ```
+```sh
+nx dev <app>        # e.g. nx dev landing, nx dev backoffice
+```
 
 ### Build
 
-Use the following commands to build the applications:
+```sh
+nx build <app>            # build single app
+nx run-many -t build --all # build everything
+nx affected -t build       # build only what changed
+```
 
-- **Gacha**:
-  ```sh
-  npm run gacha:build
-  ```
-- **Backoffice**:
-  ```sh
-  npm run backoffice:build
-  ```
-- **Dimentorin**:
-  ```sh
-  npm run dimentorin:build
-  ```
-- **Landing Page**:
-  ```sh
-  npm run landing:build
-  ```
-- **QR Campaign**:
-  ```sh
-  npm run qrcampaign:build
-  ```
+### Nix Build
 
-### Production
+```sh
+nix build .#<app>    # e.g. nix build .#landing, .#dimentorin
+```
 
-Use the following commands to run the applications in production mode:
+All Nix config lives in `flake.nix`. When `package-lock.json` changes, update `npmDepsHash` using `lib.fakeHash`.
 
-- **Gacha**:
-  ```sh
-  npm run gacha:prod
-  ```
-- **Backoffice**:
-  ```sh
-  npm run backoffice:prod
-  ```
-- **Dimentorin**:
-  ```sh
-  npm run dimentorin:prod
-  ```
-- **Landing Page**:
-  ```sh
-  npm run landing:prod
-  ```
-- **QR Campaign**:
-  ```sh
-  npm run qrcampaign:prod
-  ```
+### Testing
+
+```sh
+nx test <project>    # unit tests (vitest)
+nx e2e <app>-e2e     # e2e tests (playwright)
+nx lint <project>    # eslint
+```
 
 ### Storybook
 
-This repository uses Storybook to develop, test, and document UI components in an isolated and interactive environment. Below are the commands to work with Storybook:
+```sh
+nx storybook ui      # run storybook for ui lib
+nx build-storybook ui # build static storybook
+```
 
-- **Run Storybook**
+## CI/CD
 
-  This command starts Storybook in development mode, allowing you to view and test UI components interactively.
+GitHub Actions pipeline (`.github/workflows/nix-build.yml`):
 
-  ```sh
-  npm run ui:storybook
-  ```
+1. **detect** — uses `nx affected` to find changed apps
+2. **build** — matrix strategy builds only affected apps with Nix, pushes to [Cachix](https://app.cachix.org/cache/msdqn)
+3. **update-infra** — updates `flake.lock` in [imphnen-infrastructure](https://github.com/IMPHNEN/imphnen-infrastructure)
 
-- **Run Unit Test**
+## Tech Stack
 
-  This command runs unit tests for the UI components to ensure they function as expected.
+- **Monorepo**: Nx 22.6
+- **Frontend**: React 19, TypeScript
+- **Styling**: Tailwind CSS v4, CVA
+- **State**: Zustand, TanStack React Query
+- **Forms**: react-hook-form + zod
+- **Build**: Nix flakes, Cachix
+- **CI**: GitHub Actions
 
-  ```sh
-  npm run ui:test
-  ```
+## Contributing
 
-- **Build Components**
+1. Fork and clone the repository
+2. Create a branch: `git checkout -b feat/feature-name`
+3. Make changes, commit, and push
+4. Open a pull request to the `develop` branch
 
-  This command generates a static build of Storybook, which can be deployed for sharing and documentation purposes.
-
-  ```sh
-  npm run ui:build
-  ```
-
-## How to contribute
-
-1. Fork the repository and clone it locally.
-2. Create a new branch for a new feature or fix:
-   ```sh
-   git checkout -b feat/feature-name
-   ```
-3. Make changes, commit, and push to your forked repository.
-4. Create a pull request to this repository `develop` branch.
-
-If you encounter any issues or problems, feel free to create a new Issue.
+Issues and feedback welcome via [GitHub Issues](https://github.com/IMPHNEN/imphnen-frontend-service/issues).
