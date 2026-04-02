@@ -11,12 +11,12 @@ Monorepo for all frontend services of [IMPHNEN](https://imphnen.dev) (Ingin Menj
 | App | Framework | URL |
 |-----|-----------|-----|
 | **Landing** | Next.js 16 | [imphnen.dev](https://imphnen.dev) |
-| **Backoffice** | Vite + React | Internal admin dashboard |
-| **Hackathon** | Vite + React | Hackathon platform |
+| **Backoffice** | Vite + React | [backoffice.imphnen.dev](https://backoffice.imphnen.dev) |
+| **Hackathon** | Vite + React | [hackathon.imphnen.dev](https://dimentorin.imphnen.dev) |
 | **Dimentorin** | Vite + React | [dimentorin.imphnen.dev](https://dimentorin.imphnen.dev) |
 | **Gacha** | Vite + React | [gacha.imphnen.dev](https://gacha.imphnen.dev) |
-| **QR Campaign** | Vite + React | QR campaign management |
-| **Infra** | Vite + React | Infrastructure dashboard |
+| **QR Campaign** | Vite + React | [qr.imphnen.dev](https://qr.imphnen.dev) |
+| **Infra** | Vite + React | [infra.imphnen.dev](https://infra.imphnen.dev) |
 
 ## Shared Libraries
 
