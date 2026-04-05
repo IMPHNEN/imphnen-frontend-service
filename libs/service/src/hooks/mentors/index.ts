@@ -1,45 +1,72 @@
-import { useQuery, useMutation, UseQueryResult, UseMutationResult, UseQueryOptions } from '@tanstack/react-query';
-import { mentorService } from '../../api/mentors';
-import { MentorDetailResponseDto, MentorUpdateRequestDto } from '../../types/mentors';
-import { TResponseError } from '../../types/common';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  getMentorMe,
+  getMentorById,
+  getMentorList,
+  updateMentorMe,
+  updateMentorById,
+  verifyMentor,
+  deleteMentor,
+} from '../../api/mentors';
+import type { MentorDetailResponseDto, MentorUpdateRequestDto } from '../../types/mentors';
+import type { TPaginationParams } from '../../types/common';
 
-export const useMentorMe = (options?: UseQueryOptions<MentorDetailResponseDto, TResponseError>): UseQueryResult<MentorDetailResponseDto, TResponseError> => {
+export const useMentorMe = () => {
   return useQuery({
     queryKey: ['mentor-me'],
-    queryFn: () => mentorService.getMentorMe(),
-    ...options,
+    queryFn: getMentorMe,
   });
 };
 
-export const useMentorById = (id: string, options?: UseQueryOptions<MentorDetailResponseDto, TResponseError>): UseQueryResult<MentorDetailResponseDto, TResponseError> => {
+export const useMentorById = (id: string) => {
   return useQuery({
     queryKey: ['mentor-by-id', id],
-    queryFn: () => mentorService.getMentorById(id),
+    queryFn: () => getMentorById(id),
     enabled: !!id,
-    ...options,
   });
 };
 
-export const useUpdateMentorMe = (): UseMutationResult<
-  MentorDetailResponseDto,
-  TResponseError,
-  MentorUpdateRequestDto,
-  unknown
-> => {
+export const useMentorList = (params?: TPaginationParams) => {
+  return useQuery({
+    queryKey: ['mentor-list', params],
+    queryFn: () => getMentorList(params),
+  });
+};
+
+export const useUpdateMentorMe = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ['update-mentor-me'],
-    mutationFn: (data) => mentorService.updateMentorMe(data),
+    mutationFn: (data: MentorUpdateRequestDto) => updateMentorMe(data),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['mentor-me'] }),
   });
 };
 
-export const useUpdateMentorById = (): UseMutationResult<
-  MentorDetailResponseDto,
-  TResponseError,
-  { id: string; data: MentorUpdateRequestDto },
-  unknown
-> => {
+export const useUpdateMentorById = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ['update-mentor-by-id'],
-    mutationFn: ({ id, data }) => mentorService.updateMentorById(id, data),
+    mutationFn: ({ id, data }: { id: string; data: MentorUpdateRequestDto }) =>
+      updateMentorById(id, data),
+    onSuccess: (_, vars) => {
+      queryClient.invalidateQueries({ queryKey: ['mentor-by-id', vars.id] });
+      queryClient.invalidateQueries({ queryKey: ['mentor-list'] });
+    },
+  });
+};
+
+export const useVerifyMentor = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => verifyMentor(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['mentor-list'] }),
+  });
+};
+
+export const useDeleteMentor = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => deleteMentor(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['mentor-list'] }),
   });
 };

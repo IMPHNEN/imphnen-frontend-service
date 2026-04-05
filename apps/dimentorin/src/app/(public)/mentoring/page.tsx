@@ -8,27 +8,35 @@ import { MentorCard } from './_components/mentor-card';
 import { Pagination } from '@imphnen-frontend-service/ui/molecules';
 import { getCoreRowModel, getPaginationRowModel, PaginationState, useReactTable } from '@tanstack/react-table';
 import { motion, useInView, Variants } from 'framer-motion';
-
-const TEMP_DATA = [
-  { id: 1, name: 'John Doe' },
-  { id: 2, name: 'John Doe' },
-  { id: 3, name: 'John Doe' },
-  { id: 4, name: 'John Doe' },
-]
+import { useMentorList } from '@imphnen-frontend-service/service';
 
 export const Components: FC = (): ReactElement => {
+  const [search, setSearch] = useState('');
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
-    pageSize: 3,
+    pageSize: 8,
   });
 
+  const { data: mentorData, isLoading } = useMentorList({
+    page: pagination.pageIndex + 1,
+    per_page: pagination.pageSize,
+    search: search || undefined,
+  });
+
+  const mentors = mentorData?.data ?? [];
+  const totalItems = mentorData?.meta?.total ?? 0;
+
   const table = useReactTable({
-    data: TEMP_DATA,
+    data: mentors,
     columns: [],
     state: { pagination },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    onPaginationChange: setPagination,
+    onPaginationChange: (updater) => {
+      setPagination(updater);
+    },
+    pageCount: Math.ceil(totalItems / pagination.pageSize) || 1,
+    manualPagination: true,
   });
 
   const ref = useRef(null)
@@ -91,24 +99,33 @@ export const Components: FC = (): ReactElement => {
               <Input
                 placeholder="Cari berdasarkan nama, posisi/peran"
                 className="relative min-w-full w-full"
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setPagination((p) => ({ ...p, pageIndex: 0 }));
+                }}
               />
               <SearchOutlined className="absolute right-2.5 top-1/2 -translate-y-1/2 text-primary-500 size-2.5 cursor-text md:me-12 lg:me-0" />
             </motion.div>
 
-            <motion.div
-              className="grid gap-2 mb-10 md:grid-cols-2 md:gap-6 lg:grid-cols-4"
-              variants={containerVariants}
-              initial="hidden"
-              animate={isInView ? 'visible' : 'hidden'}
-            >
-              <For data={Array.from({ length: 8 })}>
-                {(_, index) => (
-                  <motion.div key={index} variants={childVariants}>
-                    <MentorCard />
-                  </motion.div>
-                )}
-              </For>
-            </motion.div>
+            {isLoading ? (
+              <div className="text-center py-12 text-neutral-400">Loading mentors...</div>
+            ) : (
+              <motion.div
+                className="grid gap-2 mb-10 md:grid-cols-2 md:gap-6 lg:grid-cols-4"
+                variants={containerVariants}
+                initial="hidden"
+                animate={isInView ? 'visible' : 'hidden'}
+              >
+                <For data={mentors}>
+                  {(mentor, index) => (
+                    <motion.div key={mentor.id ?? index} variants={childVariants}>
+                      <MentorCard mentor={mentor} />
+                    </motion.div>
+                  )}
+                </For>
+              </motion.div>
+            )}
 
             <Pagination table={table} />
           </motion.div>

@@ -11,6 +11,8 @@ interface IModalEditItem {
   nextStep: () => void;
   prevStep: () => void;
   resetStep: () => void;
+  initialValues?: { itemName?: string; quantity?: number };
+  onDataCapture?: (data: any) => void;
 }
 
 const ModalEditItem = ({
@@ -20,6 +22,8 @@ const ModalEditItem = ({
   nextStep,
   resetStep,
   handleEditItem,
+  initialValues,
+  onDataCapture,
 }: IModalEditItem) => {
   return (
     <Modal
@@ -31,7 +35,7 @@ const ModalEditItem = ({
       }}
       disableEscapeKeyDown={true}
     >
-      {currentStep === 1 && <StepOne nextStep={nextStep} onClose={onClose} />}
+      {currentStep === 1 && <StepOne nextStep={nextStep} onClose={onClose} initialValues={initialValues} onDataCapture={onDataCapture} />}
       {currentStep === 2 && (
         <StepTwo
           onClose={onClose}
@@ -46,15 +50,12 @@ const ModalEditItem = ({
 interface IStepOneProps {
   nextStep: () => void;
   onClose: () => void;
+  initialValues?: { itemName?: string; quantity?: number };
+  onDataCapture?: (data: any) => void;
 }
 
-const StepOne = ({ nextStep }: IStepOneProps) => {
-  const initialValues = {
-    itemName: 'Hoodie IMPHNEN Official 2025',
-    quantity: 10,
-  };
-
-  const { form, onSubmit } = useItem(nextStep, initialValues);
+const StepOne = ({ nextStep, initialValues, onDataCapture }: IStepOneProps) => {
+  const { form, onSubmit } = useItem(nextStep, initialValues as any, onDataCapture);
 
   return (
     <>
@@ -102,7 +103,7 @@ const StepOne = ({ nextStep }: IStepOneProps) => {
             variant="primary"
             size="lg"
             className="w-full"
-            onClick={nextStep}
+            type="submit"
           >
             Perbarui Item
           </Button>

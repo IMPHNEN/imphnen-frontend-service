@@ -1,51 +1,6 @@
-import axios from 'axios';
-import { useAuthStore } from '../hooks/auth';
-
-const HACKATHON_API_URL = 'https://api.hackathon.imphnen.dev/api/v1';
-
-export const hackathonApi = axios.create({
-  baseURL: HACKATHON_API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-hackathonApi.interceptors.request.use(
-  (config) => {
-    const { session } = useAuthStore.getState();
-    if (session?.token?.access_token) {
-      config.headers.Authorization = `Bearer ${session.token.access_token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(new Error(error.message || 'Request failed'));
-  }
-);
-
-hackathonApi.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      const isAuthPage = globalThis.window !== undefined && globalThis.location.pathname.startsWith('/auth');
-      const isCertificatePage = globalThis.window !== undefined && globalThis.location.pathname.startsWith('/certificate/');
-
-      if (!isAuthPage && !isCertificatePage) {
-        useAuthStore.getState().clearSession();
-        if (globalThis.window !== undefined) {
-          globalThis.location.href = '/auth/login';
-        }
-      }
-    }
-
-    const backendMsg = error?.response?.data?.message;
-    if (backendMsg && typeof backendMsg === 'string') {
-      return Promise.reject(new Error(backendMsg));
-    }
-
-    return Promise.reject(new Error(error.message || 'Request failed'));
-  }
-);
+// All API calls now go through the main `api` instance (api.imphnen.dev).
+// This file re-exports `api` as `hackathonApi` for backward compatibility.
+export { api as hackathonApi } from './index';
 
 export interface HackathonApiResponse<T> {
   data: T;

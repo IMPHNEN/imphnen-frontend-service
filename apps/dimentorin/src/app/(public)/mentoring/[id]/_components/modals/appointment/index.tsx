@@ -10,6 +10,9 @@ import { QrisPaymentStep } from "./steps/qris-payement"
 import { VAPaymentStep } from "./steps/va-payment"
 import { SuccessStep } from "./steps/success"
 import { PaymentStep } from "./steps/payment"
+import { useBookSession } from "@imphnen-frontend-service/service"
+import { TOPICS } from "../../sections/topics"
+import { toast } from "sonner"
 
 const STEPS = ['topic', 'schedule', 'profile', 'payment', 'qr-payment', 'va-payment', 'success'] as const
 type Step = typeof STEPS[number]
@@ -17,15 +20,48 @@ type Step = typeof STEPS[number]
 type Props = {
   open: boolean
   setOpen: (open: boolean) => void
+  mentorId?: string
 }
 
-export const AppointmentModal: FC<Props> = ({ open, setOpen }) => {
+export const AppointmentModal: FC<Props> = ({ open, setOpen, mentorId }) => {
   const [step, setStep] = useState<Step>('topic')
   const [selectedTopics, setSelectedTopics] = useState<number[]>([])
+  const [scheduledDate, setScheduledDate] = useState('')
+  const [scheduledTime, setScheduledTime] = useState('')
+  const [description, setDescription] = useState('')
+  const [sessionType, setSessionType] = useState('online')
+  const [isBooking, setIsBooking] = useState(false)
 
-  const handleStep = (action: 'next' | 'prev') => {
+  const bookSession = useBookSession(mentorId ?? '')
+
+  const handleStep = async (action: 'next' | 'prev') => {
     if (action === 'next' && step === 'success') {
       setOpen(false)
+    } else if (action === 'next' && step === 'payment' && mentorId) {
+      const topicNames = selectedTopics
+        .map((id) => TOPICS.find((t) => t.id === id)?.name)
+        .filter(Boolean)
+        .join(', ')
+
+      const scheduledAt =
+        scheduledDate && scheduledTime
+          ? new Date(`${scheduledDate}T${scheduledTime}`).toISOString()
+          : new Date().toISOString()
+
+      setIsBooking(true)
+      try {
+        await bookSession.mutateAsync({
+          topic: topicNames || 'General Mentoring',
+          description: description || undefined,
+          scheduled_at: scheduledAt,
+          session_type: sessionType,
+        })
+        setStep('qr-payment')
+      } catch {
+        toast.error('Gagal membuat sesi. Silakan coba lagi.')
+      } finally {
+        setIsBooking(false)
+      }
     } else if (action === 'next') {
       setStep(STEPS[STEPS.indexOf(step) + 1])
     } else if (action === 'prev' && step !== 'topic') {
@@ -46,6 +82,12 @@ export const AppointmentModal: FC<Props> = ({ open, setOpen }) => {
       window.addEventListener("keydown", handleEscapeKey)
     } else {
       document.body.style.overflow = ""
+      setStep('topic')
+      setSelectedTopics([])
+      setScheduledDate('')
+      setScheduledTime('')
+      setDescription('')
+      setSessionType('online')
     }
 
     return () => {
@@ -77,6 +119,7 @@ export const AppointmentModal: FC<Props> = ({ open, setOpen }) => {
                 size="sm"
                 variant="text"
                 className="absolute top-3 right-3 bg-primary-200 p-1 shadow md:bg-white md:p-2 md:top-8 md:right-10"
+                onClick={() => setOpen(false)}
               >
                 <CloseOutlined className="md:text-lg" />
               </Button>
@@ -113,7 +156,18 @@ export const AppointmentModal: FC<Props> = ({ open, setOpen }) => {
 
                 <AnimatePresence>
                   {step === 'topic' && <TopicStep selectedTopics={selectedTopics} setSelectedTopics={setSelectedTopics} />}
-                  {step === 'schedule' && <ScheduleStep />}
+                  {step === 'schedule' && (
+                    <ScheduleStep
+                      scheduledDate={scheduledDate}
+                      scheduledTime={scheduledTime}
+                      description={description}
+                      sessionType={sessionType}
+                      onDateChange={setScheduledDate}
+                      onTimeChange={setScheduledTime}
+                      onDescriptionChange={setDescription}
+                      onSessionTypeChange={setSessionType}
+                    />
+                  )}
                   {step === 'profile' && <ProfileStep />}
                   {step === 'payment' && <PaymentStep selectedTopics={selectedTopics} />}
                   {step === 'qr-payment' && <QrisPaymentStep />}
@@ -141,14 +195,14 @@ export const AppointmentModal: FC<Props> = ({ open, setOpen }) => {
                   size="sm"
                   variant="primary"
                   className={cn((step === 'topic' || step === 'success') && 'w-full')}
-                  disabled={selectedTopics.length === 0 && step === 'topic'}
+                  disabled={(selectedTopics.length === 0 && step === 'topic') || isBooking}
                   onClick={() => handleStep('next')}
                 >
                   <Show
                     condition={step !== 'success'}
                     fallback="Halman Booking"
                   >
-                    <Show condition={step !== 'payment'} fallback="Bayar Sekarang">
+                    <Show condition={step !== 'payment'} fallback={isBooking ? 'Memproses...' : 'Bayar Sekarang'}>
                       Selanjutnya
                     </Show>
                   </Show>

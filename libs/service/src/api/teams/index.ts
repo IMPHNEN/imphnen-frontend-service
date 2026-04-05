@@ -4,7 +4,6 @@ import type {
   TUpdateTeamRequest,
   TInviteMemberRequest,
   TJoinTeamRequest,
-  TManageMemberRequest,
   TSubmitProjectRequest,
   TTeamListResponse,
   TTeamDetailResponse,
@@ -14,8 +13,6 @@ import type {
   TProjectSubmissionResponse,
 } from '../../types/teams';
 
-const TEAMS_BASE_URL = '/teams';
-
 export const getTeams = async (params?: {
   page?: number;
   limit?: number;
@@ -23,86 +20,93 @@ export const getTeams = async (params?: {
   visibility?: string;
   search?: string;
 }) => {
-  const response = await api.get<TTeamListResponse>(TEAMS_BASE_URL, { params });
+  const response = await api.get<TTeamListResponse>('/v1/hackathon/teams/browse', { params });
   return response.data;
 };
 
 export const getTeamById = async (teamId: string) => {
-  const response = await api.get<TTeamDetailResponse>(`${TEAMS_BASE_URL}/${teamId}`);
+  const response = await api.get<TTeamDetailResponse>(`/v1/hackathon/teams/${teamId}`);
   return response.data;
 };
 
 export const createTeam = async (data: TCreateTeamRequest) => {
-  const response = await api.post<TTeamDetailResponse>(TEAMS_BASE_URL, data);
+  const response = await api.post<TTeamDetailResponse>('/v1/hackathon/teams', data);
   return response.data;
 };
 
 export const updateTeam = async (teamId: string, data: TUpdateTeamRequest) => {
-  const response = await api.put<TTeamDetailResponse>(`${TEAMS_BASE_URL}/${teamId}`, data);
+  const response = await api.put<TTeamDetailResponse>(`/v1/hackathon/teams/${teamId}`, data);
+  return response.data;
+};
+
+export const deleteTeam = async (teamId: string) => {
+  const response = await api.delete(`/v1/hackathon/teams/${teamId}`);
   return response.data;
 };
 
 export const getTeamMembers = async (teamId: string) => {
-  const response = await api.get<TTeamMembersResponse>(`${TEAMS_BASE_URL}/${teamId}/members`);
+  const response = await api.get<TTeamMembersResponse>(`/v1/hackathon/teams/${teamId}`);
   return response.data;
 };
 
 export const inviteMember = async (teamId: string, data: TInviteMemberRequest) => {
-  const response = await api.post(`${TEAMS_BASE_URL}/${teamId}/invite`, data);
-  return response.data;
-};
-
-export const manageMember = async (teamId: string, userId: string, data: TManageMemberRequest) => {
-  const response = await api.put(`${TEAMS_BASE_URL}/${teamId}/members/${userId}`, data);
+  const response = await api.post(`/v1/hackathon/invitations/teams/${teamId}/invite`, data);
   return response.data;
 };
 
 export const removeMember = async (teamId: string, userId: string) => {
-  const response = await api.delete(`${TEAMS_BASE_URL}/${teamId}/members/${userId}`);
+  const response = await api.delete(`/v1/hackathon/teams/${teamId}/members/${userId}`);
   return response.data;
 };
 
 export const joinTeam = async (teamId: string, data: TJoinTeamRequest) => {
-  const response = await api.post(`${TEAMS_BASE_URL}/${teamId}/join-request`, data);
+  const response = await api.post(`/v1/hackathon/join-requests/teams/${teamId}`, data);
   return response.data;
 };
 
 export const getTeamJoinRequests = async (teamId: string) => {
-  const response = await api.get<TTeamJoinRequestsResponse>(`${TEAMS_BASE_URL}/${teamId}/join-requests`);
+  const response = await api.get<TTeamJoinRequestsResponse>(
+    `/v1/hackathon/join-requests/teams/${teamId}/pending`
+  );
   return response.data;
 };
 
-export const respondToJoinRequest = async (teamId: string, requestId: string, action: 'approve' | 'reject') => {
-  const response = await api.put(`${TEAMS_BASE_URL}/${teamId}/join-requests/${requestId}`, { action });
+export const respondToJoinRequest = async (requestId: string, action: 'accept' | 'reject') => {
+  const response = await api.post(`/v1/hackathon/join-requests/${requestId}/respond`, { action });
   return response.data;
 };
 
 export const getMyInvitations = async () => {
-  const response = await api.get<TTeamInvitationsResponse>(`${TEAMS_BASE_URL}/invitations/me`);
+  const response = await api.get<TTeamInvitationsResponse>('/v1/hackathon/invitations/my');
   return response.data;
 };
 
 export const respondToInvitation = async (invitationId: string, action: 'accept' | 'reject') => {
-  const response = await api.put(`${TEAMS_BASE_URL}/invitations/${invitationId}`, { action });
+  const response = await api.post(`/v1/hackathon/invitations/${invitationId}/respond`, { action });
   return response.data;
 };
 
 export const getMyTeams = async () => {
-  const response = await api.get<TTeamListResponse>(`${TEAMS_BASE_URL}/me`);
-  return response.data;
-};
-
-export const submitProject = async (teamId: string, data: TSubmitProjectRequest) => {
-  const response = await api.post<TProjectSubmissionResponse>(`${TEAMS_BASE_URL}/${teamId}/submission`, data);
-  return response.data;
-};
-
-export const getTeamSubmission = async (teamId: string) => {
-  const response = await api.get<TProjectSubmissionResponse>(`${TEAMS_BASE_URL}/${teamId}/submission`);
+  const response = await api.get('/v1/hackathon/teams/my');
   return response.data;
 };
 
 export const leaveTeam = async (teamId: string) => {
-  const response = await api.post(`${TEAMS_BASE_URL}/${teamId}/leave`);
+  const response = await api.post(`/v1/hackathon/teams/${teamId}/leave`);
+  return response.data;
+};
+
+export const submitProject = async (teamId: string, data: TSubmitProjectRequest) => {
+  const response = await api.post<TProjectSubmissionResponse>(
+    `/v1/hackathon/submissions/teams/${teamId}`,
+    data
+  );
+  return response.data;
+};
+
+export const getTeamSubmission = async (teamId: string) => {
+  const response = await api.get<TProjectSubmissionResponse>(
+    `/v1/hackathon/submissions/teams/${teamId}`
+  );
   return response.data;
 };

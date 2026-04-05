@@ -1,6 +1,9 @@
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
-import { InputField, Modal } from '@imphnen-frontend-service/ui/molecules';
-import { useConfirmItem } from '../_hook/use-item';
+import { Modal } from '@imphnen-frontend-service/ui/molecules';
+import { ControlledInputField } from '@imphnen-frontend-service/ui/organisms';
 
 interface IModalUpdatePermission {
   isOpen: boolean;
@@ -10,6 +13,8 @@ interface IModalUpdatePermission {
   nextStep: () => void;
   prevStep: () => void;
   resetStep: () => void;
+  initialValues?: { name?: string };
+  onDataCapture?: (data: any) => void;
 }
 
 const ModalUpdatePermission = ({
@@ -17,10 +22,31 @@ const ModalUpdatePermission = ({
   onClose,
   resetStep,
   handleUpdate,
+  initialValues,
+  onDataCapture,
 }: IModalUpdatePermission) => {
-  const { onConfirm } = useConfirmItem(onClose, resetStep, handleUpdate, {
-    success: 'Perubahan permissions berhasil dilakukan',
-    error: 'Perubahan permissions gagal dilakukan',
+  const form = useForm<{ name: string }>({
+    mode: 'all',
+    defaultValues: initialValues,
+  });
+
+  useEffect(() => {
+    if (isOpen) {
+      form.reset(initialValues);
+    }
+  }, [isOpen, initialValues]);
+
+  const onSubmit = form.handleSubmit(async (data) => {
+    try {
+      onDataCapture?.(data);
+      if (handleUpdate) await handleUpdate();
+      toast.success('Perubahan permissions berhasil dilakukan');
+      onClose();
+      resetStep();
+    } catch (error) {
+      console.log(error);
+      toast.error('Perubahan permissions gagal dilakukan');
+    }
   });
 
   return (
@@ -36,24 +62,26 @@ const ModalUpdatePermission = ({
         </h2>
       </Modal.Header>
       <Modal.Content className="flex flex-col gap-8">
-        <InputField
-          label="Name"
-          name="name"
-          type="text"
-          placeholder="Nama Permission"
-          size="lg"
-          className="w-full"
-        />
+        <form onSubmit={onSubmit} className="flex flex-col gap-8">
+          <ControlledInputField
+            control={form.control}
+            label="Name"
+            name="name"
+            type="text"
+            placeholder="Nama Permission"
+            size="lg"
+            className="w-full"
+          />
 
-        <Button
-          variant="primary"
-          size="lg"
-          className="w-full"
-          type="submit"
-          onClick={onConfirm}
-        >
-          Update Permission
-        </Button>
+          <Button
+            variant="primary"
+            size="lg"
+            className="w-full"
+            type="submit"
+          >
+            Update Permission
+          </Button>
+        </form>
       </Modal.Content>
     </Modal>
   );

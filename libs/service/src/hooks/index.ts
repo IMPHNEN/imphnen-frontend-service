@@ -7,3 +7,8 @@ export * from './teams';
 export * from './messages';
 export * from './winners';
 export * from './use-session';
+export * from './roles';
+export * from './permissions';
+export * from './events';
+export * from './testimonials';
+export * from './sessions';

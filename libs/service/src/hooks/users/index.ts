@@ -1,69 +1,30 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { hackathonApi, HackathonApiResponse } from '../../api/hackathon';
 import { useAuthStore } from '../auth';
-
-interface User {
-  id: string;
-  email: string;
-  fullname: string;
-  bio?: string;
-  location?: string;
-  avatar?: string;
-  skills?: string[];
-  created_at: string;
-  updated_at?: string;
-}
-
-interface CertificateUserData {
-  id: string;
-  fullname: string;
-  email: string;
-  avatar?: string;
-}
-
-interface CertificateTeamData {
-  id: string;
-  name: string;
-  logo?: string;
-  is_leader: boolean;
-}
-
-interface CertificateSubmissionData {
-  id: string;
-  title: string;
-  description: string;
-  repository_url?: string;
-  demo_url?: string;
-}
-
-interface CertificateWinnerData {
-  rank: number;
-  prize?: string;
-}
+import {
+  getUserMe,
+  getUserById,
+  getUserList,
+  updateUserMe,
+  updateUserById,
+} from '../../api/users';
+import { api } from '../../api/index';
+import type { TApiPaginated, TPaginationParams } from '../../types/common';
+import type { TUsersDetailItem, TUserUpdateRequest } from '../../types/users';
 
 export interface CertificatePublicData {
-  user: CertificateUserData;
-  team?: CertificateTeamData;
-  submission?: CertificateSubmissionData;
-  winner?: CertificateWinnerData;
-}
-
-interface UpdateUserRequest {
-  fullname?: string;
-  bio?: string;
-  location?: string;
-  avatar?: string;
-  skills?: string[];
+  user: { id: string; fullname: string; email: string; avatar?: string };
+  team?: { id: string; name: string; logo?: string; is_leader: boolean };
+  submission?: { id: string; title: string; description: string; repository_url?: string; demo_url?: string };
+  winner?: { rank: number; prize?: string };
 }
 
 export const useUserMe = () => {
   const { session } = useAuthStore();
-
   return useQuery({
     queryKey: ['user-me'],
     queryFn: async () => {
-      const response = await hackathonApi.get<HackathonApiResponse<User>>('/users/me');
-      return { data: response.data.data };
+      const data = await getUserMe();
+      return { data };
     },
     enabled: !!session?.user?.id,
   });
@@ -73,10 +34,28 @@ export const useUserById = (id: string) => {
   return useQuery({
     queryKey: ['user-by-id', id],
     queryFn: async () => {
-      const response = await hackathonApi.get<HackathonApiResponse<User>>(`/users/${id}`);
-      return { data: response.data.data };
+      const data = await getUserById(id);
+      return { data };
     },
     enabled: !!id,
+  });
+};
+
+export const useUserDetailsById = (userId: string) => {
+  return useQuery({
+    queryKey: ['user-details', userId],
+    queryFn: async () => {
+      const data = await getUserById(userId);
+      return { data };
+    },
+    enabled: !!userId,
+  });
+};
+
+export const useUserList = (params?: TPaginationParams) => {
+  return useQuery({
+    queryKey: ['user-list', params],
+    queryFn: () => getUserList(params),
   });
 };
 
@@ -86,32 +65,21 @@ export const useUpdateUserMe = () => {
 
   return useMutation({
     mutationKey: ['update-user-me'],
-    mutationFn: async (data: UpdateUserRequest) => {
-      if (!session?.user?.id) {
-        throw new Error('You must be logged in to update profile');
-      }
-
-      const response = await hackathonApi.put<HackathonApiResponse<User>>('/users/me', {
-        fullname: data.fullname,
-        bio: data.bio,
-        location: data.location,
-        avatar: data.avatar,
-        skills: data.skills,
-      });
-
-      return { data: response.data.data };
+    mutationFn: (data: TUserUpdateRequest) => {
+      if (!session?.user?.id) throw new Error('You must be logged in to update profile');
+      return updateUserMe(data);
     },
     onSuccess: (result) => {
-      if (session?.user && result.data) {
+      if (session?.user && result) {
         setSession({
           token: session.token,
           user: {
             ...session.user,
-            fullname: result.data.fullname || session.user.fullname,
-            bio: result.data.bio || '',
-            location: result.data.location || '',
-            avatar: result.data.avatar || session.user.avatar,
-            skills: result.data.skills || [],
+            fullname: result.fullname || session.user.fullname,
+            bio: result.profile_extension?.bio || '',
+            location: result.profile_extension?.location || '',
+            avatar: result.avatar || session.user.avatar,
+            skills: result.profile_extension?.skills || [],
           },
         });
       }
@@ -125,24 +93,11 @@ export const useUpdateUserById = () => {
 
   return useMutation({
     mutationKey: ['update-user-by-id'],
-    mutationFn: async ({ id, data }: { id: string; data: UpdateUserRequest }) => {
-      const response = await hackathonApi.put<HackathonApiResponse<User>>(`/users/${id}`, data);
-      return { data: response.data.data };
-    },
+    mutationFn: ({ id, data }: { id: string; data: TUserUpdateRequest }) => updateUserById(id, data),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['user-by-id', variables.id] });
+      queryClient.invalidateQueries({ queryKey: ['user-list'] });
     },
-  });
-};
-
-export const useUserDetailsById = (userId: string) => {
-  return useQuery({
-    queryKey: ['user-details', userId],
-    queryFn: async () => {
-      const response = await hackathonApi.get<HackathonApiResponse<User>>(`/users/${userId}`);
-      return { data: response.data.data };
-    },
-    enabled: !!userId,
   });
 };
 
@@ -150,8 +105,8 @@ export const useCertificatePublicData = (userId: string, enabled = true) => {
   return useQuery({
     queryKey: ['certificate-public-data', userId],
     queryFn: async () => {
-      const response = await hackathonApi.get<HackathonApiResponse<CertificatePublicData>>(
-        `/certificates/${userId}`
+      const response = await api.get<{ data: CertificatePublicData }>(
+        `/v1/hackathon/certificates/${userId}`
       );
       return { data: response.data.data };
     },

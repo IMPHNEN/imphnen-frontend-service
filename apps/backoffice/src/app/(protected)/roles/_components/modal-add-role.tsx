@@ -11,6 +11,7 @@ interface IModalAddRole {
   nextStep: () => void;
   prevStep: () => void;
   resetStep: () => void;
+  onDataCapture?: (data: any) => void;
 }
 
 const ModalAddRole = ({
@@ -20,6 +21,7 @@ const ModalAddRole = ({
   nextStep,
   resetStep,
   handleAdd,
+  onDataCapture,
 }: IModalAddRole) => {
   return (
     <Modal
@@ -31,7 +33,7 @@ const ModalAddRole = ({
       }}
       disableEscapeKeyDown={true}
     >
-      {currentStep === 1 && <StepOne nextStep={nextStep} onClose={onClose} />}
+      {currentStep === 1 && <StepOne nextStep={nextStep} onClose={onClose} onDataCapture={onDataCapture} />}
       {currentStep === 2 && (
         <StepTwo
           onClose={onClose}
@@ -46,10 +48,11 @@ const ModalAddRole = ({
 interface IStepOneProps {
   nextStep: () => void;
   onClose: () => void;
+  onDataCapture?: (data: any) => void;
 }
 
-const StepOne = ({ nextStep }: IStepOneProps) => {
-  const { form, onSubmit } = useItem(nextStep);
+const StepOne = ({ nextStep, onDataCapture }: IStepOneProps) => {
+  const { form, onSubmit } = useItem(nextStep, undefined, onDataCapture);
 
   return (
     <>

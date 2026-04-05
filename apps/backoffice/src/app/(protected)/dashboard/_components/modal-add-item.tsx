@@ -11,6 +11,7 @@ interface IModalAddItem {
   nextStep: () => void;
   prevStep: () => void;
   resetStep: () => void;
+  onDataCapture?: (data: any) => void;
 }
 
 const ModalAddItem = ({
@@ -20,6 +21,7 @@ const ModalAddItem = ({
   nextStep,
   resetStep,
   handleAddItem,
+  onDataCapture,
 }: IModalAddItem) => {
   return (
     <Modal
@@ -31,7 +33,7 @@ const ModalAddItem = ({
       }}
       disableEscapeKeyDown={true}
     >
-      {currentStep === 1 && <StepOne nextStep={nextStep} onClose={onClose} />}
+      {currentStep === 1 && <StepOne nextStep={nextStep} onClose={onClose} onDataCapture={onDataCapture} />}
       {currentStep === 2 && (
         <StepTwo
           onClose={onClose}
@@ -46,10 +48,11 @@ const ModalAddItem = ({
 interface IStepOneProps {
   nextStep: () => void;
   onClose: () => void;
+  onDataCapture?: (data: any) => void;
 }
 
-const StepOne = ({ nextStep }: IStepOneProps) => {
-  const { form, onSubmit } = useItem(nextStep);
+const StepOne = ({ nextStep, onDataCapture }: IStepOneProps) => {
+  const { form, onSubmit } = useItem(nextStep, undefined, onDataCapture);
 
   return (
     <>
@@ -98,7 +101,7 @@ const StepOne = ({ nextStep }: IStepOneProps) => {
             variant="primary"
             size="lg"
             className="w-full"
-            onClick={nextStep}
+            type="submit"
           >
             Tambahkan Item
           </Button>

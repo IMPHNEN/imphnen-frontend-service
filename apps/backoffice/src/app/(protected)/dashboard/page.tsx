@@ -6,16 +6,26 @@ import {
   UserSwitchOutlined,
 } from '@ant-design/icons';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
-import { FC, Fragment, ReactElement, useState } from 'react';
+import { FC, Fragment, ReactElement, useRef, useState } from 'react';
 import ModalAddItem from './_components/modal-add-item';
 import ModalEditItem from './_components/modal-edit-item';
 import ModalDeleteItem from './_components/modal-delete-item';
 import { useQueryState } from '@imphnen-frontend-service/utils';
+import {
+  useUserList,
+  useGachaItemList,
+  useCreateGachaItem,
+  useUpdateGachaItem,
+  useDeleteGachaItem,
+  TGachaItemDto,
+} from '@imphnen-frontend-service/service';
 
 export const Components: FC = (): ReactElement => {
   const [showModalAddItem, setShowModalAddItem] = useState(false);
   const [showModalEditItem, setShowModalEditItem] = useState(false);
   const [showModalDeleteItem, setShowModalDeleteItem] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<TGachaItemDto | null>(null);
+  const pendingFormData = useRef<any>(null);
 
   const {
     step: currentStep,
@@ -27,6 +37,52 @@ export const Components: FC = (): ReactElement => {
     maxValue: 2,
     minValue: 1,
   });
+
+  const { data: usersData } = useUserList({ per_page: 1 });
+  const { data: gachaItemsData } = useGachaItemList({ per_page: 9 });
+  const createItem = useCreateGachaItem();
+  const updateItem = useUpdateGachaItem();
+  const deleteItem = useDeleteGachaItem();
+
+  const totalUsers = usersData?.meta?.total ?? 0;
+  const gachaItems: TGachaItemDto[] = gachaItemsData?.data ?? [];
+
+  const handleAdd = async (): Promise<boolean> => {
+    if (pendingFormData.current) {
+      const { itemName, quantity } = pendingFormData.current;
+      await createItem.mutateAsync({
+        item_code: (itemName as string).toLowerCase().replace(/\s+/g, '-'),
+        name: itemName,
+        description: '',
+        rarity: 'common',
+        type_: 'physical',
+        category: 'merchandise',
+        value: 0,
+        weight: 1,
+        stock: quantity ?? 1,
+        is_limited: false,
+      });
+    }
+    return true;
+  };
+
+  const handleEdit = async (): Promise<boolean> => {
+    if (selectedItem && pendingFormData.current) {
+      const { itemName, quantity } = pendingFormData.current;
+      await updateItem.mutateAsync({
+        id: selectedItem.id,
+        data: { name: itemName, stock: quantity },
+      });
+    }
+    return true;
+  };
+
+  const handleDelete = async (): Promise<boolean> => {
+    if (selectedItem) {
+      await deleteItem.mutateAsync(selectedItem.id);
+    }
+    return true;
+  };
 
   return (
     <Fragment>
@@ -47,7 +103,7 @@ export const Components: FC = (): ReactElement => {
                     <UsergroupAddOutlined className="text-[20px]" />
                   </div>
                   <div className="flex flex-col gap-1">
-                    <h3 className="text-p1 font-semibold">1000</h3>
+                    <h3 className="text-p1 font-semibold">{totalUsers}</h3>
                     <p className="text-label1 text-neutral-500">Participants</p>
                   </div>
                 </div>
@@ -57,9 +113,9 @@ export const Components: FC = (): ReactElement => {
                     <ReloadOutlined className="text-[20px]" />
                   </div>
                   <div className="flex flex-col gap-1">
-                    <h3 className="text-p1 font-semibold">1000</h3>
+                    <h3 className="text-p1 font-semibold">{gachaItemsData?.meta?.total ?? 0}</h3>
                     <p className="text-label1 text-neutral-500">
-                      Roll and Reroll
+                      Gacha Items
                     </p>
                   </div>
                 </div>
@@ -69,7 +125,7 @@ export const Components: FC = (): ReactElement => {
                     <UserSwitchOutlined className="text-[20px]" />
                   </div>
                   <div className="flex flex-col gap-1">
-                    <h3 className="text-p1 font-semibold">1000</h3>
+                    <h3 className="text-p1 font-semibold">-</h3>
                     <p className="text-label1 text-neutral-500">Redeem</p>
                   </div>
                 </div>
@@ -79,7 +135,7 @@ export const Components: FC = (): ReactElement => {
                     <UsergroupDeleteOutlined className="text-[20px]" />
                   </div>
                   <div className="flex flex-col gap-1">
-                    <h3 className="text-p1 font-semibold">1000</h3>
+                    <h3 className="text-p1 font-semibold">-</h3>
                     <p className="text-label1 text-neutral-500">
                       Inactive Users
                     </p>
@@ -105,19 +161,18 @@ export const Components: FC = (): ReactElement => {
               </div>
 
               <div className="flex flex-col gap-4 max-h-140 overflow-auto">
-                {[1, 2, 3, 4, 5, 6].map((item) => (
+                {gachaItems.map((item) => (
                   <div
-                    key={item}
+                    key={item.id}
                     className="bg-white overflow-clip rounded-lg shadow-sm flex justify-between border border-neutral-100"
                   >
                     <div className="flex flex-col py-4 px-6 gap-[8px]">
                       <div>
                         <h3 className="text-p3 text-primary-500 font-medium">
-                          Lanyard IMPHNEN
+                          {item.name}
                         </h3>
                         <div className="flex items-center justify-start gap-10 text-label2 text-gray-500 mt-1">
-                          <span>Prize {item}</span>
-                          <span>Quantity: 10</span>
+                          <span>{item.id}</span>
                         </div>
                       </div>
                       <div className="flex justify-start gap-2">
@@ -125,7 +180,10 @@ export const Components: FC = (): ReactElement => {
                           variant="text"
                           size="sm"
                           className="text-[10px] text-neutral-500 p-0 font-normal hover:bg-transparent hover:text-primary-500"
-                          onClick={() => setShowModalEditItem(true)}
+                          onClick={() => {
+                            setSelectedItem(item);
+                            setShowModalEditItem(true);
+                          }}
                         >
                           Edit
                         </Button>
@@ -133,14 +191,17 @@ export const Components: FC = (): ReactElement => {
                           variant="text"
                           size="sm"
                           className="text-[10px] text-red-500 p-0 font-normal hover:bg-transparent hover:text-red-700"
-                          onClick={() => setShowModalDeleteItem(true)}
+                          onClick={() => {
+                            setSelectedItem(item);
+                            setShowModalDeleteItem(true);
+                          }}
                         >
                           Delete
                         </Button>
                       </div>
                     </div>
 
-                    <img src="gacha-clip.webp" alt="Lanyard IMPHNEN" />
+                    <img src="gacha-clip.webp" alt={item.name} />
                   </div>
                 ))}
               </div>
@@ -162,6 +223,8 @@ export const Components: FC = (): ReactElement => {
         nextStep={nextStep}
         prevStep={prevStep}
         resetStep={resetStep}
+        handleAddItem={handleAdd}
+        onDataCapture={(data) => { pendingFormData.current = data; }}
       />
 
       <ModalEditItem
@@ -171,11 +234,15 @@ export const Components: FC = (): ReactElement => {
         nextStep={nextStep}
         prevStep={prevStep}
         resetStep={resetStep}
+        handleEditItem={handleEdit}
+        initialValues={selectedItem ? { itemName: selectedItem.name } : undefined}
+        onDataCapture={(data) => { pendingFormData.current = data; }}
       />
 
       <ModalDeleteItem
         isOpen={showModalDeleteItem}
         onClose={() => setShowModalDeleteItem(false)}
+        handleDeleteItem={async () => { await handleDelete(); return true; }}
       />
     </Fragment>
   );

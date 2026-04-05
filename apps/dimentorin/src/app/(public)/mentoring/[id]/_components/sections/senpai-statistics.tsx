@@ -1,19 +1,24 @@
 import { StarFilled } from "@ant-design/icons";
 import { For } from "@imphnen-frontend-service/utils";
 import { FC } from "react";
+import type { MentorDetailResponseDto } from "@imphnen-frontend-service/service";
 
-const SENPAI_STATISTIC = [
-  { name: 'Total Sessions', count: 8 },
-  { name: 'Mentee Impact', count: 1000 },
-  { name: 'Response Time', count: '30 Minute' }
-]
+type Props = {
+  mentor?: MentorDetailResponseDto
+}
 
-export const StatisticsSection: FC = () => {
+export const StatisticsSection: FC<Props> = ({ mentor }) => {
+  const stats = [
+    { name: 'Total Sessions', count: mentor?.mentoring_sessions ?? 0 },
+    { name: 'Rating', count: mentor?.rating != null ? `${mentor.rating.toFixed(1)}/5.0` : 'N/A' },
+    { name: 'Experience', count: mentor?.years_of_experience != null ? `${mentor.years_of_experience} Yrs` : 'N/A' },
+  ]
+
   return (
     <div className="md:mb-10">
       <h2 className="text-xs font-semibold mb-3 md:text-[15px] xl:text-[19px]">Senpai Statistics</h2>
       <div className="grid gap-4 xl:flex">
-        <For data={SENPAI_STATISTIC}>
+        <For data={stats}>
           {(item, index) => (
             <div key={index} className="px-2.5 py-2 border border-primary-50 rounded-md shadow flex items-center gap-x-2.5">
               <div

@@ -6,3 +6,6 @@ export * from './permissions';
 export * from './mentors';
 export * from './teams';
 export * from './admin';
+export * from './events';
+export * from './testimonials';
+export * from './sessions';

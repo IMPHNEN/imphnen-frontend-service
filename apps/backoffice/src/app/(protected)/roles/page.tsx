@@ -1,4 +1,4 @@
-import { FC, Fragment, ReactElement, useState } from 'react';
+import { FC, Fragment, ReactElement, useRef, useState } from 'react';
 import {
   SearchOutlined,
   EditOutlined,
@@ -19,25 +19,22 @@ import ModalAddRole from './_components/modal-add-role';
 import ModalUpdateRole from './_components/modal-update-role';
 import ModalDeleteRole from './_components/modal-delete-role';
 import { useQueryState } from '@imphnen-frontend-service/utils';
+import {
+  useRoleList,
+  useCreateRole,
+  useUpdateRole,
+  useDeleteRole,
+  TRolesListItem,
+} from '@imphnen-frontend-service/service';
 import React from 'react';
-
-interface Role {
-  id: number;
-  name: string;
-}
-
-const mockData: Role[] = [
-  { id: 1, name: 'Admin' },
-  { id: 2, name: 'Admin Pembayaran' },
-  { id: 3, name: 'Staff' },
-  { id: 4, name: 'Staff Aktivasi User' },
-  { id: 5, name: 'User' },
-];
 
 export const Components: FC = (): ReactElement => {
   const [showModalAddItem, setShowModalAddItem] = useState(false);
   const [showModalUpdateItem, setShowModalUpdateItem] = useState(false);
   const [showModalDeleteItem, setShowModalDeleteItem] = useState(false);
+  const [selectedRole, setSelectedRole] = useState<TRolesListItem | null>(null);
+  const [search, setSearch] = useState('');
+  const pendingFormData = useRef<any>(null);
 
   const {
     step: currentStep,
@@ -57,7 +54,40 @@ export const Components: FC = (): ReactElement => {
 
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
 
-  const columns: ColumnDef<Role>[] = [
+  const { data: rolesData, isLoading } = useRoleList({
+    search,
+    page: pagination.pageIndex + 1,
+    per_page: pagination.pageSize,
+  });
+  const createRole = useCreateRole();
+  const updateRole = useUpdateRole();
+  const deleteRole = useDeleteRole();
+
+  const roles: TRolesListItem[] = rolesData?.data ?? [];
+  const totalItems = rolesData?.meta?.total ?? roles.length;
+
+  const handleAdd = async (): Promise<boolean> => {
+    if (pendingFormData.current) {
+      await createRole.mutateAsync(pendingFormData.current);
+    }
+    return true;
+  };
+
+  const handleUpdate = async (): Promise<boolean> => {
+    if (selectedRole && pendingFormData.current) {
+      await updateRole.mutateAsync({ id: selectedRole.id, data: pendingFormData.current });
+    }
+    return true;
+  };
+
+  const handleDelete = async (): Promise<boolean> => {
+    if (selectedRole) {
+      await deleteRole.mutateAsync(selectedRole.id);
+    }
+    return true;
+  };
+
+  const columns: ColumnDef<TRolesListItem>[] = [
     {
       id: 'select',
       header: ({ table }) => (
@@ -87,13 +117,14 @@ export const Components: FC = (): ReactElement => {
     },
     {
       header: 'Action',
-      cell: () => (
+      cell: ({ row }) => (
         <div className="flex gap-[8px]">
           <Button
             variant="primary"
             size="sm"
             onClick={(e) => {
               e.stopPropagation();
+              setSelectedRole(row.original);
               setShowModalUpdateItem(true);
             }}
             className="flex items-center gap-2"
@@ -105,6 +136,7 @@ export const Components: FC = (): ReactElement => {
             size="sm"
             onClick={(e) => {
               e.stopPropagation();
+              setSelectedRole(row.original);
               setShowModalDeleteItem(true);
             }}
             className="flex items-center gap-2"
@@ -117,7 +149,7 @@ export const Components: FC = (): ReactElement => {
   ];
 
   const table = useReactTable({
-    data: mockData,
+    data: roles,
     columns,
     state: {
       pagination,
@@ -128,8 +160,8 @@ export const Components: FC = (): ReactElement => {
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
-    pageCount: Math.ceil(mockData.length / pagination.pageSize),
-    manualPagination: false,
+    pageCount: Math.ceil(totalItems / pagination.pageSize),
+    manualPagination: true,
   });
 
   return (
@@ -145,6 +177,8 @@ export const Components: FC = (): ReactElement => {
               <Input
                 placeholder="Cari berdasarkan nama roles"
                 className="pl-12 w-full max-h-full"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
               />
               <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[16px]">
                 <SearchOutlined />
@@ -155,9 +189,7 @@ export const Components: FC = (): ReactElement => {
                 variant="primary"
                 size="md"
                 className="flex gap-3 text-nowrap"
-                onClick={() => {
-                  setShowModalAddItem(true);
-                }}
+                onClick={() => setShowModalAddItem(true)}
               >
                 <PlusOutlined />
                 Tambah Role
@@ -165,12 +197,16 @@ export const Components: FC = (): ReactElement => {
             </div>
           </div>
 
-          <DataTable
-            data={mockData}
-            columns={columns}
-            pageSize={9}
-            table={table}
-          />
+          {isLoading ? (
+            <div className="text-center py-8 text-neutral-400">Loading...</div>
+          ) : (
+            <DataTable
+              data={roles}
+              columns={columns}
+              pageSize={9}
+              table={table}
+            />
+          )}
         </section>
       </main>
 
@@ -181,6 +217,8 @@ export const Components: FC = (): ReactElement => {
         nextStep={nextStep}
         prevStep={prevStep}
         resetStep={resetStep}
+        handleAdd={handleAdd}
+        onDataCapture={(data) => { pendingFormData.current = data; }}
       />
       <ModalUpdateRole
         isOpen={showModalUpdateItem}
@@ -188,6 +226,9 @@ export const Components: FC = (): ReactElement => {
         nextStep={nextStep}
         prevStep={prevStep}
         resetStep={resetStep}
+        handleUpdate={handleUpdate}
+        initialValues={selectedRole ? { name: selectedRole.name } : undefined}
+        onDataCapture={(data) => { pendingFormData.current = data; }}
       />
       <ModalDeleteRole
         isOpen={showModalDeleteItem}
@@ -195,6 +236,7 @@ export const Components: FC = (): ReactElement => {
         nextStep={nextStep}
         prevStep={prevStep}
         resetStep={resetStep}
+        handleDelete={handleDelete}
       />
     </Fragment>
   );

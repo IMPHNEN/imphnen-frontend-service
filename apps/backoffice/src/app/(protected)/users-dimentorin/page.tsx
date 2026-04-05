@@ -15,30 +15,19 @@ import {
 } from '@tanstack/react-table';
 import { ReactElement, useState } from 'react';
 import { ModalDetailUser } from './_components/modal/detail';
-
-type UserStatus = 'active' | 'inactive';
-
-interface UserType {
-  id: number;
-  name: string;
-  email: string;
-  rating: number;
-  status: UserStatus;
-}
-
-const mockData: UserType[] = Array.from({ length: 90 }, (_, i) => ({
-  id: i + 1,
-  name: i % 3 === 0 ? 'Ahmad Wijuana' : 'Sofia Wijuana',
-  email: 'fullname23@gmail.com',
-  rating: 4.5,
-  status: i % 2 === 0 ? 'active' : 'inactive',
-}));
+import {
+  useMentorList,
+  useUserList,
+  MentorDetailResponseDto,
+  TUsersListItem,
+} from '@imphnen-frontend-service/service';
 
 export default function Components(): ReactElement {
   const TABS = ['mentor', 'mentee'] as const;
   const [activeTab, setActiveTab] = useState<'mentor' | 'mentee'>('mentor');
   const [showDetail, setShowDetail] = useState(false);
-  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [search, setSearch] = useState('');
 
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [pagination, setPagination] = useState<PaginationState>({
@@ -46,7 +35,27 @@ export default function Components(): ReactElement {
     pageSize: 9,
   });
 
-  const columns: ColumnDef<UserType>[] = [
+  const { data: mentorData, isLoading: mentorLoading } = useMentorList({
+    search,
+    page: pagination.pageIndex + 1,
+    per_page: pagination.pageSize,
+  });
+
+  const { data: menteeData, isLoading: menteeLoading } = useUserList({
+    search,
+    page: pagination.pageIndex + 1,
+    per_page: pagination.pageSize,
+  });
+
+  const mentors: MentorDetailResponseDto[] = mentorData?.data ?? [];
+  const mentees: TUsersListItem[] = menteeData?.data ?? [];
+  const mentorTotal = mentorData?.meta?.total ?? mentors.length;
+  const menteeTotal = menteeData?.meta?.total ?? mentees.length;
+
+  const isLoading = activeTab === 'mentor' ? mentorLoading : menteeLoading;
+  const totalItems = activeTab === 'mentor' ? mentorTotal : menteeTotal;
+
+  const mentorColumns: ColumnDef<MentorDetailResponseDto>[] = [
     {
       id: 'select',
       meta: { cellClassName: cn('w-20') },
@@ -70,7 +79,7 @@ export default function Components(): ReactElement {
     {
       id: 'name',
       header: 'Name',
-      accessorKey: 'name',
+      accessorKey: 'fullname',
     },
     {
       id: 'email',
@@ -81,6 +90,7 @@ export default function Components(): ReactElement {
       id: 'rating',
       header: 'Rating',
       accessorKey: 'rating',
+      cell: ({ row }) => <span>{row.original.rating ?? '-'}</span>,
     },
     {
       id: 'status',
@@ -88,19 +98,14 @@ export default function Components(): ReactElement {
       accessorKey: 'status',
       cell: ({ row }) => {
         const status = row.original.status;
-        const statusColors: Record<UserStatus, string> = {
+        const statusColors: Record<string, string> = {
           active: 'bg-success-200 text-success-500',
+          pending: 'bg-warning-200 text-warning-700',
           inactive: 'bg-danger-200 text-danger-500',
         };
-        const statusText: Record<UserStatus, string> = {
-          active: 'Active',
-          inactive: 'Inactive',
-        };
         return (
-          <div
-            className={`py-2 px-4 rounded-md text-center ${statusColors[status]}`}
-          >
-            {statusText[status]}
+          <div className={`py-2 px-4 rounded-md text-center capitalize ${statusColors[status] ?? 'bg-neutral-200 text-neutral-700'}`}>
+            {status}
           </div>
         );
       },
@@ -125,20 +130,91 @@ export default function Components(): ReactElement {
     },
   ];
 
-  const table = useReactTable({
-    data: mockData,
-    columns,
-    state: {
-      pagination,
-      rowSelection,
+  const menteeColumns: ColumnDef<TUsersListItem>[] = [
+    {
+      id: 'select',
+      meta: { cellClassName: cn('w-20') },
+      header: ({ table }) => (
+        <input
+          type="checkbox"
+          className="rounded"
+          checked={table.getIsAllRowsSelected()}
+          onChange={table.getToggleAllRowsSelectedHandler()}
+        />
+      ),
+      cell: ({ row }) => (
+        <input
+          type="checkbox"
+          className="rounded"
+          checked={row.getIsSelected()}
+          onChange={row.getToggleSelectedHandler()}
+        />
+      ),
     },
+    {
+      id: 'name',
+      header: 'Name',
+      accessorKey: 'fullname',
+    },
+    {
+      id: 'email',
+      header: 'Email',
+      accessorKey: 'email',
+    },
+    {
+      id: 'status',
+      header: 'Status',
+      accessorKey: 'is_active',
+      cell: ({ row }) => (
+        <div className={`py-2 px-4 rounded-md text-center ${row.original.is_active ? 'bg-success-200 text-success-500' : 'bg-danger-200 text-danger-500'}`}>
+          {row.original.is_active ? 'Active' : 'Inactive'}
+        </div>
+      ),
+    },
+    {
+      header: 'Action',
+      meta: { cellClassName: cn('w-72') },
+      cell: ({ row }) => (
+        <Button
+          variant="primary"
+          size="sm"
+          onClick={(e) => {
+            e.stopPropagation();
+            setSelectedUserId(row.original.id);
+            setShowDetail(true);
+          }}
+          className="flex items-center gap-2 w-max"
+        >
+          <SearchOutlined className="text-[16px]" /> Lihat Detail & Action
+        </Button>
+      ),
+    },
+  ];
+
+  const mentorTable = useReactTable({
+    data: mentors,
+    columns: mentorColumns,
+    state: { pagination, rowSelection },
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
-    pageCount: Math.ceil(mockData.length / pagination.pageSize),
-    manualPagination: false,
+    pageCount: Math.ceil(mentorTotal / pagination.pageSize),
+    manualPagination: true,
+  });
+
+  const menteeTable = useReactTable({
+    data: mentees,
+    columns: menteeColumns,
+    state: { pagination, rowSelection },
+    enableRowSelection: true,
+    onRowSelectionChange: setRowSelection,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    onPaginationChange: setPagination,
+    pageCount: Math.ceil(menteeTotal / pagination.pageSize),
+    manualPagination: true,
   });
 
   return (
@@ -157,7 +233,10 @@ export default function Components(): ReactElement {
                   'px-3 py-2 capitalize',
                   activeTab === tab && 'bg-white'
                 )}
-                onClick={() => setActiveTab(tab)}
+                onClick={() => {
+                  setActiveTab(tab);
+                  setPagination((p) => ({ ...p, pageIndex: 0 }));
+                }}
               >
                 {tab}
               </Button>
@@ -172,28 +251,22 @@ export default function Components(): ReactElement {
             <Input
               placeholder="Cari berdasarkan nama lengkap"
               className="pl-12 w-full max-h-full"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
             />
             <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[16px]">
               <SearchOutlined />
             </div>
           </div>
-          <Select>
-            <option selected disabled>
-              Rating
-            </option>
-            <option value="4.5">4.5</option>
-            <option value="5">5</option>
-          </Select>
-          <Select>
-            <option selected disabled>
-              Status
-            </option>
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-          </Select>
         </div>
 
-        <DataTable data={mockData} columns={columns} table={table} />
+        {isLoading ? (
+          <div className="text-center py-8 text-neutral-400">Loading...</div>
+        ) : activeTab === 'mentor' ? (
+          <DataTable data={mentors} columns={mentorColumns} table={mentorTable} />
+        ) : (
+          <DataTable data={mentees} columns={menteeColumns} table={menteeTable} />
+        )}
       </section>
 
       <ModalDetailUser

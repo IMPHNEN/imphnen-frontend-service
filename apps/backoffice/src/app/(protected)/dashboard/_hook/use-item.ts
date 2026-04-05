@@ -8,16 +8,17 @@ import { toast } from 'sonner';
 
 export const useItem = (
   nextStep: () => void,
-  initialValues?: TGachaItem
+  initialValues?: Partial<TGachaItem>,
+  onDataCapture?: (data: any) => void,
 ) => {
-  const form = useForm<TGachaItem>({
+  const form = useForm<any>({
     resolver: zodResolver(gachaItemSchema),
     mode: 'all',
     defaultValues: initialValues,
   });
 
   const onSubmit = form.handleSubmit((data) => {
-    console.log('Form data:', data);
+    onDataCapture?.(data);
     nextStep();
   });
 
@@ -38,6 +39,9 @@ export const useConfirmItem = (
 ) => {
   const onConfirm = async () => {
     try {
+      if (actionFunction) {
+        await actionFunction();
+      }
       toast.success(messages?.success);
       onClose();
       resetStep();

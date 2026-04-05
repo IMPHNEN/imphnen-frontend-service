@@ -5,27 +5,11 @@ import { cn } from "@imphnen-frontend-service/utils";
 import { ColumnDef, getCoreRowModel, getPaginationRowModel, PaginationState, RowSelectionState, useReactTable } from "@tanstack/react-table";
 import { ReactElement, useState } from "react";
 import { ModalDetailSession } from "./_components/modal/detail";
-
-type SessionStatus = 'ongoing' | 'finished';
-
-interface SessionType {
-  id: string
-  mentorName: string
-  menteeName: string
-  datetime: number
-  status: SessionStatus
-}
-
-const mockData: SessionType[] = Array.from({ length: 90 }, (_, i) => ({
-  id: `DS-${i + 1}`,
-  mentorName: 'Ahmad Wijuana',
-  menteeName: 'Sofia Wijuana',
-  datetime: new Date().getTime(),
-  status: i % 2 === 0 ? 'ongoing' : 'finished',
-}))
+import { useMySessions, TSessionListItem } from "@imphnen-frontend-service/service";
 
 export default function Components(): ReactElement {
   const [openDetail, setOpenDetail] = useState(false);
+  const [statusFilter, setStatusFilter] = useState('');
 
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
   const [pagination, setPagination] = useState<PaginationState>({
@@ -33,7 +17,14 @@ export default function Components(): ReactElement {
     pageSize: 9,
   });
 
-  const columns: ColumnDef<SessionType>[] = [
+  const { data: sessionsData, isLoading } = useMySessions(
+    statusFilter ? { status: statusFilter } : undefined
+  );
+
+  const sessions: TSessionListItem[] = sessionsData?.sessions ?? [];
+  const totalItems = sessionsData?.total ?? sessions.length;
+
+  const columns: ColumnDef<TSessionListItem>[] = [
     {
       id: 'select',
       meta: { cellClassName: cn("w-20") },
@@ -60,19 +51,22 @@ export default function Components(): ReactElement {
       accessorKey: 'id',
     },
     {
-      id: 'mentorName',
+      id: 'mentorId',
       header: 'Nama Mentor',
-      accessorKey: 'name',
+      accessorKey: 'mentor_id',
     },
     {
       id: 'menteeName',
       header: 'Nama Mentee',
-      accessorKey: 'name',
+      accessorKey: 'mentee_fullname',
     },
     {
       id: 'datetime',
       header: 'Waktu',
-      accessorKey: 'datetime',
+      accessorKey: 'scheduled_at',
+      cell: ({ row }) => (
+        <span>{new Date(row.original.scheduled_at).toLocaleString('id-ID')}</span>
+      ),
     },
     {
       id: 'status',
@@ -80,19 +74,16 @@ export default function Components(): ReactElement {
       accessorKey: 'status',
       cell: ({ row }) => {
         const status = row.original.status;
-        const statusColors: Record<SessionStatus, string> = {
+        const statusColors: Record<string, string> = {
+          pending: 'bg-warning-200 text-warning-700',
+          confirmed: 'bg-primary-200 text-primary-700',
           ongoing: 'bg-warning-200 text-warning-700',
-          finished: 'bg-success-200 text-success-500',
-        };
-        const statusText: Record<SessionStatus, string> = {
-          ongoing: 'On Going',
-          finished: 'Finished',
+          completed: 'bg-success-200 text-success-500',
+          cancelled: 'bg-danger-200 text-danger-500',
         };
         return (
-          <div
-            className={`py-2 px-4 rounded-md text-center ${statusColors[status]}`}
-          >
-            {statusText[status]}
+          <div className={`py-2 px-4 rounded-md text-center capitalize ${statusColors[status] ?? 'bg-neutral-200 text-neutral-700'}`}>
+            {status}
           </div>
         );
       },
@@ -100,7 +91,7 @@ export default function Components(): ReactElement {
     {
       header: 'Action',
       meta: { cellClassName: cn("w-52") },
-      cell: ({ row }) => (
+      cell: () => (
         <Button
           variant="primary"
           size="sm"
@@ -117,7 +108,7 @@ export default function Components(): ReactElement {
   ]
 
   const table = useReactTable({
-    data: mockData,
+    data: sessions,
     columns,
     state: {
       pagination,
@@ -128,8 +119,8 @@ export default function Components(): ReactElement {
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
-    pageCount: Math.ceil(mockData.length / pagination.pageSize),
-    manualPagination: false,
+    pageCount: Math.ceil(totalItems / pagination.pageSize),
+    manualPagination: true,
   });
 
   return (
@@ -147,19 +138,21 @@ export default function Components(): ReactElement {
               <SearchOutlined />
             </div>
           </div>
-          <Select>
-            <option selected disabled>Rating</option>
-            <option value="4.5">4.5</option>
-            <option value="5">5</option>
-          </Select>
-          <Select>
-            <option selected disabled>Status</option>
-            <option value="finished">Finished</option>
+          <Select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+            <option value="">Semua Status</option>
+            <option value="pending">Pending</option>
+            <option value="confirmed">Confirmed</option>
             <option value="ongoing">On Going</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
           </Select>
         </div>
 
-        <DataTable data={mockData} columns={columns} table={table} />
+        {isLoading ? (
+          <div className="text-center py-8 text-neutral-400">Loading...</div>
+        ) : (
+          <DataTable data={sessions} columns={columns} table={table} />
+        )}
       </section>
 
       <ModalDetailSession open={openDetail} setOpen={setOpenDetail} />

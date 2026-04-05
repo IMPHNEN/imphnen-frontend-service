@@ -4,30 +4,13 @@ import { BackofficeWrapper, DataTable } from "@imphnen-frontend-service/ui/organ
 import { cn, For } from "@imphnen-frontend-service/utils";
 import { ColumnDef, getCoreRowModel, getPaginationRowModel, PaginationState, RowSelectionState, useReactTable } from "@tanstack/react-table";
 import { ReactElement, useState } from "react"
+import { useMySessions, TSessionListItem } from "@imphnen-frontend-service/service";
 
 const TABS = {
   MENTORING: 'Mentoring',
   PLATFORM: 'Platform'
 } as const
 type Tabs = typeof TABS[keyof typeof TABS]
-
-type FeedbackStatus = 'done' | 'todo';
-
-interface FeedbackType {
-  id: number
-  name: string
-  email: string
-  rating: number
-  status: FeedbackStatus
-}
-
-const mockData: FeedbackType[] = Array.from({ length: 90 }, (_, i) => ({
-  id: i + 1,
-  name: i % 3 === 0 ? 'Ahmad Wijuana' : 'Sofia Wijuana',
-  email: 'fullname23@gmail.com',
-  rating: 4.5,
-  status: i % 2 === 0 ? 'done' : 'todo',
-}))
 
 export default function Components(): ReactElement {
   const [activeTab, setActiveTab] = useState<Tabs>(TABS.MENTORING)
@@ -38,7 +21,18 @@ export default function Components(): ReactElement {
     pageSize: 9,
   });
 
-  const columns: ColumnDef<FeedbackType>[] = [
+  const { data: sessionsData, isLoading } = useMySessions(
+    activeTab === TABS.MENTORING ? { status: 'completed' } : undefined
+  );
+
+  const sessions: TSessionListItem[] = activeTab === TABS.MENTORING
+    ? (sessionsData?.sessions ?? [])
+    : [];
+  const totalItems = activeTab === TABS.MENTORING
+    ? (sessionsData?.total ?? sessions.length)
+    : 0;
+
+  const columns: ColumnDef<TSessionListItem>[] = [
     {
       id: 'select',
       meta: { cellClassName: cn("w-20") },
@@ -62,37 +56,30 @@ export default function Components(): ReactElement {
     {
       id: 'name',
       header: 'Name',
-      accessorKey: 'name',
+      accessorKey: 'mentee_fullname',
+      cell: ({ row }) => <span>{row.original.mentee_fullname ?? '-'}</span>,
     },
     {
       id: 'email',
       header: 'Email',
-      accessorKey: 'email',
+      accessorKey: 'mentee_email',
+      cell: ({ row }) => <span>{row.original.mentee_email ?? '-'}</span>,
     },
     {
       id: 'rating',
       header: 'Rating',
       accessorKey: 'rating',
+      cell: ({ row }) => <span>{row.original.rating ?? '-'}</span>,
     },
     {
       id: 'status',
       header: 'Status',
       accessorKey: 'status',
       cell: ({ row }) => {
-        const status = row.original.status;
-        const statusColors: Record<FeedbackStatus, string> = {
-          done: 'bg-success-200 text-success-500',
-          todo: 'bg-primary-200 text-primary-500',
-        };
-        const statusText: Record<FeedbackStatus, string> = {
-          done: 'Done',
-          todo: 'To Do',
-        };
+        const hasRating = !!row.original.rating;
         return (
-          <div
-            className={`py-2 px-4 rounded-md text-center ${statusColors[status]}`}
-          >
-            {statusText[status]}
+          <div className={`py-2 px-4 rounded-md text-center ${hasRating ? 'bg-success-200 text-success-500' : 'bg-primary-200 text-primary-500'}`}>
+            {hasRating ? 'Done' : 'To Do'}
           </div>
         );
       },
@@ -100,7 +87,7 @@ export default function Components(): ReactElement {
     {
       header: 'Action',
       meta: { cellClassName: cn("w-72") },
-      cell: ({ row }) => (
+      cell: () => (
         <Button
           variant="primary"
           size="sm"
@@ -116,7 +103,7 @@ export default function Components(): ReactElement {
   ]
 
   const table = useReactTable({
-    data: mockData,
+    data: sessions,
     columns,
     state: {
       pagination,
@@ -127,8 +114,8 @@ export default function Components(): ReactElement {
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
-    pageCount: Math.ceil(mockData.length / pagination.pageSize),
-    manualPagination: false,
+    pageCount: Math.ceil(totalItems / pagination.pageSize),
+    manualPagination: true,
   });
 
   return (
@@ -142,7 +129,10 @@ export default function Components(): ReactElement {
                 key={tab}
                 variant="text"
                 className={cn("px-3 py-2 capitalize", activeTab === tab && "bg-white")}
-                onClick={() => setActiveTab(tab)}
+                onClick={() => {
+                  setActiveTab(tab);
+                  setPagination((p) => ({ ...p, pageIndex: 0 }));
+                }}
               >
                 {tab}
               </Button>
@@ -163,18 +153,26 @@ export default function Components(): ReactElement {
             </div>
           </div>
           <Select>
-            <option selected disabled>Rating</option>
+            <option disabled>Rating</option>
             <option value="4.5">4.5</option>
             <option value="5">5</option>
           </Select>
           <Select>
-            <option selected disabled>Status</option>
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
+            <option disabled>Status</option>
+            <option value="done">Done</option>
+            <option value="todo">To Do</option>
           </Select>
         </div>
 
-        <DataTable data={mockData} columns={columns} table={table} />
+        {isLoading ? (
+          <div className="text-center py-8 text-neutral-400">Loading...</div>
+        ) : activeTab === TABS.PLATFORM ? (
+          <div className="text-center py-8 text-neutral-400">
+            Platform feedback tidak tersedia
+          </div>
+        ) : (
+          <DataTable data={sessions} columns={columns} table={table} />
+        )}
       </section>
     </BackofficeWrapper>
   );

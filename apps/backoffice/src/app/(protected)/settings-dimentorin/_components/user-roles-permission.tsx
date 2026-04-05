@@ -4,18 +4,8 @@ import { DataTable } from "@imphnen-frontend-service/ui/organisms";
 import { cn } from "@imphnen-frontend-service/utils";
 import { ColumnDef, getCoreRowModel, getPaginationRowModel, PaginationState, RowSelectionState, useReactTable } from "@tanstack/react-table";
 import { FC, useState } from "react";
-
-type UserRolesPermissionType = {
-  id: number
-  role: string
-  totalUser: number
-}
-
-const mockData: UserRolesPermissionType[] = Array.from({ length: 90 }, (_, i) => ({
-  id: i + 1,
-  role: ['Admin', 'Super Admin', 'Mentee', 'Mentor'][Math.floor(Math.random() * 4)],
-  totalUser: 10
-}))
+import { useRoleList, useDeleteRole, TRolesListItem } from "@imphnen-frontend-service/service";
+import { toast } from "sonner";
 
 export const UserRolesPermission: FC = () => {
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
@@ -24,7 +14,25 @@ export const UserRolesPermission: FC = () => {
     pageSize: 9,
   });
 
-  const columns: ColumnDef<UserRolesPermissionType>[] = [
+  const { data: rolesData, isLoading } = useRoleList({
+    page: pagination.pageIndex + 1,
+    per_page: pagination.pageSize,
+  });
+  const deleteRole = useDeleteRole();
+
+  const roles: TRolesListItem[] = rolesData?.data ?? [];
+  const totalItems = rolesData?.meta?.total ?? roles.length;
+
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteRole.mutateAsync(id);
+      toast.success('Role berhasil dihapus');
+    } catch {
+      toast.error('Role gagal dihapus');
+    }
+  };
+
+  const columns: ColumnDef<TRolesListItem>[] = [
     {
       id: 'select',
       meta: { cellClassName: cn("w-20") },
@@ -48,12 +56,12 @@ export const UserRolesPermission: FC = () => {
     {
       id: 'role',
       header: 'Role',
-      accessorKey: 'role',
+      accessorKey: 'name',
     },
     {
       id: 'totalUser',
-      header: 'Total User',
-      accessorKey: 'totalUser',
+      header: 'Total Permissions',
+      accessorKey: 'permissions_count',
     },
     {
       header: 'Action',
@@ -75,6 +83,7 @@ export const UserRolesPermission: FC = () => {
             size="sm"
             onClick={(e) => {
               e.stopPropagation();
+              handleDelete(row.original.id);
             }}
             className="flex items-center gap-2 w-max"
           >
@@ -86,7 +95,7 @@ export const UserRolesPermission: FC = () => {
   ]
 
   const table = useReactTable({
-    data: mockData,
+    data: roles,
     columns,
     state: {
       pagination,
@@ -97,8 +106,8 @@ export const UserRolesPermission: FC = () => {
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
-    pageCount: Math.ceil(mockData.length / pagination.pageSize),
-    manualPagination: false,
+    pageCount: Math.ceil(totalItems / pagination.pageSize),
+    manualPagination: true,
   });
 
   return (
@@ -106,12 +115,16 @@ export const UserRolesPermission: FC = () => {
       <div className="mb-8 flex items-center justify-between">
         <h1 className="text-p2 font-semibold text-neutral-700">User Roles & Permissions</h1>
         <Button type="button">
-          Add Rols
+          Add Role
         </Button>
       </div>
 
       <div className="bg-white shadow p-8 rounded-lg">
-        <DataTable data={mockData} columns={columns} table={table} />
+        {isLoading ? (
+          <div className="text-center py-8 text-neutral-400">Loading...</div>
+        ) : (
+          <DataTable data={roles} columns={columns} table={table} />
+        )}
       </div>
     </div>
   )

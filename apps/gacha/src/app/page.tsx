@@ -6,11 +6,22 @@ import ModalFormLogin from './_components/form/modal-form-login';
 import ModalFormRegister from './_components/form/modal-form-register';
 import { GachaItem } from './_components/item/gacha-item';
 import { useModalLogin } from '@imphnen-frontend-service/utils';
+import { useGachaItemList, useUserCredits, useExecuteGachaRoll } from '@imphnen-frontend-service/service';
+import { toast } from 'sonner';
+import type { TGachaRollItemDto } from '@imphnen-frontend-service/service';
 
 export const Components: FC = (): ReactElement => {
   const { showModalLogin, setShowModalLogin } = useModalLogin();
   const [showModalForgotPassword, setShowModalForgotPassword] = useState(false);
   const [showModalRegister, setShowModalRegister] = useState(false);
+  const [spinResult, setSpinResult] = useState<TGachaRollItemDto | null>(null);
+
+  const { data: creditsData } = useUserCredits();
+  const { data: itemsData } = useGachaItemList({ per_page: 10 });
+  const executeRoll = useExecuteGachaRoll();
+
+  const gachaItems = itemsData?.data ?? [];
+  const availableRolls = creditsData?.available_rolls ?? 0;
 
   const scrollToRoulette = () => {
     const rouletteSection = document.getElementById('roulette');
@@ -22,6 +33,21 @@ export const Components: FC = (): ReactElement => {
   const handleForgotPasswordClick = () => {
     setShowModalLogin(false);
     setShowModalForgotPassword(true);
+  };
+
+  const handleSpin = async () => {
+    if (availableRolls <= 0) {
+      toast.error('Kamu tidak punya gacha roll. Beli dulu ya!');
+      return;
+    }
+    try {
+      const result = await executeRoll.mutateAsync();
+      setSpinResult(result);
+      const wonItem = gachaItems.find((item) => item.id === result.item_id);
+      toast.success(`Selamat! Kamu mendapatkan: ${wonItem?.name ?? 'item'}`);
+    } catch {
+      toast.error('Gagal spin gacha. Coba lagi ya!');
+    }
   };
 
   return (
@@ -51,6 +77,14 @@ export const Components: FC = (): ReactElement => {
             <p>Let's Go Checkout Our Merch &</p>
             <p>Gacha Your Prize Here</p>
           </div>
+
+          {creditsData && (
+            <div className="text-center text-p3 md:text-p2 bg-primary-100 rounded-md px-4 py-2 border border-primary-300">
+              <span className="font-semibold">Roll tersisa: </span>
+              <span className="text-primary-600 font-bold">{availableRolls}</span>
+            </div>
+          )}
+
           <Button
             size="sm"
             variant="bordered"
@@ -152,31 +186,40 @@ export const Components: FC = (): ReactElement => {
 
         <div className="col-span-4 md:col-span-8 lg:col-span-6 flex flex-col items-center gap-4 md:gap-8 overflow-x-hidden">
           <div className="bg-white text-primary-500 font-medium text-p3 md:text-h3 shadow py-2 px-4 md:py-4 md:px-8 max-w-fit rounded-md md:rounded-lg">
-            Here Take Your Prize
+            {spinResult
+              ? `Hadiahmu: ${gachaItems.find((i) => i.id === spinResult.item_id)?.name ?? 'Item'}`
+              : 'Here Take Your Prize'}
           </div>
           <section
             id="gacha-play"
             className="flex flex-nowrap overflow-auto w-full gap-x-8 snap-x snap-mandatory"
           >
-            <GachaItem
-              src="/gacha/certificate.png"
-              label="Sertifikat + Laminating"
-            />
-            <GachaItem
-              src="/gacha/lanyard-id-card.png"
-              label="Lanyard + ID Card"
-            />
-            <GachaItem src="/gacha/pin.png" label="Pin" />
-            <GachaItem src="/gacha/sticker.png" label="Sticker Isi 3" />
-            <GachaItem src="/gacha/sticker.png" label="Sticker Isi 5" />
-            <GachaItem
-              src="/gacha/gelang-karet.png"
-              label="Gelang Karet"
-              className="h-[86px] md:h-[160px]"
-            />
+            {gachaItems.length > 0 ? (
+              gachaItems.map((item) => (
+                <GachaItem
+                  key={item.id}
+                  src="/gacha/certificate.png"
+                  label={item.name}
+                />
+              ))
+            ) : (
+              <>
+                <GachaItem src="/gacha/certificate.png" label="Sertifikat + Laminating" />
+                <GachaItem src="/gacha/lanyard-id-card.png" label="Lanyard + ID Card" />
+                <GachaItem src="/gacha/pin.png" label="Pin" />
+                <GachaItem src="/gacha/sticker.png" label="Sticker Isi 3" />
+                <GachaItem src="/gacha/sticker.png" label="Sticker Isi 5" />
+                <GachaItem src="/gacha/gelang-karet.png" label="Gelang Karet" className="h-[86px] md:h-[160px]" />
+              </>
+            )}
           </section>
-          <Button variant="secondary" size="md">
-            Spin Now
+          <Button
+            variant="secondary"
+            size="md"
+            onClick={handleSpin}
+            disabled={executeRoll.isPending}
+          >
+            {executeRoll.isPending ? 'Spinning...' : 'Spin Now'}
           </Button>
         </div>
       </section>

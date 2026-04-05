@@ -3,7 +3,8 @@ import { toast } from 'sonner';
 
 export const useItem = (
   nextStep: () => void,
-  initialValues?: any
+  initialValues?: any,
+  onDataCapture?: (data: any) => void,
 ) => {
   const form = useForm<any>({
     mode: 'all',
@@ -11,7 +12,7 @@ export const useItem = (
   });
 
   const onSubmit = form.handleSubmit((data) => {
-    console.log('Form data:', data);
+    onDataCapture?.(data);
     nextStep();
   });
 
@@ -32,6 +33,9 @@ export const useConfirmItem = (
 ) => {
   const onConfirm = async () => {
     try {
+      if (actionFunction) {
+        await actionFunction();
+      }
       toast.success(messages?.success);
       onClose();
       resetStep();

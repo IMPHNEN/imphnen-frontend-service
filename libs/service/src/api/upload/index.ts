@@ -1,59 +1,39 @@
 import { api, ApiResponse } from '../index';
 
 export interface UploadResponse {
-  filename: string;
-  original_filename: string;
-  uploaded_path: string;
+  filename?: string;
+  original_filename?: string;
+  uploaded_path?: string;
   url: string;
-  size: number;
-  content_type: string;
-  file_type: string;
-  user_id: string;
-  email: string;
+  size?: number;
+  content_type?: string;
+  file_type?: string;
+  user_id?: string;
+  email?: string;
 }
 
-export interface UploadService {
-  uploadFile(file: File): Promise<UploadResponse>;
-  uploadAvatar(file: File): Promise<UploadResponse>;
-  uploadCV(file: File): Promise<UploadResponse>;
-}
+const multipartPost = async (url: string, file: File, fieldName = 'file'): Promise<UploadResponse> => {
+  const formData = new FormData();
+  formData.append(fieldName, file);
+  const response = await api.post<ApiResponse<UploadResponse>>(url, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+  return response.data.data;
+};
 
-export const uploadService: UploadService = {
-  async uploadFile(file: File) {
-    const formData = new FormData();
-    formData.append('file', file);
+export const uploadUserFile = (file: File) => multipartPost('/v1/iam/users/upload', file);
 
-    const response = await api.post<ApiResponse<UploadResponse>>('/users/upload', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    return response.data.data;
-  },
+export const uploadHackathonFile = (file: File) => multipartPost('/v1/hackathon/upload', file);
 
-  async uploadAvatar(file: File) {
-    if (!file.type.startsWith('image/')) {
-      throw new Error('File harus berupa gambar');
-    }
+export const uploadHackathonAvatar = (file: File) => multipartPost('/v1/hackathon/upload/avatar', file);
 
-    const maxSize = 5 * 1024 * 1024;
-    if (file.size > maxSize) {
-      throw new Error('Ukuran file maksimal 5MB');
-    }
+export const uploadHackathonTeamFile = (file: File) => multipartPost('/v1/hackathon/upload/team', file);
 
-    return this.uploadFile(file);
-  },
+export const uploadHackathonSubmission = (file: File) => multipartPost('/v1/hackathon/upload/submission', file);
 
-  async uploadCV(file: File) {
-    if (file.type !== 'application/pdf') {
-      throw new Error('CV harus berupa file PDF');
-    }
-
-    const maxSize = 10 * 1024 * 1024;
-    if (file.size > maxSize) {
-      throw new Error('Ukuran file maksimal 10MB');
-    }
-
-    return this.uploadFile(file);
-  },
+// Legacy service object for backward compatibility
+export const uploadService = {
+  uploadFile: uploadUserFile,
+  uploadAvatar: uploadUserFile,
+  uploadCV: uploadUserFile,
 };

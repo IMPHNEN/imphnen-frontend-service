@@ -7,6 +7,11 @@ export * from './mentors';
 export * from './upload';
 export * from './hackathon';
 export * from './admin';
+export * from './roles';
+export * from './permissions';
+export * from './events';
+export * from './testimonials';
+export * from './sessions';
 
 export interface ApiResponse<T> {
   data: T;
@@ -140,7 +145,7 @@ async function handleTokenRefresh(originalRequest: AxiosRequestConfig) {
 }
 
 async function refreshAccessToken(refreshToken: string) {
-  return axios.post(`${getBaseURL()}/auth/refresh`, {
+  return axios.post(`${getBaseURL()}/v1/iam/auth/refresh`, {
     refresh_token: refreshToken,
   });
 }

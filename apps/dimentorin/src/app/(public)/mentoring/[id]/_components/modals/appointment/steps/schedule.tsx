@@ -3,7 +3,7 @@ import { cn } from "@imphnen-frontend-service/utils"
 import { motion } from "framer-motion"
 
 const placeholder = `Hi [Nama Mentor], Saya [Nama Kamu] & saya berharap dapat memiliki sesi mentoring dengan Anda.
-  
+
 Saat ini, saya tertarik untuk mengejar __. Tujuan saya untuk sesi ini adalah __.
 
 Saya ingin tahu secara khusus tentang ___.
@@ -13,7 +13,27 @@ Saya ingin tahu secara khusus tentang ___.
 
 const labelClass = cn('text-neutral-800 text-[10px] font-semibold mb-1.5 inline-block md:text-xs md:mb-2 xl:text-[15px]')
 
-export const ScheduleStep = () => {
+type Props = {
+  scheduledDate: string
+  scheduledTime: string
+  description: string
+  sessionType: string
+  onDateChange: (v: string) => void
+  onTimeChange: (v: string) => void
+  onDescriptionChange: (v: string) => void
+  onSessionTypeChange: (v: string) => void
+}
+
+export const ScheduleStep = ({
+  scheduledDate,
+  scheduledTime,
+  description,
+  sessionType,
+  onDateChange,
+  onTimeChange,
+  onDescriptionChange,
+  onSessionTypeChange,
+}: Props) => {
   return (
     <motion.div
       className="bg-white px-6 py-5 rounded-md md:px-6"
@@ -31,15 +51,29 @@ export const ScheduleStep = () => {
       <div className="grid gap-2.5 md:grid-cols-2 md:gap-5">
         <div>
           <label className={labelClass}>Tanggal</label>
-          <Input type="date" className="min-w-full w-full" />
+          <Input
+            type="date"
+            className="min-w-full w-full"
+            value={scheduledDate}
+            onChange={(e) => onDateChange(e.target.value)}
+          />
         </div>
         <div>
           <label className={labelClass}>Waktu</label>
-          <Input type="time" className="min-w-full w-full" />
+          <Input
+            type="time"
+            className="min-w-full w-full"
+            value={scheduledTime}
+            onChange={(e) => onTimeChange(e.target.value)}
+          />
         </div>
         <div className="relative md:col-span-full">
           <label className={labelClass}>Lokasi</label>
-          <Select className="min-w-full w-full">
+          <Select
+            className="min-w-full w-full"
+            value={sessionType}
+            onChange={(e) => onSessionTypeChange(e.target.value)}
+          >
             <option value="online">Online</option>
             <option value="offline">Offline</option>
           </Select>
@@ -48,7 +82,10 @@ export const ScheduleStep = () => {
           <label className={labelClass}>Pertanyaan Untuk Senpai</label>
           <Textarea
             className="min-w-full w-full h-40"
-            placeholder={placeholder} />
+            placeholder={placeholder}
+            value={description}
+            onChange={(e) => onDescriptionChange(e.target.value)}
+          />
         </div>
       </div>
     </motion.div>

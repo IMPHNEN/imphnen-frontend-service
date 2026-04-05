@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { FC, Fragment, ReactElement, useState } from 'react';
+import { FC, Fragment, ReactElement, useRef, useState } from 'react';
 import {
   SearchOutlined,
   EditOutlined,
@@ -22,25 +22,21 @@ import ModalAddItem from './_components/modal-add-item';
 import ModalUpdateItem from './_components/modal-update-item';
 import ModalDeleteItem from './_components/modal-delete-item';
 import { useQueryState } from '@imphnen-frontend-service/utils';
-
-interface GachaItem {
-  id: number;
-  name: string;
-  chanceRate: number;
-  quantity: number;
-}
-
-const mockData: GachaItem[] = Array.from({ length: 90 }, (_, i) => ({
-  id: i + 1,
-  name: 'Hoodie IMPHNEN Official 2025',
-  chanceRate: 0.1,
-  quantity: 10,
-}));
+import {
+  useGachaItemList,
+  useCreateGachaItem,
+  useUpdateGachaItem,
+  useDeleteGachaItem,
+  TGachaItemDto,
+} from '@imphnen-frontend-service/service';
 
 export const Components: FC = (): ReactElement => {
   const [showModalAddItem, setShowModalAddItem] = useState(false);
   const [showModalUpdateItem, setShowModalUpdateItem] = useState(false);
   const [showModalDeleteItem, setShowModalDeleteItem] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<TGachaItemDto | null>(null);
+  const [search, setSearch] = useState('');
+  const pendingFormData = useRef<any>(null);
 
   const {
     step: currentStep,
@@ -60,7 +56,60 @@ export const Components: FC = (): ReactElement => {
 
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
 
-  const columns: ColumnDef<GachaItem>[] = [
+  const { data: itemsData, isLoading } = useGachaItemList({
+    search,
+    page: pagination.pageIndex + 1,
+    per_page: pagination.pageSize,
+  });
+  const createItem = useCreateGachaItem();
+  const updateItem = useUpdateGachaItem();
+  const deleteItem = useDeleteGachaItem();
+
+  const items: TGachaItemDto[] = itemsData?.data ?? [];
+  const totalItems = itemsData?.meta?.total ?? items.length;
+
+  const handleAdd = async (): Promise<boolean> => {
+    if (pendingFormData.current) {
+      const { itemName, quantity, chanceRate } = pendingFormData.current;
+      await createItem.mutateAsync({
+        item_code: (itemName as string).toLowerCase().replace(/\s+/g, '-'),
+        name: itemName,
+        description: '',
+        rarity: 'common',
+        type_: 'physical',
+        category: 'merchandise',
+        value: 0,
+        weight: chanceRate ?? 1,
+        stock: quantity ?? 1,
+        is_limited: false,
+      });
+    }
+    return true;
+  };
+
+  const handleUpdate = async (): Promise<boolean> => {
+    if (selectedItem && pendingFormData.current) {
+      const { itemName, quantity, chanceRate } = pendingFormData.current;
+      await updateItem.mutateAsync({
+        id: selectedItem.id,
+        data: {
+          name: itemName,
+          weight: chanceRate,
+          stock: quantity,
+        },
+      });
+    }
+    return true;
+  };
+
+  const handleDelete = async () => {
+    if (selectedItem) {
+      await deleteItem.mutateAsync(selectedItem.id);
+    }
+    setShowModalDeleteItem(false);
+  };
+
+  const columns: ColumnDef<TGachaItemDto>[] = [
     {
       id: 'select',
       header: ({ table }) => (
@@ -89,22 +138,15 @@ export const Components: FC = (): ReactElement => {
       accessorKey: 'name',
     },
     {
-      header: 'Chance Rate',
-      accessorKey: 'chanceRate',
-    },
-    {
-      header: 'Quantity',
-      accessorKey: 'quantity',
-    },
-    {
       header: 'Action',
-      cell: () => (
+      cell: ({ row }) => (
         <div className="flex gap-[8px]">
           <Button
             variant="primary"
             size="sm"
             onClick={(e) => {
               e.stopPropagation();
+              setSelectedItem(row.original);
               setShowModalUpdateItem(true);
             }}
             className="flex items-center gap-2"
@@ -116,6 +158,7 @@ export const Components: FC = (): ReactElement => {
             size="sm"
             onClick={(e) => {
               e.stopPropagation();
+              setSelectedItem(row.original);
               setShowModalDeleteItem(true);
             }}
             className="flex items-center gap-2"
@@ -128,7 +171,7 @@ export const Components: FC = (): ReactElement => {
   ];
 
   const table = useReactTable({
-    data: mockData,
+    data: items,
     columns,
     state: {
       pagination,
@@ -139,8 +182,8 @@ export const Components: FC = (): ReactElement => {
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
-    pageCount: Math.ceil(mockData.length / pagination.pageSize),
-    manualPagination: false,
+    pageCount: Math.ceil(totalItems / pagination.pageSize),
+    manualPagination: true,
   });
 
   return (
@@ -156,6 +199,8 @@ export const Components: FC = (): ReactElement => {
               <Input
                 placeholder="Cari berdasarkan nama item"
                 className="pl-12 w-full max-h-full"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
               />
               <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[16px]">
                 <SearchOutlined />
@@ -166,9 +211,7 @@ export const Components: FC = (): ReactElement => {
                 variant="primary"
                 size="md"
                 className="flex gap-3 text-nowrap"
-                onClick={() => {
-                  setShowModalAddItem(true);
-                }}
+                onClick={() => setShowModalAddItem(true)}
               >
                 <PlusOutlined />
                 Tambah Item
@@ -176,7 +219,11 @@ export const Components: FC = (): ReactElement => {
             </div>
           </div>
 
-          <DataTable data={mockData} columns={columns} table={table} />
+          {isLoading ? (
+            <div className="text-center py-8 text-neutral-400">Loading...</div>
+          ) : (
+            <DataTable data={items} columns={columns} table={table} />
+          )}
         </section>
       </main>
 
@@ -187,6 +234,8 @@ export const Components: FC = (): ReactElement => {
         nextStep={nextStep}
         prevStep={prevStep}
         resetStep={resetStep}
+        handleAddItem={handleAdd}
+        onDataCapture={(data) => { pendingFormData.current = data; }}
       />
       <ModalUpdateItem
         currentStep={currentStep}
@@ -195,13 +244,14 @@ export const Components: FC = (): ReactElement => {
         nextStep={nextStep}
         prevStep={prevStep}
         resetStep={resetStep}
+        handleUpdateItem={handleUpdate}
+        initialValues={selectedItem ? { itemName: selectedItem.name } : undefined}
+        onDataCapture={(data) => { pendingFormData.current = data; }}
       />
       <ModalDeleteItem
         isOpen={showModalDeleteItem}
         onClose={() => setShowModalDeleteItem(false)}
-        handleDeleteItem={() => {
-          console.log('Item deleted');
-        }}
+        handleDeleteItem={handleDelete}
       />
     </Fragment>
   );

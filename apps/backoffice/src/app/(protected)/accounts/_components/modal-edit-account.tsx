@@ -1,15 +1,17 @@
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { InputField, Modal } from '@imphnen-frontend-service/ui/molecules';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface IModalEditAccount {
   isOpen: boolean;
   onClose: () => void;
-  handleEditAccount?: () => void;
+  handleEditAccount?: () => Promise<void>;
   currentStep?: number;
   nextStep: () => void;
   prevStep: () => void;
   resetStep: () => void;
+  initialValues?: { fullname?: string; email?: string };
+  onDataCapture?: (data: any) => void;
 }
 
 const ModalEditAccount = ({
@@ -17,9 +19,10 @@ const ModalEditAccount = ({
   onClose,
   currentStep,
   nextStep,
-  prevStep,
   resetStep,
   handleEditAccount,
+  initialValues,
+  onDataCapture,
 }: IModalEditAccount) => {
   return (
     <Modal
@@ -31,7 +34,14 @@ const ModalEditAccount = ({
       }}
       disableEscapeKeyDown={true}
     >
-      {currentStep === 1 && <StepOne nextStep={nextStep} onClose={onClose} />}
+      {currentStep === 1 && (
+        <StepOne
+          nextStep={nextStep}
+          onClose={onClose}
+          initialValues={initialValues}
+          onDataCapture={onDataCapture}
+        />
+      )}
       {currentStep === 2 && (
         <StepTwo
           onClose={onClose}
@@ -46,13 +56,18 @@ const ModalEditAccount = ({
 interface IStepOneProps {
   nextStep: () => void;
   onClose: () => void;
+  initialValues?: { fullname?: string; email?: string };
+  onDataCapture?: (data: any) => void;
 }
 
-const StepOne = ({ nextStep }: IStepOneProps) => {
-  const [fullName, setFullName] = useState('Ahmad Wiyana');
-  const [email, setEmail] = useState('fullname23@gmail.com');
-  const [phoneNumber, setPhoneNumber] = useState('081904423804');
-  const [address, setAddress] = useState('Jl. Pantai Cibaduyut Indah');
+const StepOne = ({ nextStep, initialValues, onDataCapture }: IStepOneProps) => {
+  const [fullName, setFullName] = useState(initialValues?.fullname ?? '');
+  const [email, setEmail] = useState(initialValues?.email ?? '');
+
+  useEffect(() => {
+    setFullName(initialValues?.fullname ?? '');
+    setEmail(initialValues?.email ?? '');
+  }, [initialValues]);
 
   return (
     <>
@@ -81,31 +96,16 @@ const StepOne = ({ nextStep }: IStepOneProps) => {
             size="lg"
             className="w-full"
           />
-          <InputField
-            label="Nomor Telepon"
-            type="text"
-            placeholder="Masukkan Nomor Telepon"
-            value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
-            size="lg"
-            className="w-full"
-          />
-          <InputField
-            label="Alamat"
-            type="text"
-            placeholder="Masukkan Alamat"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            size="lg"
-            className="w-full"
-          />
         </div>
 
         <Button
           variant="primary"
           size="lg"
           className="w-full"
-          onClick={nextStep}
+          onClick={() => {
+            onDataCapture?.({ fullname: fullName, email });
+            nextStep();
+          }}
         >
           Perbarui Data
         </Button>
@@ -116,7 +116,7 @@ const StepOne = ({ nextStep }: IStepOneProps) => {
 
 interface IStepTwoProps {
   onClose: () => void;
-  handleEditAccount?: () => void;
+  handleEditAccount?: () => Promise<void>;
   resetStep: () => void;
 }
 
@@ -147,8 +147,8 @@ const StepTwo = ({ onClose, handleEditAccount, resetStep }: IStepTwoProps) => (
         variant="primary"
         size="lg"
         className="w-full"
-        onClick={() => {
-          handleEditAccount && handleEditAccount();
+        onClick={async () => {
+          if (handleEditAccount) await handleEditAccount();
           onClose();
           resetStep();
         }}

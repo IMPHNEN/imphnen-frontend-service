@@ -4,7 +4,7 @@ import { Modal } from '@imphnen-frontend-service/ui/molecules';
 interface IModalDeleteItem {
   isOpen: boolean;
   onClose: () => void;
-  handleDeleteItem?: () => void;
+  handleDeleteItem?: () => Promise<void>;
 }
 
 const ModalDeleteItem = ({
@@ -48,8 +48,9 @@ const ModalDeleteItem = ({
           variant="danger"
           size="lg"
           className="w-full"
-          onClick={() => {
-            handleDeleteItem && handleDeleteItem();
+          onClick={async () => {
+            if (handleDeleteItem) await handleDeleteItem();
+            onClose();
           }}
         >
           Hapus Item

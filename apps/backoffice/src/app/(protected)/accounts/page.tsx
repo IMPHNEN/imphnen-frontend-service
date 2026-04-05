@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { FC, Fragment, ReactElement, useState } from 'react';
+import { FC, Fragment, ReactElement, useRef, useState } from 'react';
 import {
   FilterOutlined,
   SearchOutlined,
@@ -19,25 +19,17 @@ import {
 } from '@tanstack/react-table';
 import ModalEditAccount from './_components/modal-edit-account';
 import { useQueryState } from '@imphnen-frontend-service/utils';
-
-interface Account {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-  address: string;
-}
-
-const mockData: Account[] = Array.from({ length: 90 }, (_, i) => ({
-  id: i + 1,
-  name: i === 0 ? 'Ahmad Wijuana' : 'Nama Lengkap',
-  email: 'fullname23@gmail.com',
-  phone: '081904423804',
-  address: 'Jl. Pantai Cibaduyut Indah',
-}));
+import {
+  useUserList,
+  useUpdateUserById,
+  TUsersListItem,
+} from '@imphnen-frontend-service/service';
 
 export const Components: FC = (): ReactElement => {
   const [showModalEditAccount, setShowModalEditAccount] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<TUsersListItem | null>(null);
+  const [search, setSearch] = useState('');
+  const pendingFormData = useRef<any>(null);
 
   const {
     step: currentStep,
@@ -58,7 +50,23 @@ export const Components: FC = (): ReactElement => {
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
   const [showFilter, setShowFilter] = useState(false);
 
-  const columns: ColumnDef<Account>[] = [
+  const { data: usersData, isLoading } = useUserList({
+    search,
+    page: pagination.pageIndex + 1,
+    per_page: pagination.pageSize,
+  });
+  const updateUser = useUpdateUserById();
+
+  const users: TUsersListItem[] = usersData?.data ?? [];
+  const totalItems = usersData?.meta?.total ?? users.length;
+
+  const handleEditAccount = async () => {
+    if (selectedUser && pendingFormData.current) {
+      await updateUser.mutateAsync({ id: selectedUser.id, data: pendingFormData.current });
+    }
+  };
+
+  const columns: ColumnDef<TUsersListItem>[] = [
     {
       id: 'select',
       header: ({ table }) => (
@@ -84,19 +92,24 @@ export const Components: FC = (): ReactElement => {
     },
     {
       header: 'Nama Lengkap',
-      accessorKey: 'name',
+      accessorKey: 'fullname',
     },
     {
       header: 'Email',
       accessorKey: 'email',
     },
     {
-      header: 'Nomor Telp',
-      accessorKey: 'phone',
+      header: 'Role',
+      accessorKey: 'role',
     },
     {
-      header: 'Alamat Pengiriman',
-      accessorKey: 'address',
+      header: 'Status',
+      accessorKey: 'is_active',
+      cell: ({ row }) => (
+        <span className={row.original.is_active ? 'text-success-500' : 'text-danger-500'}>
+          {row.original.is_active ? 'Aktif' : 'Tidak Aktif'}
+        </span>
+      ),
     },
     {
       header: 'Action',
@@ -106,6 +119,7 @@ export const Components: FC = (): ReactElement => {
           size="sm"
           onClick={(e) => {
             e.stopPropagation();
+            setSelectedUser(row.original);
             setShowModalEditAccount(true);
           }}
           className="flex items-center gap-2"
@@ -117,7 +131,7 @@ export const Components: FC = (): ReactElement => {
   ];
 
   const table = useReactTable({
-    data: mockData,
+    data: users,
     columns,
     state: {
       pagination,
@@ -128,8 +142,8 @@ export const Components: FC = (): ReactElement => {
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
-    pageCount: Math.ceil(mockData.length / pagination.pageSize),
-    manualPagination: false,
+    pageCount: Math.ceil(totalItems / pagination.pageSize),
+    manualPagination: true,
   });
 
   return (
@@ -144,6 +158,8 @@ export const Components: FC = (): ReactElement => {
               <Input
                 placeholder="Cari berdasarkan nama lengkap, email"
                 className="pl-12 w-full max-h-full"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
               />
               <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[16px]">
                 <SearchOutlined />
@@ -167,7 +183,11 @@ export const Components: FC = (): ReactElement => {
               )}
             </div>
           </div>
-          <DataTable data={mockData} columns={columns} table={table} />
+          {isLoading ? (
+            <div className="text-center py-8 text-neutral-400">Loading...</div>
+          ) : (
+            <DataTable data={users} columns={columns} table={table} />
+          )}
         </section>
       </main>
 
@@ -175,12 +195,12 @@ export const Components: FC = (): ReactElement => {
         currentStep={currentStep}
         isOpen={showModalEditAccount}
         onClose={() => setShowModalEditAccount(false)}
-        handleEditAccount={() => {
-          console.log('Account updated');
-        }}
+        handleEditAccount={handleEditAccount}
         nextStep={nextStep}
         prevStep={prevStep}
         resetStep={resetStep}
+        initialValues={selectedUser ? { fullname: selectedUser.fullname, email: selectedUser.email } : undefined}
+        onDataCapture={(data) => { pendingFormData.current = data; }}
       />
     </Fragment>
   );
