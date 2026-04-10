@@ -1,5 +1,8 @@
+'use client';
+
 import { buttonVariants } from '@components';
 import { cn } from '@utils';
+import { useEffect, useState } from 'react';
 import { HiCalendar, HiClock, HiLocationMarker } from 'react-icons/hi';
 
 interface ApiEvent {
@@ -47,27 +50,34 @@ const getEventStatus = (endDate: string) => {
   return end > now ? 'upcoming' : 'past';
 };
 
-async function fetchEvents(): Promise<ApiEvent[]> {
-  const res = await fetch(
-    'https://api.imphnen.dev/v1/landing/cms/events',
-    { next: { revalidate: 60 } }
-  );
+export default function EventsPage() {
+  const [events, setEvents] = useState<ApiEvent[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  if (!res.ok) {
-    return [];
-  }
-
-  const json: ApiResponse = await res.json();
-  return json.data.filter((e) => !e.is_deleted);
-}
-
-export default async function EventsPage() {
-  const events = await fetchEvents();
+  useEffect(() => {
+    fetch('https://api.imphnen.dev/v1/landing/cms/events')
+      .then((res) => res.json())
+      .then((json: ApiResponse) => {
+        setEvents(json.data?.filter((e) => !e.is_deleted) || []);
+      })
+      .catch(() => setEvents([]))
+      .finally(() => setLoading(false));
+  }, []);
 
   const sortedEvents = [...events].sort(
     (a, b) =>
       new Date(b.start_date).getTime() - new Date(a.start_date).getTime()
   );
+
+  if (loading) {
+    return (
+      <section className="min-h-screen bg-background container py-10">
+        <div className="flex justify-center items-center py-20">
+          <div className="w-8 h-8 border-3 border-gray-200 border-t-primary-500 rounded-full animate-spin" />
+        </div>
+      </section>
+    );
+  }
 
   if (sortedEvents.length === 0) {
     return (

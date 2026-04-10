@@ -1,5 +1,8 @@
+'use client';
+
 import { Button } from '@components';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import { BsChatLeftQuote } from 'react-icons/bs';
 import { FaQuoteLeft } from 'react-icons/fa';
 
@@ -36,22 +39,17 @@ function getInitial(name: string) {
   return name.charAt(0).toUpperCase();
 }
 
-async function fetchTestimonials() {
-  const res = await fetch(
-    'https://api.imphnen.dev/v1/landing/cms/testimonials',
-    { next: { revalidate: 60 } }
-  );
+export default function Page() {
+  const [testimonials, setTestimonials] = useState<ApiTestimonial[]>([]);
 
-  if (!res.ok) {
-    return [];
-  }
-
-  const json: ApiResponse = await res.json();
-  return json.data.filter((t) => !t.is_deleted);
-}
-
-export default async function Page() {
-  const testimonials = await fetchTestimonials();
+  useEffect(() => {
+    fetch('https://api.imphnen.dev/v1/landing/cms/testimonials')
+      .then((res) => res.json())
+      .then((json: ApiResponse) => {
+        setTestimonials(json.data?.filter((t: ApiTestimonial) => !t.is_deleted) || []);
+      })
+      .catch(() => setTestimonials([]));
+  }, []);
 
   return (
     <div className="min-h-screen">
