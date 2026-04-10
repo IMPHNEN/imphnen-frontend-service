@@ -14,7 +14,7 @@ import type { TApiPaginated, TPaginationParams } from '../../types/common';
 
 // ----- Credits -----
 export const getUserCredits = async (): Promise<TGachaCreditDto> => {
-  const response = await api.get<ApiResponse<TGachaCreditDto>>('/v1/gacha/credits/');
+  const response = await api.get<ApiResponse<TGachaCreditDto>>('/v1/gacha/credits');
   return response.data.data;
 };
 
@@ -30,7 +30,7 @@ export const consumeCredit = async (): Promise<{ message: string }> => {
 
 // ----- Items -----
 export const getGachaItemList = async (params?: TPaginationParams): Promise<TApiPaginated<TGachaItemDto>> => {
-  const response = await api.get<TApiPaginated<TGachaItemDto>>('/v1/gacha/items/', { params });
+  const response = await api.get<TApiPaginated<TGachaItemDto>>('/v1/gacha/items', { params });
   return response.data;
 };
 
