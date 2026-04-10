@@ -1,99 +1,191 @@
-import { FC, ReactElement } from 'react';
-import { ControlledInputField, LoginBanner } from '@imphnen-frontend-service/ui/organisms';
-import { Button } from '@imphnen-frontend-service/ui/atoms';
-import { useLogin } from '../../_hooks/use-login';
-import { useGoogleLogin } from '../../_hooks/use-google-login';
-import { ArrowLeftOutlined } from '@ant-design/icons';
+import { useState, useEffect } from 'react';
+import {
+  useGitHubAuth,
+  useLogin,
+} from '@imphnen-frontend-service/service';
+import { GithubOutlined } from '@ant-design/icons';
+import { useNavigate, Link } from 'react-router';
+import { toast } from 'sonner';
+import { Icon } from '@iconify/react';
 
-export const Components: FC = (): ReactElement => {
-  const { form, onSubmit, isLoading } = useLogin();
-  const { handleGoogleLogin } = useGoogleLogin();
+export default function LoginPage() {
+  const navigate = useNavigate();
+  const { signInWithGitHub } = useGitHubAuth();
+  const loginMutation = useLogin();
+  const [isGithubLoading, setIsGithubLoading] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    const hashParams = new URLSearchParams(globalThis.location.hash.substring(1));
+    const urlParams = new URLSearchParams(globalThis.location.search);
+    const accessToken = hashParams.get('access_token') || urlParams.get('access_token');
+    const type = hashParams.get('type') || urlParams.get('type');
+    if (accessToken) {
+      if (type === 'recovery' || type === 'magiclink' || !type) {
+        toast.info('Redirecting to password reset...');
+        navigate('/auth/reset-password?access_token=' + accessToken);
+      }
+    }
+  }, [navigate]);
+
+  const handleEmailLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    if (!email || !password) {
+      setError('Please enter both email and password');
+      return;
+    }
+    try {
+      await loginMutation.mutateAsync({ email, password });
+      toast.success('Login successful!');
+      navigate('/dashboard');
+    } catch (err) {
+      setError((err as Error).message || 'Login failed');
+    }
+  };
+
+  const handleGithubLogin = async () => {
+    try {
+      setIsGithubLoading(true);
+      const result = await signInWithGitHub();
+      if (result?.url) {
+        globalThis.location.href = result.url;
+      } else {
+        setIsGithubLoading(false);
+        setError('Failed to get GitHub OAuth URL');
+      }
+    } catch (err) {
+      setError((err as Error).message || 'GitHub login failed');
+      setIsGithubLoading(false);
+    }
+  };
 
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen py-[60px] px-[80px]">
-      <div className="bg-white xl:min-w-[1120px] xl:min-h-[712px] p-10 rounded-2xl shadow-md flex gap-6">
-        <LoginBanner />
-        <div className="xl:border-2 xl:border-primary-500/50 md:w-[596px] rounded-lg md:py-[70px] md:px-[96px] flex justify-center">
-          <div className="md:w-[404px]">
-            <h2 className="text-4xl font-semibold text-primary-500 text-center mb-2">
-              Hallo Minna-san
-            </h2>
-            <h5 className="text-xl font-medium text-primary-500 text-center mb-5">
-              Welcome to Dimentorin by IMPHNEN
-            </h5>
-            <form onSubmit={onSubmit} className="flex flex-col gap-2">
-              <ControlledInputField
-                control={form.control}
-                label="Email"
-                size="lg"
-                className="w-full mb-2"
-                placeholder="Masukkan email-mu, Senpai~! ✨ (Pastikan tidak typo, ya~ 😆)"
-                name={'email'}
-              />
-              <ControlledInputField
-                control={form.control}
-                label="Password"
-                className="w-full"
-                size="lg"
-                type="password"
-                placeholder="Masukkan password rahasiamu!"
-                name={'password'}
-              />
-              <div className="flex justify-end my-5">
-                <a href="/auth/forgot" className="text-primary-500 font-medium">
-                  Lupa Password ?
-                </a>
-              </div>
-              <Button className="w-full" type='submit' disabled={(!form.formState.isValid || isLoading)}>Enter Isekai</Button>
-            </form>
+    <div className="flex justify-center items-center min-h-screen bg-gray-50 dark:bg-gray-950 p-4">
+      <div className="bg-white dark:bg-gray-900 w-full max-w-md p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
+        <div className="flex items-center justify-between mb-6">
+          <button
+            onClick={() => navigate('/')}
+            className="cursor-pointer text-primary-500 hover:text-primary-600 dark:text-primary-400 dark:hover:text-primary-300 text-base font-sans flex items-center"
+          >
+            <Icon icon="ic:baseline-chevron-left" width="24" height="24" />
+            Back to Homepage
+          </button>
+        </div>
 
-            <div className="flex my-3 gap-3 justify-center">
-              <h5>Belum Punya akun ?</h5>
-              <a href="/auth/register" className="text-primary-500 font-medium">
-                Daftar Disini
-              </a>
-            </div>
-            <div className='text-center w-full mb-1'>
-              <a href="/auth/register-mentor" className="text-primary-500 font-medium">
-                Daftar Sebagai Mentor
-              </a>
-            </div>
-            <div className="flex items-center w-full">
-              <div className="flex-grow border-t border-blue-400 opacity-50"></div>
-              <span className="px-3 text-blue-400">Or</span>
-              <div className="flex-grow border-t border-blue-400 opacity-50"></div>
-            </div>
-            <Button
-              className="w-full my-3 text-gray-500 gap-2"
-              variant="secondary"
-              onClick={handleGoogleLogin}
-            >
-              <p>Log In With Google</p>
-              <img
-                src="/image/33978ce5bed2da9bf9d73acad802182a.webp"
-                alt="Google Icon"
-                width={24}
-              />
-            </Button>
-            <Button
-              className='xl:hidden w-full gap-3'
-              variant='secondary'
-            >
-              <ArrowLeftOutlined />
-              Kembali Ke Homepage
-            </Button>
-            <Button
-              className='xl:hidden w-full gap-3'
-              variant='secondary'
-            >
-              <ArrowLeftOutlined />
-              Kembali Ke Homepage
-            </Button>
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            Welcome Back
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400 font-sans">
+            Sign in to the mentoring platform
+          </p>
+        </div>
+
+        {error && (
+          <div className="mb-6 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+            <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>
           </div>
+        )}
+
+        <form onSubmit={handleEmailLogin} className="space-y-4">
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Email
+            </label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="your@email.com"
+              disabled={loginMutation.isPending}
+              className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:cursor-not-allowed"
+              required
+            />
+          </div>
+
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                Password
+              </label>
+              <Link to="/auth/forgot-password" className="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300">
+                Forgot password?
+              </Link>
+            </div>
+            <div className="relative">
+              <input
+                id="password"
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                disabled={loginMutation.isPending}
+                className="w-full px-4 py-2.5 pr-12 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 disabled:bg-gray-100 dark:disabled:bg-gray-700 disabled:cursor-not-allowed"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+              >
+                <Icon icon={showPassword ? 'mdi:eye-off' : 'mdi:eye'} className="text-xl" />
+              </button>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={loginMutation.isPending}
+            className="w-full py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed transition-colors cursor-pointer"
+          >
+            {loginMutation.isPending ? 'Signing in...' : 'Sign in with Email'}
+          </button>
+        </form>
+
+        <div className="my-6 flex items-center">
+          <div className="flex-1 border-t border-gray-300 dark:border-gray-600"></div>
+          <span className="px-4 text-sm text-gray-500 dark:text-gray-400">OR</span>
+          <div className="flex-1 border-t border-gray-300 dark:border-gray-600"></div>
+        </div>
+
+        <button
+          onClick={handleGithubLogin}
+          disabled={isGithubLoading}
+          type="button"
+          className="w-full py-3 flex items-center justify-center gap-2 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg font-semibold text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:cursor-not-allowed transition-colors cursor-pointer"
+        >
+          <GithubOutlined className="text-xl" />
+          <span>{isGithubLoading ? 'Connecting...' : 'Sign in with GitHub'}</span>
+        </button>
+
+        <p className="mt-3 text-xs text-center text-gray-500 dark:text-gray-500 font-sans">
+          Make sure your GitHub email is{' '}
+          <a href="https://github.com/settings/emails" target="_blank" rel="noopener noreferrer" className="text-primary-600 dark:text-primary-400 hover:underline">
+            set to public
+          </a>{' '}
+          for GitHub sign in to work.
+        </p>
+
+        <div className="mt-6 text-center">
+          <p className="text-gray-600 dark:text-gray-400 text-sm">
+            Don't have an account?{' '}
+            <Link to="/auth/signup" className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-semibold">
+              Sign up
+            </Link>
+          </p>
+        </div>
+
+        <div className="mt-6 text-center">
+          <p className="text-gray-500 dark:text-gray-500 text-xs">
+            By signing in, you agree to our Terms of Service and Privacy Policy
+          </p>
         </div>
       </div>
     </div>
   );
-};
-
-export default Components;
+}
