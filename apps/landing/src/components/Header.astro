@@ -1,0 +1,35 @@
+---
+import navigations from '../data/navigations.json';
+import MobileMenu from './MobileMenu';
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="sticky top-0 w-full z-50 bg-background/70 backdrop-blur-sm">
+  <div class="container flex h-20 items-center justify-between">
+    <a href="/" class="relative overflow-hidden rounded z-50" aria-label="Home">
+      <img src="/logo.webp" alt="IMPHNEN" class="w-24 md:w-28 h-auto" />
+    </a>
+
+    <nav class="hidden md:flex items-center gap-8">
+      {navigations.map(({ link, title }: { link: string; title: string }) => (
+        <a
+          href={link}
+          class:list={[
+            'text-sm font-medium relative group px-1 py-2',
+            currentPath === link ? 'text-primary' : 'text-foreground/90',
+          ]}
+        >
+          <span class="transition-colors hover:text-primary block">{title}</span>
+          {currentPath === link && (
+            <span class="absolute bottom-0 left-0 w-full h-0.5 bg-primary-500" />
+          )}
+        </a>
+      ))}
+    </nav>
+
+    <div class="md:hidden">
+      <MobileMenu client:idle navigations={navigations} currentPath={currentPath} />
+    </div>
+  </div>
+</header>

@@ -1,0 +1,145 @@
+---
+import Public from '../layouts/Public.astro';
+
+interface TeamItem {
+  id: string;
+  name: string;
+  description: string;
+  city: string;
+  logo: string | null;
+  banner: string | null;
+}
+
+interface WinnerItem {
+  id: string;
+  team_id: string;
+  team_name: string;
+  rank: number;
+  prize: string | null;
+}
+
+let teams: TeamItem[] = [];
+let winners: WinnerItem[] = [];
+
+try {
+  const [teamsRes, winnersRes] = await Promise.all([
+    fetch('https://api.imphnen.dev/v1/hackathon/teams/browse?per_page=20'),
+    fetch('https://api.imphnen.dev/v1/hackathon/winners'),
+  ]);
+  const teamsJson = await teamsRes.json();
+  const winnersJson = await winnersRes.json();
+  teams = teamsJson.data?.data || [];
+  winners = winnersJson.data || [];
+} catch {
+  teams = [];
+  winners = [];
+}
+
+function getWinnerRank(teamId: string): number | null {
+  const w = winners.find((x) => x.team_id === teamId);
+  return w ? w.rank : null;
+}
+
+const sortedWinners = [...winners].sort((a, b) => a.rank - b.rank);
+---
+
+<Public title="Hackathon - IMPHNEN">
+  <section class="min-h-screen bg-background container py-10">
+    {teams.length === 0 ? (
+      <div class="flex items-center justify-center min-h-[50vh]">
+        <div class="text-center">
+          <p class="text-muted-foreground text-lg mb-2">No hackathon teams yet.</p>
+          <a
+            href="https://hackathon.imphnen.dev"
+            class="inline-flex items-center justify-center rounded-lg bg-primary text-primary-foreground px-6 py-3 text-sm font-medium hover:bg-primary/90 transition-colors mt-4"
+          >
+            Join Hackathon
+          </a>
+        </div>
+      </div>
+    ) : (
+      <>
+        <div class="text-center mb-12">
+          <h1 class="text-4xl font-bold mb-3 text-foreground">IMPHNEN Hackathon</h1>
+          <p class="text-muted-foreground text-lg max-w-2xl mx-auto">
+            Tim-tim yang berpartisipasi dalam hackathon IMPHNEN
+          </p>
+        </div>
+
+        {sortedWinners.length > 0 && (
+          <div class="mb-12">
+            <h2 class="text-2xl font-bold mb-6 text-foreground flex items-center gap-2">
+              <svg class="w-6 h-6 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3l3.057-3L12 3.057 15.943 0 19 3l-3 7h-8L5 3zM12 14l-3-3h6l-3 3zm-5 4h10l1 3H6l1-3z" /></svg>
+              Pemenang
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {sortedWinners.map((w) => (
+                <div class="bg-amber-50 border-2 border-amber-200 rounded-xl p-6 text-center">
+                  <div class="text-4xl mb-2">
+                    {w.rank === 1 ? '\uD83E\uDD47' : w.rank === 2 ? '\uD83E\uDD48' : '\uD83E\uDD49'}
+                  </div>
+                  <h3 class="text-lg font-bold text-gray-900">{w.team_name}</h3>
+                  <p class="text-sm text-amber-700 mt-1">Juara {w.rank}</p>
+                  {w.prize && <p class="text-xs text-amber-600 mt-1">{w.prize}</p>}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <h2 class="text-2xl font-bold mb-6 text-foreground">Semua Tim</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {teams.map((team) => {
+            const rank = getWinnerRank(team.id);
+            return (
+              <div
+                class:list={[
+                  'rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 bg-card group overflow-hidden',
+                  rank ? 'ring-2 ring-amber-300' : '',
+                ]}
+              >
+                {team.banner ? (
+                  <div class="h-40 bg-muted relative overflow-hidden">
+                    <img
+                      src={team.banner}
+                      alt={team.name}
+                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+                ) : (
+                  <div class="h-40 bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center">
+                    <svg class="w-12 h-12 text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
+                  </div>
+                )}
+                <div class="p-6">
+                  <div class="flex items-start justify-between mb-2">
+                    <h3 class="text-lg font-semibold text-foreground">{team.name}</h3>
+                    {rank && (
+                      <span class="text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded-full font-medium">
+                        Juara {rank}
+                      </span>
+                    )}
+                  </div>
+                  {team.city && (
+                    <p class="text-xs text-muted-foreground mb-2">{team.city}</p>
+                  )}
+                  {team.description && (
+                    <p class="text-muted-foreground text-sm mb-4 line-clamp-3">{team.description}</p>
+                  )}
+                  <a
+                    href={`https://hackathon.imphnen.dev/teams/${team.id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex items-center justify-center rounded-lg border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground transition-colors w-full"
+                  >
+                    Lihat Tim
+                  </a>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </>
+    )}
+  </section>
+</Public>

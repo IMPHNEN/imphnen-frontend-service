@@ -1,0 +1,14 @@
+---
+import Public from '../layouts/Public.astro';
+import HeroSection from '../components/HeroSection.astro';
+import CommunitySection from '../components/CommunitySection.astro';
+import TestimonialSection from '../components/TestimonialSection';
+import CTASection from '../components/CTASection.astro';
+---
+
+<Public>
+  <HeroSection />
+  <CommunitySection />
+  <TestimonialSection client:visible />
+  <CTASection />
+</Public>

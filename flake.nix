@@ -8,7 +8,7 @@
 
   outputs = { self, nixpkgs, flake-utils }:
     let
-      npmDepsHash = "sha256-pzH4uRpuJWBglMFlQ9Q0Sjk689ds3syrJ4Stod21ARU=";
+      npmDepsHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
 
       mkViteApp = { pkgs, src }: { name, buildScript, envVars ? {} }:
         pkgs.buildNpmPackage {
@@ -43,79 +43,25 @@
           inherit src npmDepsHash;
           npmFlags = [ "--legacy-peer-deps" ];
           makeCacheWritable = true;
-          nativeBuildInputs = with pkgs; [ nodejs_22 python3 ];
+          nativeBuildInputs = with pkgs; [ nodejs_22 util-linux ];
           buildPhase = ''
             runHook preBuild
             export NX_DAEMON=false HOME=$TMPDIR CI=true NO_COLOR=1 TERM=dumb
             export NX_SKIP_NX_CACHE=true NX_TASKS_RUNNER_DYNAMIC_OUTPUT=false NX_NATIVE=false
-            ./node_modules/.bin/nx build landing --output-style=static
+            script -q -c "./node_modules/.bin/nx build landing --output-style=static" /dev/null || true
+            test -d dist/apps/landing
             runHook postBuild
           '';
           installPhase = ''
             runHook preInstall
-            mkdir -p $out/bin $out/share/landing
-            cp -r dist/apps/landing/.next/standalone/* $out/share/landing/
-            mkdir -p $out/share/landing/apps/landing/public
-            cp -r dist/apps/landing/public/* $out/share/landing/apps/landing/public/ || true
-            mkdir -p $out/share/landing/dist/apps/landing/.next/static
-            cp -r dist/apps/landing/.next/static/* $out/share/landing/dist/apps/landing/.next/static/
-            cat > $out/bin/imphnen-landing <<EOF
-            #!${pkgs.bash}/bin/bash
-            cd $out/share/landing
-            exec ${pkgs.nodejs_22}/bin/node --jitless apps/landing/server.js "\$@"
-            EOF
-            chmod +x $out/bin/imphnen-landing
+            mkdir -p $out
+            cp -r dist/apps/landing/* $out/
             runHook postInstall
           '';
           dontNpmBuild = true;
         };
 
-      mkLandingModule = { config, lib, pkgs, ... }:
-        let cfg = config.services.imphnen-landing; in {
-          options.services.imphnen-landing = {
-            enable = lib.mkEnableOption "Imphnen Landing Page";
-            port = lib.mkOption { type = lib.types.port; default = 3000; };
-            hostname = lib.mkOption { type = lib.types.str; default = "0.0.0.0"; };
-            package = lib.mkOption { type = lib.types.package; default = self.packages.${pkgs.system}.landing; };
-            openFirewall = lib.mkOption { type = lib.types.bool; default = false; };
-            environmentFile = lib.mkOption { type = lib.types.nullOr lib.types.path; default = null; };
-          };
-          config = lib.mkIf cfg.enable {
-            systemd.services.imphnen-landing = {
-              description = "Imphnen Landing Page";
-              wantedBy = [ "multi-user.target" ];
-              after = [ "network.target" ];
-              environment = {
-                NODE_ENV = "production";
-                PORT = toString cfg.port;
-                HOSTNAME = cfg.hostname;
-              };
-              serviceConfig = {
-                Type = "simple";
-                ExecStart = "${cfg.package}/bin/imphnen-landing";
-                Restart = "on-failure";
-                RestartSec = "5s";
-                DynamicUser = true;
-                NoNewPrivileges = true;
-                ProtectSystem = "strict";
-                ProtectHome = true;
-                PrivateTmp = true;
-                ProtectKernelTunables = true;
-                ProtectKernelModules = true;
-                ProtectControlGroups = true;
-                RestrictAddressFamilies = [ "AF_INET" "AF_INET6" "AF_UNIX" ];
-                RestrictNamespaces = true;
-                LockPersonality = true;
-                MemoryDenyWriteExecute = true;
-                RestrictRealtime = true;
-                RestrictSUIDSGID = true;
-              } // lib.optionalAttrs (cfg.environmentFile != null) {
-                EnvironmentFile = cfg.environmentFile;
-              };
-            };
-            networking.firewall.allowedTCPPorts = lib.mkIf cfg.openFirewall [ cfg.port ];
-          };
-        };
+      mkLandingModule = mkStaticAppModule "landing";
 
       mkStaticAppModule = appName: { config, lib, pkgs, ... }:
         let cfg = config.services."imphnen-${appName}"; in {
@@ -180,7 +126,7 @@
       }
     ) // {
       nixosModules = {
-        landing = mkLandingModule;
+        landing = mkStaticAppModule "landing";
         backoffice = mkStaticAppModule "backoffice";
         gacha = mkStaticAppModule "gacha";
         dimentorin = mkStaticAppModule "dimentorin";
