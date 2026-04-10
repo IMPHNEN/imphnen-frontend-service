@@ -67,7 +67,7 @@ export const getBaseURL = () => {
   } catch {
     // not in Vite context
   }
-  return '';
+  return 'https://api.imphnen.dev';
 };
 
 const config: AxiosRequestConfig = {
