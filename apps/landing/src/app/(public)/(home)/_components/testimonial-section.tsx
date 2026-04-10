@@ -1,16 +1,72 @@
 'use client';
 
-import TESTIMONIALS from '@/data/testimonials.json';
 import { buttonVariants } from '@components';
 import { motion, useInView } from 'framer-motion';
-import Image from 'next/image';
 import Link from 'next/link';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FaQuoteLeft } from 'react-icons/fa';
+
+interface ApiTestimonial {
+  id: number;
+  user_id: number;
+  user_fullname: string;
+  role: string;
+  content: string;
+  created_at: string;
+  is_deleted: boolean;
+}
+
+interface Testimonial {
+  id: number;
+  name: string;
+  role: string;
+  text: string;
+}
+
+const AVATAR_COLORS = [
+  'bg-primary-500 text-white',
+  'bg-blue-500 text-white',
+  'bg-green-500 text-white',
+  'bg-purple-500 text-white',
+  'bg-orange-500 text-white',
+  'bg-pink-500 text-white',
+];
+
+function getAvatarColor(index: number) {
+  return AVATAR_COLORS[index % AVATAR_COLORS.length];
+}
+
+function getInitial(name: string) {
+  return name.charAt(0).toUpperCase();
+}
 
 export function TestimonialSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.1 });
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+
+  useEffect(() => {
+    fetch('https://api.imphnen.dev/v1/landing/cms/testimonials')
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to fetch');
+        return res.json();
+      })
+      .then((json) => {
+        const items: Testimonial[] = (json.data as ApiTestimonial[])
+          .filter((t) => !t.is_deleted)
+          .slice(0, 6)
+          .map((t) => ({
+            id: t.id,
+            name: t.user_fullname,
+            role: t.role,
+            text: t.content,
+          }));
+        setTestimonials(items);
+      })
+      .catch(() => {
+        setTestimonials([]);
+      });
+  }, []);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -59,7 +115,7 @@ export function TestimonialSection() {
           initial="hidden"
           animate={isInView ? 'visible' : 'hidden'}
         >
-          {TESTIMONIALS.map((testimonial) => (
+          {testimonials.map((testimonial, index) => (
             <motion.div
               key={testimonial.id}
               variants={itemVariants}
@@ -67,14 +123,11 @@ export function TestimonialSection() {
             >
               <div className="flex flex-col space-y-4">
                 <div className="flex items-center gap-4">
-                  <Image
-                    src={testimonial.image}
-                    alt={testimonial.name}
-                    width={48}
-                    height={48}
-                    className="w-12 h-12 rounded-full object-cover"
-                    unoptimized
-                  />
+                  <div
+                    className={`w-12 h-12 rounded-full flex items-center justify-center text-lg font-semibold ${getAvatarColor(index)}`}
+                  >
+                    {getInitial(testimonial.name)}
+                  </div>
                   <div>
                     <h4 className="font-semibold text-gray-900">
                       {testimonial.name}
