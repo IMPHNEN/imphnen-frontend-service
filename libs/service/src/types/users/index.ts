@@ -76,6 +76,47 @@ export type TUsersDetailItem = {
   updated_at: string;
 };
 
+// --- Unified /me response types ---
+
+export type THackathonProfile = {
+  is_admin: boolean;
+  phone_number?: string;
+  location?: string;
+  bio?: string;
+  skills?: string[] | null;
+};
+
+export type TQrProfile = {
+  role: string;
+  provider: string;
+};
+
+export type TMentorProfile = {
+  mentor_id: string;
+  status?: string;
+  current_company?: string;
+  current_role?: string;
+  years_of_experience?: number;
+};
+
+export type TSessionProfile = {
+  id: string;
+  topic: string;
+  description?: string;
+  scheduled_at: string;
+  duration_minutes: number;
+  session_type: string;
+  status: string;
+  role: string;
+};
+
+export type TUsersMeResponse = TUsersDetailItem & {
+  hackathon?: THackathonProfile;
+  qr?: TQrProfile;
+  mentor?: TMentorProfile;
+  sessions?: TSessionProfile[];
+};
+
 export type TUserCreateRequest = {
   email: string;
   password: string;

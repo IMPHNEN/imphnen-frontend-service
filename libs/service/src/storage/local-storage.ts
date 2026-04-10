@@ -1,26 +1,22 @@
-import type { TPermissionItem } from '../types/permissions';
-
-type TRoleItem = {
-  id: string;
-  name: string;
-  created_at: string;
-  updated_at: string;
-  permissions: TPermissionItem[];
-};
+import type { TRoleDetailItem } from '../types/roles';
+import type { THackathonProfile, TQrProfile, TMentorProfile } from '../types/users';
 
 type TUserItem = {
   id: string;
-  avatar: string;
-  birthdate: string;
+  avatar?: string;
+  birthdate?: string;
   email: string;
   fullname: string;
-  gender: string;
+  gender?: string;
   is_active: boolean;
-  phone_number: string;
-  role: TRoleItem;
+  phone_number?: string;
+  role: TRoleDetailItem;
   bio?: string;
   location?: string;
   skills?: string[];
+  hackathon?: THackathonProfile;
+  qr?: TQrProfile;
+  mentor?: TMentorProfile;
 };
 
 export const SessionUser = {

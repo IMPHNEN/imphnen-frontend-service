@@ -8,7 +8,7 @@ import {
   postForgotPassword,
   postNewPassword,
 } from '../../api/auth';
-import { getUserMe } from '../../api/users';
+import { getUserMe, type TUserMeInclude } from '../../api/users';
 
 export * from './use-auth-store';
 
@@ -27,15 +27,13 @@ export const useLogin = () => {
           id: u.id,
           email: u.email,
           fullname: u.fullname,
-          phone_number: u.phone_number || '',
-          avatar: u.avatar || '',
-          birthdate: u.birthdate || '',
-          gender: u.gender || '',
+          phone_number: u.phone_number,
+          avatar: u.avatar,
           is_active: u.is_active,
           location: u.location,
           bio: u.bio,
           skills: u.skills,
-          role: u.role ?? { id: '', name: 'user', permissions: [], created_at: '', updated_at: '' },
+          role: u.role ?? { id: '', name: 'user', permissions: [] },
         },
       });
     },
@@ -57,15 +55,13 @@ export const useBackofficeLogin = () => {
           id: u.id,
           email: u.email,
           fullname: u.fullname,
-          phone_number: u.phone_number || '',
-          avatar: u.avatar || '',
-          birthdate: u.birthdate || '',
-          gender: u.gender || '',
+          phone_number: u.phone_number,
+          avatar: u.avatar,
           is_active: u.is_active,
           location: u.location,
           bio: u.bio,
           skills: u.skills,
-          role: u.role ?? { id: '', name: 'admin', permissions: [], created_at: '', updated_at: '' },
+          role: u.role ?? { id: '', name: 'admin', permissions: [] },
         },
       });
     },
@@ -115,12 +111,12 @@ export const useSignOut = () => {
   });
 };
 
-export const useSessionQuery = () => {
+export const useSessionQuery = (include?: TUserMeInclude[]) => {
   const { session } = useAuthStore();
   return useQuery({
-    queryKey: ['auth-session'],
+    queryKey: ['auth-session', include],
     queryFn: async () => {
-      const user = await getUserMe();
+      const user = await getUserMe(include);
       return { user };
     },
     enabled: !!session?.token,

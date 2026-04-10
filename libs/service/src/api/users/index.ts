@@ -4,6 +4,7 @@ import type {
   TUsersDetailItem,
   TUserCreateRequest,
   TUserUpdateRequest,
+  TUsersMeResponse,
 } from '../../types/users';
 import type { TApiPaginated, TPaginationParams } from '../../types/common';
 
@@ -11,13 +12,16 @@ import type { TApiPaginated, TPaginationParams } from '../../types/common';
 export type UserDetailResponseDto = TUsersDetailItem;
 export type UserUpdateRequestDto = TUserUpdateRequest;
 
+export type TUserMeInclude = 'hackathon' | 'qr' | 'mentor' | 'sessions';
+
 export const getUserList = async (params?: TPaginationParams): Promise<TApiPaginated<TUsersListItem>> => {
   const response = await api.get<TApiPaginated<TUsersListItem>>('/v1/iam/users', { params });
   return response.data;
 };
 
-export const getUserMe = async (): Promise<TUsersDetailItem> => {
-  const response = await api.get<ApiResponse<TUsersDetailItem>>('/v1/iam/users/me');
+export const getUserMe = async (include?: TUserMeInclude[]): Promise<TUsersMeResponse> => {
+  const params = include?.length ? { include: include.join(',') } : undefined;
+  const response = await api.get<ApiResponse<TUsersMeResponse>>('/v1/iam/users/me', { params });
   return response.data.data;
 };
 
