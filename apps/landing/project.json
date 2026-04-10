@@ -5,8 +5,18 @@
   "projectType": "application",
   "tags": [],
   "targets": {
-    "dev": { "command": "cd apps/landing && npx astro dev" },
-    "build": { "command": "cd apps/landing && npx astro build" },
-    "preview": { "command": "cd apps/landing && npx astro preview" }
+    "dev": {
+      "command": "npx astro dev",
+      "options": { "cwd": "apps/landing" }
+    },
+    "build": {
+      "command": "npx astro build --outDir ../../dist/apps/landing",
+      "options": { "cwd": "apps/landing" },
+      "outputs": ["{workspaceRoot}/dist/apps/landing"]
+    },
+    "preview": {
+      "command": "npx astro preview",
+      "options": { "cwd": "apps/landing" }
+    }
   }
 }
