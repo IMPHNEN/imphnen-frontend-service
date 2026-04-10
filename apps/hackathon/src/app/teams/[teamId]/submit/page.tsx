@@ -9,7 +9,7 @@ import {
   useSubmitProject,
   useTeamById,
   useTeamSubmission,
-  useUploadFile,
+  useUploadSubmission,
   useAuthStore,
 } from '@imphnen-frontend-service/service';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -67,7 +67,7 @@ const SubmitProjectPage: FC = (): ReactElement => {
   const { data: submissionData } = useTeamSubmission(teamId || '', !!teamId);
   const { mutateAsync: submitProject, isPending: isSubmitting } =
     useSubmitProject(teamId || '');
-  const { mutateAsync: uploadFile, isPending: isUploading } = useUploadFile();
+  const { mutateAsync: uploadFile, isPending: isUploading } = useUploadSubmission();
 
   const team = teamData?.data;
   const currentUserId = session?.user?.id;

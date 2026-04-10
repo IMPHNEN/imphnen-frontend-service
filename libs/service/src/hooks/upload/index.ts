@@ -14,6 +14,9 @@ export const useUploadFile = () => {
     mutationKey: ['upload-file'],
     mutationFn: async (file: File) => {
       if (!session?.user?.id) throw new Error('You must be logged in to upload files');
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
+      if (!allowedTypes.includes(file.type)) throw new Error('Invalid file type. Allowed: JPEG, PNG, WebP, GIF');
+      if (file.size > 5 * 1024 * 1024) throw new Error('File too large. Maximum size: 5MB');
       const data = await uploadHackathonTeamFile(file);
       return { data };
     },
@@ -28,7 +31,7 @@ export const useUploadAvatar = () => {
       if (!session?.user?.id) throw new Error('You must be logged in to upload avatar');
       const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
       if (!allowedTypes.includes(file.type)) throw new Error('Invalid file type. Allowed: JPEG, PNG, WebP, GIF');
-      if (file.size > 5 * 1024 * 1024) throw new Error('File too large. Maximum size: 5MB');
+      if (file.size > 2 * 1024 * 1024) throw new Error('File too large. Maximum size: 2MB');
       const data = await uploadHackathonAvatar(file);
       return { data };
     },
