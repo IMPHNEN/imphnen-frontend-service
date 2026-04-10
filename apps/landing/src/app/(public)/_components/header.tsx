@@ -2,16 +2,14 @@
 
 import { LogoSimple } from '@/app/_components/logo';
 import NAVIGATIONS from '@/data/navigations.json';
-import { Button } from '@components';
 import { cn } from '@utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { LuMenu, LuX } from 'react-icons/lu';
 
 export function Header() {
-  const router = useRouter();
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -60,22 +58,6 @@ export function Header() {
             </Link>
           ))}
         </nav>
-
-        <div className="hidden md:flex items-center gap-x-3">
-          <Button
-            onClick={() => router.push('/signin')}
-            className="px-5 py-2 text-sm font-medium"
-          >
-            Masuk
-          </Button>
-          <Button
-            variant="bordered"
-            onClick={() => router.push('/signup')}
-            className="px-5 py-2 text-sm font-medium shadow-lg shadow-primary/20 hover:shadow-primary/30"
-          >
-            Daftar
-          </Button>
-        </div>
 
         <button
           onClick={() => setMobileMenuOpen((prev) => !prev)}
@@ -137,33 +119,6 @@ export function Header() {
                   </Link>
                 ))}
               </motion.nav>
-
-              <motion.div
-                className="container space-y-4 pb-10"
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.2 }}
-              >
-                <Button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    router.push('/signin');
-                  }}
-                  className="w-full py-4 text-base"
-                >
-                  Masuk
-                </Button>
-                <Button
-                  variant="bordered"
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    router.push('/signup');
-                  }}
-                  className="w-full py-4 text-base shadow-lg shadow-primary/20"
-                >
-                  Daftar
-                </Button>
-              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
