@@ -237,7 +237,14 @@ function createRoute(args: {
   if (pageType === 'page' || pageType === 'layout') {
     route.element = <args.PageComponent />;
     route.HydrateFallback =
-      args.LoadingComponent ?? (() => <div>Loading...</div>);
+      args.LoadingComponent ?? (() => (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', background: '#f9fafb' }}>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ width: 40, height: 40, border: '3px solid #e5e7eb', borderTopColor: '#3b82f6', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '0 auto 12px' }} />
+            <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
+          </div>
+        </div>
+      ));
     route.action = args.action;
     route.loader = async (...props) => {
       if (!(await args.guard?.())) {
@@ -256,7 +263,14 @@ function createRoute(args: {
       return {
         path: `${cleanPath}/${nextSegment}`,
         element: <args.PageComponent />,
-        HydrateFallback: args.LoadingComponent ?? (() => <div>Loading...</div>),
+        HydrateFallback: args.LoadingComponent ?? (() => (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', background: '#f9fafb' }}>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ width: 40, height: 40, border: '3px solid #e5e7eb', borderTopColor: '#3b82f6', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '0 auto 12px' }} />
+            <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
+          </div>
+        </div>
+      )),
         action: args.action,
         loader: args.loader,
         handle: { pageType: pageType as 'layout' | 'page' },
