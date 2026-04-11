@@ -17,7 +17,7 @@ const faqItems = [
   { q: 'Is my data secure?', a: 'Yes, we use encryption and secure protocols to protect your data. See our Privacy Policy for details.' },
 ]
 
-export const Route = createFileRoute('/_authenticated/dashboard/settings')({
+export const Route = createFileRoute('/_authenticated/dashboard_/settings')({
   component: SettingsPage,
 })
 
@@ -70,16 +70,16 @@ function SettingsPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
-                    <input type="text" defaultValue={user?.fullname || ''} disabled className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white disabled:opacity-60" />
+                    <input type="text" defaultValue={user?.fullname || ""} disabled className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white disabled:opacity-60" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
-                    <input type="email" defaultValue={user?.email || ''} disabled className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white disabled:opacity-60" />
+                    <input type="email" defaultValue={user?.email || ""} disabled className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white disabled:opacity-60" />
                   </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Role</label>
-                  <input type="text" defaultValue={user?.role?.name || 'User'} disabled className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white disabled:opacity-60" />
+                  <input type="text" defaultValue={user?.role?.name || "User"} disabled className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white disabled:opacity-60" />
                 </div>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
                   To update your profile, use the profile page from the main menu.
@@ -165,7 +165,7 @@ function SettingsPage() {
                       className="w-full px-4 py-3 flex items-center justify-between text-left cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800"
                     >
                       <span className="font-medium text-gray-900 dark:text-white text-sm">{item.q}</span>
-                      <Icon icon={expandedFaq === i ? 'mdi:chevron-up' : 'mdi:chevron-down'} className="text-gray-400 shrink-0" />
+                      <Icon icon={expandedFaq === i ? 'mdi:chevron-up' : 'mdi:chevron-down'} className='text-gray-400 shrink-0' />
                     </button>
                     {expandedFaq === i && (
                       <div className="px-4 pb-3">

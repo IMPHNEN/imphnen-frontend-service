@@ -10,7 +10,7 @@ import { Button } from '@imphnen-frontend-service/ui/atoms'
 import { AppointmentModal } from './$id/_components/modals/appointment'
 import { useMentorById } from '@imphnen-frontend-service/service'
 
-export const Route = createFileRoute('/_site/mentoring/$id')({
+export const Route = createFileRoute('/_site/mentoring_/$id')({
   component: MentorDetailPage,
 })
 

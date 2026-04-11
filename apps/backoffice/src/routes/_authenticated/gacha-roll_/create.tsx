@@ -6,7 +6,7 @@ import { Button } from '@imphnen-frontend-service/ui/atoms'
 import { ControlledInputField } from '@imphnen-frontend-service/ui/organisms'
 import { useCreateGachaItem } from '@imphnen-frontend-service/service'
 
-export const Route = createFileRoute('/_authenticated/gacha-roll/create')({
+export const Route = createFileRoute('/_authenticated/gacha-roll_/create')({
   component: GachaRollCreatePage,
 })
 

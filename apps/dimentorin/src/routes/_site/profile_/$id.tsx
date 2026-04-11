@@ -7,7 +7,7 @@ import { NotificationModal, NotificationType } from './_components/modals/notifi
 import { ProfileProvider, useProfile } from './_components/contexts/profile-context'
 import { EditProfileModal } from './_components/modals/edit-profile-modal'
 
-export const Route = createFileRoute('/_site/profile/$id')({
+export const Route = createFileRoute('/_site/profile_/$id')({
   component: ProfileByIdPage,
 })
 

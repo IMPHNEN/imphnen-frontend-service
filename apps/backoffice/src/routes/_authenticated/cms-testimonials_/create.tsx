@@ -6,7 +6,7 @@ import { Button } from '@imphnen-frontend-service/ui/atoms'
 import { ControlledInputField } from '@imphnen-frontend-service/ui/organisms'
 import { useCreateTestimonial } from '@imphnen-frontend-service/service'
 
-export const Route = createFileRoute('/_authenticated/cms-testimonials/create')({
+export const Route = createFileRoute('/_authenticated/cms-testimonials_/create')({
   component: CmsTestimonialsCreatePage,
 })
 

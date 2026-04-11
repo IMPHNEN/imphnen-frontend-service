@@ -5,7 +5,7 @@ import { useOtpHook } from '../../../_hooks/use-otp'
 import { Button } from '@imphnen-frontend-service/ui/atoms'
 import { useResendOtpHook } from '../../../_hooks/use-resend-otp'
 
-export const Route = createFileRoute('/_public/auth/register/otp')({
+export const Route = createFileRoute('/_public/auth/register_/otp')({
   validateSearch: (search: Record<string, unknown>) => ({
     email: (search.email as string) || '',
   }),
@@ -38,7 +38,7 @@ function RegisterOtpPage(): ReactElement {
   const formatTime = (seconds: number) => {
     const m = Math.floor(seconds / 60)
     const s = seconds % 60
-    return `${m}:${s.toString().padStart(2, '0')}`
+    return `${m}:${s.toString().padStart(2, `0`)}`
   }
 
   return (
@@ -65,7 +65,7 @@ function RegisterOtpPage(): ReactElement {
                 setDisabled(true)
                 setTimeLeft(5 * 60)
               }
-            }>Kirim ulang otp {disabled? `(${formatTime(timeLeft)})`: ""}</Button>
+            }>Kirim ulang otp {disabled? `(${formatTime(timeLeft)})`: ``}</Button>
             <Button className="xl:w-full mt-2" disabled={(!form.formState.isValid || isLoading)}>Linked Start !!!</Button>
           </form>
         </div>

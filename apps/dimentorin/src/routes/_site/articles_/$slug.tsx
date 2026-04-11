@@ -4,7 +4,7 @@ import { Button } from '@imphnen-frontend-service/ui/atoms'
 import { cn } from '@imphnen-frontend-service/utils'
 import { motion } from 'framer-motion'
 
-export const Route = createFileRoute('/_site/articles/$slug')({
+export const Route = createFileRoute('/_site/articles_/$slug')({
   component: DetailArticlePage,
 })
 

@@ -20,7 +20,7 @@ Saya ingin tahu secara khusus tentang ___.
 
 const labelClass = cn('text-neutral-800 text-[10px] font-semibold mb-1.5 inline-block md:text-xs md:mb-2 xl:text-[15px]')
 
-export const Route = createFileRoute('/_authenticated/session-dimentorin/$id')({
+export const Route = createFileRoute('/_authenticated/session-dimentorin_/$id')({
   component: SessionDetailPage,
 })
 
@@ -70,7 +70,7 @@ function SessionDetailPage() {
               <div>
                 <h3 className="text-p2 font-semibold text-primary-500 mb-4">Mentor</h3>
                 <div>
-                  <p className="text-p3 font-semibold mb-2.5">{session?.mentor_id ?? '-'}</p>
+                  <p className="text-p3 font-semibold mb-2.5">{session?.mentor_id ?? "-"}</p>
                 </div>
               </div>
             </div>
@@ -79,13 +79,13 @@ function SessionDetailPage() {
               <div>
                 <h3 className="text-p2 font-semibold text-primary-500 mb-4">Mentee</h3>
                 <div>
-                  <p className="text-p3 font-semibold mb-2.5">{session?.mentee_fullname ?? '-'}</p>
-                  <p className="text-neutral-600">{session?.mentee_email ?? '-'}</p>
+                  <p className="text-p3 font-semibold mb-2.5">{session?.mentee_fullname ?? "-"}</p>
+                  <p className="text-neutral-600">{session?.mentee_email ?? "-"}</p>
                 </div>
               </div>
               <div>
                 <h3 className="text-p2 font-semibold text-neutral-700 mb-4">Status</h3>
-                <div className={`py-2 px-6 rounded-md text-center capitalize font-semibold ${statusColors[session?.status ?? ''] ?? 'bg-neutral-200 text-neutral-700'}`}>
+                <div className={`py-2 px-6 rounded-md text-center capitalize font-semibold ${statusColors[session?.status ?? ``] ?? `bg-neutral-200 text-neutral-700`}`}>
                   {session?.status ?? '-'}
                 </div>
               </div>
@@ -135,7 +135,7 @@ function SessionDetailPage() {
               </div>
               <div className="relative md:col-span-full">
                 <label className={labelClass}>Tipe Sesi</label>
-                <Select className="min-w-full w-full" value={session?.session_type ?? 'online'} disabled>
+                <Select className="min-w-full w-full" value={session?.session_type ?? "online"} disabled>
                   <option value="online">Online</option>
                   <option value="offline">Offline</option>
                 </Select>

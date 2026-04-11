@@ -7,7 +7,7 @@ import {
 } from '@imphnen-frontend-service/service'
 import { Icon } from '@iconify/react'
 
-export const Route = createFileRoute('/_authenticated/dashboard/')({
+export const Route = createFileRoute('/_authenticated/dashboard_/')({
   component: DashboardIndexPage,
 })
 

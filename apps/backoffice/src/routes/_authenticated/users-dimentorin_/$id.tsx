@@ -15,9 +15,9 @@ import {
 const labelClass = cn('text-neutral-800 text-[10px] font-semibold mb-1.5 inline-block md:text-xs md:mb-2 xl:text-[15px]')
 
 const SOCIAL_LINKS = [
-  { icon: <Icon icon="mdi:linkedin" className="text-2xl" />, key: 'linkedin_url', label: 'LinkedIn' },
-  { icon: <Icon icon="mdi:github" className="text-2xl" />, key: 'github_url', label: 'Github' },
-  { icon: <Icon icon="mingcute:meta-line" className="text-2xl" />, key: 'portfolio_url', label: 'Portfolio' },
+  { icon: <Icon icon="mdi:linkedin" className="text-2xl" />, key: "linkedin_url", label: "LinkedIn" },
+  { icon: <Icon icon="mdi:github" className="text-2xl" />, key: "github_url", label: "Github" },
+  { icon: <Icon icon="mingcute:meta-line" className="text-2xl" />, key: "portfolio_url", label: "Portfolio" },
 ]
 
 const TABS = {
@@ -26,7 +26,7 @@ const TABS = {
 } as const
 type TabType = typeof TABS[keyof typeof TABS]
 
-export const Route = createFileRoute('/_authenticated/users-dimentorin/$id')({
+export const Route = createFileRoute('/_authenticated/users-dimentorin_/$id')({
   component: UserDetailPage,
 })
 
@@ -162,7 +162,7 @@ function UserDetailPage() {
                 </div>
 
                 <div className="flex justify-end gap-x-5 mt-8">
-                  <Button type="button" variant="bordered" onClick={() => navigate({ to: '/users-dimentorin' })}>
+                  <Button type="button" variant="bordered" onClick={() => navigate({ to: "/users-dimentorin" })}>
                     Kembali
                   </Button>
                 </div>
@@ -185,7 +185,7 @@ function UserDetailPage() {
                     <div>
                       <h3 className="text-p2 font-semibold text-neutral-800">{displayName}</h3>
                       <p className="text-p3 font-medium text-neutral-600">
-                        {mentor ? `${mentor.current_role ?? ''} at ${mentor.current_company ?? ''}` : user?.role?.name ?? '-'}
+                        {mentor ? `${mentor.current_role ?? ``} at ${mentor.current_company ?? ``}` : user?.role?.name ?? `-`}
                       </p>
                     </div>
                   </div>

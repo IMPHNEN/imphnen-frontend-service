@@ -10,7 +10,7 @@ import {
   useUpdateTestimonial,
 } from '@imphnen-frontend-service/service'
 
-export const Route = createFileRoute('/_authenticated/cms-testimonials/$id')({
+export const Route = createFileRoute('/_authenticated/cms-testimonials_/$id')({
   component: CmsTestimonialsEditPage,
 })
 

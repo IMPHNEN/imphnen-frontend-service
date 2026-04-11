@@ -10,7 +10,7 @@ import {
   useUpdateGachaItem,
 } from '@imphnen-frontend-service/service'
 
-export const Route = createFileRoute('/_authenticated/dashboard/$id')({
+export const Route = createFileRoute('/_authenticated/dashboard_/$id')({
   component: DashboardEditPage,
 })
 

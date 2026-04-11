@@ -6,7 +6,7 @@ import { Button } from '@imphnen-frontend-service/ui/atoms'
 import { ControlledInputField } from '@imphnen-frontend-service/ui/organisms'
 import { useCreateGachaItem } from '@imphnen-frontend-service/service'
 
-export const Route = createFileRoute('/_authenticated/dashboard/create')({
+export const Route = createFileRoute('/_authenticated/dashboard_/create')({
   component: DashboardCreatePage,
 })
 

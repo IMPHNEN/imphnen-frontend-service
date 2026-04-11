@@ -4,7 +4,7 @@ import { RegisterResetBanner } from '@imphnen-frontend-service/ui/organisms'
 import { Button } from '@imphnen-frontend-service/ui/atoms'
 import { ArrowRightOutlined } from '@ant-design/icons'
 
-export const Route = createFileRoute('/_public/auth/register-mentor/pending')({
+export const Route = createFileRoute('/_public/auth/register-mentor_/pending')({
   component: RegisterMentorPendingPage,
 })
 

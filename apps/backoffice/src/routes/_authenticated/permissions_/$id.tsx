@@ -10,7 +10,7 @@ import {
   useUpdatePermission,
 } from '@imphnen-frontend-service/service'
 
-export const Route = createFileRoute('/_authenticated/permissions/$id')({
+export const Route = createFileRoute('/_authenticated/permissions_/$id')({
   component: PermissionsEditPage,
 })
 

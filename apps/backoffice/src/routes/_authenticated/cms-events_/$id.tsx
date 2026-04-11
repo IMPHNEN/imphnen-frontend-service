@@ -10,7 +10,7 @@ import {
   useUpdateEvent,
 } from '@imphnen-frontend-service/service'
 
-export const Route = createFileRoute('/_authenticated/cms-events/$id')({
+export const Route = createFileRoute('/_authenticated/cms-events_/$id')({
   component: CmsEventsEditPage,
 })
 

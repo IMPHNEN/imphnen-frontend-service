@@ -9,7 +9,7 @@ import {
   useUpdateUserById,
 } from '@imphnen-frontend-service/service'
 
-export const Route = createFileRoute('/_authenticated/accounts/$id')({
+export const Route = createFileRoute('/_authenticated/accounts_/$id')({
   component: AccountsEditPage,
 })
 

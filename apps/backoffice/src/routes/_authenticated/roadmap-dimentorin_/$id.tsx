@@ -7,7 +7,7 @@ import { Button } from '@imphnen-frontend-service/ui/atoms'
 import { ControlledInputField } from '@imphnen-frontend-service/ui/organisms'
 import { useRoadmapList, useUpdateRoadmap, TRoadmapStatus } from '@imphnen-frontend-service/service'
 
-export const Route = createFileRoute('/_authenticated/roadmap-dimentorin/$id')({
+export const Route = createFileRoute('/_authenticated/roadmap-dimentorin_/$id')({
   component: RoadmapEditPage,
 })
 

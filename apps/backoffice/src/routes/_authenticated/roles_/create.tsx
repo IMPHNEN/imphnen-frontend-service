@@ -6,7 +6,7 @@ import { Button } from '@imphnen-frontend-service/ui/atoms'
 import { ControlledInputField } from '@imphnen-frontend-service/ui/organisms'
 import { useCreateRole } from '@imphnen-frontend-service/service'
 
-export const Route = createFileRoute('/_authenticated/roles/create')({
+export const Route = createFileRoute('/_authenticated/roles_/create')({
   component: RolesCreatePage,
 })
 
@@ -85,19 +85,19 @@ function RolesCreatePage() {
                     <hr className="border-blue-200" />
                     <div className="flex flex-col items-start gap-4 mb-4">
                       <div className="flex gap-[8px] items-center">
-                        <input type="checkbox" id={`${title}-read`} />
+                        <input type="checkbox" id={"${title}-read"} />
                         <label htmlFor={`${title}-read`}>Read</label>
                       </div>
                       <div className="flex gap-[8px] items-center">
-                        <input type="checkbox" id={`${title}-create`} />
+                        <input type="checkbox" id={"${title}-create"} />
                         <label htmlFor={`${title}-create`}>Create</label>
                       </div>
                       <div className="flex gap-[8px] items-center">
-                        <input type="checkbox" id={`${title}-update`} />
+                        <input type="checkbox" id={"${title}-update"} />
                         <label htmlFor={`${title}-update`}>Update</label>
                       </div>
                       <div className="flex gap-[8px] items-center">
-                        <input type="checkbox" id={`${title}-delete`} />
+                        <input type="checkbox" id={"${title}-delete"} />
                         <label htmlFor={`${title}-delete`}>Delete</label>
                       </div>
                     </div>

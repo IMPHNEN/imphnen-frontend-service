@@ -4,7 +4,7 @@ import { RegisterResetBanner } from '@imphnen-frontend-service/ui/organisms'
 import { ForgotStep } from '@imphnen-frontend-service/ui/molecules'
 import { Button, Input } from '@imphnen-frontend-service/ui/atoms'
 
-export const Route = createFileRoute('/_public/auth/forgot/summon')({
+export const Route = createFileRoute('/_public/auth/forgot_/summon')({
   component: ForgotSummonPage,
 })
 
@@ -16,12 +16,12 @@ function ForgotSummonPage(): ReactElement {
         <div className='border-2 border-primary-500/50 w-[596px] rounded-lg py-[70px] px-[48px] flex flex-col justify-center'>
           <ForgotStep step={3} />
           <h3 className='mt-5 text-3xl font-semibold text-primary-500'>Forgot Password</h3>
-          <h5 className='mt-2 text-md font-medium text-primary-500'>Sekarang, buatlah password baru yang lebih kuat, seperti jurus andalanmu!<span role="img" aria-label='emoji'>🔥⚡</span></h5>
+          <h5 className='mt-2 text-md font-medium text-primary-500'>Sekarang, buatlah password baru yang lebih kuat, seperti jurus andalanmu!<span role='img' aria-label='emoji'>🔥⚡</span></h5>
           <div className='my-4'>
             <h6 className='text-gray-700'>Password Baru</h6>
-            <Input className='w-full' type="password" placeholder='Buat password sekokoh armor legendary!'/>
+            <Input className='w-full' type='password' placeholder='Buat password sekokoh armor legendary!'/>
             <h6 className='text-gray-700 mt-5'>Ulang Password Baru</h6>
-            <Input className='w-full' type="password" placeholder='Pastikan Cocok! Jangan sampai ada typo, Senpai~!'/>
+            <Input className='w-full' type='password' placeholder='Pastikan Cocok! Jangan sampai ada typo, Senpai~!'/>
           </div>
           <div className='mb-4 text-gray-700 flex flex-col gap-3 text-sm'>
             <h6><span role='img' aria-label='emoji'>💡</span> Tips dari kami:</h6>

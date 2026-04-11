@@ -10,7 +10,7 @@ import {
   useUpdateGachaItem,
 } from '@imphnen-frontend-service/service'
 
-export const Route = createFileRoute('/_authenticated/gacha-roll/$id')({
+export const Route = createFileRoute('/_authenticated/gacha-roll_/$id')({
   component: GachaRollEditPage,
 })
 

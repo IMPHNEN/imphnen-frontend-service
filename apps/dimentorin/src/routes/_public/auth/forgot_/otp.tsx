@@ -4,7 +4,7 @@ import { RegisterResetBanner } from '@imphnen-frontend-service/ui/organisms'
 import { ForgotStep, OtpForm } from '@imphnen-frontend-service/ui/molecules'
 import { Button } from '@imphnen-frontend-service/ui/atoms'
 
-export const Route = createFileRoute('/_public/auth/forgot/otp')({
+export const Route = createFileRoute('/_public/auth/forgot_/otp')({
   component: ForgotOtpPage,
 })
 

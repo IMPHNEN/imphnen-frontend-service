@@ -6,7 +6,7 @@ import { Button } from '@imphnen-frontend-service/ui/atoms'
 import { ControlledInputField } from '@imphnen-frontend-service/ui/organisms'
 import { useCreateEvent } from '@imphnen-frontend-service/service'
 
-export const Route = createFileRoute('/_authenticated/cms-events/create')({
+export const Route = createFileRoute('/_authenticated/cms-events_/create')({
   component: CmsEventsCreatePage,
 })
 
