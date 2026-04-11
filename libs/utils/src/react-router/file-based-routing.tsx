@@ -303,9 +303,7 @@ export function getRouteSegmentsFromFilePath(
     .map((segment) => {
       if (segment.startsWith('.')) return '/';
       if (segment.startsWith('('))
-        return (
-          getParamFromSegment(segment).replace('(', '').replace(')', '') + '?'
-        );
+        return '';
       if (segment.startsWith('[')) return getParamFromSegment(segment);
       return segment;
     });
