@@ -1,92 +1,46 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import {
   PlusOutlined,
   ReloadOutlined,
   UsergroupAddOutlined,
   UsergroupDeleteOutlined,
   UserSwitchOutlined,
+  DeleteOutlined,
 } from '@ant-design/icons'
 import { Button } from '@imphnen-frontend-service/ui/atoms'
-import { FC, Fragment, ReactElement, useRef, useState } from 'react'
-import ModalAddItem from './_components/dashboard/modal-add-item'
-import ModalEditItem from './_components/dashboard/modal-edit-item'
-import ModalDeleteItem from './_components/dashboard/modal-delete-item'
-import { useQueryState } from '@imphnen-frontend-service/utils'
+import { Fragment, useState } from 'react'
 import {
   useUserList,
   useGachaItemList,
-  useCreateGachaItem,
-  useUpdateGachaItem,
   useDeleteGachaItem,
   TGachaItemDto,
 } from '@imphnen-frontend-service/service'
+import { toast } from 'sonner'
 
 export const Route = createFileRoute('/_authenticated/dashboard')({
   component: DashboardPage,
 })
 
 function DashboardPage() {
-  const [showModalAddItem, setShowModalAddItem] = useState(false)
-  const [showModalEditItem, setShowModalEditItem] = useState(false)
-  const [showModalDeleteItem, setShowModalDeleteItem] = useState(false)
-  const [selectedItem, setSelectedItem] = useState<TGachaItemDto | null>(null)
-  const pendingFormData = useRef<any>(null)
-
-  const {
-    step: currentStep,
-    nextStep,
-    prevStep,
-    resetStep,
-  } = useQueryState('step', {
-    defaultValue: 1,
-    maxValue: 2,
-    minValue: 1,
-  })
+  const navigate = useNavigate()
+  const [deleteId, setDeleteId] = useState<string | null>(null)
 
   const { data: usersData } = useUserList({ per_page: 1 })
   const { data: gachaItemsData } = useGachaItemList({ per_page: 9 })
-  const createItem = useCreateGachaItem()
-  const updateItem = useUpdateGachaItem()
   const deleteItem = useDeleteGachaItem()
 
   const totalUsers = usersData?.meta?.total ?? 0
   const gachaItems: TGachaItemDto[] = gachaItemsData?.data ?? []
 
-  const handleAdd = async (): Promise<boolean> => {
-    if (pendingFormData.current) {
-      const { itemName, quantity } = pendingFormData.current
-      await createItem.mutateAsync({
-        item_code: (itemName as string).toLowerCase().replace(/\s+/g, '-'),
-        name: itemName,
-        description: '',
-        rarity: 'common',
-        type_: 'physical',
-        category: 'merchandise',
-        value: 0,
-        weight: 1,
-        stock: quantity ?? 1,
-        is_limited: false,
-      })
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteItem.mutateAsync(id)
+      toast.success('Item berhasil dihapus')
+      setDeleteId(null)
+    } catch (error) {
+      console.log(error)
+      toast.error('Item gagal dihapus')
     }
-    return true
-  }
-
-  const handleEdit = async (): Promise<boolean> => {
-    if (selectedItem && pendingFormData.current) {
-      const { itemName, quantity } = pendingFormData.current
-      await updateItem.mutateAsync({
-        id: selectedItem.id,
-        data: { name: itemName, stock: quantity },
-      })
-    }
-    return true
-  }
-
-  const handleDelete = async (): Promise<boolean> => {
-    if (selectedItem) {
-      await deleteItem.mutateAsync(selectedItem.id)
-    }
-    return true
   }
 
   return (
@@ -158,7 +112,7 @@ function DashboardPage() {
                   variant="primary"
                   size="sm"
                   className="items-end gap-3"
-                  onClick={() => setShowModalAddItem(true)}
+                  onClick={() => navigate({ to: '/dashboard/create' })}
                 >
                   <span>Tambah Item</span>
                   <PlusOutlined className="text-[16px]" />
@@ -185,24 +139,40 @@ function DashboardPage() {
                           variant="text"
                           size="sm"
                           className="text-[10px] text-neutral-500 p-0 font-normal hover:bg-transparent hover:text-primary-500"
-                          onClick={() => {
-                            setSelectedItem(item)
-                            setShowModalEditItem(true)
-                          }}
+                          onClick={() => navigate({ to: '/dashboard/$id', params: { id: item.id } })}
                         >
                           Edit
                         </Button>
-                        <Button
-                          variant="text"
-                          size="sm"
-                          className="text-[10px] text-red-500 p-0 font-normal hover:bg-transparent hover:text-red-700"
-                          onClick={() => {
-                            setSelectedItem(item)
-                            setShowModalDeleteItem(true)
-                          }}
-                        >
-                          Delete
-                        </Button>
+                        {deleteId === item.id ? (
+                          <div className="flex items-center gap-1">
+                            <span className="text-[10px] text-neutral-400">Yakin?</span>
+                            <Button
+                              variant="text"
+                              size="sm"
+                              className="text-[10px] text-red-500 p-0 font-normal hover:bg-transparent hover:text-red-700"
+                              onClick={() => handleDelete(item.id)}
+                            >
+                              Ya
+                            </Button>
+                            <Button
+                              variant="text"
+                              size="sm"
+                              className="text-[10px] text-neutral-500 p-0 font-normal hover:bg-transparent"
+                              onClick={() => setDeleteId(null)}
+                            >
+                              Batal
+                            </Button>
+                          </div>
+                        ) : (
+                          <Button
+                            variant="text"
+                            size="sm"
+                            className="text-[10px] text-red-500 p-0 font-normal hover:bg-transparent hover:text-red-700"
+                            onClick={() => setDeleteId(item.id)}
+                          >
+                            Delete
+                          </Button>
+                        )}
                       </div>
                     </div>
 
@@ -220,35 +190,6 @@ function DashboardPage() {
           />
         </div>
       </main>
-
-      <ModalAddItem
-        currentStep={currentStep}
-        isOpen={showModalAddItem}
-        onClose={() => setShowModalAddItem(false)}
-        nextStep={nextStep}
-        prevStep={prevStep}
-        resetStep={resetStep}
-        handleAddItem={handleAdd}
-        onDataCapture={(data) => { pendingFormData.current = data }}
-      />
-
-      <ModalEditItem
-        currentStep={currentStep}
-        isOpen={showModalEditItem}
-        onClose={() => setShowModalEditItem(false)}
-        nextStep={nextStep}
-        prevStep={prevStep}
-        resetStep={resetStep}
-        handleEditItem={handleEdit}
-        initialValues={selectedItem ? { itemName: selectedItem.name } : undefined}
-        onDataCapture={(data) => { pendingFormData.current = data }}
-      />
-
-      <ModalDeleteItem
-        isOpen={showModalDeleteItem}
-        onClose={() => setShowModalDeleteItem(false)}
-        handleDeleteItem={async () => { await handleDelete(); return true }}
-      />
     </Fragment>
   )
 }

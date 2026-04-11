@@ -1,5 +1,5 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { FC, Fragment, ReactElement, useRef, useState } from 'react'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { Fragment, useState } from 'react'
 import {
   SearchOutlined,
   EditOutlined,
@@ -16,41 +16,22 @@ import {
   RowSelectionState,
   useReactTable,
 } from '@tanstack/react-table'
-import ModalAddEvent from './_components/cms-events/modal-add-event'
-import ModalUpdateEvent from './_components/cms-events/modal-update-event'
-import ModalDeleteEvent from './_components/cms-events/modal-delete-event'
-import { useQueryState } from '@imphnen-frontend-service/utils'
 import {
   useEventList,
-  useCreateEvent,
-  useUpdateEvent,
   useDeleteEvent,
   TEventsListItem,
 } from '@imphnen-frontend-service/service'
 import React from 'react'
+import { toast } from 'sonner'
 
 export const Route = createFileRoute('/_authenticated/cms-events')({
   component: CmsEventsPage,
 })
 
 function CmsEventsPage() {
-  const [showModalAddItem, setShowModalAddItem] = useState(false)
-  const [showModalUpdateItem, setShowModalUpdateItem] = useState(false)
-  const [showModalDeleteItem, setShowModalDeleteItem] = useState(false)
-  const [selectedEvent, setSelectedEvent] = useState<TEventsListItem | null>(null)
+  const navigate = useNavigate()
   const [search, setSearch] = useState('')
-  const pendingFormData = useRef<any>(null)
-
-  const {
-    step: currentStep,
-    nextStep,
-    prevStep,
-    resetStep,
-  } = useQueryState('step', {
-    defaultValue: 1,
-    maxValue: 2,
-    minValue: 1,
-  })
+  const [deleteId, setDeleteId] = useState<string | null>(null)
 
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
@@ -64,32 +45,20 @@ function CmsEventsPage() {
     page: pagination.pageIndex + 1,
     per_page: pagination.pageSize,
   })
-  const createEvent = useCreateEvent()
-  const updateEvent = useUpdateEvent()
   const deleteEvent = useDeleteEvent()
 
   const events: TEventsListItem[] = eventsData?.data ?? []
   const totalItems = eventsData?.meta?.total ?? events.length
 
-  const handleAdd = async (): Promise<boolean> => {
-    if (pendingFormData.current) {
-      await createEvent.mutateAsync(pendingFormData.current)
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteEvent.mutateAsync(id)
+      toast.success('Data event berhasil dihapus')
+      setDeleteId(null)
+    } catch (error) {
+      console.log(error)
+      toast.error('Data event gagal dihapus')
     }
-    return true
-  }
-
-  const handleUpdate = async (): Promise<boolean> => {
-    if (selectedEvent && pendingFormData.current) {
-      await updateEvent.mutateAsync({ id: selectedEvent.id, data: pendingFormData.current })
-    }
-    return true
-  }
-
-  const handleDelete = async (): Promise<boolean> => {
-    if (selectedEvent) {
-      await deleteEvent.mutateAsync(selectedEvent.id)
-    }
-    return true
   }
 
   const columns: ColumnDef<TEventsListItem>[] = [
@@ -163,25 +132,49 @@ function CmsEventsPage() {
             size="sm"
             onClick={(e) => {
               e.stopPropagation()
-              setSelectedEvent(row.original)
-              setShowModalUpdateItem(true)
+              navigate({ to: '/cms-events/$id', params: { id: row.original.id } })
             }}
             className="flex items-center gap-2"
           >
             <EditOutlined /> Update
           </Button>
-          <Button
-            variant="danger"
-            size="sm"
-            onClick={(e) => {
-              e.stopPropagation()
-              setSelectedEvent(row.original)
-              setShowModalDeleteItem(true)
-            }}
-            className="flex items-center gap-2"
-          >
-            <DeleteOutlined /> Delete
-          </Button>
+          {deleteId === row.original.id ? (
+            <div className="flex items-center gap-2">
+              <span className="text-label2 text-neutral-500">Yakin?</span>
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleDelete(row.original.id)
+                }}
+              >
+                Ya
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setDeleteId(null)
+                }}
+              >
+                Batal
+              </Button>
+            </div>
+          ) : (
+            <Button
+              variant="danger"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation()
+                setDeleteId(row.original.id)
+              }}
+              className="flex items-center gap-2"
+            >
+              <DeleteOutlined /> Delete
+            </Button>
+          )}
         </div>
       ),
     },
@@ -228,7 +221,7 @@ function CmsEventsPage() {
                 variant="primary"
                 size="md"
                 className="flex gap-3 text-nowrap"
-                onClick={() => setShowModalAddItem(true)}
+                onClick={() => navigate({ to: '/cms-events/create' })}
               >
                 <PlusOutlined />
                 Tambah Event
@@ -248,44 +241,6 @@ function CmsEventsPage() {
           )}
         </section>
       </main>
-
-      <ModalAddEvent
-        currentStep={currentStep}
-        isOpen={showModalAddItem}
-        onClose={() => setShowModalAddItem(false)}
-        nextStep={nextStep}
-        prevStep={prevStep}
-        resetStep={resetStep}
-        handleAdd={handleAdd}
-        onDataCapture={(data) => { pendingFormData.current = data }}
-      />
-      <ModalUpdateEvent
-        isOpen={showModalUpdateItem}
-        onClose={() => setShowModalUpdateItem(false)}
-        nextStep={nextStep}
-        prevStep={prevStep}
-        resetStep={resetStep}
-        handleUpdate={handleUpdate}
-        initialValues={selectedEvent ? {
-          name: selectedEvent.name,
-          description: selectedEvent.description,
-          detail_link: selectedEvent.detail_link,
-          location: selectedEvent.location,
-          price: selectedEvent.price,
-          start_date: selectedEvent.start_date,
-          end_date: selectedEvent.end_date,
-          is_online: selectedEvent.is_online,
-        } : undefined}
-        onDataCapture={(data) => { pendingFormData.current = data }}
-      />
-      <ModalDeleteEvent
-        isOpen={showModalDeleteItem}
-        onClose={() => setShowModalDeleteItem(false)}
-        nextStep={nextStep}
-        prevStep={prevStep}
-        resetStep={resetStep}
-        handleDelete={handleDelete}
-      />
     </Fragment>
   )
 }

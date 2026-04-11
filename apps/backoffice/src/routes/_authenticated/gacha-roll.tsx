@@ -1,6 +1,6 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import * as React from 'react'
-import { FC, Fragment, ReactElement, useRef, useState } from 'react'
+import { Fragment, useState } from 'react'
 import {
   SearchOutlined,
   EditOutlined,
@@ -17,40 +17,21 @@ import {
   useReactTable,
   RowSelectionState,
 } from '@tanstack/react-table'
-import ModalAddItem from './_components/gacha-roll/modal-add-item'
-import ModalUpdateItem from './_components/gacha-roll/modal-update-item'
-import ModalDeleteItem from './_components/gacha-roll/modal-delete-item'
-import { useQueryState } from '@imphnen-frontend-service/utils'
 import {
   useGachaItemList,
-  useCreateGachaItem,
-  useUpdateGachaItem,
   useDeleteGachaItem,
   TGachaItemDto,
 } from '@imphnen-frontend-service/service'
+import { toast } from 'sonner'
 
 export const Route = createFileRoute('/_authenticated/gacha-roll')({
   component: GachaRollPage,
 })
 
 function GachaRollPage() {
-  const [showModalAddItem, setShowModalAddItem] = useState(false)
-  const [showModalUpdateItem, setShowModalUpdateItem] = useState(false)
-  const [showModalDeleteItem, setShowModalDeleteItem] = useState(false)
-  const [selectedItem, setSelectedItem] = useState<TGachaItemDto | null>(null)
+  const navigate = useNavigate()
   const [search, setSearch] = useState('')
-  const pendingFormData = useRef<any>(null)
-
-  const {
-    step: currentStep,
-    nextStep,
-    prevStep,
-    resetStep,
-  } = useQueryState('step', {
-    defaultValue: 1,
-    maxValue: 2,
-    minValue: 1,
-  })
+  const [deleteId, setDeleteId] = useState<string | null>(null)
 
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
@@ -64,52 +45,20 @@ function GachaRollPage() {
     page: pagination.pageIndex + 1,
     per_page: pagination.pageSize,
   })
-  const createItem = useCreateGachaItem()
-  const updateItem = useUpdateGachaItem()
   const deleteItem = useDeleteGachaItem()
 
   const items: TGachaItemDto[] = itemsData?.data ?? []
   const totalItems = itemsData?.meta?.total ?? items.length
 
-  const handleAdd = async (): Promise<boolean> => {
-    if (pendingFormData.current) {
-      const { itemName, quantity, chanceRate } = pendingFormData.current
-      await createItem.mutateAsync({
-        item_code: (itemName as string).toLowerCase().replace(/\s+/g, '-'),
-        name: itemName,
-        description: '',
-        rarity: 'common',
-        type_: 'physical',
-        category: 'merchandise',
-        value: 0,
-        weight: chanceRate ?? 1,
-        stock: quantity ?? 1,
-        is_limited: false,
-      })
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteItem.mutateAsync(id)
+      toast.success('Item berhasil dihapus')
+      setDeleteId(null)
+    } catch (error) {
+      console.log(error)
+      toast.error('Item gagal dihapus')
     }
-    return true
-  }
-
-  const handleUpdate = async (): Promise<boolean> => {
-    if (selectedItem && pendingFormData.current) {
-      const { itemName, quantity, chanceRate } = pendingFormData.current
-      await updateItem.mutateAsync({
-        id: selectedItem.id,
-        data: {
-          name: itemName,
-          weight: chanceRate,
-          stock: quantity,
-        },
-      })
-    }
-    return true
-  }
-
-  const handleDelete = async () => {
-    if (selectedItem) {
-      await deleteItem.mutateAsync(selectedItem.id)
-    }
-    setShowModalDeleteItem(false)
   }
 
   const columns: ColumnDef<TGachaItemDto>[] = [
@@ -149,25 +98,49 @@ function GachaRollPage() {
             size="sm"
             onClick={(e) => {
               e.stopPropagation()
-              setSelectedItem(row.original)
-              setShowModalUpdateItem(true)
+              navigate({ to: '/gacha-roll/$id', params: { id: row.original.id } })
             }}
             className="flex items-center gap-2"
           >
             <EditOutlined /> Update
           </Button>
-          <Button
-            variant="danger"
-            size="sm"
-            onClick={(e) => {
-              e.stopPropagation()
-              setSelectedItem(row.original)
-              setShowModalDeleteItem(true)
-            }}
-            className="flex items-center gap-2"
-          >
-            <DeleteOutlined /> Delete
-          </Button>
+          {deleteId === row.original.id ? (
+            <div className="flex items-center gap-2">
+              <span className="text-label2 text-neutral-500">Yakin?</span>
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleDelete(row.original.id)
+                }}
+              >
+                Ya
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setDeleteId(null)
+                }}
+              >
+                Batal
+              </Button>
+            </div>
+          ) : (
+            <Button
+              variant="danger"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation()
+                setDeleteId(row.original.id)
+              }}
+              className="flex items-center gap-2"
+            >
+              <DeleteOutlined /> Delete
+            </Button>
+          )}
         </div>
       ),
     },
@@ -214,7 +187,7 @@ function GachaRollPage() {
                 variant="primary"
                 size="md"
                 className="flex gap-3 text-nowrap"
-                onClick={() => setShowModalAddItem(true)}
+                onClick={() => navigate({ to: '/gacha-roll/create' })}
               >
                 <PlusOutlined />
                 Tambah Item
@@ -229,33 +202,6 @@ function GachaRollPage() {
           )}
         </section>
       </main>
-
-      <ModalAddItem
-        currentStep={currentStep}
-        isOpen={showModalAddItem}
-        onClose={() => setShowModalAddItem(false)}
-        nextStep={nextStep}
-        prevStep={prevStep}
-        resetStep={resetStep}
-        handleAddItem={handleAdd}
-        onDataCapture={(data) => { pendingFormData.current = data }}
-      />
-      <ModalUpdateItem
-        currentStep={currentStep}
-        isOpen={showModalUpdateItem}
-        onClose={() => setShowModalUpdateItem(false)}
-        nextStep={nextStep}
-        prevStep={prevStep}
-        resetStep={resetStep}
-        handleUpdateItem={handleUpdate}
-        initialValues={selectedItem ? { itemName: selectedItem.name } : undefined}
-        onDataCapture={(data) => { pendingFormData.current = data }}
-      />
-      <ModalDeleteItem
-        isOpen={showModalDeleteItem}
-        onClose={() => setShowModalDeleteItem(false)}
-        handleDeleteItem={handleDelete}
-      />
     </Fragment>
   )
 }

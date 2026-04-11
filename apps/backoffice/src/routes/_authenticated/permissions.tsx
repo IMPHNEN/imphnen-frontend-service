@@ -1,5 +1,5 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { FC, Fragment, ReactElement, useRef, useState } from 'react'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { Fragment, useState } from 'react'
 import {
   SearchOutlined,
   EditOutlined,
@@ -16,41 +16,22 @@ import {
   RowSelectionState,
   useReactTable,
 } from '@tanstack/react-table'
-import ModalAddPermission from './_components/permissions/modal-add-permission'
-import ModalUpdatePermission from './_components/permissions/modal-update-permission'
-import ModalDeletePermission from './_components/permissions/modal-delete-permission'
-import { useQueryState } from '@imphnen-frontend-service/utils'
 import {
   usePermissionList,
-  useCreatePermission,
-  useUpdatePermission,
   useDeletePermission,
   TPermissionItem,
 } from '@imphnen-frontend-service/service'
 import React from 'react'
+import { toast } from 'sonner'
 
 export const Route = createFileRoute('/_authenticated/permissions')({
   component: PermissionsPage,
 })
 
 function PermissionsPage() {
-  const [showModalAddItem, setShowModalAddItem] = useState(false)
-  const [showModalUpdateItem, setShowModalUpdateItem] = useState(false)
-  const [showModalDeleteItem, setShowModalDeleteItem] = useState(false)
-  const [selectedItem, setSelectedItem] = useState<TPermissionItem | null>(null)
+  const navigate = useNavigate()
   const [search, setSearch] = useState('')
-  const pendingFormData = useRef<any>(null)
-
-  const {
-    step: currentStep,
-    nextStep,
-    prevStep,
-    resetStep,
-  } = useQueryState('step', {
-    defaultValue: 1,
-    maxValue: 2,
-    minValue: 1,
-  })
+  const [deleteId, setDeleteId] = useState<string | null>(null)
 
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
@@ -64,32 +45,20 @@ function PermissionsPage() {
     page: pagination.pageIndex + 1,
     per_page: pagination.pageSize,
   })
-  const createPermission = useCreatePermission()
-  const updatePermission = useUpdatePermission()
   const deletePermission = useDeletePermission()
 
   const permissions: TPermissionItem[] = permissionsData?.data ?? []
   const totalItems = permissionsData?.meta?.total ?? permissions.length
 
-  const handleAdd = async (): Promise<boolean> => {
-    if (pendingFormData.current) {
-      await createPermission.mutateAsync(pendingFormData.current)
+  const handleDelete = async (id: string) => {
+    try {
+      await deletePermission.mutateAsync(id)
+      toast.success('Data permissions berhasil dihapus')
+      setDeleteId(null)
+    } catch (error) {
+      console.log(error)
+      toast.error('Data permissions gagal dihapus')
     }
-    return true
-  }
-
-  const handleUpdate = async (): Promise<boolean> => {
-    if (selectedItem && pendingFormData.current) {
-      await updatePermission.mutateAsync({ id: selectedItem.id, data: pendingFormData.current })
-    }
-    return true
-  }
-
-  const handleDelete = async (): Promise<boolean> => {
-    if (selectedItem) {
-      await deletePermission.mutateAsync(selectedItem.id)
-    }
-    return true
   }
 
   const columns: ColumnDef<TPermissionItem>[] = [
@@ -129,25 +98,49 @@ function PermissionsPage() {
             size="sm"
             onClick={(e) => {
               e.stopPropagation()
-              setSelectedItem(row.original)
-              setShowModalUpdateItem(true)
+              navigate({ to: '/permissions/$id', params: { id: row.original.id } })
             }}
             className="flex items-center gap-2"
           >
             <EditOutlined /> Update
           </Button>
-          <Button
-            variant="danger"
-            size="sm"
-            onClick={(e) => {
-              e.stopPropagation()
-              setSelectedItem(row.original)
-              setShowModalDeleteItem(true)
-            }}
-            className="flex items-center gap-2"
-          >
-            <DeleteOutlined /> Delete
-          </Button>
+          {deleteId === row.original.id ? (
+            <div className="flex items-center gap-2">
+              <span className="text-label2 text-neutral-500">Yakin?</span>
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleDelete(row.original.id)
+                }}
+              >
+                Ya
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setDeleteId(null)
+                }}
+              >
+                Batal
+              </Button>
+            </div>
+          ) : (
+            <Button
+              variant="danger"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation()
+                setDeleteId(row.original.id)
+              }}
+              className="flex items-center gap-2"
+            >
+              <DeleteOutlined /> Delete
+            </Button>
+          )}
         </div>
       ),
     },
@@ -194,7 +187,7 @@ function PermissionsPage() {
                 variant="primary"
                 size="md"
                 className="flex gap-3 text-nowrap"
-                onClick={() => setShowModalAddItem(true)}
+                onClick={() => navigate({ to: '/permissions/create' })}
               >
                 <PlusOutlined />
                 Tambah Permissions
@@ -214,35 +207,6 @@ function PermissionsPage() {
           )}
         </section>
       </main>
-
-      <ModalAddPermission
-        currentStep={currentStep}
-        isOpen={showModalAddItem}
-        onClose={() => setShowModalAddItem(false)}
-        nextStep={nextStep}
-        prevStep={prevStep}
-        resetStep={resetStep}
-        handleAddItem={handleAdd}
-        onDataCapture={(data) => { pendingFormData.current = data }}
-      />
-      <ModalUpdatePermission
-        isOpen={showModalUpdateItem}
-        onClose={() => setShowModalUpdateItem(false)}
-        nextStep={nextStep}
-        prevStep={prevStep}
-        resetStep={resetStep}
-        handleUpdate={handleUpdate}
-        initialValues={selectedItem ? { name: selectedItem.name } : undefined}
-        onDataCapture={(data) => { pendingFormData.current = data }}
-      />
-      <ModalDeletePermission
-        isOpen={showModalDeleteItem}
-        onClose={() => setShowModalDeleteItem(false)}
-        nextStep={nextStep}
-        prevStep={prevStep}
-        resetStep={resetStep}
-        handleDelete={handleDelete}
-      />
     </Fragment>
   )
 }

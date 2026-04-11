@@ -1,5 +1,5 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { FC, Fragment, ReactElement, useRef, useState } from 'react'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { Fragment, useState } from 'react'
 import {
   SearchOutlined,
   EditOutlined,
@@ -16,41 +16,22 @@ import {
   RowSelectionState,
   useReactTable,
 } from '@tanstack/react-table'
-import ModalAddTestimonial from './_components/cms-testimonials/modal-add-testimonial'
-import ModalUpdateTestimonial from './_components/cms-testimonials/modal-update-testimonial'
-import ModalDeleteTestimonial from './_components/cms-testimonials/modal-delete-testimonial'
-import { useQueryState } from '@imphnen-frontend-service/utils'
 import {
   useTestimonialList,
-  useCreateTestimonial,
-  useUpdateTestimonial,
   useDeleteTestimonial,
   TTestimonialsListItem,
 } from '@imphnen-frontend-service/service'
 import React from 'react'
+import { toast } from 'sonner'
 
 export const Route = createFileRoute('/_authenticated/cms-testimonials')({
   component: CmsTestimonialsPage,
 })
 
 function CmsTestimonialsPage() {
-  const [showModalAddItem, setShowModalAddItem] = useState(false)
-  const [showModalUpdateItem, setShowModalUpdateItem] = useState(false)
-  const [showModalDeleteItem, setShowModalDeleteItem] = useState(false)
-  const [selectedTestimonial, setSelectedTestimonial] = useState<TTestimonialsListItem | null>(null)
+  const navigate = useNavigate()
   const [search, setSearch] = useState('')
-  const pendingFormData = useRef<any>(null)
-
-  const {
-    step: currentStep,
-    nextStep,
-    prevStep,
-    resetStep,
-  } = useQueryState('step', {
-    defaultValue: 1,
-    maxValue: 2,
-    minValue: 1,
-  })
+  const [deleteId, setDeleteId] = useState<string | null>(null)
 
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
@@ -64,32 +45,20 @@ function CmsTestimonialsPage() {
     page: pagination.pageIndex + 1,
     per_page: pagination.pageSize,
   })
-  const createTestimonial = useCreateTestimonial()
-  const updateTestimonial = useUpdateTestimonial()
   const deleteTestimonial = useDeleteTestimonial()
 
   const testimonials: TTestimonialsListItem[] = testimonialsData?.data ?? []
   const totalItems = testimonialsData?.meta?.total ?? testimonials.length
 
-  const handleAdd = async (): Promise<boolean> => {
-    if (pendingFormData.current) {
-      await createTestimonial.mutateAsync(pendingFormData.current)
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteTestimonial.mutateAsync(id)
+      toast.success('Data testimonial berhasil dihapus')
+      setDeleteId(null)
+    } catch (error) {
+      console.log(error)
+      toast.error('Data testimonial gagal dihapus')
     }
-    return true
-  }
-
-  const handleUpdate = async (): Promise<boolean> => {
-    if (selectedTestimonial && pendingFormData.current) {
-      await updateTestimonial.mutateAsync({ id: selectedTestimonial.id, data: pendingFormData.current })
-    }
-    return true
-  }
-
-  const handleDelete = async (): Promise<boolean> => {
-    if (selectedTestimonial) {
-      await deleteTestimonial.mutateAsync(selectedTestimonial.id)
-    }
-    return true
   }
 
   const columns: ColumnDef<TTestimonialsListItem>[] = [
@@ -147,25 +116,49 @@ function CmsTestimonialsPage() {
             size="sm"
             onClick={(e) => {
               e.stopPropagation()
-              setSelectedTestimonial(row.original)
-              setShowModalUpdateItem(true)
+              navigate({ to: '/cms-testimonials/$id', params: { id: row.original.id } })
             }}
             className="flex items-center gap-2"
           >
             <EditOutlined /> Update
           </Button>
-          <Button
-            variant="danger"
-            size="sm"
-            onClick={(e) => {
-              e.stopPropagation()
-              setSelectedTestimonial(row.original)
-              setShowModalDeleteItem(true)
-            }}
-            className="flex items-center gap-2"
-          >
-            <DeleteOutlined /> Delete
-          </Button>
+          {deleteId === row.original.id ? (
+            <div className="flex items-center gap-2">
+              <span className="text-label2 text-neutral-500">Yakin?</span>
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleDelete(row.original.id)
+                }}
+              >
+                Ya
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setDeleteId(null)
+                }}
+              >
+                Batal
+              </Button>
+            </div>
+          ) : (
+            <Button
+              variant="danger"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation()
+                setDeleteId(row.original.id)
+              }}
+              className="flex items-center gap-2"
+            >
+              <DeleteOutlined /> Delete
+            </Button>
+          )}
         </div>
       ),
     },
@@ -212,7 +205,7 @@ function CmsTestimonialsPage() {
                 variant="primary"
                 size="md"
                 className="flex gap-3 text-nowrap"
-                onClick={() => setShowModalAddItem(true)}
+                onClick={() => navigate({ to: '/cms-testimonials/create' })}
               >
                 <PlusOutlined />
                 Tambah Testimonial
@@ -232,38 +225,6 @@ function CmsTestimonialsPage() {
           )}
         </section>
       </main>
-
-      <ModalAddTestimonial
-        currentStep={currentStep}
-        isOpen={showModalAddItem}
-        onClose={() => setShowModalAddItem(false)}
-        nextStep={nextStep}
-        prevStep={prevStep}
-        resetStep={resetStep}
-        handleAdd={handleAdd}
-        onDataCapture={(data) => { pendingFormData.current = data }}
-      />
-      <ModalUpdateTestimonial
-        isOpen={showModalUpdateItem}
-        onClose={() => setShowModalUpdateItem(false)}
-        nextStep={nextStep}
-        prevStep={prevStep}
-        resetStep={resetStep}
-        handleUpdate={handleUpdate}
-        initialValues={selectedTestimonial ? {
-          role: selectedTestimonial.role,
-          content: selectedTestimonial.content,
-        } : undefined}
-        onDataCapture={(data) => { pendingFormData.current = data }}
-      />
-      <ModalDeleteTestimonial
-        isOpen={showModalDeleteItem}
-        onClose={() => setShowModalDeleteItem(false)}
-        nextStep={nextStep}
-        prevStep={prevStep}
-        resetStep={resetStep}
-        handleDelete={handleDelete}
-      />
     </Fragment>
   )
 }

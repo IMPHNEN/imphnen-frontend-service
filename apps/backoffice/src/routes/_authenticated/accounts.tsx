@@ -1,6 +1,6 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import * as React from 'react'
-import { FC, Fragment, ReactElement, useRef, useState } from 'react'
+import { Fragment, useState } from 'react'
 import {
   FilterOutlined,
   SearchOutlined,
@@ -16,11 +16,8 @@ import {
   useReactTable,
   RowSelectionState,
 } from '@tanstack/react-table'
-import ModalEditAccount from './_components/accounts/modal-edit-account'
-import { useQueryState } from '@imphnen-frontend-service/utils'
 import {
   useUserList,
-  useUpdateUserById,
   TUsersListItem,
 } from '@imphnen-frontend-service/service'
 
@@ -29,21 +26,8 @@ export const Route = createFileRoute('/_authenticated/accounts')({
 })
 
 function AccountsPage() {
-  const [showModalEditAccount, setShowModalEditAccount] = useState(false)
-  const [selectedUser, setSelectedUser] = useState<TUsersListItem | null>(null)
+  const navigate = useNavigate()
   const [search, setSearch] = useState('')
-  const pendingFormData = useRef<any>(null)
-
-  const {
-    step: currentStep,
-    nextStep,
-    prevStep,
-    resetStep,
-  } = useQueryState('step', {
-    defaultValue: 1,
-    maxValue: 2,
-    minValue: 1,
-  })
 
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
@@ -58,16 +42,9 @@ function AccountsPage() {
     page: pagination.pageIndex + 1,
     per_page: pagination.pageSize,
   })
-  const updateUser = useUpdateUserById()
 
   const users: TUsersListItem[] = usersData?.data ?? []
   const totalItems = usersData?.meta?.total ?? users.length
-
-  const handleEditAccount = async () => {
-    if (selectedUser && pendingFormData.current) {
-      await updateUser.mutateAsync({ id: selectedUser.id, data: pendingFormData.current })
-    }
-  }
 
   const columns: ColumnDef<TUsersListItem>[] = [
     {
@@ -122,8 +99,7 @@ function AccountsPage() {
           size="sm"
           onClick={(e) => {
             e.stopPropagation()
-            setSelectedUser(row.original)
-            setShowModalEditAccount(true)
+            navigate({ to: '/accounts/$id', params: { id: row.original.id } })
           }}
           className="flex items-center gap-2"
         >
@@ -193,18 +169,6 @@ function AccountsPage() {
           )}
         </section>
       </main>
-
-      <ModalEditAccount
-        currentStep={currentStep}
-        isOpen={showModalEditAccount}
-        onClose={() => setShowModalEditAccount(false)}
-        handleEditAccount={handleEditAccount}
-        nextStep={nextStep}
-        prevStep={prevStep}
-        resetStep={resetStep}
-        initialValues={selectedUser ? { fullname: selectedUser.fullname, email: selectedUser.email } : undefined}
-        onDataCapture={(data) => { pendingFormData.current = data }}
-      />
     </Fragment>
   )
 }
