@@ -8,7 +8,7 @@ import {
 } from '@ant-design/icons';
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { FC, ReactElement, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from '@tanstack/react-router';
 import { cn, For } from '@imphnen-frontend-service/utils';
 import { useAuthStore } from '../app/features/auth/store/auth.store';
 
