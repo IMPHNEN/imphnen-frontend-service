@@ -6,12 +6,12 @@ const currentPath = Astro.url.pathname;
 ---
 
 <header class="sticky top-0 w-full z-50 bg-background/70 backdrop-blur-sm">
-  <div class="container flex h-20 items-center justify-between">
-    <a href="/" class="relative overflow-hidden rounded z-50" aria-label="Home">
+  <div class="container flex h-20 items-center">
+    <a href="/" class="relative overflow-hidden rounded z-50 shrink-0" aria-label="Home">
       <img src="/logo.webp" alt="IMPHNEN" class="w-24 md:w-28 h-auto" />
     </a>
 
-    <nav class="hidden md:flex items-center gap-8">
+    <nav class="hidden md:flex items-center gap-8 flex-1 justify-center">
       {navigations.map(({ link, title }: { link: string; title: string }) => (
         <a
           href={link}
@@ -28,7 +28,10 @@ const currentPath = Astro.url.pathname;
       ))}
     </nav>
 
-    <div class="md:hidden">
+    <!-- Spacer to balance the logo on the left -->
+    <div class="hidden md:block w-24 md:w-28 shrink-0"></div>
+
+    <div class="md:hidden ml-auto">
       <MobileMenu client:idle navigations={navigations} currentPath={currentPath} />
     </div>
   </div>
