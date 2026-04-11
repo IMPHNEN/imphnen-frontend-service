@@ -20,7 +20,7 @@ import {
 } from '@ant-design/icons';
 import { Button } from '../../atoms';
 import { FC, ReactElement, useState } from 'react';
-import { Link, useLocation } from '@tanstack/react-router';
+import { useLocation } from '@tanstack/react-router';
 import { cn, For } from '@imphnen-frontend-service/utils';
 import { useSession } from '@imphnen-frontend-service/service';
 
@@ -238,9 +238,9 @@ export const BackofficeSidebar: FC<SidebarProps> = ({
                   {openGroups[menu.label] && (
                     <div className="mt-2 ml-6 flex flex-col gap-2">
                       {menu.children.map((child) => (
-                        <Link
+                        <a
                           key={child.href}
-                          to={child.href}
+                          href={child.href}
                           className={cn(
                             'flex items-center gap-3 px-2 py-2.5 rounded-md',
                             isActive(child.href)
@@ -252,15 +252,15 @@ export const BackofficeSidebar: FC<SidebarProps> = ({
                           <span className="text-label1 font-medium">
                             {child.label}
                           </span>
-                        </Link>
+                        </a>
                       ))}
                     </div>
                   )}
                 </div>
               ) : (
-                <Link
+                <a
                   key={menu.href ?? menu.label}
-                  to={menu.href ?? '#'}
+                  href={menu.href ?? '#'}
                   className={cn(
                     'flex items-center justify-items-start gap-3 px-2 py-2.5',
                     menu.href && isActive(menu.href)
@@ -270,7 +270,7 @@ export const BackofficeSidebar: FC<SidebarProps> = ({
                 >
                   {menu.icon}
                   <span className="text-p3 font-medium">{menu.label}</span>
-                </Link>
+                </a>
               )
             }
           </For>
