@@ -5,8 +5,8 @@ import {
   uploadHackathonTeamFile,
   uploadHackathonSubmission,
   uploadHackathonFile,
-  uploadUserFile,
 } from '../../api/upload';
+import { uploadUserFile } from '../../api/users';
 
 export const useUploadFile = () => {
   const { session } = useAuthStore();
