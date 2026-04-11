@@ -1,10 +1,10 @@
 import { FC, useEffect } from 'react';
-import { Link, useLocation } from 'react-router';
+import { Link, useLocation } from '@tanstack/react-router';
 import {
   useMyTeams,
   useAuthStore,
 } from '@imphnen-frontend-service/service';
-import { useNavigate } from 'react-router';
+import { useNavigate } from '@tanstack/react-router';
 import { toast } from 'sonner';
 import { useTheme } from './theme-provider';
 import { Icon } from '@iconify/react';

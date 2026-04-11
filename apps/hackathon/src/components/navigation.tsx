@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { Link, useNavigate } from 'react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
 import { useUserMe, useMyTeams } from '@imphnen-frontend-service/service';
 import { useSession } from '@imphnen-frontend-service/service';
 

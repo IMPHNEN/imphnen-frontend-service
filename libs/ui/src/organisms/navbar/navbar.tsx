@@ -1,6 +1,6 @@
 import { MenuOutlined } from '@ant-design/icons';
 import { FC, ReactElement, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '@tanstack/react-router';
 import { Button } from '../../atoms/button';
 import { useModalLogin } from '@imphnen-frontend-service/utils';
 import { useSession } from '@imphnen-frontend-service/service';
