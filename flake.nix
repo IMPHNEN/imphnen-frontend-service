@@ -8,7 +8,7 @@
 
   outputs = { self, nixpkgs, flake-utils }:
     let
-      npmDepsHash = "sha256-zcM+H9fwvwQzug8pPs4VPIY0WmOmaCQKJeLZSS1JjQY=";
+      npmDepsHash = "sha256-TNtRhzAX+2Ps9m0vcISaP8gPO2NDj0Hrosqg5OOBwUs=";
 
       mkViteApp = { pkgs, src }: { name, buildScript, envVars ? {} }:
         pkgs.buildNpmPackage {
