@@ -164,7 +164,15 @@ export const BackofficeSidebar: FC<SidebarProps> = ({
 }): ReactElement => {
   const { signOut } = useSession();
   const location = useLocation();
-  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => {
+    const initial: Record<string, boolean> = {};
+    MENUS.forEach((menu) => {
+      if (menu.children?.some((child) => child.href && location.pathname.includes(child.href))) {
+        initial[menu.label] = true;
+      }
+    });
+    return initial;
+  });
   const isActive = (path: string) => {
     if (path === '/dashboard' && location.pathname === '/dashboard-dimentorin')
       return false;
