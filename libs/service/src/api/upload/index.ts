@@ -21,8 +21,6 @@ const multipartPost = async (url: string, file: File, fieldName = 'file'): Promi
   return response.data.data;
 };
 
-export const uploadUserFile = (file: File) => multipartPost('/v1/iam/users/upload', file);
-
 export const uploadHackathonFile = (file: File) => multipartPost('/v1/hackathon/upload', file);
 
 export const uploadHackathonAvatar = (file: File) => multipartPost('/v1/hackathon/upload/avatar', file);
@@ -33,7 +31,7 @@ export const uploadHackathonSubmission = (file: File) => multipartPost('/v1/hack
 
 // Legacy service object for backward compatibility
 export const uploadService = {
-  uploadFile: uploadUserFile,
-  uploadAvatar: uploadUserFile,
-  uploadCV: uploadUserFile,
+  uploadFile: (file: File) => multipartPost('/v1/iam/users/upload', file),
+  uploadAvatar: (file: File) => multipartPost('/v1/iam/users/upload', file),
+  uploadCV: (file: File) => multipartPost('/v1/iam/users/upload', file),
 };

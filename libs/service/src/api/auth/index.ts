@@ -1,11 +1,6 @@
 import { api } from '../index';
-import type { TLoginResponse, TRegisterRequest, TSendOTPRequest, TVerifyEmailRequest } from '../../types/auth';
+import type { TLoginRequest, TLoginResponse, TRegisterRequest, TSendOTPRequest, TVerifyEmailRequest } from '../../types/auth';
 import type { TResponseMessage } from '../../types/common';
-
-export type TLoginRequest = {
-  email: string;
-  password: string;
-};
 
 export type TForgotPasswordRequest = {
   email: string;

@@ -8,9 +8,6 @@ import type {
 } from '../../types/users';
 import type { TApiPaginated, TPaginationParams } from '../../types/common';
 
-// Re-export for backward compatibility
-export type UserDetailResponseDto = TUsersDetailItem;
-export type UserUpdateRequestDto = TUserUpdateRequest;
 
 export type TUserMeInclude = 'hackathon' | 'qr' | 'mentor' | 'sessions';
 
