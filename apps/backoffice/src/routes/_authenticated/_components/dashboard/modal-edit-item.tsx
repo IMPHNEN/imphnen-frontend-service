@@ -1,6 +1,6 @@
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { InputField, Modal } from '@imphnen-frontend-service/ui/molecules';
-import { useConfirmItem, useItem } from '../_hook/use-item';
+import { useConfirmItem, useItem } from '../../_hooks/dashboard/use-item';
 import { ControlledInputField } from '@imphnen-frontend-service/ui/organisms';
 
 interface IModalEditItem {

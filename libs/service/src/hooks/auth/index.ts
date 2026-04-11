@@ -186,8 +186,8 @@ export const useEmailAuth = () => {
     };
   };
 
-  const signUpWithEmail = async (email: string, password: string, fullname: string) => {
-    const result = await signupMutation.mutateAsync({ email, password, fullname });
+  const signUpWithEmail = async (email: string, password: string, fullname: string, phone_number = '', confirm_password?: string) => {
+    const result = await signupMutation.mutateAsync({ email, password, fullname, phone_number, confirm_password: confirm_password || password });
     return { message: result.message };
   };
 

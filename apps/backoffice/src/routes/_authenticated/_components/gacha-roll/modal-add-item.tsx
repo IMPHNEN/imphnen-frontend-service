@@ -1,7 +1,7 @@
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { Modal } from '@imphnen-frontend-service/ui/molecules';
 import { ControlledInputField } from '@imphnen-frontend-service/ui/organisms';
-import { useItem, useConfirmItem } from '../_hook/use-item';
+import { useItem, useConfirmItem } from '../../_hooks/gacha-roll/use-item';
 
 interface IModalAddItem {
   isOpen: boolean;

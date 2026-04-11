@@ -1,6 +1,6 @@
 import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { Modal } from '@imphnen-frontend-service/ui/molecules';
-import { useConfirmItem } from '../_hook/use-item';
+import { useConfirmItem } from '../../_hooks/cms-testimonials/use-item';
 
 interface IModalDeleteTestimonial {
   isOpen: boolean;
