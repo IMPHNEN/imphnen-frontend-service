@@ -14,13 +14,13 @@ export const buttonVariants = cva(
       variant: {
         primary: 'bg-primary-500 hover:bg-primary-600 text-white shadow-md',
         secondary:
-          'bg-white dark:bg-gray-800 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-gray-700 text-primary-500 dark:text-primary-400 shadow-md dark:shadow-gray-900/50 border dark:border-gray-700',
-        text: 'bg-transparent hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-gray-800 text-primary-500 dark:text-primary-400',
+          'bg-white hover:text-primary-600 hover:bg-gray-50 text-primary-500 shadow-md border',
+        text: 'bg-transparent hover:text-primary-600 hover:bg-gray-50 text-primary-500',
         bordered:
-          'border border-primary-500 dark:border-primary-400 hover:border-primary-600 dark:hover:border-primary-300 bg-transparent hover:text-primary-600 dark:hover:text-primary-300 hover:bg-gray-50 dark:hover:bg-gray-800 text-primary-500 dark:text-primary-400',
+          'border border-primary-500 hover:border-primary-600 bg-transparent hover:text-primary-600 hover:bg-gray-50 text-primary-500',
         success: 'bg-success-500 hover:bg-success-600 text-white shadow-md',
         danger:
-          'bg-danger-100 dark:bg-danger-500/20 hover:bg-danger-200 dark:hover:bg-danger-500/30 text-danger-500 shadow-md dark:shadow-gray-900/50',
+          'bg-danger-100 hover:bg-danger-200 text-danger-500 shadow-md',
       },
       size: {
         sm: 'text-[12px] max-h-[36px]',

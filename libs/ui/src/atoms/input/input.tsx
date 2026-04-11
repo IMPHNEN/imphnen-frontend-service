@@ -58,7 +58,7 @@ export const Input: FC<TInputProps> = ({
   };
 
   const mergedClassName = cn(
-    `px-[12px] py-[8px] text-neutral-800 dark:text-white bg-white dark:bg-gray-800 placeholder:text-neutral-300 dark:placeholder:text-neutral-500 border border-neutral-200 dark:border-neutral-600 hover:border-blue-300 dark:hover:border-blue-500 focus:outline-1 focus:outline-blue-500 dark:focus:outline-primary-500 rounded-md font-bai-jamjuree w-full ${
+    `px-[12px] py-[8px] text-neutral-800 bg-white placeholder:text-neutral-300 border border-neutral-200 hover:border-blue-300 focus:outline-1 focus:outline-blue-500 rounded-md font-bai-jamjuree w-full ${
       widthform === 'standard' ? 'min-w-70' : ''
     }`,
     sizeClasses[size].textSize,
