@@ -1,11 +1,10 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { SearchOutlined } from '@ant-design/icons'
 import { Button, Input, Select } from '@imphnen-frontend-service/ui/atoms'
 import { BackofficeWrapper, DataTable } from '@imphnen-frontend-service/ui/organisms'
 import { cn } from '@imphnen-frontend-service/utils'
 import { ColumnDef, getCoreRowModel, getPaginationRowModel, PaginationState, RowSelectionState, useReactTable } from '@tanstack/react-table'
 import { ReactElement, useState } from 'react'
-import { ModalDetailSession } from './_components/session-dimentorin/modal/detail'
 import { useMySessions, TSessionListItem } from '@imphnen-frontend-service/service'
 
 export const Route = createFileRoute('/_authenticated/session-dimentorin')({
@@ -13,7 +12,7 @@ export const Route = createFileRoute('/_authenticated/session-dimentorin')({
 })
 
 function SessionDimentorinPage(): ReactElement {
-  const [openDetail, setOpenDetail] = useState(false)
+  const navigate = useNavigate()
   const [statusFilter, setStatusFilter] = useState('')
 
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
@@ -96,13 +95,13 @@ function SessionDimentorinPage(): ReactElement {
     {
       header: 'Action',
       meta: { cellClassName: cn('w-52') },
-      cell: () => (
+      cell: ({ row }) => (
         <Button
           variant="primary"
           size="sm"
           onClick={(e) => {
             e.stopPropagation()
-            setOpenDetail(true)
+            navigate({ to: '/session-dimentorin/$id', params: { id: row.original.id } })
           }}
           className="flex items-center gap-2 w-max"
         >
@@ -159,8 +158,6 @@ function SessionDimentorinPage(): ReactElement {
           <DataTable data={sessions} columns={columns} table={table} />
         )}
       </section>
-
-      <ModalDetailSession open={openDetail} setOpen={setOpenDetail} />
     </BackofficeWrapper>
   )
 }

@@ -12,3 +12,4 @@ export * from './permissions';
 export * from './events';
 export * from './testimonials';
 export * from './sessions';
+export * from './roadmap';

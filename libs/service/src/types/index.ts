@@ -9,3 +9,4 @@ export * from './admin';
 export * from './events';
 export * from './testimonials';
 export * from './sessions';
+export * from './roadmap';

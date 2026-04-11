@@ -12,6 +12,7 @@ export * from './permissions';
 export * from './events';
 export * from './testimonials';
 export * from './sessions';
+export * from './roadmap';
 
 export interface ApiResponse<T> {
   data: T;

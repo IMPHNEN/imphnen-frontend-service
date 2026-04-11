@@ -1,6 +1,6 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { SearchOutlined } from '@ant-design/icons'
-import { Button, Input, Select } from '@imphnen-frontend-service/ui/atoms'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { DeleteOutlined, SearchOutlined } from '@ant-design/icons'
+import { Button, Input } from '@imphnen-frontend-service/ui/atoms'
 import {
   BackofficeWrapper,
   DataTable,
@@ -15,10 +15,11 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { ReactElement, useState } from 'react'
-import { ModalDetailUser } from './_components/users-dimentorin/modal/detail'
+import { toast } from 'sonner'
 import {
   useMentorList,
   useUserList,
+  useDeleteMentor,
   MentorDetailResponseDto,
   TUsersListItem,
 } from '@imphnen-frontend-service/service'
@@ -29,10 +30,10 @@ export const Route = createFileRoute('/_authenticated/users-dimentorin')({
 
 function UsersDimentorinPage(): ReactElement {
   const TABS = ['mentor', 'mentee'] as const
+  const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState<'mentor' | 'mentee'>('mentor')
-  const [showDetail, setShowDetail] = useState(false)
-  const [selectedUserId, setSelectedUserId] = useState<string | null>(null)
   const [search, setSearch] = useState('')
+  const [deletingId, setDeletingId] = useState<string | null>(null)
 
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
   const [pagination, setPagination] = useState<PaginationState>({
@@ -52,6 +53,8 @@ function UsersDimentorinPage(): ReactElement {
     per_page: pagination.pageSize,
   })
 
+  const deleteMentor = useDeleteMentor()
+
   const mentors: MentorDetailResponseDto[] = mentorData?.data ?? []
   const mentees: TUsersListItem[] = menteeData?.data ?? []
   const mentorTotal = mentorData?.meta?.total ?? mentors.length
@@ -59,6 +62,17 @@ function UsersDimentorinPage(): ReactElement {
 
   const isLoading = activeTab === 'mentor' ? mentorLoading : menteeLoading
   const totalItems = activeTab === 'mentor' ? mentorTotal : menteeTotal
+
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteMentor.mutateAsync(id)
+      toast.success('Akun berhasil dihapus')
+      setDeletingId(null)
+    } catch (error) {
+      console.log(error)
+      toast.error('Gagal menghapus akun')
+    }
+  }
 
   const mentorColumns: ColumnDef<MentorDetailResponseDto>[] = [
     {
@@ -119,18 +133,59 @@ function UsersDimentorinPage(): ReactElement {
       header: 'Action',
       meta: { cellClassName: cn('w-72') },
       cell: ({ row }) => (
-        <Button
-          variant="primary"
-          size="sm"
-          onClick={(e) => {
-            e.stopPropagation()
-            setSelectedUserId(row.original.id)
-            setShowDetail(true)
-          }}
-          className="flex items-center gap-2 w-max"
-        >
-          <SearchOutlined className="text-[16px]" /> Lihat Detail & Action
-        </Button>
+        <div className="flex gap-[8px]">
+          {deletingId === row.original.id ? (
+            <>
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleDelete(row.original.id)
+                }}
+                className="flex items-center gap-2"
+              >
+                Konfirmasi
+              </Button>
+              <Button
+                variant="bordered"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setDeletingId(null)
+                }}
+                className="flex items-center gap-2"
+              >
+                Batal
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  navigate({ to: '/users-dimentorin/$id', params: { id: row.original.id } })
+                }}
+                className="flex items-center gap-2 w-max"
+              >
+                <SearchOutlined className="text-[16px]" /> Lihat Detail
+              </Button>
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setDeletingId(row.original.id)
+                }}
+                className="flex items-center gap-2"
+              >
+                <DeleteOutlined />
+              </Button>
+            </>
+          )}
+        </div>
       ),
     },
   ]
@@ -185,12 +240,11 @@ function UsersDimentorinPage(): ReactElement {
           size="sm"
           onClick={(e) => {
             e.stopPropagation()
-            setSelectedUserId(row.original.id)
-            setShowDetail(true)
+            navigate({ to: '/users-dimentorin/$id', params: { id: row.original.id } })
           }}
           className="flex items-center gap-2 w-max"
         >
-          <SearchOutlined className="text-[16px]" /> Lihat Detail & Action
+          <SearchOutlined className="text-[16px]" /> Lihat Detail
         </Button>
       ),
     },
@@ -273,12 +327,6 @@ function UsersDimentorinPage(): ReactElement {
           <DataTable data={mentees} columns={menteeColumns} table={menteeTable} />
         )}
       </section>
-
-      <ModalDetailUser
-        open={showDetail}
-        setOpen={setShowDetail}
-        userId={selectedUserId}
-      />
     </BackofficeWrapper>
   )
 }

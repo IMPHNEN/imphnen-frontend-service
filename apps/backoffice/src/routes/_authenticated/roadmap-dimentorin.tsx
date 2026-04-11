@@ -1,34 +1,22 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { DeleteOutlined, EditOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons'
 import { Button, Input, Select } from '@imphnen-frontend-service/ui/atoms'
 import { BackofficeWrapper, DataTable } from '@imphnen-frontend-service/ui/organisms'
 import { cn } from '@imphnen-frontend-service/utils'
 import { ColumnDef, getCoreRowModel, getPaginationRowModel, PaginationState, RowSelectionState, useReactTable } from '@tanstack/react-table'
 import { useState } from 'react'
-import { ModalCreateRoadmap } from './_components/roadmap-dimentorin/modal/create-roadmap'
-
-type LearningStatus = 'active' | 'inactive'
-
-type RoadmapType = {
-  id: number
-  name: string
-  learningLevel: string
-  status: LearningStatus
-}
-
-const mockData: RoadmapType[] = Array.from({ length: 90 }, (_, i) => ({
-  id: i + 1,
-  name: i === 0 ? 'Ahmad Wijuana' : 'Anna Wiguana',
-  learningLevel: ['Pemula', 'Menengah'][Math.floor(Math.random() * 2)],
-  status: i % 2 === 0 ? 'active' : 'inactive',
-}))
+import { toast } from 'sonner'
+import { useRoadmapList, useDeleteRoadmap, TRoadmapListItem, TRoadmapStatus } from '@imphnen-frontend-service/service'
 
 export const Route = createFileRoute('/_authenticated/roadmap-dimentorin')({
   component: RoadmapDimentorinPage,
 })
 
 function RoadmapDimentorinPage(): React.ReactElement {
-  const [openCreateModal, setOpenCreateModal] = useState(false)
+  const navigate = useNavigate()
+  const [search, setSearch] = useState('')
+  const [statusFilter, setStatusFilter] = useState('')
+  const [deletingId, setDeletingId] = useState<string | null>(null)
 
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
   const [pagination, setPagination] = useState<PaginationState>({
@@ -36,7 +24,40 @@ function RoadmapDimentorinPage(): React.ReactElement {
     pageSize: 9,
   })
 
-  const columns: ColumnDef<RoadmapType>[] = [
+  const { data: roadmapData, isLoading } = useRoadmapList()
+  const deleteRoadmap = useDeleteRoadmap()
+
+  const allItems: TRoadmapListItem[] = roadmapData ?? []
+  const filteredItems = allItems.filter((item) => {
+    const matchSearch = !search || item.title.toLowerCase().includes(search.toLowerCase())
+    const matchStatus = !statusFilter || item.status === statusFilter
+    return matchSearch && matchStatus
+  })
+
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteRoadmap.mutateAsync(id)
+      toast.success('Roadmap berhasil dihapus')
+      setDeletingId(null)
+    } catch (error) {
+      console.log(error)
+      toast.error('Gagal menghapus roadmap')
+    }
+  }
+
+  const statusColors: Record<TRoadmapStatus, string> = {
+    upcoming: 'bg-warning-200 text-warning-700',
+    in_progress: 'bg-primary-200 text-primary-700',
+    completed: 'bg-success-200 text-success-500',
+  }
+
+  const statusText: Record<TRoadmapStatus, string> = {
+    upcoming: 'Upcoming',
+    in_progress: 'In Progress',
+    completed: 'Completed',
+  }
+
+  const columns: ColumnDef<TRoadmapListItem>[] = [
     {
       id: 'select',
       meta: { cellClassName: cn('w-20') },
@@ -58,19 +79,17 @@ function RoadmapDimentorinPage(): React.ReactElement {
       ),
     },
     {
-      id: 'id',
-      header: 'No',
-      accessorKey: 'id',
+      id: 'title',
+      header: 'Title',
+      accessorKey: 'title',
     },
     {
-      id: 'name',
-      header: 'Nama Roadmap',
-      accessorKey: 'name',
-    },
-    {
-      id: 'learningLevel',
-      header: 'Tingkat Belajar',
-      accessorKey: 'learningLevel',
+      id: 'description',
+      header: 'Description',
+      accessorKey: 'description',
+      cell: ({ row }) => (
+        <span className="line-clamp-2">{row.original.description}</span>
+      ),
     },
     {
       id: 'status',
@@ -78,55 +97,81 @@ function RoadmapDimentorinPage(): React.ReactElement {
       accessorKey: 'status',
       cell: ({ row }) => {
         const status = row.original.status
-        const statusColors: Record<LearningStatus, string> = {
-          inactive: 'bg-danger-200 text-danger-700',
-          active: 'bg-success-200 text-success-500',
-        }
-        const statusText: Record<LearningStatus, string> = {
-          inactive: 'Inactive',
-          active: 'Active',
-        }
         return (
-          <div
-            className={`py-2 px-4 rounded-md text-center ${statusColors[status]}`}
-          >
-            {statusText[status]}
+          <div className={`py-2 px-4 rounded-md text-center ${statusColors[status] ?? 'bg-neutral-200 text-neutral-700'}`}>
+            {statusText[status] ?? status}
           </div>
         )
       },
+    },
+    {
+      id: 'votes',
+      header: 'Votes',
+      accessorKey: 'votes',
     },
     {
       header: 'Action',
       meta: { cellClassName: cn('w-72') },
       cell: ({ row }) => (
         <div className="flex gap-[8px]">
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={(e) => {
-              e.stopPropagation()
-            }}
-            className="flex items-center gap-2"
-          >
-            <EditOutlined /> Action
-          </Button>
-          <Button
-            variant="danger"
-            size="sm"
-            onClick={(e) => {
-              e.stopPropagation()
-            }}
-            className="flex items-center gap-2"
-          >
-            <DeleteOutlined /> Delete
-          </Button>
+          {deletingId === row.original.id ? (
+            <>
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleDelete(row.original.id)
+                }}
+                className="flex items-center gap-2"
+              >
+                Konfirmasi
+              </Button>
+              <Button
+                variant="bordered"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setDeletingId(null)
+                }}
+                className="flex items-center gap-2"
+              >
+                Batal
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  navigate({ to: '/roadmap-dimentorin/$id', params: { id: row.original.id } })
+                }}
+                className="flex items-center gap-2"
+              >
+                <EditOutlined /> Edit
+              </Button>
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setDeletingId(row.original.id)
+                }}
+                className="flex items-center gap-2"
+              >
+                <DeleteOutlined /> Delete
+              </Button>
+            </>
+          )}
         </div>
       ),
     },
   ]
 
   const table = useReactTable({
-    data: mockData,
+    data: filteredItems,
     columns,
     state: {
       pagination,
@@ -137,7 +182,7 @@ function RoadmapDimentorinPage(): React.ReactElement {
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
-    pageCount: Math.ceil(mockData.length / pagination.pageSize),
+    pageCount: Math.ceil(filteredItems.length / pagination.pageSize),
     manualPagination: false,
   })
 
@@ -148,7 +193,12 @@ function RoadmapDimentorinPage(): React.ReactElement {
       <section className="flex flex-col gap-6 p-8 bg-white rounded-md">
         <div className="flex items-center justify-between mb-9">
           <h2 className="text-p2 font-semibold text-neutral-600">AI Roadmaps</h2>
-          <Button type="button" variant="primary" className="flex items-center gap-2" onClick={() => setOpenCreateModal(true)}>
+          <Button
+            type="button"
+            variant="primary"
+            className="flex items-center gap-2"
+            onClick={() => navigate({ to: '/roadmap-dimentorin/create' })}
+          >
             <PlusOutlined /> Buat Roadmap
           </Button>
         </div>
@@ -156,24 +206,29 @@ function RoadmapDimentorinPage(): React.ReactElement {
         <div className="flex justify-between items-center gap-5 mb-2">
           <div className="relative w-full">
             <Input
-              placeholder="Cari berdasarkan nama roadmap"
+              placeholder="Cari berdasarkan judul roadmap"
               className="pl-12 w-full max-h-full"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
             />
             <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[16px]">
               <SearchOutlined />
             </div>
           </div>
-          <Select>
-            <option selected disabled>Tingkat Belajar</option>
-            <option value="pemula">Pemula</option>
-            <option value="menengah">Menengah</option>
+          <Select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+            <option value="">Semua Status</option>
+            <option value="upcoming">Upcoming</option>
+            <option value="in_progress">In Progress</option>
+            <option value="completed">Completed</option>
           </Select>
         </div>
 
-        <DataTable data={mockData} columns={columns} table={table} />
+        {isLoading ? (
+          <div className="text-center py-8 text-neutral-400">Loading...</div>
+        ) : (
+          <DataTable data={filteredItems} columns={columns} table={table} />
+        )}
       </section>
-
-      <ModalCreateRoadmap isOpen={openCreateModal} onClose={() => setOpenCreateModal(false)} />
     </BackofficeWrapper>
   )
 }
