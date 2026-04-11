@@ -20,7 +20,7 @@ import {
 } from '@ant-design/icons';
 import { Button } from '../../atoms';
 import { FC, ReactElement, useState } from 'react';
-import { useLocation } from '@tanstack/react-router';
+import { useLocation, useNavigate } from '@tanstack/react-router';
 import { cn, For } from '@imphnen-frontend-service/utils';
 import { useSession } from '@imphnen-frontend-service/service';
 
@@ -164,6 +164,7 @@ export const BackofficeSidebar: FC<SidebarProps> = ({
 }): ReactElement => {
   const { signOut } = useSession();
   const location = useLocation();
+  const navigate = useNavigate();
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => {
     const initial: Record<string, boolean> = {};
     MENUS.forEach((menu) => {
@@ -246,11 +247,12 @@ export const BackofficeSidebar: FC<SidebarProps> = ({
                   {openGroups[menu.label] && (
                     <div className="mt-2 ml-6 flex flex-col gap-2">
                       {menu.children.map((child) => (
-                        <a
+                        <button
+                          type="button"
                           key={child.href}
-                          href={child.href}
+                          onClick={() => { navigate({ to: child.href as string }); onClose?.(); }}
                           className={cn(
-                            'flex items-center gap-3 px-2 py-2.5 rounded-md',
+                            'flex items-center gap-3 px-2 py-2.5 rounded-md cursor-pointer text-left w-full',
                             isActive(child.href)
                               ? 'bg-primary-100 text-primary-700 hover:bg-primary-200'
                               : 'text-gray-700 hover:bg-gray-100'
@@ -260,17 +262,18 @@ export const BackofficeSidebar: FC<SidebarProps> = ({
                           <span className="text-label1 font-medium">
                             {child.label}
                           </span>
-                        </a>
+                        </button>
                       ))}
                     </div>
                   )}
                 </div>
               ) : (
-                <a
+                <button
+                  type="button"
                   key={menu.href ?? menu.label}
-                  href={menu.href ?? '#'}
+                  onClick={() => { if (menu.href) { navigate({ to: menu.href as string }); onClose?.(); } }}
                   className={cn(
-                    'flex items-center justify-items-start gap-3 px-2 py-2.5',
+                    'flex items-center justify-items-start gap-3 px-2 py-2.5 cursor-pointer text-left w-full',
                     menu.href && isActive(menu.href)
                       ? 'bg-primary-500 text-white rounded-md'
                       : 'text-gray-700 hover:bg-gray-100'
@@ -278,7 +281,7 @@ export const BackofficeSidebar: FC<SidebarProps> = ({
                 >
                   {menu.icon}
                   <span className="text-p3 font-medium">{menu.label}</span>
-                </a>
+                </button>
               )
             }
           </For>
@@ -288,7 +291,7 @@ export const BackofficeSidebar: FC<SidebarProps> = ({
       <div className="w-full">
         <hr className="mb-5 border-primary-200" />
         <Button
-          onClick={signOut}
+          onClick={() => { signOut(); navigate({ to: '/auth/login' as string }); }}
           variant="text"
           className="items-start justify-start gap-3 px-2 py-2.5 text-gray-700 hover:text-red-500 transition-colors w-full"
         >
