@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 import { SessionToken } from '@imphnen-frontend-service/service'
 import { useState } from 'react'
-import { BackofficeSidebar } from '@imphnen-frontend-service/ui/organisms'
+import { BackofficeSidebar } from '../components/sidebar'
 
 export const Route = createFileRoute('/_authenticated')({
   beforeLoad: () => {

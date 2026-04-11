@@ -18,7 +18,7 @@ import {
   UserOutlined,
   UserSwitchOutlined,
 } from '@ant-design/icons';
-import { Button } from '../../atoms';
+import { Button } from '@imphnen-frontend-service/ui/atoms';
 import { FC, ReactElement, useState } from 'react';
 import { useLocation, useNavigate } from '@tanstack/react-router';
 import { cn, For } from '@imphnen-frontend-service/utils';
