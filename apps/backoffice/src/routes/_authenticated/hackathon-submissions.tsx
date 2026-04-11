@@ -152,7 +152,7 @@ function HackathonSubmissionsPage() {
   }, [])
 
   const filteredData = useMemo(() => {
-    return submissionsResponse?.data || []
+    return submissionsResponse?.data?.data || submissionsResponse?.data || []
   }, [submissionsResponse])
 
   const columns: ColumnDef<SubmissionType>[] = useMemo(

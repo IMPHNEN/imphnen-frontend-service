@@ -158,7 +158,7 @@ function HackathonTeamsPage() {
   }, [])
 
   const filteredData = useMemo(() => {
-    return teamsResponse?.data || []
+    return teamsResponse?.data?.data || teamsResponse?.data || []
   }, [teamsResponse])
 
   const columns: ColumnDef<TeamType>[] = useMemo(

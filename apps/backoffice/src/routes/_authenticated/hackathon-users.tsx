@@ -169,7 +169,7 @@ function HackathonUsersPage() {
   }, [])
 
   const filteredData = useMemo(() => {
-    const usersData = usersResponse?.data || []
+    const usersData = usersResponse?.data?.data || usersResponse?.data || []
     return usersData.filter((user: UserType) => {
       if (statusFilter !== 'all') {
         const isActive = statusFilter === 'active'
