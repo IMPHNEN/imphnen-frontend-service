@@ -40,7 +40,6 @@ export default defineConfig(() => ({
             'react',
             'react-dom',
             'react/jsx-runtime',
-            'react-router-dom',
             '@ant-design/icons',
             '@imphnen-frontend-service/service',
             '@imphnen-frontend-service/utils',
