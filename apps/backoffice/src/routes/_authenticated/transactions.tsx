@@ -1,13 +1,22 @@
-import { createFileRoute } from '@tanstack/react-router'
-import * as React from 'react'
-import { FC, Fragment, ReactElement, useState } from 'react'
+import { createFileRoute } from '@tanstack/react-router';
+import * as React from 'react';
+import { Filter as FilterIcon, Search, ClipboardCheck } from 'lucide-react';
 import {
-  FilterOutlined,
-  SearchOutlined,
-  AuditOutlined,
-} from '@ant-design/icons'
-import { Button, Input } from '@imphnen-frontend-service/ui/atoms'
-import { DataTable, Filter } from '@imphnen-frontend-service/ui/organisms'
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Input,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@imphnen-frontend-service/ui/atoms';
+import {
+  DataTable,
+  Filter,
+  BackofficeWrapper,
+} from '@imphnen-frontend-service/ui/organisms';
 import {
   ColumnDef,
   getCoreRowModel,
@@ -15,131 +24,111 @@ import {
   PaginationState,
   useReactTable,
   RowSelectionState,
-} from '@tanstack/react-table'
-import ModalValidate from './_components/transactions/modal-validate'
+} from '@tanstack/react-table';
+import ModalValidate from './_components/transactions/modal-validate';
+import {
+  SelectAllCheckbox,
+  RowSelectCheckbox,
+} from '../../components/list-helpers';
 
-type TransactionStatus = 'valid' | 'invalid' | 'unchecked'
+type TransactionStatus = 'valid' | 'invalid' | 'unchecked';
 
 interface Transaction {
-  id: number
-  name: string
-  transactionNumber: string
-  status: TransactionStatus
+  id: number;
+  name: string;
+  transactionNumber: string;
+  status: TransactionStatus;
 }
 
-const mockTransactions: Transaction[] = Array.from({ length: 20 }, (_, i) => ({
-  id: i + 1,
-  name: i === 0 ? 'Ahmad Wijuana' : 'Nama Lengkap',
-  transactionNumber: '25D2133Y9AFYBD',
-  status: (i % 3 === 0
-    ? 'invalid'
-    : i % 5 === 0
-    ? 'unchecked'
-    : 'valid') as TransactionStatus,
-}))
+const mockTransactions: Transaction[] = Array.from(
+  { length: 20 },
+  (_, i) => ({
+    id: i + 1,
+    name: i === 0 ? 'Ahmad Wijuana' : 'Nama Lengkap',
+    transactionNumber: '25D2133Y9AFYBD',
+    status: (i % 3 === 0
+      ? 'invalid'
+      : i % 5 === 0
+        ? 'unchecked'
+        : 'valid') as TransactionStatus,
+  })
+);
 
 export const Route = createFileRoute('/_authenticated/transactions')({
   component: TransactionsPage,
-})
+});
 
 function TransactionsPage() {
-  const [showModalValidate, setShowModalValidate] = useState(false)
-
+  const [showModalValidate, setShowModalValidate] = React.useState(false);
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
-    pageSize: 9,
-  })
-
-  const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({})
-  const [showFilter, setShowFilter] = useState(false)
+    pageSize: 10,
+  });
+  const [rowSelection, setRowSelection] =
+    React.useState<RowSelectionState>({});
+  const [showFilter, setShowFilter] = React.useState(false);
 
   const validationOptions = [
-    { id: 'option1', value: 'unchecked', label: 'Unchecked' },
-    { id: 'option2', value: 'valid', label: 'Valid' },
-    { id: 'option3', value: 'invalid', label: 'Invalid' },
-  ]
+    { id: 'unchecked', value: 'unchecked', label: 'Unchecked' },
+    { id: 'valid', value: 'valid', label: 'Valid' },
+    { id: 'invalid', value: 'invalid', label: 'Invalid' },
+  ];
+
+  const statusVariants: Record<
+    TransactionStatus,
+    'success' | 'destructive' | 'warning'
+  > = {
+    valid: 'success',
+    invalid: 'destructive',
+    unchecked: 'warning',
+  };
+
+  const statusText: Record<TransactionStatus, string> = {
+    valid: 'Valid',
+    invalid: 'Invalid',
+    unchecked: 'Unchecked',
+  };
 
   const columns: ColumnDef<Transaction>[] = [
     {
       id: 'select',
-      header: ({ table }) => (
-        <input
-          type="checkbox"
-          className="rounded"
-          checked={table.getIsAllRowsSelected()}
-          onChange={table.getToggleAllRowsSelectedHandler()}
-        />
-      ),
-      cell: ({ row }) => (
-        <input
-          type="checkbox"
-          className="rounded"
-          checked={row.getIsSelected()}
-          onChange={row.getToggleSelectedHandler()}
-        />
-      ),
+      header: ({ table }) => <SelectAllCheckbox table={table} />,
+      cell: ({ row }) => <RowSelectCheckbox row={row} />,
     },
-    {
-      header: 'No',
-      accessorKey: 'id',
-    },
-    {
-      header: 'Nama Lengkap',
-      accessorKey: 'name',
-    },
-    {
-      header: 'Nomor Transaksi',
-      accessorKey: 'transactionNumber',
-    },
+    { header: 'No', accessorKey: 'id' },
+    { header: 'Nama Lengkap', accessorKey: 'name' },
+    { header: 'Nomor Transaksi', accessorKey: 'transactionNumber' },
     {
       header: 'Order Valid?',
       accessorKey: 'status',
-      cell: ({ row }) => {
-        const status = row.original.status
-        const statusColors: Record<TransactionStatus, string> = {
-          valid: 'bg-success-200 text-success-500',
-          invalid: 'bg-danger-200 text-danger-500',
-          unchecked: 'bg-warning-200 text-warning-900',
-        }
-        const statusText: Record<TransactionStatus, string> = {
-          valid: 'Valid',
-          invalid: 'Invalid',
-          unchecked: 'Unchecked',
-        }
-        return (
-          <div
-            className={`py-2 px-4 rounded-md text-center ${statusColors[status]}`}
-          >
-            {statusText[status]}
-          </div>
-        )
-      },
+      cell: ({ row }) => (
+        <Badge variant={statusVariants[row.original.status]}>
+          {statusText[row.original.status]}
+        </Badge>
+      ),
     },
     {
       header: 'Action',
-      cell: ({ row }) => (
+      cell: () => (
         <Button
-          variant="primary"
+          variant="secondary"
           size="sm"
           onClick={(e) => {
-            e.stopPropagation()
-            setShowModalValidate(true)
+            e.stopPropagation();
+            setShowModalValidate(true);
           }}
-          className="flex items-center gap-2 w-full"
         >
-          <AuditOutlined className="text-[16px]" /> Update
+          <ClipboardCheck className="size-3.5" />
+          Update
         </Button>
       ),
     },
-  ]
+  ];
 
   const table = useReactTable({
     data: mockTransactions,
     columns,
-    state: {
-      pagination,
-      rowSelection,
-    },
+    state: { pagination, rowSelection },
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     getCoreRowModel: getCoreRowModel(),
@@ -147,64 +136,58 @@ function TransactionsPage() {
     onPaginationChange: setPagination,
     pageCount: Math.ceil(mockTransactions.length / pagination.pageSize),
     manualPagination: false,
-  })
+  });
 
   return (
-    <Fragment>
-      <main className="w-full px-[48px] py-[40px] flex flex-col gap-8">
-        <header className="bg-white py-4 px-8 rounded-lg shadow p-4">
-          <h1 className="text-p2 font-semibold">Validasi Transaksi</h1>
-        </header>
-
-        <section className="flex flex-col gap-6 p-8 bg-white rounded-md">
-          <div className="flex justify-between items-center gap-8 mb-2">
-            <div className="relative w-full">
+    <BackofficeWrapper
+      title="Validasi Transaksi"
+      description="Verifikasi status transaksi pengguna"
+    >
+      <Card>
+        <CardHeader>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="relative w-full sm:max-w-sm">
+              <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input
-                placeholder="Cari berdasarkan nama lengkap, nomor order Shopee"
-                className="pl-12 w-full max-h-full"
+                className="pl-9"
+                placeholder="Cari nama atau nomor order…"
               />
-              <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[16px]">
-                <SearchOutlined />
-              </div>
             </div>
-
-            <div className="relative">
-              <Button
-                variant="primary"
-                size="md"
-                className="flex items-center gap-3"
-                onClick={() => setShowFilter(!showFilter)}
-              >
-                <FilterOutlined />
-                Filters
-              </Button>
-              {showFilter && (
-                <div className="absolute right-0 top-[calc(100%+12px)] z-10 shadow-lg">
-                  <Filter
-                    options={validationOptions}
-                    onClose={() => setShowFilter(false)}
-                    onFilterChange={(value) => {
-                      console.log('Selected filter:', value)
-                    }}
-                  />
-                </div>
-              )}
-            </div>
+            <Popover open={showFilter} onOpenChange={setShowFilter}>
+              <PopoverTrigger asChild>
+                <Button variant="secondary" size="md">
+                  <FilterIcon className="size-4" />
+                  Filters
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent align="end" className="w-auto p-0">
+                <Filter
+                  options={validationOptions}
+                  title="Status"
+                  onClose={() => setShowFilter(false)}
+                  onFilterChange={(value) => {
+                    console.log('Selected filter:', value);
+                  }}
+                />
+              </PopoverContent>
+            </Popover>
           </div>
-
+        </CardHeader>
+        <CardContent>
           <DataTable data={mockTransactions} columns={columns} table={table} />
-        </section>
-      </main>
+        </CardContent>
+      </Card>
+
       <ModalValidate
         isOpen={showModalValidate}
         onClose={() => setShowModalValidate(false)}
         handleValid={() => {
-          console.log('Action ketika user klik Valid')
+          console.log('Action ketika user klik Valid');
         }}
         handleInvalid={() => {
-          console.log('Action ketika user klik Tidak Valid')
+          console.log('Action ketika user klik Tidak Valid');
         }}
       />
-    </Fragment>
-  )
+    </BackofficeWrapper>
+  );
 }

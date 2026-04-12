@@ -1,182 +1,162 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { DeleteOutlined, EditOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons'
-import { Button, Input, Select } from '@imphnen-frontend-service/ui/atoms'
-import { BackofficeWrapper, DataTable } from '@imphnen-frontend-service/ui/organisms'
-import { cn } from '@imphnen-frontend-service/utils'
-import { ColumnDef, getCoreRowModel, getPaginationRowModel, PaginationState, RowSelectionState, useReactTable } from '@tanstack/react-table'
-import { useState } from 'react'
-import { toast } from 'sonner'
-import { useRoadmapList, useDeleteRoadmap, TRoadmapListItem, TRoadmapStatus } from '@imphnen-frontend-service/service'
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import * as React from 'react';
+import { Search, Plus, Pencil, Trash2 } from 'lucide-react';
+import {
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Input,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@imphnen-frontend-service/ui/atoms';
+import {
+  BackofficeWrapper,
+  DataTable,
+} from '@imphnen-frontend-service/ui/organisms';
+import { cn } from '@imphnen-frontend-service/utils';
+import {
+  ColumnDef,
+  getCoreRowModel,
+  getPaginationRowModel,
+  PaginationState,
+  RowSelectionState,
+  useReactTable,
+} from '@tanstack/react-table';
+import { toast } from 'sonner';
+import {
+  useRoadmapList,
+  useDeleteRoadmap,
+  TRoadmapListItem,
+  TRoadmapStatus,
+} from '@imphnen-frontend-service/service';
+import {
+  SelectAllCheckbox,
+  RowSelectCheckbox,
+  DeleteConfirmDialog,
+} from '../../components/list-helpers';
 
 export const Route = createFileRoute('/_authenticated/roadmap-dimentorin')({
   component: RoadmapDimentorinPage,
-})
+});
 
-function RoadmapDimentorinPage(): React.ReactElement {
-  const navigate = useNavigate()
-  const [search, setSearch] = useState('')
-  const [statusFilter, setStatusFilter] = useState('')
-  const [deletingId, setDeletingId] = useState<string | null>(null)
-
-  const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
-  const [pagination, setPagination] = useState<PaginationState>({
+function RoadmapDimentorinPage() {
+  const navigate = useNavigate();
+  const [search, setSearch] = React.useState('');
+  const [statusFilter, setStatusFilter] = React.useState('all');
+  const [deletingId, setDeletingId] = React.useState<string | null>(null);
+  const [rowSelection, setRowSelection] =
+    React.useState<RowSelectionState>({});
+  const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
-    pageSize: 9,
-  })
+    pageSize: 10,
+  });
 
-  const { data: roadmapData, isLoading } = useRoadmapList()
-  const deleteRoadmap = useDeleteRoadmap()
+  const { data: roadmapData, isLoading } = useRoadmapList();
+  const deleteRoadmap = useDeleteRoadmap();
 
-  const allItems: TRoadmapListItem[] = roadmapData ?? []
+  const allItems: TRoadmapListItem[] = roadmapData ?? [];
   const filteredItems = allItems.filter((item) => {
-    const matchSearch = !search || item.title.toLowerCase().includes(search.toLowerCase())
-    const matchStatus = !statusFilter || item.status === statusFilter
-    return matchSearch && matchStatus
-  })
+    const matchSearch =
+      !search || item.title.toLowerCase().includes(search.toLowerCase());
+    const matchStatus = statusFilter === 'all' || item.status === statusFilter;
+    return matchSearch && matchStatus;
+  });
 
   const handleDelete = async (id: string) => {
     try {
-      await deleteRoadmap.mutateAsync(id)
-      toast.success('Roadmap berhasil dihapus')
-      setDeletingId(null)
+      await deleteRoadmap.mutateAsync(id);
+      toast.success('Roadmap berhasil dihapus');
+      setDeletingId(null);
     } catch (error) {
-      console.log(error)
-      toast.error('Gagal menghapus roadmap')
+      console.log(error);
+      toast.error('Gagal menghapus roadmap');
     }
-  }
+  };
 
-  const statusColors: Record<TRoadmapStatus, string> = {
-    upcoming: 'bg-warning-200 text-warning-700',
-    in_progress: 'bg-primary-200 text-primary-700',
-    completed: 'bg-success-200 text-success-500',
-  }
+  const statusVariants: Record<
+    TRoadmapStatus,
+    'warning' | 'info' | 'success'
+  > = {
+    upcoming: 'warning',
+    in_progress: 'info',
+    completed: 'success',
+  };
 
   const statusText: Record<TRoadmapStatus, string> = {
     upcoming: 'Upcoming',
     in_progress: 'In Progress',
     completed: 'Completed',
-  }
+  };
 
   const columns: ColumnDef<TRoadmapListItem>[] = [
     {
       id: 'select',
-      meta: { cellClassName: cn('w-20') },
-      header: ({ table }) => (
-        <input
-          type="checkbox"
-          className="rounded"
-          checked={table.getIsAllRowsSelected()}
-          onChange={table.getToggleAllRowsSelectedHandler()}
-        />
-      ),
-      cell: ({ row }) => (
-        <input
-          type="checkbox"
-          className="rounded"
-          checked={row.getIsSelected()}
-          onChange={row.getToggleSelectedHandler()}
-        />
-      ),
+      meta: { cellClassName: cn('w-10') },
+      header: ({ table }) => <SelectAllCheckbox table={table} />,
+      cell: ({ row }) => <RowSelectCheckbox row={row} />,
     },
-    {
-      id: 'title',
-      header: 'Title',
-      accessorKey: 'title',
-    },
+    { id: 'title', header: 'Title', accessorKey: 'title' },
     {
       id: 'description',
       header: 'Description',
       accessorKey: 'description',
       cell: ({ row }) => (
-        <span className="line-clamp-2">{row.original.description}</span>
+        <span className="line-clamp-2 max-w-md">{row.original.description}</span>
       ),
     },
     {
       id: 'status',
       header: 'Status',
       accessorKey: 'status',
-      cell: ({ row }) => {
-        const status = row.original.status
-        return (
-          <div className={`py-2 px-4 rounded-md text-center ${statusColors[status] ?? 'bg-neutral-200 text-neutral-700'}`}>
-            {statusText[status] ?? status}
-          </div>
-        )
-      },
+      cell: ({ row }) => (
+        <Badge variant={statusVariants[row.original.status] ?? 'secondary'}>
+          {statusText[row.original.status] ?? row.original.status}
+        </Badge>
+      ),
     },
-    {
-      id: 'votes',
-      header: 'Votes',
-      accessorKey: 'votes',
-    },
+    { id: 'votes', header: 'Votes', accessorKey: 'votes' },
     {
       header: 'Action',
-      meta: { cellClassName: cn('w-72') },
       cell: ({ row }) => (
-        <div className="flex gap-[8px]">
-          {deletingId === row.original.id ? (
-            <>
-              <Button
-                variant="danger"
-                size="sm"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  handleDelete(row.original.id)
-                }}
-                className="flex items-center gap-2"
-              >
-                Konfirmasi
-              </Button>
-              <Button
-                variant="bordered"
-                size="sm"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setDeletingId(null)
-                }}
-                className="flex items-center gap-2"
-              >
-                Batal
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  navigate({ to: '/roadmap-dimentorin/$id', params: { id: row.original.id } })
-                }}
-                className="flex items-center gap-2"
-              >
-                <EditOutlined /> Edit
-              </Button>
-              <Button
-                variant="danger"
-                size="sm"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setDeletingId(row.original.id)
-                }}
-                className="flex items-center gap-2"
-              >
-                <DeleteOutlined /> Delete
-              </Button>
-            </>
-          )}
+        <div className="flex items-center gap-2">
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate({
+                to: '/roadmap-dimentorin/$id',
+                params: { id: row.original.id },
+              });
+            }}
+          >
+            <Pencil className="size-3.5" />
+            Edit
+          </Button>
+          <Button
+            variant="danger"
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              setDeletingId(row.original.id);
+            }}
+          >
+            <Trash2 className="size-3.5" />
+          </Button>
         </div>
       ),
     },
-  ]
+  ];
 
   const table = useReactTable({
     data: filteredItems,
     columns,
-    state: {
-      pagination,
-      rowSelection,
-    },
+    state: { pagination, rowSelection },
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     getCoreRowModel: getCoreRowModel(),
@@ -184,51 +164,64 @@ function RoadmapDimentorinPage(): React.ReactElement {
     onPaginationChange: setPagination,
     pageCount: Math.ceil(filteredItems.length / pagination.pageSize),
     manualPagination: false,
-  })
+  });
 
   return (
-    <BackofficeWrapper title="Dimentorin.dev">
-      <h1 className="text-p1 font-semibold text-neutral-700 mb-8">Content & Roadmap</h1>
-
-      <section className="flex flex-col gap-6 p-8 bg-white rounded-md">
-        <div className="flex items-center justify-between mb-9">
-          <h2 className="text-p2 font-semibold text-neutral-600">AI Roadmaps</h2>
-          <Button
-            type="button"
-            variant="primary"
-            className="flex items-center gap-2"
-            onClick={() => navigate({ to: '/roadmap-dimentorin/create' })}
-          >
-            <PlusOutlined /> Buat Roadmap
-          </Button>
-        </div>
-
-        <div className="flex justify-between items-center gap-5 mb-2">
-          <div className="relative w-full">
-            <Input
-              placeholder="Cari berdasarkan judul roadmap"
-              className="pl-12 w-full max-h-full"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[16px]">
-              <SearchOutlined />
+    <BackofficeWrapper
+      title="Content & Roadmap"
+      description="Kelola AI roadmap dimentorin"
+    >
+      <Card>
+        <CardHeader>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-1 flex-col gap-2 sm:flex-row">
+              <div className="relative w-full sm:max-w-sm">
+                <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  className="pl-9"
+                  placeholder="Cari judul roadmap…"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </div>
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-40">
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Semua Status</SelectItem>
+                  <SelectItem value="upcoming">Upcoming</SelectItem>
+                  <SelectItem value="in_progress">In Progress</SelectItem>
+                  <SelectItem value="completed">Completed</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
+            <Button
+              size="md"
+              onClick={() => navigate({ to: '/roadmap-dimentorin/create' })}
+            >
+              <Plus className="size-4" />
+              Buat Roadmap
+            </Button>
           </div>
-          <Select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-            <option value="">Semua Status</option>
-            <option value="upcoming">Upcoming</option>
-            <option value="in_progress">In Progress</option>
-            <option value="completed">Completed</option>
-          </Select>
-        </div>
+        </CardHeader>
+        <CardContent>
+          {isLoading ? (
+            <div className="py-10 text-center text-sm text-muted-foreground">
+              Memuat data…
+            </div>
+          ) : (
+            <DataTable data={filteredItems} columns={columns} table={table} />
+          )}
+        </CardContent>
+      </Card>
 
-        {isLoading ? (
-          <div className="text-center py-8 text-neutral-400">Loading...</div>
-        ) : (
-          <DataTable data={filteredItems} columns={columns} table={table} />
-        )}
-      </section>
+      <DeleteConfirmDialog
+        open={!!deletingId}
+        onOpenChange={(o) => !o && setDeletingId(null)}
+        onConfirm={() => deletingId && handleDelete(deletingId)}
+        title="Hapus roadmap ini?"
+      />
     </BackofficeWrapper>
-  )
+  );
 }

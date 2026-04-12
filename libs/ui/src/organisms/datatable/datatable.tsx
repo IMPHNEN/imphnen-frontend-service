@@ -1,3 +1,4 @@
+import * as React from 'react';
 import {
   PaginationState,
   SortingState,
@@ -8,17 +9,25 @@ import {
   getFilteredRowModel,
   flexRender,
   ColumnDef,
-  Table,
+  Table as TanstackTable,
   RowData,
   TableOptions,
 } from '@tanstack/react-table';
-import { Pagination } from '../../molecules';
-
-import React from 'react';
+import { ArrowUpDown, ArrowUp, ArrowDown, ChevronLeft, ChevronRight } from 'lucide-react';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '../../atoms/table';
+import { Button } from '../../atoms/button';
+import { Pagination } from '../../molecules/pagination';
 import { cn } from '@imphnen-frontend-service/utils';
 
 interface DataTableProps<T extends RowData> {
-  table?: Table<T>;
+  table?: TanstackTable<T>;
   data?: T[];
   columns?: ColumnDef<T, unknown>[];
   pageSize?: number;
@@ -27,18 +36,103 @@ interface DataTableProps<T extends RowData> {
   pageCount?: number;
   currentPage?: number;
   onPageChange?: (page: number) => void;
+  emptyMessage?: string;
+}
+
+function ManualPagination({
+  currentPage,
+  pageCount,
+  onPageChange,
+}: {
+  currentPage: number;
+  pageCount: number;
+  onPageChange: (page: number) => void;
+}) {
+  if (pageCount <= 1) return null;
+
+  const pages: Array<number | 'ellipsis'> = [];
+  if (pageCount <= 7) {
+    for (let i = 1; i <= pageCount; i++) pages.push(i);
+  } else {
+    pages.push(1);
+    if (currentPage > 3) pages.push('ellipsis');
+    const start = Math.max(2, currentPage - 1);
+    const end = Math.min(pageCount - 1, currentPage + 1);
+    for (let i = start; i <= end; i++) pages.push(i);
+    if (currentPage < pageCount - 2) pages.push('ellipsis');
+    pages.push(pageCount);
+  }
+
+  return (
+    <nav
+      role="navigation"
+      aria-label="Pagination"
+      className="flex items-center justify-between gap-2 pt-2"
+    >
+      <div className="text-xs text-muted-foreground">
+        Page {currentPage} of {pageCount}
+      </div>
+      <div className="flex items-center gap-1">
+        <Button
+          variant="text"
+          size="icon"
+          onClick={() => onPageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+          aria-label="Previous page"
+        >
+          <ChevronLeft className="size-4" />
+        </Button>
+        {pages.map((p, idx) =>
+          p === 'ellipsis' ? (
+            <span
+              key={`e-${idx}`}
+              className="px-1 text-sm text-muted-foreground"
+              aria-hidden="true"
+            >
+              …
+            </span>
+          ) : (
+            <button
+              key={p}
+              type="button"
+              onClick={() => onPageChange(p)}
+              className={cn(
+                'inline-flex size-8 items-center justify-center rounded-md text-sm font-medium transition-colors',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1',
+                currentPage === p
+                  ? 'bg-primary-500 text-white hover:bg-primary-600'
+                  : 'bg-transparent text-foreground hover:bg-primary-50 hover:text-primary-600'
+              )}
+            >
+              {p}
+            </button>
+          )
+        )}
+        <Button
+          variant="text"
+          size="icon"
+          onClick={() => onPageChange(currentPage + 1)}
+          disabled={currentPage === pageCount}
+          aria-label="Next page"
+        >
+          <ChevronRight className="size-4" />
+        </Button>
+      </div>
+    </nav>
+  );
 }
 
 export const DataTable = <T extends RowData>({
   table,
   data = [],
   columns = [],
-  pageSize = 9,
+  pageSize = 10,
   className,
   manualPagination = false,
   pageCount,
   currentPage = 1,
   onPageChange,
+  emptyMessage = 'Tidak ada data',
 }: DataTableProps<T>) => {
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
@@ -47,18 +141,12 @@ export const DataTable = <T extends RowData>({
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
   React.useEffect(() => {
-    setPagination((prev) => ({
-      ...prev,
-      pageSize,
-    }));
+    setPagination((prev) => ({ ...prev, pageSize }));
   }, [pageSize]);
 
   React.useEffect(() => {
     if (data.length > 0) {
-      setPagination((prev) => ({
-        ...prev,
-        pageIndex: 0, // Reset to first page when data changes
-      }));
+      setPagination((prev) => ({ ...prev, pageIndex: 0 }));
     }
   }, [data.length]);
 
@@ -69,10 +157,7 @@ export const DataTable = <T extends RowData>({
     const config: TableOptions<T> = {
       data: memoizedData,
       columns: memoizedColumns,
-      state: {
-        pagination,
-        sorting,
-      },
+      state: { pagination, sorting },
       onPaginationChange: setPagination,
       onSortingChange: setSorting,
       getCoreRowModel: getCoreRowModel(),
@@ -82,16 +167,8 @@ export const DataTable = <T extends RowData>({
       manualPagination,
       pageCount: manualPagination ? pageCount : undefined,
     };
-
     return config;
-  }, [
-    memoizedData,
-    memoizedColumns,
-    pagination,
-    sorting,
-    manualPagination,
-    pageCount,
-  ]);
+  }, [memoizedData, memoizedColumns, pagination, sorting, manualPagination, pageCount]);
 
   const internalTable = useReactTable(tableConfig);
   const t = table ?? internalTable;
@@ -99,189 +176,89 @@ export const DataTable = <T extends RowData>({
   const isEmpty = t.getRowModel().rows.length === 0;
 
   return (
-    <div className={cn('flex flex-col gap-8', className)}>
-      <div className="w-full overflow-x-auto">
-        <table className="w-full min-w-full text-base">
-          <thead className="bg-primary-50 mb-3 text-left text-nowrap">
+    <div className={cn('flex flex-col gap-4', className)}>
+      <div className="rounded-md border border-neutral-200 overflow-hidden">
+        <Table>
+          <TableHeader className="bg-neutral-50">
             {t.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <th
-                    key={header.id}
-                    onClick={
-                      header.column.getCanSort()
-                        ? header.column.getToggleSortingHandler()
-                        : undefined
-                    }
-                    className={cn(
-                      'py-4 px-5 font-normal first:rounded-l-lg last:rounded-r-lg',
-                      header.column.getCanSort() &&
-                        'cursor-pointer select-none hover:bg-primary-100 transition-colors',
-                      header?.column?.columnDef?.meta?.headerClassName
-                    )}
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                    {header.column.getCanSort() && (
-                      <span className="ml-2 text-xs text-gray-500">
-                        {header.column.getIsSorted() === 'asc' && '▲'}
-                        {header.column.getIsSorted() === 'desc' && '▼'}
-                        {!header.column.getIsSorted() && <span>⇅</span>}
-                      </span>
-                    )}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {isEmpty ? (
-              <tr>
-                <td
-                  colSpan={t.getAllColumns().length}
-                  className="py-8 px-5 text-center text-neutral-500"
-                >
-                  No data available
-                </td>
-              </tr>
-            ) : (
-              t.getRowModel().rows.map((row, rowIndex) => (
-                <tr
-                  key={row.id}
-                  className={cn(
-                    'hover:bg-primary-50 transition-colors',
-                    rowIndex % 2 === 0 ? 'bg-white' : 'bg-primary-100'
-                  )}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <td
-                      key={cell.id}
+              <TableRow key={headerGroup.id} className="hover:bg-transparent">
+                {headerGroup.headers.map((header) => {
+                  const canSort = header.column.getCanSort();
+                  const sorted = header.column.getIsSorted();
+                  return (
+                    <TableHead
+                      key={header.id}
+                      onClick={
+                        canSort
+                          ? header.column.getToggleSortingHandler()
+                          : undefined
+                      }
                       className={cn(
-                        'py-3 px-5 first:rounded-l-lg last:rounded-r-lg',
-                        cell?.column?.columnDef?.meta?.cellClassName
+                        canSort && 'cursor-pointer select-none hover:bg-neutral-100',
+                        header?.column?.columnDef?.meta?.headerClassName
                       )}
+                    >
+                      <span className="inline-flex items-center gap-1.5">
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                        {canSort && (
+                          <span className="text-muted-foreground">
+                            {sorted === 'asc' ? (
+                              <ArrowUp className="size-3" />
+                            ) : sorted === 'desc' ? (
+                              <ArrowDown className="size-3" />
+                            ) : (
+                              <ArrowUpDown className="size-3 opacity-50" />
+                            )}
+                          </span>
+                        )}
+                      </span>
+                    </TableHead>
+                  );
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {isEmpty ? (
+              <TableRow className="hover:bg-transparent">
+                <TableCell
+                  colSpan={t.getAllColumns().length}
+                  className="py-10 text-center text-sm text-muted-foreground"
+                >
+                  {emptyMessage}
+                </TableCell>
+              </TableRow>
+            ) : (
+              t.getRowModel().rows.map((row) => (
+                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell
+                      key={cell.id}
+                      className={cell?.column?.columnDef?.meta?.cellClassName}
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
                       )}
-                    </td>
+                    </TableCell>
                   ))}
-                </tr>
+                </TableRow>
               ))
             )}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
       {manualPagination && onPageChange && pageCount ? (
-        <div className="flex items-center justify-center gap-10">
-          <button
-            className="disabled:opacity-50 cursor-pointer"
-            onClick={() => onPageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-            aria-label="Previous page"
-          >
-            <svg
-              className="w-4 h-4 text-neutral-800"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-          </button>
-
-          <div className="flex gap-4 items-baseline">
-            {pageCount <= 8 ? (
-              Array.from({ length: pageCount }, (_, index) => (
-                <button
-                  key={index}
-                  className={`size-[30px] py-2 flex items-center justify-center rounded-md cursor-pointer ${
-                    currentPage === index + 1
-                      ? 'bg-primary-500 text-white'
-                      : 'bg-primary-100 hover:bg-primary-200'
-                  }`}
-                  onClick={() => onPageChange(index + 1)}
-                >
-                  {index + 1}
-                </button>
-              ))
-            ) : (
-              <>
-                <button
-                  onClick={() => onPageChange(1)}
-                  className={`size-[30px] py-2 flex items-center justify-center rounded-md cursor-pointer ${
-                    currentPage === 1
-                      ? 'bg-primary-500 text-white'
-                      : 'bg-primary-100 hover:bg-primary-200'
-                  }`}
-                >
-                  1
-                </button>
-                {currentPage > 3 && <span>...</span>}
-                {Array.from(
-                  { length: 5 },
-                  (_, index) => currentPage - 2 + index
-                )
-                  .filter((page) => page > 1 && page < pageCount)
-                  .map((page) => (
-                    <button
-                      key={page}
-                      onClick={() => onPageChange(page)}
-                      className={`size-[30px] py-2 flex items-center justify-center rounded-md cursor-pointer ${
-                        currentPage === page
-                          ? 'bg-primary-500 text-white'
-                          : 'bg-primary-100 hover:bg-primary-200'
-                      }`}
-                    >
-                      {page}
-                    </button>
-                  ))}
-                {currentPage < pageCount - 2 && <span>...</span>}
-                <button
-                  onClick={() => onPageChange(pageCount)}
-                  className={`size-[30px] py-2 flex items-center justify-center rounded-md cursor-pointer ${
-                    currentPage === pageCount
-                      ? 'bg-primary-500 text-white'
-                      : 'bg-primary-100 hover:bg-primary-200'
-                  }`}
-                >
-                  {pageCount}
-                </button>
-              </>
-            )}
-          </div>
-
-          <button
-            className="disabled:opacity-50 cursor-pointer"
-            onClick={() => onPageChange(currentPage + 1)}
-            disabled={currentPage === pageCount}
-            aria-label="Next page"
-          >
-            <svg
-              className="w-4 h-4 text-neutral-800"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </button>
-        </div>
+        <ManualPagination
+          currentPage={currentPage}
+          pageCount={pageCount}
+          onPageChange={onPageChange}
+        />
       ) : (
         <Pagination table={t} />
       )}

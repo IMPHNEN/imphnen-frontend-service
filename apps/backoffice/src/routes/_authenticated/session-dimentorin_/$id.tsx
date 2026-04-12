@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Input, Select, Textarea } from '@imphnen-frontend-service/ui/atoms'
+import { Input, NativeSelect as Select, Textarea } from '@imphnen-frontend-service/ui/atoms'
 import { cn, For } from '@imphnen-frontend-service/utils'
 import { useMySessions, TSessionListItem } from '@imphnen-frontend-service/service'
 

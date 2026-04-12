@@ -1,4 +1,4 @@
-import { Button, Input, Select, ToggleInput } from "@imphnen-frontend-service/ui/atoms"
+import { Button, Input, NativeSelect as Select, ToggleInput } from "@imphnen-frontend-service/ui/atoms"
 import { cn } from "@imphnen-frontend-service/utils"
 import { FC } from "react"
 
