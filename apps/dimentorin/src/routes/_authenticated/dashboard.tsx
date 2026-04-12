@@ -87,6 +87,17 @@ function DashboardLayout() {
     navigate({ to: '/auth/login' });
   };
 
+  const isNavItemActive = (path?: string) => {
+    if (!path) return false;
+
+    // Dashboard should only be active on the dashboard index route.
+    if (path === '/dashboard') {
+      return location.pathname === '/dashboard' || location.pathname === '/dashboard/';
+    }
+
+    return location.pathname.startsWith(path);
+  };
+
   return (
     <div className="min-h-screen bg-bg-light-blue flex">
       {/* Sidebar Navigation */}
@@ -105,9 +116,9 @@ function DashboardLayout() {
         {/* Navigation Items */}
         <nav className="flex-1 px-6 flex flex-col gap-2">
           {navItems.map((item) => {
-            const isActive = item.isLink && item.path && location.pathname.startsWith(item.path);
+            const isActive = item.isLink ? isNavItemActive(item.path) : false;
             const baseClasses = 'h-8 px-3 rounded-sm flex items-center gap-3 cursor-pointer text-xs font-medium leading-[1.3] text-text-muted transition-all duration-200 hover:bg-bg-hover';
-            const activeClasses = isActive ? 'bg-primary-accent text-primary-50' : '';
+            const activeClasses = isActive ? 'bg-primary-accent text-white' : '';
 
             if (item.isLink && item.path) {
               return (
@@ -119,7 +130,8 @@ function DashboardLayout() {
                   <Icon 
                     icon={item.icon} 
                     width="16" 
-                    style={isActive ? { color: '#f0f8ff' } : {}}
+                    className={isActive ? 'text-white' : 'text-text-muted'}
+                    style={isActive ? { color: '#ffffff' } : {}}
                   />
                   {item.label}
                 </Link>

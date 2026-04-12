@@ -7,6 +7,7 @@ export const Route = createFileRoute('/_authenticated/dashboard/learning-path')(
 
 function LearningPathPage() {
   const [activeTab, setActiveTab] = useState<'roadmap' | 'article'>('roadmap')
+  const [isSubmitArticlePopupOpen, setIsSubmitArticlePopupOpen] = useState(false)
 
   return (
     <section className="w-[972px]">
@@ -109,11 +110,45 @@ function LearningPathPage() {
                   <td className="px-4 py-3"><span className="text-[10px] font-semibold text-primary-accent">On Progress</span></td>
                   <td className="text-xs text-text-muted px-4 py-3">-</td>
                   <td className="px-4 py-3">
-                    <button className="h-7 px-2 rounded-sm border border-primary-accent text-primary-accent text-[10px] font-semibold cursor-pointer">Edit</button>
+                    <button
+                      onClick={() => setIsSubmitArticlePopupOpen(true)}
+                      className="h-7 px-2 rounded-sm border border-primary-accent text-primary-accent text-[10px] font-semibold cursor-pointer"
+                    >
+                      Submit
+                    </button>
                   </td>
                 </tr>
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+
+      {isSubmitArticlePopupOpen && (
+        <div className="fixed inset-0 z-50 bg-black/30 flex items-center justify-center p-4">
+          <div className="w-[400px] h-[288px] rounded-[8px] bg-white px-10 py-10">
+            <div className="w-[320px] mx-auto text-center">
+              <h3 className="text-[23px] font-semibold text-[#23a1eb]">Apakah Kamu Sudah Yakin?</h3>
+              <p className="text-[15px] text-[#888888] mt-8">
+                Pastikan isi artikel sudah sesuai dengan ketentuan^^, artikel yang sudah disubmit tidak dapat diedit
+              </p>
+            </div>
+
+            <div className="mt-8 flex items-center gap-4">
+              <button
+                onClick={() => setIsSubmitArticlePopupOpen(false)}
+                className="w-[152px] h-[34px] rounded-sm bg-white text-[#23a1eb] text-[15px] font-semibold cursor-pointer"
+              >
+                Nanti Deh
+              </button>
+
+              <button
+                onClick={() => setIsSubmitArticlePopupOpen(false)}
+                className="w-[152px] h-[34px] rounded-sm bg-[#23a1eb] text-[#f6f6f6] text-[15px] font-semibold cursor-pointer"
+              >
+                Sumbit
+              </button>
+            </div>
           </div>
         </div>
       )}
