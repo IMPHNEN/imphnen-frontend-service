@@ -1,16 +1,12 @@
-import {
-  FC,
-  ReactElement,
-  SelectHTMLAttributes,
-  DetailedHTMLProps,
-} from 'react';
-import { Select } from '../../atoms'; // Custom select atom kamu
+import * as React from 'react';
+import { NativeSelect } from '../../atoms/select';
+import { Label } from '../../atoms/label';
 import { cn } from '@imphnen-frontend-service/utils';
 
 export type TSelectSize = 'sm' | 'md' | 'lg';
 
 export type TSelectFieldProps = Omit<
-  DetailedHTMLProps<SelectHTMLAttributes<HTMLSelectElement>, HTMLSelectElement>,
+  React.SelectHTMLAttributes<HTMLSelectElement>,
   'size'
 > & {
   label: string;
@@ -18,76 +14,55 @@ export type TSelectFieldProps = Omit<
   error?: string;
   helperText?: string;
   htmlFor?: string;
-  disabled?: boolean;
 };
 
-const sizeClasses: Record<TSelectSize, { label: string; helperText: string }> = {
-  lg: {
-    label: 'text-p3 font-medium',
-    helperText: 'text-label3 font-normal',
-  },
-  md: {
-    label: 'text-label1 font-medium',
-    helperText: 'text-label2 font-normal',
-  },
-  sm: {
-    label: 'text-label2 font-medium',
-    helperText: 'text-label2 font-normal',
-  },
-};
-
-export const SelectField: FC<TSelectFieldProps> = ({
-  label,
-  size = 'md',
-  error,
-  helperText,
-  htmlFor,
-  disabled,
-  className,
-  children,
-  ...rest
-}): ReactElement => {
-  return (
-    <div className="flex flex-col gap-[8px]">
-      <label
-        htmlFor={htmlFor}
-        className={cn(
-          'items-start justify-item-start text-start !text-neutral-800',
-          sizeClasses[size].label
-        )}
-      >
-        {label}
-      </label>
-
-      <Select
-        {...(htmlFor && { id: htmlFor })}
-        size={size}
-        disabled={disabled}
-        className={cn(
-          error &&
-            'border-danger-500 hover:border-danger-500 focus:outline-danger-500',
-          className,
-          disabled && 'opacity-50 cursor-not-allowed'
-        )}
-        {...rest}
-      >
-        {children}
-      </Select>
-
-      {error ? (
-        <p className="text-danger-500 text-label1 text-left">{error}</p>
-      ) : (
-        helperText && (
-          <p
-            className={cn(
-              'text-label2 text-left',
-              sizeClasses[size].helperText
-            )}
-          >
-            {helperText}
-          </p>
-        )
-      )}
-    </div>
-  );
-};
+export const SelectField = React.forwardRef<
+  HTMLSelectElement,
+  TSelectFieldProps
+>(
+  (
+    {
+      label,
+      size = 'md',
+      error,
+      helperText,
+      htmlFor,
+      className,
+      disabled,
+      id,
+      children,
+      ...rest
+    },
+    ref
+  ) => {
+    const autoId = React.useId();
+    const fieldId = htmlFor ?? id ?? autoId;
+    return (
+      <div className="flex flex-col gap-2">
+        <Label htmlFor={fieldId} className="text-sm font-medium text-foreground">
+          {label}
+        </Label>
+        <NativeSelect
+          ref={ref}
+          id={fieldId}
+          size={size}
+          disabled={disabled}
+          aria-invalid={!!error}
+          className={cn(
+            error && 'border-destructive focus-visible:ring-destructive/20',
+            className
+          )}
+          {...rest}
+        >
+          {children}
+        </NativeSelect>
+        {error ? (
+          <p className="text-xs text-destructive">{error}</p>
+        ) : helperText ? (
+          <p className="text-xs text-muted-foreground">{helperText}</p>
+        ) : null}
+      </div>
+    );
+  }
+);
+SelectField.displayName = 'SelectField';

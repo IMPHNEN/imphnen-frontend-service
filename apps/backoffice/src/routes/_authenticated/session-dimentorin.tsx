@@ -1,64 +1,82 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { SearchOutlined } from '@ant-design/icons'
-import { Button, Input, Select } from '@imphnen-frontend-service/ui/atoms'
-import { BackofficeWrapper, DataTable } from '@imphnen-frontend-service/ui/organisms'
-import { cn } from '@imphnen-frontend-service/utils'
-import { ColumnDef, getCoreRowModel, getPaginationRowModel, PaginationState, RowSelectionState, useReactTable } from '@tanstack/react-table'
-import { ReactElement, useState } from 'react'
-import { useMySessions, TSessionListItem } from '@imphnen-frontend-service/service'
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import * as React from 'react';
+import { Search, Eye } from 'lucide-react';
+import {
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Input,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@imphnen-frontend-service/ui/atoms';
+import {
+  BackofficeWrapper,
+  DataTable,
+} from '@imphnen-frontend-service/ui/organisms';
+import { cn } from '@imphnen-frontend-service/utils';
+import {
+  ColumnDef,
+  getCoreRowModel,
+  getPaginationRowModel,
+  PaginationState,
+  RowSelectionState,
+  useReactTable,
+} from '@tanstack/react-table';
+import {
+  useMySessions,
+  TSessionListItem,
+} from '@imphnen-frontend-service/service';
+import {
+  SelectAllCheckbox,
+  RowSelectCheckbox,
+} from '../../components/list-helpers';
 
 export const Route = createFileRoute('/_authenticated/session-dimentorin')({
   component: SessionDimentorinPage,
-})
+});
 
-function SessionDimentorinPage(): ReactElement {
-  const navigate = useNavigate()
-  const [statusFilter, setStatusFilter] = useState('')
-
-  const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
-  const [pagination, setPagination] = useState<PaginationState>({
+function SessionDimentorinPage() {
+  const navigate = useNavigate();
+  const [statusFilter, setStatusFilter] = React.useState('all');
+  const [rowSelection, setRowSelection] =
+    React.useState<RowSelectionState>({});
+  const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
-    pageSize: 9,
-  })
+    pageSize: 10,
+  });
 
   const { data: sessionsData, isLoading } = useMySessions(
-    statusFilter ? { status: statusFilter } : undefined
-  )
+    statusFilter !== 'all' ? { status: statusFilter } : undefined
+  );
 
-  const sessions: TSessionListItem[] = sessionsData?.sessions ?? []
-  const totalItems = sessionsData?.total ?? sessions.length
+  const sessions: TSessionListItem[] = sessionsData?.sessions ?? [];
+  const totalItems = sessionsData?.total ?? sessions.length;
+
+  const statusVariants: Record<
+    string,
+    'warning' | 'info' | 'success' | 'destructive' | 'secondary'
+  > = {
+    pending: 'warning',
+    confirmed: 'info',
+    ongoing: 'warning',
+    completed: 'success',
+    cancelled: 'destructive',
+  };
 
   const columns: ColumnDef<TSessionListItem>[] = [
     {
       id: 'select',
-      meta: { cellClassName: cn('w-20') },
-      header: ({ table }) => (
-        <input
-          type="checkbox"
-          className="rounded"
-          checked={table.getIsAllRowsSelected()}
-          onChange={table.getToggleAllRowsSelectedHandler()}
-        />
-      ),
-      cell: ({ row }) => (
-        <input
-          type="checkbox"
-          className="rounded"
-          checked={row.getIsSelected()}
-          onChange={row.getToggleSelectedHandler()}
-        />
-      ),
+      meta: { cellClassName: cn('w-10') },
+      header: ({ table }) => <SelectAllCheckbox table={table} />,
+      cell: ({ row }) => <RowSelectCheckbox row={row} />,
     },
-    {
-      id: 'id',
-      header: 'ID Sesi',
-      accessorKey: 'id',
-    },
-    {
-      id: 'mentorId',
-      header: 'Nama Mentor',
-      accessorKey: 'mentor_id',
-    },
+    { id: 'id', header: 'ID Sesi', accessorKey: 'id' },
+    { id: 'mentorId', header: 'Nama Mentor', accessorKey: 'mentor_id' },
     {
       id: 'menteeName',
       header: 'Nama Mentee',
@@ -69,55 +87,49 @@ function SessionDimentorinPage(): ReactElement {
       header: 'Waktu',
       accessorKey: 'scheduled_at',
       cell: ({ row }) => (
-        <span>{new Date(row.original.scheduled_at).toLocaleString('id-ID')}</span>
+        <span>
+          {new Date(row.original.scheduled_at).toLocaleString('id-ID')}
+        </span>
       ),
     },
     {
       id: 'status',
       header: 'Status',
       accessorKey: 'status',
-      cell: ({ row }) => {
-        const status = row.original.status
-        const statusColors: Record<string, string> = {
-          pending: 'bg-warning-200 text-warning-700',
-          confirmed: 'bg-primary-200 text-primary-700',
-          ongoing: 'bg-warning-200 text-warning-700',
-          completed: 'bg-success-200 text-success-500',
-          cancelled: 'bg-danger-200 text-danger-500',
-        }
-        return (
-          <div className={`py-2 px-4 rounded-md text-center capitalize ${statusColors[status] ?? 'bg-neutral-200 text-neutral-700'}`}>
-            {status}
-          </div>
-        )
-      },
+      cell: ({ row }) => (
+        <Badge
+          variant={statusVariants[row.original.status] ?? 'secondary'}
+          className="capitalize"
+        >
+          {row.original.status}
+        </Badge>
+      ),
     },
     {
       header: 'Action',
-      meta: { cellClassName: cn('w-52') },
       cell: ({ row }) => (
         <Button
-          variant="primary"
+          variant="secondary"
           size="sm"
           onClick={(e) => {
-            e.stopPropagation()
-            navigate({ to: '/session-dimentorin/$id', params: { id: row.original.id } })
+            e.stopPropagation();
+            navigate({
+              to: '/session-dimentorin/$id',
+              params: { id: row.original.id },
+            });
           }}
-          className="flex items-center gap-2 w-max"
         >
-          <SearchOutlined className="text-[16px]" /> Cek Detail
+          <Eye className="size-3.5" />
+          Detail
         </Button>
       ),
     },
-  ]
+  ];
 
   const table = useReactTable({
     data: sessions,
     columns,
-    state: {
-      pagination,
-      rowSelection,
-    },
+    state: { pagination, rowSelection },
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     getCoreRowModel: getCoreRowModel(),
@@ -125,39 +137,55 @@ function SessionDimentorinPage(): ReactElement {
     onPaginationChange: setPagination,
     pageCount: Math.ceil(totalItems / pagination.pageSize),
     manualPagination: true,
-  })
+  });
 
   return (
-    <BackofficeWrapper title="Dimentorin.dev">
-      <h1 className="text-p1 font-semibold text-neutral-700 mb-8">Session Management</h1>
-
-      <section className="flex flex-col gap-6 p-8 bg-white rounded-md">
-        <div className="flex justify-between items-center gap-5 mb-2">
-          <div className="relative w-full">
-            <Input
-              placeholder="Cari berdasarkan nama lengkap"
-              className="pl-12 w-full max-h-full"
-            />
-            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[16px]">
-              <SearchOutlined />
+    <BackofficeWrapper
+      title="Session Management"
+      description="Kelola sesi mentoring aktif"
+    >
+      <Card>
+        <CardHeader>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="relative w-full sm:max-w-sm">
+              <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Input className="pl-9" placeholder="Cari nama lengkap…" />
             </div>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-40">
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Semua Status</SelectItem>
+                <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="confirmed">Confirmed</SelectItem>
+                <SelectItem value="ongoing">On Going</SelectItem>
+                <SelectItem value="completed">Completed</SelectItem>
+                <SelectItem value="cancelled">Cancelled</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-          <Select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-            <option value="">Semua Status</option>
-            <option value="pending">Pending</option>
-            <option value="confirmed">Confirmed</option>
-            <option value="ongoing">On Going</option>
-            <option value="completed">Completed</option>
-            <option value="cancelled">Cancelled</option>
-          </Select>
-        </div>
-
-        {isLoading ? (
-          <div className="text-center py-8 text-neutral-400">Loading...</div>
-        ) : (
-          <DataTable data={sessions} columns={columns} table={table} />
-        )}
-      </section>
+        </CardHeader>
+        <CardContent>
+          {isLoading ? (
+            <div className="py-10 text-center text-sm text-muted-foreground">
+              Memuat data…
+            </div>
+          ) : (
+            <DataTable
+              data={sessions}
+              columns={columns}
+              table={table}
+              manualPagination
+              pageCount={Math.ceil(totalItems / pagination.pageSize)}
+              currentPage={pagination.pageIndex + 1}
+              onPageChange={(p) =>
+                setPagination((prev) => ({ ...prev, pageIndex: p - 1 }))
+              }
+            />
+          )}
+        </CardContent>
+      </Card>
     </BackofficeWrapper>
-  )
+  );
 }

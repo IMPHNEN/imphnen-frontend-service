@@ -1,13 +1,26 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { Fragment, useState } from 'react'
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import * as React from 'react';
+import { Search, Pencil, Trash2, Plus } from 'lucide-react';
 import {
-  SearchOutlined,
-  EditOutlined,
-  DeleteOutlined,
-  PlusOutlined,
-} from '@ant-design/icons'
-import { Button, Input } from '@imphnen-frontend-service/ui/atoms'
-import { DataTable } from '@imphnen-frontend-service/ui/organisms'
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Checkbox,
+  Input,
+} from '@imphnen-frontend-service/ui/atoms';
+import {
+  DataTable,
+  BackofficeWrapper,
+} from '@imphnen-frontend-service/ui/organisms';
 import {
   ColumnDef,
   getCoreRowModel,
@@ -15,86 +28,84 @@ import {
   PaginationState,
   RowSelectionState,
   useReactTable,
-} from '@tanstack/react-table'
+} from '@tanstack/react-table';
 import {
   useTestimonialList,
   useDeleteTestimonial,
   TTestimonialsListItem,
-} from '@imphnen-frontend-service/service'
-import React from 'react'
-import { toast } from 'sonner'
+} from '@imphnen-frontend-service/service';
+import { toast } from 'sonner';
 
 export const Route = createFileRoute('/_authenticated/cms-testimonials')({
   component: CmsTestimonialsPage,
-})
+});
 
 function CmsTestimonialsPage() {
-  const navigate = useNavigate()
-  const [search, setSearch] = useState('')
-  const [deleteId, setDeleteId] = useState<string | null>(null)
-
+  const navigate = useNavigate();
+  const [search, setSearch] = React.useState('');
+  const [deleteId, setDeleteId] = React.useState<string | null>(null);
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
-    pageSize: 9,
-  })
-
-  const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({})
+    pageSize: 10,
+  });
+  const [rowSelection, setRowSelection] =
+    React.useState<RowSelectionState>({});
 
   const { data: testimonialsData, isLoading } = useTestimonialList({
     search,
     page: pagination.pageIndex + 1,
     per_page: pagination.pageSize,
-  })
-  const deleteTestimonial = useDeleteTestimonial()
+  });
+  const deleteTestimonial = useDeleteTestimonial();
 
-  const testimonials: TTestimonialsListItem[] = testimonialsData?.data ?? []
-  const totalItems = testimonialsData?.meta?.total ?? testimonials.length
+  const testimonials: TTestimonialsListItem[] = testimonialsData?.data ?? [];
+  const totalItems = testimonialsData?.meta?.total ?? testimonials.length;
 
   const handleDelete = async (id: string) => {
     try {
-      await deleteTestimonial.mutateAsync(id)
-      toast.success('Data testimonial berhasil dihapus')
-      setDeleteId(null)
+      await deleteTestimonial.mutateAsync(id);
+      toast.success('Data testimonial berhasil dihapus');
+      setDeleteId(null);
     } catch (error) {
-      console.log(error)
-      toast.error('Data testimonial gagal dihapus')
+      console.log(error);
+      toast.error('Data testimonial gagal dihapus');
     }
-  }
+  };
 
   const columns: ColumnDef<TTestimonialsListItem>[] = [
     {
       id: 'select',
       header: ({ table }) => (
-        <input
-          type="checkbox"
-          className="rounded"
-          checked={table.getIsAllRowsSelected()}
-          onChange={table.getToggleAllRowsSelectedHandler()}
+        <Checkbox
+          checked={
+            table.getIsAllRowsSelected()
+              ? true
+              : table.getIsSomeRowsSelected()
+                ? 'indeterminate'
+                : false
+          }
+          onCheckedChange={(v) =>
+            table.toggleAllRowsSelected(!!v && v !== 'indeterminate')
+          }
         />
       ),
       cell: ({ row }) => (
-        <input
-          type="checkbox"
-          className="rounded"
+        <Checkbox
           checked={row.getIsSelected()}
-          onChange={row.getToggleSelectedHandler()}
+          onCheckedChange={(v) => row.toggleSelected(!!v)}
         />
       ),
     },
-    {
-      header: 'User',
-      accessorKey: 'user_fullname',
-    },
-    {
-      header: 'Role',
-      accessorKey: 'role',
-    },
+    { header: 'User', accessorKey: 'user_fullname' },
+    { header: 'Role', accessorKey: 'role' },
     {
       header: 'Content',
       accessorKey: 'content',
       cell: ({ row }) => {
-        const content = row.original.content
-        return content.length > 80 ? `${content.substring(0, 80)}...` : content
+        const content = row.original.content;
+        return content.length > 80
+          ? `${content.substring(0, 80)}…`
+          : content;
       },
     },
     {
@@ -110,67 +121,41 @@ function CmsTestimonialsPage() {
     {
       header: 'Action',
       cell: ({ row }) => (
-        <div className="flex gap-[8px]">
+        <div className="flex items-center gap-2">
           <Button
-            variant="primary"
+            variant="secondary"
             size="sm"
             onClick={(e) => {
-              e.stopPropagation()
-              navigate({ to: '/cms-testimonials/$id', params: { id: row.original.id } })
+              e.stopPropagation();
+              navigate({
+                to: '/cms-testimonials/$id',
+                params: { id: row.original.id },
+              });
             }}
-            className="flex items-center gap-2"
           >
-            <EditOutlined /> Update
+            <Pencil className="size-3.5" />
+            Update
           </Button>
-          {deleteId === row.original.id ? (
-            <div className="flex items-center gap-2">
-              <span className="text-label2 text-neutral-500">Yakin?</span>
-              <Button
-                variant="danger"
-                size="sm"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  handleDelete(row.original.id)
-                }}
-              >
-                Ya
-              </Button>
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setDeleteId(null)
-                }}
-              >
-                Batal
-              </Button>
-            </div>
-          ) : (
-            <Button
-              variant="danger"
-              size="sm"
-              onClick={(e) => {
-                e.stopPropagation()
-                setDeleteId(row.original.id)
-              }}
-              className="flex items-center gap-2"
-            >
-              <DeleteOutlined /> Delete
-            </Button>
-          )}
+          <Button
+            variant="danger"
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              setDeleteId(row.original.id);
+            }}
+          >
+            <Trash2 className="size-3.5" />
+            Delete
+          </Button>
         </div>
       ),
     },
-  ]
+  ];
 
   const table = useReactTable({
     data: testimonials,
     columns,
-    state: {
-      pagination,
-      rowSelection,
-    },
+    state: { pagination, rowSelection },
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     getCoreRowModel: getCoreRowModel(),
@@ -178,53 +163,78 @@ function CmsTestimonialsPage() {
     onPaginationChange: setPagination,
     pageCount: Math.ceil(totalItems / pagination.pageSize),
     manualPagination: true,
-  })
+  });
 
   return (
-    <Fragment>
-      <main className="w-full px-[48px] py-[40px] flex flex-col gap-8">
-        <header className="bg-white py-4 px-8 rounded-lg shadow p-4">
-          <h1 className="text-p2 font-semibold">CMS Testimonials</h1>
-        </header>
-
-        <section className="flex flex-col gap-6 p-8 bg-white rounded-md">
-          <div className="flex justify-between items-center gap-8 mb-2">
-            <div className="relative w-full">
+    <BackofficeWrapper
+      title="CMS Testimonials"
+      description="Kelola testimonial pengguna"
+    >
+      <Card>
+        <CardHeader>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="relative w-full sm:max-w-sm">
+              <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input
-                placeholder="Cari berdasarkan nama user"
-                className="pl-12 w-full max-h-full"
+                placeholder="Cari nama user…"
+                className="pl-9"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
-              <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[16px]">
-                <SearchOutlined />
-              </div>
             </div>
-            <div className="relative">
-              <Button
-                variant="primary"
-                size="md"
-                className="flex gap-3 text-nowrap"
-                onClick={() => navigate({ to: '/cms-testimonials/create' })}
-              >
-                <PlusOutlined />
-                Tambah Testimonial
-              </Button>
-            </div>
+            <Button
+              onClick={() => navigate({ to: '/cms-testimonials/create' })}
+              size="md"
+            >
+              <Plus className="size-4" />
+              Tambah Testimonial
+            </Button>
           </div>
-
+        </CardHeader>
+        <CardContent>
           {isLoading ? (
-            <div className="text-center py-8 text-neutral-400">Loading...</div>
+            <div className="py-10 text-center text-sm text-muted-foreground">
+              Memuat data…
+            </div>
           ) : (
             <DataTable
               data={testimonials}
               columns={columns}
-              pageSize={9}
               table={table}
+              manualPagination
+              pageCount={Math.ceil(totalItems / pagination.pageSize)}
+              currentPage={pagination.pageIndex + 1}
+              onPageChange={(p) =>
+                setPagination((prev) => ({ ...prev, pageIndex: p - 1 }))
+              }
             />
           )}
-        </section>
-      </main>
-    </Fragment>
-  )
+        </CardContent>
+      </Card>
+
+      <AlertDialog
+        open={!!deleteId}
+        onOpenChange={(o) => !o && setDeleteId(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Hapus testimonial ini?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tindakan ini tidak dapat dibatalkan. Testimonial akan dihapus
+              permanen.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Batal</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => deleteId && handleDelete(deleteId)}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Hapus
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </BackofficeWrapper>
+  );
 }

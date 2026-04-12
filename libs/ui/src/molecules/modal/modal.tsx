@@ -1,7 +1,15 @@
-import { CloseOutlined } from '@ant-design/icons';
+'use client';
+
+import * as React from 'react';
 import { cn } from '@imphnen-frontend-service/utils';
-import React, { useEffect, useMemo, useCallback } from 'react';
-import { createPortal } from 'react-dom';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '../../atoms/dialog';
 
 interface ModalProps {
   isOpen: boolean;
@@ -16,170 +24,83 @@ interface ModalProps {
   'aria-describedby'?: string;
 }
 
-const Modal = ({
+/**
+ * Modal — backward-compat wrapper around the shadcn Dialog primitives.
+ * Existing callers use `<Modal isOpen onClose>` + `Modal.Header/Content/Footer/Title/Description`.
+ */
+function ModalRoot({
   isOpen,
   onClose,
   children,
   className,
-  overlayClassName,
-  closeButtonClassName,
   disableEscapeKeyDown = false,
   'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledBy,
   'aria-describedby': ariaDescribedBy,
-}: ModalProps) => {
-  const handleEscapeKey = useCallback(
-    (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && isOpen && !disableEscapeKeyDown) {
-        onClose();
-      }
-    },
-    [isOpen, onClose, disableEscapeKeyDown]
-  );
-
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-      window.addEventListener('keydown', handleEscapeKey);
-    } else {
-      document.body.style.overflow = '';
-    }
-
-    return () => {
-      document.body.style.overflow = '';
-      window.removeEventListener('keydown', handleEscapeKey);
-    };
-  }, [isOpen, handleEscapeKey]);
-
-  const modalNode = useMemo(() => document.createElement('div'), []);
-
-  useEffect(() => {
-    document.body.appendChild(modalNode);
-    return () => {
-      document.body.removeChild(modalNode);
-    };
-  }, [modalNode]);
-
-  if (!isOpen) return null;
-
-  return createPortal(
-    <div className="fixed inset-0 z-50">
-      <div
-        className={cn(
-          'fixed inset-0 bg-gray-900/80 transition-opacity duration-200',
-          isOpen ? 'opacity-100' : 'opacity-0',
-          overlayClassName
-        )}
-        onClick={onClose}
-        role="presentation"
-      />
-      <div
-        className={cn(
-          'fixed left-[50%] top-[50%] z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 bg-[#F0F8FF] rounded-lg p-6 shadow-xl transition-all duration-200',
-          'sm:rounded-lg sm:max-w-md',
-          isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95',
-          className
-        )}
-        role="dialog"
-        aria-modal="true"
+}: ModalProps) {
+  return (
+    <Dialog
+      open={isOpen}
+      onOpenChange={(o) => {
+        if (!o) onClose();
+      }}
+    >
+      <DialogContent
+        className={cn('sm:max-w-md', className)}
         aria-label={ariaLabel}
         aria-labelledby={ariaLabelledBy}
         aria-describedby={ariaDescribedBy}
+        onEscapeKeyDown={(e) => {
+          if (disableEscapeKeyDown) e.preventDefault();
+        }}
       >
         {children}
-        <button
-          onClick={onClose}
-          className={cn(
-            'absolute right-4 top-4 rounded-sm p-1 text-gray-500 transition-colors hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-2',
-            closeButtonClassName
-          )}
-          aria-label="Close modal"
-        >
-          <CloseOutlined className="h-4 w-4 cursor-pointer" />
-        </button>
-      </div>
-    </div>,
-    modalNode
+      </DialogContent>
+    </Dialog>
   );
-};
-
-interface ModalHeaderProps {
-  className?: string;
-  children: React.ReactNode;
 }
 
-const ModalHeader = ({ className, children }: ModalHeaderProps) => (
-  <div
-    className={cn(
-      'mb-4 flex flex-col space-y-1.5 text-center sm:text-left',
-      className
-    )}
-  >
-    {children}
-  </div>
+type ModalHeaderProps = React.ComponentProps<'div'>;
+const ModalHeader = ({ className, ...props }: ModalHeaderProps) => (
+  <DialogHeader className={className} {...props} />
 );
 
-interface ModalContentProps {
-  className?: string;
-  children: React.ReactNode;
-}
-
-const ModalContent = ({ className, children }: ModalContentProps) => (
-  <div className={cn('mb-4', className)}>{children}</div>
+type ModalContentProps = React.ComponentProps<'div'>;
+const ModalContent = ({ className, ...props }: ModalContentProps) => (
+  <div className={cn('py-2', className)} {...props} />
 );
 
-interface ModalFooterProps {
-  className?: string;
-  children: React.ReactNode;
-}
-
-const ModalFooter = ({ className, children }: ModalFooterProps) => (
-  <div className={cn('flex gap-2 sm:flex-row sm:justify-end', className)}>
-    {children}
-  </div>
+type ModalFooterProps = React.ComponentProps<'div'>;
+const ModalFooter = ({ className, ...props }: ModalFooterProps) => (
+  <DialogFooter className={className} {...props} />
 );
 
-interface ModalTitleProps {
-  className?: string;
-  children: React.ReactNode;
-  id?: string;
-}
-
+type ModalTitleProps = React.ComponentProps<'h2'>;
 const ModalTitle = ({ className, children, id }: ModalTitleProps) => (
-  <h2
-    id={id}
-    className={cn(
-      'text-lg font-semibold leading-none tracking-tight',
-      className
-    )}
-  >
+  <DialogTitle id={id} className={className}>
     {children}
-  </h2>
+  </DialogTitle>
 );
 
-interface ModalDescriptionProps {
-  className?: string;
-  children: React.ReactNode;
-  id?: string;
-}
-
+type ModalDescriptionProps = React.ComponentProps<'p'>;
 const ModalDescription = ({
   className,
   children,
   id,
 }: ModalDescriptionProps) => (
-  <p id={id} className={cn('text-sm text-gray-500', className)}>
+  <DialogDescription id={id} className={className}>
     {children}
-  </p>
+  </DialogDescription>
 );
 
-Modal.Header = ModalHeader;
-Modal.Content = ModalContent;
-Modal.Footer = ModalFooter;
-Modal.Title = ModalTitle;
-Modal.Description = ModalDescription;
+export const Modal = Object.assign(ModalRoot, {
+  Header: ModalHeader,
+  Content: ModalContent,
+  Footer: ModalFooter,
+  Title: ModalTitle,
+  Description: ModalDescription,
+});
 
-export { Modal };
 export type {
   ModalProps,
   ModalHeaderProps,

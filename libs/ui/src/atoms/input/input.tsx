@@ -1,15 +1,8 @@
 'use client';
 
-import {
-  DetailedHTMLProps,
-  FC,
-  InputHTMLAttributes,
-  ReactElement,
-  useState,
-} from 'react';
-import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons'; // Import Ant Design icons
+import * as React from 'react';
+import { Eye, EyeOff } from 'lucide-react';
 import { cn } from '@imphnen-frontend-service/utils';
-import { Button } from '../button';
 
 type TInputType =
   | 'text'
@@ -23,81 +16,80 @@ type TInputSize = 'sm' | 'md' | 'lg';
 type Width = 'standard' | 'custom';
 
 type TInputProps = Omit<
-  DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>,
+  React.InputHTMLAttributes<HTMLInputElement>,
   'size' | 'type'
 > & {
   type?: TInputType;
   size?: TInputSize;
   widthform?: Width;
-  disabled?: boolean;
 };
 
-const sizeClasses: Record<TInputSize, { textSize: string; iconSize: string }> =
-  {
-    sm: { textSize: 'text-[10px] h-[28px]', iconSize: 'text-[10px]' },
-    md: { textSize: 'text-[12px] h-[30px]', iconSize: 'text-[12px]' },
-    lg: { textSize: 'text-[15px] h-[34px]', iconSize: 'text-[15px]' },
-  };
+const sizeClasses: Record<TInputSize, string> = {
+  sm: 'h-8 text-xs',
+  md: 'h-9 text-sm',
+  lg: 'h-11 text-base',
+};
 
-const disabledClass = 'opacity-50 hover:border-neutral-200 cursor-not-allowed';
+export const Input = React.forwardRef<HTMLInputElement, TInputProps>(
+  (
+    {
+      type = 'text',
+      size = 'md',
+      placeholder,
+      widthform = 'standard',
+      disabled,
+      className,
+      ...rest
+    },
+    ref
+  ) => {
+    const [showPassword, setShowPassword] = React.useState(false);
 
-export const Input: FC<TInputProps> = ({
-  type = 'text',
-  size = 'md',
-  placeholder = 'Placeholder',
-  widthform = 'standard',
-  disabled,
-  className,
-  ...rest
-}): ReactElement => {
-  const [showPassword, setShowPassword] = useState(false); // State for password visibility
+    const togglePasswordVisibility = (e: React.MouseEvent) => {
+      e.preventDefault();
+      if (!disabled) setShowPassword((prev) => !prev);
+    };
 
-  const togglePasswordVisibility = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!disabled) setShowPassword((prev) => !prev);
-  };
-
-  const mergedClassName = cn(
-    `px-[12px] py-[8px] text-neutral-800 bg-white placeholder:text-neutral-300 border border-neutral-200 hover:border-blue-300 focus:outline-1 focus:outline-blue-500 rounded-md font-bai-jamjuree w-full ${
-      widthform === 'standard' ? 'min-w-70' : ''
-    }`,
-    sizeClasses[size].textSize,
-    disabled && disabledClass,
-    className
-  );
-
-  return (
-    <div className="relative flex items-center">
-      <input
-        className={mergedClassName}
-        type={type === 'password' && showPassword ? 'text' : type}
-        disabled={disabled}
-        placeholder={placeholder}
-        {...rest}
-      />
-      {type === 'password' && (
-        <div className="absolute end-0 px-3 h-full flex items-center">
-          <Button
+    return (
+      <div className="relative flex items-center w-full">
+        <input
+          ref={ref}
+          data-slot="input"
+          type={type === 'password' && showPassword ? 'text' : type}
+          disabled={disabled}
+          placeholder={placeholder}
+          className={cn(
+            'flex w-full rounded-md border border-input bg-background px-3 py-1 font-bai-jamjuree text-foreground shadow-xs transition-colors',
+            'placeholder:text-muted-foreground',
+            'file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1',
+            'aria-invalid:border-destructive aria-invalid:ring-destructive/20',
+            'disabled:cursor-not-allowed disabled:opacity-50',
+            sizeClasses[size],
+            type === 'password' && 'pr-9',
+            widthform === 'standard' && 'min-w-0',
+            className
+          )}
+          {...rest}
+        />
+        {type === 'password' && (
+          <button
             type="button"
-            variant="text"
-            size={size}
+            tabIndex={-1}
             onClick={togglePasswordVisibility}
-            className={cn(
-              'relative aspect-square -me-2 p-1.5',
-              sizeClasses[size].iconSize,
-              disabled && 'cursor-not-allowed'
-            )}
+            disabled={disabled}
+            className="absolute right-2 inline-flex h-7 w-7 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
+            aria-label={showPassword ? 'Hide password' : 'Show password'}
           >
             {showPassword ? (
-              <EyeInvisibleOutlined
-                style={{ color: 'var(--color-neutral-500)' }}
-              />
+              <EyeOff className="size-4" />
             ) : (
-              <EyeOutlined style={{ color: 'var(--color-neutral-500)' }} />
+              <Eye className="size-4" />
             )}
-          </Button>
-        </div>
-      )}
-    </div>
-  );
-};
+          </button>
+        )}
+      </div>
+    );
+  }
+);
+Input.displayName = 'Input';

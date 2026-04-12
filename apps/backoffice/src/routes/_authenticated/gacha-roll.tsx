@@ -1,14 +1,17 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import * as React from 'react'
-import { Fragment, useState } from 'react'
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import * as React from 'react';
+import { Search, Pencil, Trash2, Plus } from 'lucide-react';
 import {
-  SearchOutlined,
-  EditOutlined,
-  DeleteOutlined,
-  PlusOutlined,
-} from '@ant-design/icons'
-import { Button, Input } from '@imphnen-frontend-service/ui/atoms'
-import { DataTable } from '@imphnen-frontend-service/ui/organisms'
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Input,
+} from '@imphnen-frontend-service/ui/atoms';
+import {
+  DataTable,
+  BackofficeWrapper,
+} from '@imphnen-frontend-service/ui/organisms';
 import {
   ColumnDef,
   getCoreRowModel,
@@ -16,143 +19,101 @@ import {
   PaginationState,
   useReactTable,
   RowSelectionState,
-} from '@tanstack/react-table'
+} from '@tanstack/react-table';
 import {
   useGachaItemList,
   useDeleteGachaItem,
   TGachaItemDto,
-} from '@imphnen-frontend-service/service'
-import { toast } from 'sonner'
+} from '@imphnen-frontend-service/service';
+import { toast } from 'sonner';
+import {
+  SelectAllCheckbox,
+  RowSelectCheckbox,
+  DeleteConfirmDialog,
+} from '../../components/list-helpers';
 
 export const Route = createFileRoute('/_authenticated/gacha-roll')({
   component: GachaRollPage,
-})
+});
 
 function GachaRollPage() {
-  const navigate = useNavigate()
-  const [search, setSearch] = useState('')
-  const [deleteId, setDeleteId] = useState<string | null>(null)
-
+  const navigate = useNavigate();
+  const [search, setSearch] = React.useState('');
+  const [deleteId, setDeleteId] = React.useState<string | null>(null);
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
-    pageSize: 9,
-  })
-
-  const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({})
+    pageSize: 10,
+  });
+  const [rowSelection, setRowSelection] =
+    React.useState<RowSelectionState>({});
 
   const { data: itemsData, isLoading } = useGachaItemList({
     search,
     page: pagination.pageIndex + 1,
     per_page: pagination.pageSize,
-  })
-  const deleteItem = useDeleteGachaItem()
+  });
+  const deleteItem = useDeleteGachaItem();
 
-  const items: TGachaItemDto[] = itemsData?.data ?? []
-  const totalItems = itemsData?.meta?.total ?? items.length
+  const items: TGachaItemDto[] = itemsData?.data ?? [];
+  const totalItems = itemsData?.meta?.total ?? items.length;
 
   const handleDelete = async (id: string) => {
     try {
-      await deleteItem.mutateAsync(id)
-      toast.success('Item berhasil dihapus')
-      setDeleteId(null)
+      await deleteItem.mutateAsync(id);
+      toast.success('Item berhasil dihapus');
+      setDeleteId(null);
     } catch (error) {
-      console.log(error)
-      toast.error('Item gagal dihapus')
+      console.log(error);
+      toast.error('Item gagal dihapus');
     }
-  }
+  };
 
   const columns: ColumnDef<TGachaItemDto>[] = [
     {
       id: 'select',
-      header: ({ table }) => (
-        <input
-          type="checkbox"
-          className="rounded"
-          checked={table.getIsAllRowsSelected()}
-          onChange={table.getToggleAllRowsSelectedHandler()}
-        />
-      ),
-      cell: ({ row }) => (
-        <input
-          type="checkbox"
-          className="rounded"
-          checked={row.getIsSelected()}
-          onChange={row.getToggleSelectedHandler()}
-        />
-      ),
+      header: ({ table }) => <SelectAllCheckbox table={table} />,
+      cell: ({ row }) => <RowSelectCheckbox row={row} />,
     },
-    {
-      header: 'No',
-      accessorKey: 'id',
-    },
-    {
-      header: 'Nama Item',
-      accessorKey: 'name',
-    },
+    { header: 'No', accessorKey: 'id' },
+    { header: 'Nama Item', accessorKey: 'name' },
     {
       header: 'Action',
       cell: ({ row }) => (
-        <div className="flex gap-[8px]">
+        <div className="flex items-center gap-2">
           <Button
-            variant="primary"
+            variant="secondary"
             size="sm"
             onClick={(e) => {
-              e.stopPropagation()
-              navigate({ to: '/gacha-roll/$id', params: { id: row.original.id } })
+              e.stopPropagation();
+              navigate({
+                to: '/gacha-roll/$id',
+                params: { id: row.original.id },
+              });
             }}
-            className="flex items-center gap-2"
           >
-            <EditOutlined /> Update
+            <Pencil className="size-3.5" />
+            Update
           </Button>
-          {deleteId === row.original.id ? (
-            <div className="flex items-center gap-2">
-              <span className="text-label2 text-neutral-500">Yakin?</span>
-              <Button
-                variant="danger"
-                size="sm"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  handleDelete(row.original.id)
-                }}
-              >
-                Ya
-              </Button>
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setDeleteId(null)
-                }}
-              >
-                Batal
-              </Button>
-            </div>
-          ) : (
-            <Button
-              variant="danger"
-              size="sm"
-              onClick={(e) => {
-                e.stopPropagation()
-                setDeleteId(row.original.id)
-              }}
-              className="flex items-center gap-2"
-            >
-              <DeleteOutlined /> Delete
-            </Button>
-          )}
+          <Button
+            variant="danger"
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              setDeleteId(row.original.id);
+            }}
+          >
+            <Trash2 className="size-3.5" />
+            Delete
+          </Button>
         </div>
       ),
     },
-  ]
+  ];
 
   const table = useReactTable({
     data: items,
     columns,
-    state: {
-      pagination,
-      rowSelection,
-    },
+    state: { pagination, rowSelection },
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     getCoreRowModel: getCoreRowModel(),
@@ -160,48 +121,61 @@ function GachaRollPage() {
     onPaginationChange: setPagination,
     pageCount: Math.ceil(totalItems / pagination.pageSize),
     manualPagination: true,
-  })
+  });
 
   return (
-    <Fragment>
-      <main className="w-full px-[48px] py-[40px] flex flex-col gap-8">
-        <header className="bg-white py-4 px-8 rounded-lg shadow p-4">
-          <h1 className="text-p2 font-semibold">Gacha Roll</h1>
-        </header>
-
-        <section className="flex flex-col gap-6 p-8 bg-white rounded-md">
-          <div className="flex justify-between items-center gap-8 mb-2">
-            <div className="relative w-full">
+    <BackofficeWrapper
+      title="Gacha Roll"
+      description="Kelola item hadiah gacha"
+    >
+      <Card>
+        <CardHeader>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="relative w-full sm:max-w-sm">
+              <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input
-                placeholder="Cari berdasarkan nama item"
-                className="pl-12 w-full max-h-full"
+                placeholder="Cari nama item…"
+                className="pl-9"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
-              <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[16px]">
-                <SearchOutlined />
-              </div>
             </div>
-            <div className="relative">
-              <Button
-                variant="primary"
-                size="md"
-                className="flex gap-3 text-nowrap"
-                onClick={() => navigate({ to: '/gacha-roll/create' })}
-              >
-                <PlusOutlined />
-                Tambah Item
-              </Button>
-            </div>
+            <Button
+              onClick={() => navigate({ to: '/gacha-roll/create' })}
+              size="md"
+            >
+              <Plus className="size-4" />
+              Tambah Item
+            </Button>
           </div>
-
+        </CardHeader>
+        <CardContent>
           {isLoading ? (
-            <div className="text-center py-8 text-neutral-400">Loading...</div>
+            <div className="py-10 text-center text-sm text-muted-foreground">
+              Memuat data…
+            </div>
           ) : (
-            <DataTable data={items} columns={columns} table={table} />
+            <DataTable
+              data={items}
+              columns={columns}
+              table={table}
+              manualPagination
+              pageCount={Math.ceil(totalItems / pagination.pageSize)}
+              currentPage={pagination.pageIndex + 1}
+              onPageChange={(p) =>
+                setPagination((prev) => ({ ...prev, pageIndex: p - 1 }))
+              }
+            />
           )}
-        </section>
-      </main>
-    </Fragment>
-  )
+        </CardContent>
+      </Card>
+
+      <DeleteConfirmDialog
+        open={!!deleteId}
+        onOpenChange={(o) => !o && setDeleteId(null)}
+        onConfirm={() => deleteId && handleDelete(deleteId)}
+        title="Hapus item gacha ini?"
+      />
+    </BackofficeWrapper>
+  );
 }

@@ -1,5 +1,5 @@
 import { FC, useState, useEffect, useCallback } from 'react';
-import { Select } from '@imphnen-frontend-service/ui/atoms';
+import { NativeSelect as Select } from '@imphnen-frontend-service/ui/atoms';
 import { SectionWrapper } from '../shared/section-wrapper';
 import { NotificationType } from '../modals/notification-modal';
 import { PersonalInfoSection } from '../sections/personal-info-section';

@@ -1,5 +1,4 @@
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts"
-import { PieLabelProps } from "recharts/types/polar/Pie"
 
 type ChartProps = {
   name: string
@@ -14,14 +13,20 @@ const chartData: ChartProps[] = [
 ]
 
 const RADIAN = Math.PI / 180;
-const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: PieLabelProps) => {
+const renderCustomizedLabel = (props: any) => {
+  const cx = props.cx ?? 0
+  const cy = props.cy ?? 0
+  const midAngle = props.midAngle ?? 0
+  const innerRadius = props.innerRadius ?? 0
+  const outerRadius = props.outerRadius ?? 0
+  const percent = props.percent ?? 0
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-  const x = cx + radius * Math.cos(-(midAngle ?? 0) * RADIAN);
-  const y = cy + radius * Math.sin(-(midAngle ?? 0) * RADIAN);
+  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
   return (
     <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
-      {`${((percent ?? 1) * 100).toFixed(0)}%`}
+      {`${(percent * 100).toFixed(0)}%`}
     </text>
   );
 };
