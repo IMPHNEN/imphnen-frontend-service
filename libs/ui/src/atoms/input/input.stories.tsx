@@ -62,3 +62,12 @@ export const Disabled: Story = {
     disabled: true,
   },
 };
+
+export const Error: Story = {
+  args: {
+    size: 'md',
+    type: 'text',
+    error: true,
+    placeholder: 'Error state',
+  },
+};

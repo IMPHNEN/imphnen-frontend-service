@@ -25,16 +25,16 @@ export type TInputFieldProps = Omit<
 
 const sizeClasses: Record<TInputSize, { label: string; helperText: string }> = {
   lg: {
-    label: 'text-label1 font-medium',
-    helperText: 'text-label3 font-normal',
+    label: 'text-label1 font-medium leading-tight',
+    helperText: 'text-label3 font-normal leading-tight',
   },
   md: {
-    label: 'text-label2 font-medium',
-    helperText: 'text-label2 font-normal',
+    label: 'text-p3 font-medium leading-6',
+    helperText: 'text-label3 font-normal leading-tight',
   },
   sm: {
-    label: 'text-label3 font-medium',
-    helperText: 'text-label2 font-normal',
+    label: 'text-label3 font-medium leading-snug',
+    helperText: 'text-label2 font-normal leading-tight',
   },
 };
 
@@ -56,11 +56,11 @@ export const InputField: FC<TInputFieldProps> = ({
       <label
         htmlFor={htmlFor}
         className={cn(
-          'items-start justify-item-start text-start text-neutral-800!',
+          'items-start justify-item-start text-start text-neutral-800',
           sizeClasses[size].label
         )}
       >
-        {label} {isRequired ? <span className="text-red-500">*</span> : null}
+        {label} {isRequired ? <span className="text-danger-500">*</span> : null}
       </label>
       <Input
         {...(htmlFor && { id: htmlFor })}
@@ -72,17 +72,18 @@ export const InputField: FC<TInputFieldProps> = ({
           error &&
             'border-danger-500 hover:border-danger-500 focus:outline-danger-500',
           className,
-          disabled && 'opacity-50 cursor-not-allowed'
+          disabled && 'opacity-50 cursor-not-allowed',
+          'focus:outline-primary-500 hover:border-primary-200'
         )}
         {...rest}
       />
       {error ? (
-        <p className="text-danger-500 text-label2 text-left">{error}</p>
+        <p className="text-danger-500 text-label3 text-left leading-tight">{error}</p>
       ) : (
         helperText && (
           <p
             className={cn(
-              'text-label2 text-left',
+              'text-neutral-800 text-left',
               sizeClasses[size].helperText
             )}
           >
