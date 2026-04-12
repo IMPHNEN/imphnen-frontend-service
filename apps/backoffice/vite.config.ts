@@ -16,7 +16,9 @@ export default defineConfig(() => ({
     port: 3001,
     host: 'localhost',
   },
-  build: { rolldownOptions: { output: { codeSplitting: { groups: [{ name: 'vendor', test: /node_modules/ }] } } } },
+  resolve: {
+    dedupe: ['react', 'react-dom', '@tanstack/react-router', '@tanstack/react-query'],
+  },
   plugins: [
     TanStackRouterVite({
       routeFileIgnorePattern: '_components|_hooks|_hook|_data',
@@ -31,6 +33,9 @@ export default defineConfig(() => ({
     reportCompressedSize: true,
     commonjsOptions: {
       transformMixedEsModules: true,
+    },
+    rolldownOptions: {
+      output: { codeSplitting: { groups: [{ name: 'vendor', test: /node_modules/ }] } },
     },
   },
   test: {
