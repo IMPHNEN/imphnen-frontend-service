@@ -563,64 +563,88 @@ function SettingsPage() {
             {activeSection === 'feedback' && (
               <div className="space-y-12">
                 <div className="space-y-6">
-                  <p className="text-[15px] font-medium text-[#454545] text-center">Seberapa puas anda dengan platform ini?</p>
+                  <p className="text-[17px] font-semibold text-[#454545] text-center">Seberapa puas anda dengan platform ini?</p>
                   <div className="flex justify-center gap-4">
                     {[1, 2, 3, 4, 5].map(n => (
                       <button
                         key={n}
-                        className="w-[128px] h-[43px] rounded-sm bg-primary-50 text-primary-accent font-semibold hover:bg-primary-accent hover:text-white transition-all cursor-pointer"
+                        className="w-[124px] h-[47px] rounded-sm bg-primary-50 text-primary-accent font-semibold text-[17px] hover:bg-primary-accent hover:text-white transition-all cursor-pointer border border-primary-100"
                       >
                         {n}
                       </button>
                     ))}
                   </div>
-                  <p className="text-[10px] text-[#888888] text-center tracking-wider uppercase">1 = Sangat Tidak Puas, 5 = Sangat Puas</p>
+                  <p className="text-[10px] text-[#888888] text-center tracking-widest uppercase">1 = Sangat Tidak Puas, 5 = Sangat Puas</p>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[15px] font-medium text-[#454545]">Apa hal yang paling kamu sukai dari platform ini</label>
+                  <label className="text-[15px] font-semibold text-[#454545]">Apa hal yang paling kamu sukai dari platform ini</label>
                   <textarea
                     placeholder="Deskripsi Detail Kendala"
-                    className="w-full h-[120px] p-5 border border-neutral-200 rounded-sm text-[15px] outline-none focus:border-primary-accent resize-none"
+                    className="w-full h-[140px] p-5 border border-neutral-200 rounded-sm text-[15px] text-[#454545] outline-none focus:border-primary-accent resize-none placeholder:text-[#BBBBBB]"
                   />
                   <p className="text-[10px] text-[#888888]">Deskripsikan kendala yang kamu alami secara detail dan kronologisnya</p>
                 </div>
 
                 <div className="grid grid-cols-3 gap-8">
                   <div className="space-y-2">
-                    <label className="text-[15px] font-medium text-[#454545]">Seberapa mudah Anda menggunakan platform ini ?</label>
-                    <select className="w-full h-[43px] px-5 border border-neutral-200 rounded-sm text-[15px] text-[#888888] outline-none bg-white">
-                      <option>Placeholder</option>
-                    </select>
+                    <label className="text-[15px] font-semibold text-[#454545]">Seberapa mudah Anda menggunakan platform ini ?</label>
+                    <div className="relative">
+                      <select className="w-full h-[47px] px-5 border border-neutral-200 rounded-sm text-[15px] text-[#888888] outline-none bg-white cursor-pointer appearance-none">
+                        <option>Placeholder</option>
+                        <option>Sangat Mudah</option>
+                        <option>Mudah</option>
+                        <option>Cukup</option>
+                        <option>Sulit</option>
+                      </select>
+                      <Icon icon="mdi:chevron-down" className="absolute right-4 top-1/2 -translate-y-1/2 text-[#888888] pointer-events-none" width="20" />
+                    </div>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[15px] font-medium text-[#454545]">Platform ini membantu perkembangan karier atau pembelajaran Anda?</label>
-                    <select className="w-full h-[43px] px-5 border border-neutral-200 rounded-sm text-[15px] text-[#888888] outline-none bg-white">
-                      <option>Placeholder</option>
-                    </select>
+                    <label className="text-[15px] font-semibold text-[#454545]">Platform ini membantu perkembangan karier atau pembelajaran Anda?</label>
+                    <div className="relative">
+                      <select className="w-full h-[47px] px-5 border border-neutral-200 rounded-sm text-[15px] text-[#888888] outline-none bg-white cursor-pointer appearance-none">
+                        <option>Placeholder</option>
+                        <option>Sangat Terbantu</option>
+                        <option>Terbantu</option>
+                        <option>Cukup</option>
+                        <option>Tidak Terbantu</option>
+                      </select>
+                      <Icon icon="mdi:chevron-down" className="absolute right-4 top-1/2 -translate-y-1/2 text-[#888888] pointer-events-none" width="20" />
+                    </div>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[15px] font-medium text-[#454545]">Bagian apa yang perlu kami ditingkatkan?</label>
-                    <select className="w-full h-[43px] px-5 border border-neutral-200 rounded-sm text-[15px] text-[#888888] outline-none bg-white">
-                      <option>Placeholder</option>
-                    </select>
+                    <label className="text-[15px] font-semibold text-[#454545]">Bagian apa yang perlu kami ditingkatkan?</label>
+                    <div className="relative">
+                      <select className="w-full h-[47px] px-5 border border-neutral-200 rounded-sm text-[15px] text-[#888888] outline-none bg-white cursor-pointer appearance-none">
+                        <option>Placeholder</option>
+                        <option>Roadmap</option>
+                        <option>Mentoring</option>
+                        <option>UI/UX</option>
+                        <option>Materi</option>
+                      </select>
+                      <Icon icon="mdi:chevron-down" className="absolute right-4 top-1/2 -translate-y-1/2 text-[#888888] pointer-events-none" width="20" />
+                    </div>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[15px] font-medium text-[#454545]">Menurut pengalaman kamu, apa yang harus ditingkatkan dari platform ini?</label>
+                  <label className="text-[15px] font-semibold text-[#454545]">Menurut pengalaman kamu, apa yang harus ditingkatkan dari platform ini?</label>
                   <textarea
                     placeholder="Deskripsi Detail Kendala"
-                    className="w-full h-[120px] p-5 border border-neutral-200 rounded-sm text-[15px] outline-none focus:border-primary-accent resize-none"
+                    className="w-full h-[140px] p-5 border border-neutral-200 rounded-sm text-[15px] text-[#454545] outline-none focus:border-primary-accent resize-none placeholder:text-[#BBBBBB]"
                   />
                   <p className="text-[10px] text-[#888888]">Deskripsikan kendala yang kamu alami secara detail dan kronologisnya</p>
                 </div>
 
-                <button className="h-[43px] px-8 bg-primary-accent text-white rounded-sm text-[15px] font-semibold hover:opacity-90 transition-all cursor-pointer">
-                  Kirim Feedback
-                </button>
+                <div className="flex justify-start">
+                  <button className="h-[47px] px-10 bg-primary-accent text-white rounded-sm text-[15px] font-bold hover:opacity-90 transition-all cursor-pointer">
+                    Kirim Feedback
+                  </button>
+                </div>
               </div>
             )}
+
           </div>
         </main>
       </div>
