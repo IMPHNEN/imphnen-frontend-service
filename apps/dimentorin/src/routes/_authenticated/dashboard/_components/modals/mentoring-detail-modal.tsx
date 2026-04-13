@@ -1,5 +1,6 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import { Icon } from '@iconify/react'
+import { Button } from '@imphnen-frontend-service/ui/atoms'
 
 interface MentoringDetailModalProps {
   isOpen: boolean
@@ -15,7 +16,7 @@ interface MentoringDetailModalProps {
     date: string
     time: string
     location: string
-    link: string
+    link?: string
   }
 }
 
@@ -26,106 +27,117 @@ export const MentoringDetailModal: FC<MentoringDetailModalProps> = ({
   mentor,
   session,
 }) => {
-  if (!isOpen) return null
+  const [pertanyaan, setPertanyaan] = useState('')
 
-  const handleCopyLink = () => {
-    navigator.clipboard.writeText(session.link)
-    // You could add a toast here if you have a toast library
-  }
+  if (!isOpen) return null
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <div className="bg-white rounded-[16px] shadow-2xl w-full max-w-[840px] overflow-hidden flex flex-col relative p-12">
-        <div className="flex items-center justify-between mb-10">
-          <h2 className="text-[23px] font-bold text-[#23A1EB] tracking-tight">Detail Sesi Mentoring</h2>
-          <button
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl overflow-hidden flex flex-col relative p-8">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-2xl font-bold text-primary-600">Detail Sesi Mentoring</h2>
+          <Button
+            variant="text"
+            size="icon"
             onClick={onClose}
-            className="text-[#888888] hover:text-[#454545] transition-colors cursor-pointer p-1"
+            className="text-gray-400 hover:text-gray-600 transition-colors"
           >
-            <Icon icon="mdi:close" width="28" />
-          </button>
+            <Icon icon="mdi:close" width="24" />
+          </Button>
         </div>
 
-        <div className="grid grid-cols-[306px_1fr] gap-[64px]">
-          {/* Left Column: Mentor Info */}
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-[280px_1fr] gap-12">
+          {/* Left Column: Mentor Card */}
           <div className="flex flex-col items-center">
-            <h3 className="text-[23px] font-bold text-[#23A1EB] mb-8 w-full">Your Senpai</h3>
-            <div className="flex flex-col items-center text-center">
-              <div className="w-[180px] h-[217px] mb-8 overflow-hidden rounded-lg bg-gray-50 flex items-center justify-center">
+            <h3 className="text-lg font-bold text-primary-600 mb-6 w-full text-center">Your Senpai</h3>
+            <div className="flex flex-col items-center text-center w-full bg-gray-50 rounded-xl p-6">
+              <div className="w-40 h-48 mb-6 overflow-hidden rounded-2xl bg-white flex items-center justify-center shadow-sm">
                 <img
                   src={mentor.image || '/image/mascot-character.webp'}
                   alt={mentor.name}
                   className="w-full h-full object-cover"
                 />
               </div>
-              <p className="text-[19px] font-bold text-[#454545] leading-[1.2] mb-1">
+              <p className="text-lg font-bold text-gray-900 leading-tight mb-1">
                 {mentor.name}
               </p>
-              <p className="text-[15px] font-medium text-[#888888]">
+              <p className="text-sm text-gray-600">
                 {mentor.title}
               </p>
             </div>
           </div>
 
-          {/* Right Column: Session Info */}
-          <div className="flex flex-col pt-1">
-            <div className="mb-6">
-              <p className="text-[15px] font-bold text-[#454545] mb-3">Topik</p>
-              <div className="flex flex-wrap gap-2">
+          {/* Right Column: Session Details */}
+          <div className="flex flex-col gap-6">
+            {/* Topics */}
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-3">Topics</label>
+              <div className="flex flex-wrap gap-2 bg-gray-50 p-4 rounded-lg">
                 {mentor.topics.map((topic, i) => (
                   <span
                     key={i}
-                    className="h-[31px] px-5 rounded-full bg-[#F3F4F6] text-[10px] font-bold text-[#888888] inline-flex items-center uppercase tracking-wider"
+                    className="px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-xs font-semibold text-gray-700 inline-flex items-center"
                   >
-                    {topic}
+                    ▪ {topic}
                   </span>
                 ))}
               </div>
             </div>
 
-            <div className="space-y-4 mb-4">
+            {/* Date and Time Row */}
+            <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-[15px] font-bold text-[#454545] mb-2">Tanggal</p>
-                <div className="w-full h-[43px] rounded-lg border border-[#D1D1D1] px-5 flex items-center text-[15px] text-[#888888] font-medium bg-white">
+                <label className="block text-sm font-bold text-gray-700 mb-2">Tanggal</label>
+                <div className="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-white text-sm text-gray-700 font-medium">
                   {session.date}
                 </div>
               </div>
               <div>
-                <p className="text-[15px] font-bold text-[#454545] mb-2">Waktu</p>
-                <div className="w-full h-[43px] rounded-lg border border-[#D1D1D1] px-5 flex items-center text-[15px] text-[#888888] font-medium bg-white">
+                <label className="block text-sm font-bold text-gray-700 mb-2">Waktu</label>
+                <div className="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-white text-sm text-gray-700 font-medium">
                   {session.time}
                 </div>
               </div>
-              <div>
-                <p className="text-[15px] font-bold text-[#454545] mb-2">Lokasi</p>
-                <div className="w-full h-[43px] rounded-lg border border-[#D1D1D1] px-5 flex items-center text-[15px] text-[#888888] font-medium bg-white">
-                  {session.location}
-                </div>
+            </div>
+
+            {/* Location */}
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-2">Lokasi</label>
+              <div className="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-white text-sm text-gray-700 font-medium">
+                {session.location}
               </div>
             </div>
 
-            <div className="mb-10">
-              <p className="text-[15px] font-bold text-[#454545] mb-2">Link Sesi Mentoring</p>
-              <div className="flex items-center gap-3">
-                <div className="flex-1 h-[43px] rounded-lg border border-[#D1D1D1] px-5 flex items-center text-[15px] text-[#23A1EB] font-bold underline truncate bg-white">
-                  {session.link}
-                </div>
-                <button
-                  onClick={handleCopyLink}
-                  className="h-[43px] px-6 bg-[#23A1EB] text-white rounded-lg text-[15px] font-bold cursor-pointer hover:bg-[#1e88c7] transition-colors"
-                >
-                  Salin Link
-                </button>
-              </div>
+            {/* Pertanyaan Untuk Senpai */}
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-2">Pertanyaan Untuk Senpai</label>
+              <textarea
+                value={pertanyaan}
+                onChange={(e) => setPertanyaan(e.target.value)}
+                placeholder="Hi [Nama Mentor], Saya [Nama Kamu] & saya berharap dapat memiliki sesi mentoring dengan Anda.
+
+Saat ini, saya tertarik untuk mengejar _____. Tujuan saya untuk sesi ini adalah _____.
+
+Saya ingin tahu secara khusus tentang _____:
+1. Pertanyaan Anda
+2. ...
+3. ..."
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 bg-white text-sm text-gray-700 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent resize-none"
+                rows={6}
+              />
             </div>
 
-            <button
+            {/* Contact Button */}
+            <Button
+              variant="primary"
+              className="w-full flex items-center justify-center gap-2"
               onClick={onContactMentor}
-              className="w-full h-[43px] rounded-lg bg-[#23A1EB] text-white text-[15px] font-bold cursor-pointer flex items-center justify-center gap-2 hover:bg-[#1e88c7] transition-colors shadow-sm"
             >
-              <Icon icon="mdi:message-outline" width="20" />
-              Hubungi Mentor
-            </button>
+              <Icon icon="mdi:phone-outline" width="18" />
+              Hubungi Senpai
+            </Button>
           </div>
         </div>
       </div>

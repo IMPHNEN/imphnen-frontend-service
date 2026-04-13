@@ -132,6 +132,7 @@ export const EditProfileModal: FC<EditProfileModalProps> = ({ isOpen, onClose, s
               msg = parsed.message;
               }
             } catch {
+              // JSON parse failed, use original message
             }
           }
         }
