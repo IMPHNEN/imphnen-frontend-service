@@ -4,6 +4,7 @@ import {
   useAuthStore,
   useSessionQuery,
 } from '@imphnen-frontend-service/service'
+import { cn } from '@imphnen-frontend-service/utils'
 import { Icon } from '@iconify/react'
 import { toast } from 'sonner'
 import { resolvePersona } from '../dashboard/_data/persona-resolver'
@@ -281,10 +282,15 @@ function SettingsPage() {
                       </p>
                     </div>
                     <button
-                      onClick={() => setTwoStepAuthStep('input-email')}
-                      className="h-[34px] px-6 bg-primary-accent text-white rounded-sm text-xs font-semibold hover:opacity-90 transition-all cursor-pointer"
+                      onClick={() => setTwoStepAuthStep(meData?.user?.is_active ? 'input-email' : 'input-email')}
+                      className={cn(
+                        "h-[34px] px-6 rounded-sm text-xs font-semibold transition-all cursor-pointer",
+                        meData?.user?.is_active 
+                          ? "bg-red-50 text-red-600 border border-red-100 hover:bg-red-100" 
+                          : "bg-primary-accent text-white hover:opacity-90"
+                      )}
                     >
-                      Aktifkan 2FA
+                      {meData?.user?.is_active ? 'Nonaktifkan 2FA' : 'Aktifkan 2FA'}
                     </button>
                   </div>
                 </div>
@@ -621,85 +627,104 @@ function SettingsPage() {
 
       {/* Two Step Auth Modals */}
       {twoStepAuthStep !== 'off' && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-md p-8 relative">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/20 backdrop-blur-sm">
+          <div className="bg-white rounded-sm shadow-xl w-full max-w-[430px] p-10 relative">
             <button
               onClick={() => setTwoStepAuthStep('off')}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 cursor-pointer"
+              className="absolute top-6 right-6 text-[#888888] hover:text-[#454545] cursor-pointer"
             >
               <Icon icon="mdi:close" width="24" />
             </button>
 
             {twoStepAuthStep === 'input-email' && (
-              <div className="text-center">
-                <div className="w-16 h-16 bg-primary-50 dark:bg-primary-900/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Icon icon="mdi:email-outline" width="32" className="text-primary-600" />
+              <div className="text-center space-y-6">
+                <div className="w-[72px] h-[72px] bg-primary-accent/10 rounded-full flex items-center justify-center mx-auto">
+                  <Icon icon="mdi:email-outline" width="36" className="text-primary-accent" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Verifikasi Email</h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">
-                  Masukkan email kamu untuk menerima kode verifikasi OTP
-                </p>
-                <input
-                  type="email"
-                  placeholder="name@example.com"
-                  defaultValue={user?.email || ""}
-                  className="w-full px-4 py-3 border border-neutral-300 dark:border-gray-600 rounded-xl mb-6 bg-white dark:bg-gray-800 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary-500"
-                />
-                <button
-                  onClick={() => setTwoStepAuthStep('input-otp')}
-                  className="w-full py-3 bg-primary-600 text-white rounded-xl font-semibold hover:bg-primary-700 transition-colors cursor-pointer"
-                >
-                  Kirim Kode
-                </button>
+                <div className="space-y-2">
+                  <h3 className="text-[23px] font-bold text-[#454545]">Verifikasi Email</h3>
+                  <p className="text-[15px] text-[#888888] leading-relaxed px-4">
+                    Masukkan email kamu untuk menerima kode verifikasi OTP
+                  </p>
+                </div>
+                <div className="space-y-4 pt-2">
+                  <input
+                    type="email"
+                    placeholder="name@example.com"
+                    defaultValue={user?.email || ""}
+                    className="w-full h-[47px] px-5 border border-neutral-200 rounded-sm bg-white text-[#454545] text-[15px] outline-none focus:border-primary-accent transition-all"
+                  />
+                  <button
+                    onClick={() => setTwoStepAuthStep('input-otp')}
+                    className="w-full h-[47px] bg-primary-accent text-white rounded-sm font-semibold text-[15px] hover:opacity-90 transition-all cursor-pointer"
+                  >
+                    Kirim Kode
+                  </button>
+                </div>
               </div>
             )}
 
             {twoStepAuthStep === 'input-otp' && (
-              <div className="text-center">
-                <div className="w-16 h-16 bg-primary-50 dark:bg-primary-900/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Icon icon="mdi:shield-check-outline" width="32" className="text-primary-600" />
+              <div className="text-center space-y-6">
+                <div className="w-[72px] h-[72px] bg-primary-accent/10 rounded-full flex items-center justify-center mx-auto">
+                  <Icon icon="mdi:shield-check-outline" width="36" className="text-primary-accent" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Masukkan Kode OTP</h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">
-                  Kami telah mengirimkan kode 6 digit ke email kamu
-                </p>
-                <div className="flex justify-between mb-8">
-                  {[1, 2, 3, 4, 5, 6].map((i) => (
-                    <input
-                      key={i}
-                      type="text"
-                      maxLength={1}
-                      className="w-12 h-14 border border-neutral-300 dark:border-gray-600 rounded-xl text-center text-xl font-bold bg-white dark:bg-gray-800 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary-500"
-                    />
-                  ))}
+                <div className="space-y-2">
+                  <h3 className="text-[23px] font-bold text-[#454545]">Masukkan Kode OTP</h3>
+                  <p className="text-[15px] text-[#888888] leading-relaxed px-4">
+                    Kami telah mengirimkan kode 6 digit ke email kamu
+                  </p>
                 </div>
-                <button
-                  onClick={() => setTwoStepAuthStep('done')}
-                  className="w-full py-3 bg-primary-600 text-white rounded-xl font-semibold hover:bg-primary-700 transition-colors cursor-pointer"
-                >
-                  Verifikasi
-                </button>
-                <p className="text-sm text-gray-500 mt-6">
-                  Tidak menerima kode? <button className="text-primary-600 font-medium cursor-pointer">Kirim ulang</button>
-                </p>
+                <div className="space-y-8 pt-2">
+                  <div className="flex justify-between gap-2">
+                    {[1, 2, 3, 4, 5, 6].map((i) => (
+                      <input
+                        key={i}
+                        type="text"
+                        maxLength={1}
+                        className="w-[52px] h-[58px] border border-neutral-200 rounded-sm text-center text-xl font-bold bg-white text-[#454545] outline-none focus:border-primary-accent transition-all"
+                      />
+                    ))}
+                  </div>
+                  <div className="space-y-4">
+                    <button
+                      onClick={() => setTwoStepAuthStep('done')}
+                      className="w-full h-[47px] bg-primary-accent text-white rounded-sm font-semibold text-[15px] hover:opacity-90 transition-all cursor-pointer"
+                    >
+                      Verifikasi
+                    </button>
+                    <p className="text-[13px] text-[#888888]">
+                      Tidak menerima kode? <button className="text-primary-accent font-semibold hover:underline cursor-pointer">Kirim ulang</button>
+                    </p>
+                  </div>
+                </div>
               </div>
             )}
 
             {twoStepAuthStep === 'done' && (
-              <div className="text-center">
-                <div className="w-16 h-16 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Icon icon="mdi:check-circle-outline" width="32" className="text-green-600" />
+              <div className="text-center space-y-6">
+                <div className="w-[72px] h-[72px] bg-success-500/10 rounded-full flex items-center justify-center mx-auto">
+                  <Icon icon="mdi:check-circle-outline" width="36" className="text-success-500" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">2FA Berhasil Diaktifkan!</h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">
-                  Akun kamu sekarang lebih aman dengan verifikasi dua langkah
-                </p>
-                <button
-                  onClick={() => setTwoStepAuthStep('off')}
-                  className="w-full py-3 bg-primary-600 text-white rounded-xl font-semibold hover:bg-primary-700 transition-colors cursor-pointer"
-                >
-                  Selesai
-                </button>
+                <div className="space-y-2">
+                  <h3 className="text-[23px] font-bold text-[#454545]">
+                    {meData?.user?.is_active ? '2FA Berhasil Dinonaktifkan!' : '2FA Berhasil Diaktifkan!'}
+                  </h3>
+                  <p className="text-[15px] text-[#888888] leading-relaxed px-4">
+                    {meData?.user?.is_active 
+                      ? 'Fitur autentikasi telah dinonaktifkan dari akun kamu.'
+                      : 'Akun kamu sekarang lebih aman dengan verifikasi dua langkah.'
+                    }
+                  </p>
+                </div>
+                <div className="pt-2">
+                  <button
+                    onClick={() => setTwoStepAuthStep('off')}
+                    className="w-full h-[47px] bg-primary-accent text-white rounded-sm font-semibold text-[15px] hover:opacity-90 transition-all cursor-pointer"
+                  >
+                    Selesai
+                  </button>
+                </div>
               </div>
             )}
           </div>
