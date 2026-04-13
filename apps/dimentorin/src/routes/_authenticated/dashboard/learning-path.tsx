@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import { Icon } from '@iconify/react'
 
@@ -7,9 +7,14 @@ export const Route = createFileRoute('/_authenticated/dashboard/learning-path')(
 })
 
 function LearningPathPage() {
+  const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState<'roadmap' | 'article'>('roadmap')
   const [isSubmitArticlePopupOpen, setIsSubmitArticlePopupOpen] = useState(false)
   const [selectedArticles, setSelectedArticles] = useState<number[]>([])
+
+  const handleEditArticle = () => {
+    navigate({ to: '/dashboard/article-builder' })
+  }
 
   const toggleSelectArticle = (no: number) => {
     setSelectedArticles((prev) => (prev.includes(no) ? prev.filter((id) => id !== no) : [...prev, no]))
@@ -137,7 +142,10 @@ function LearningPathPage() {
                     <td className="text-xs text-text-muted px-4 py-3">{row.date}</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center justify-center gap-2">
-                        <button className="h-7 w-[84px] rounded-sm bg-[#fef39b] text-[#d7a20f] text-[10px] font-semibold cursor-pointer flex items-center justify-center gap-1 hover:opacity-90 transition-all">
+                        <button
+                          onClick={handleEditArticle}
+                          className="h-7 w-[84px] rounded-sm bg-[#fef39b] text-[#d7a20f] text-[10px] font-semibold cursor-pointer flex items-center justify-center gap-1 hover:opacity-90 transition-all"
+                        >
                           <Icon icon="mdi:pencil" width="12" />
                           Edit
                         </button>

@@ -1,4 +1,5 @@
 import { createFileRoute, Outlet, Link, useLocation, useNavigate } from '@tanstack/react-router'
+import { useState } from 'react'
 import { useAuthStore } from '@imphnen-frontend-service/service'
 import { Icon } from '@iconify/react'
 import { resolvePersona } from './dashboard/_data/persona-resolver'
@@ -40,21 +41,66 @@ export const Route = createFileRoute('/_authenticated/dashboard')({
  * Header component for the dashboard, containing the app brand and user profile.
  */
 function HeaderDashboard({ persona, user, onLogout }: { persona: 'user' | 'mentor', user: any, onLogout: () => void }) {
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
+
+  const notifications = [
+    { id: 1, title: 'Mentoring Sesi Baru', message: 'Kamu punya sesi mentoring besok jam 20:00 WIB', time: '2 jam yang lalu', unread: true },
+    { id: 2, title: 'Artikel Disetujui', message: 'Artikel "How to install linux" kamu telah disetujui mentor', time: '5 jam yang lalu', unread: false },
+    { id: 3, title: 'Roadmap Selesai', message: 'Selamat! Kamu telah menyelesaikan roadmap Front-end Basic', time: '1 hari yang lalu', unread: false },
+  ]
+
   return (
-    <header className="h-[58px] w-[972px] mx-auto mt-[52px] mb-[62px] bg-white rounded-sm shadow-sm flex items-center justify-between px-5">
+    <header className="h-[58px] w-[972px] mx-auto mt-[52px] mb-[62px] bg-white rounded-sm shadow-sm flex items-center justify-between px-5 relative">
       <Link to="/dashboard" className="text-[19px] font-semibold text-primary-accent">
         Dimentorin.dev
       </Link>
 
       <div className="flex items-center gap-4">
-        <button className="w-7 h-7 rounded-sm bg-white text-neutral-600 flex items-center justify-center cursor-pointer">
-          <Icon icon="lucide:bell" width="16" />
-        </button>
-        <button className="w-7 h-7 rounded-sm bg-white text-neutral-600 flex items-center justify-center cursor-pointer">
-          <Icon icon="lucide:search" width="16" />
-        </button>
+        <div className="relative">
+          <button
+            onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+            className={`w-7 h-7 rounded-sm flex items-center justify-center cursor-pointer transition-colors ${
+              isNotificationsOpen ? 'bg-primary-50 text-primary-accent' : 'bg-white text-neutral-600'
+            }`}
+          >
+            <Icon icon="lucide:bell" width="16" />
+            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white" />
+          </button>
+
+          {isNotificationsOpen && (
+            <div className="absolute right-0 top-full mt-2 w-[320px] bg-white rounded-xl shadow-2xl border border-gray-100 z-50 overflow-hidden animate-in fade-in slide-in-from-top-2">
+              <div className="p-4 border-b border-gray-50 flex items-center justify-between">
+                <h3 className="font-bold text-gray-900">Notifikasi</h3>
+                <button className="text-xs text-primary-600 font-medium hover:underline cursor-pointer">Tandai semua dibaca</button>
+              </div>
+              <div className="max-h-[400px] overflow-y-auto">
+                {notifications.map((n) => (
+                  <div key={n.id} className={`p-4 border-b border-gray-50 last:border-0 hover:bg-gray-50 transition-colors cursor-pointer ${n.unread ? 'bg-primary-50/30' : ''}`}>
+                    <div className="flex justify-between items-start mb-1">
+                      <p className={`text-sm font-bold ${n.unread ? 'text-gray-900' : 'text-gray-700'}`}>{n.title}</p>
+                      <span className="text-[10px] text-gray-400 whitespace-nowrap">{n.time}</span>
+                    </div>
+                    <p className="text-xs text-gray-500 line-clamp-2">{n.message}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="p-3 bg-gray-50 text-center">
+                <button className="text-xs font-bold text-gray-600 hover:text-primary-600 transition-colors cursor-pointer">Lihat Semua Notifikasi</button>
+              </div>
+            </div>
+          )}
+        </div>
+        <Link 
+          to="/dashboard/settings"
+          className="w-7 h-7 rounded-sm bg-white text-neutral-600 flex items-center justify-center cursor-pointer"
+        >
+          <Icon icon="lucide:settings" width="16" />
+        </Link>
         
-        <button className="h-[42px] flex items-center gap-3 pl-2.5 cursor-pointer border-none bg-transparent">
+        <Link 
+          to="/profile" 
+          className="h-[42px] flex items-center gap-3 pl-2.5 cursor-pointer border-none bg-transparent"
+        >
           <div className="flex flex-col items-end text-right">
             <span className="text-xs font-medium text-neutral-600">{user?.fullname || 'User'}</span>
             <span className="text-[10px] font-medium text-neutral-600">{persona === 'mentor' ? 'Mentor' : 'Mentee'}</span>
@@ -63,7 +109,7 @@ function HeaderDashboard({ persona, user, onLogout }: { persona: 'user' | 'mento
             className="w-7 h-7 rounded-full bg-bg-placeholder bg-cover bg-center" 
             style={user?.avatar ? { backgroundImage: `url(${user.avatar})` } : {}}
           />
-        </button>
+        </Link>
       </div>
     </header>
   );
