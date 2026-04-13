@@ -272,9 +272,9 @@ function SettingsPage() {
 
             {activeSection === 'privacy' && (
               <div className="space-y-12">
-                <div className="max-w-[732px] p-6 border border-neutral-100 rounded-sm space-y-6">
-                  <div className="flex items-start justify-between">
-                    <div className="space-y-1">
+                <div className="w-full p-6 border border-neutral-100 rounded-sm space-y-6">
+                  <div className="flex items-start justify-between gap-6">
+                    <div className="flex-1 space-y-1">
                       <h3 className="text-[19px] font-semibold text-[#454545]">Two Step Authentication</h3>
                       <p className="text-[15px] text-[#888888]">
                         Tambahkan lapisan keamanan ekstra ke akun kamu.
@@ -289,7 +289,7 @@ function SettingsPage() {
                   </div>
                 </div>
 
-                <div className="max-w-[732px] p-6 border border-neutral-100 rounded-sm space-y-6">
+                <div className="w-full p-6 border border-neutral-100 rounded-sm space-y-6">
                   <h3 className="text-[19px] font-semibold text-[#454545]">Notifikasi Email</h3>
                   <div className="space-y-4">
                     {[
@@ -305,7 +305,7 @@ function SettingsPage() {
                   </div>
                 </div>
 
-                <div className="max-w-[732px] p-6 border border-neutral-100 rounded-sm space-y-8">
+                <div className="w-full p-6 border border-neutral-100 rounded-sm space-y-8">
                   <h3 className="text-[19px] font-semibold text-[#454545]">Rubah Password</h3>
                   <div className="space-y-6">
                     <div className="space-y-2">
@@ -340,8 +340,8 @@ function SettingsPage() {
                   </div>
                 </div>
 
-                <div className="max-w-[732px] p-6 border border-red-100 bg-red-50/30 rounded-sm flex items-center justify-between">
-                  <div className="space-y-1">
+                <div className="w-full p-6 border border-red-100 bg-red-50/30 rounded-sm flex items-start justify-between gap-6">
+                  <div className="flex-1 space-y-1">
                     <h3 className="text-[19px] font-semibold text-red-600">Penghapusan Akun?</h3>
                     <p className="text-[15px] text-[#888888]">
                       Tindakan ini tidak dapat dibatalkan. Semua data kamu akan dihapus secara permanen.

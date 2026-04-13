@@ -32,7 +32,6 @@ import { Route as AuthenticatedDashboardSettingsRouteImport } from './routes/_au
 import { Route as AuthenticatedDashboardRoadmapDiscoveryRouteImport } from './routes/_authenticated/dashboard/roadmap-discovery'
 import { Route as AuthenticatedDashboardMentoringRouteImport } from './routes/_authenticated/dashboard/mentoring'
 import { Route as AuthenticatedDashboardLearningPathRouteImport } from './routes/_authenticated/dashboard/learning-path'
-import { Route as AuthenticatedDashboardFaqRouteImport } from './routes/_authenticated/dashboard/faq'
 import { Route as AuthenticatedDashboardArticleBuilderRouteImport } from './routes/_authenticated/dashboard/article-builder'
 import { Route as PublicAuthRegisterSuccessRouteImport } from './routes/_public/auth/register_/success'
 import { Route as PublicAuthRegisterOtpRouteImport } from './routes/_public/auth/register_/otp'
@@ -161,12 +160,6 @@ const AuthenticatedDashboardLearningPathRoute =
     path: '/learning-path',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
-const AuthenticatedDashboardFaqRoute =
-  AuthenticatedDashboardFaqRouteImport.update({
-    id: '/faq',
-    path: '/faq',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
 const AuthenticatedDashboardArticleBuilderRoute =
   AuthenticatedDashboardArticleBuilderRouteImport.update({
     id: '/article-builder',
@@ -215,7 +208,6 @@ export interface FileRoutesByFullPath {
   '/profile': typeof SiteProfileRoute
   '/resources': typeof SiteResourcesRoute
   '/dashboard/article-builder': typeof AuthenticatedDashboardArticleBuilderRoute
-  '/dashboard/faq': typeof AuthenticatedDashboardFaqRoute
   '/dashboard/learning-path': typeof AuthenticatedDashboardLearningPathRoute
   '/dashboard/mentoring': typeof AuthenticatedDashboardMentoringRoute
   '/dashboard/roadmap-discovery': typeof AuthenticatedDashboardRoadmapDiscoveryRoute
@@ -244,7 +236,6 @@ export interface FileRoutesByTo {
   '/profile': typeof SiteProfileRoute
   '/resources': typeof SiteResourcesRoute
   '/dashboard/article-builder': typeof AuthenticatedDashboardArticleBuilderRoute
-  '/dashboard/faq': typeof AuthenticatedDashboardFaqRoute
   '/dashboard/learning-path': typeof AuthenticatedDashboardLearningPathRoute
   '/dashboard/mentoring': typeof AuthenticatedDashboardMentoringRoute
   '/dashboard/roadmap-discovery': typeof AuthenticatedDashboardRoadmapDiscoveryRoute
@@ -278,7 +269,6 @@ export interface FileRoutesById {
   '/_site/profile': typeof SiteProfileRoute
   '/_site/resources': typeof SiteResourcesRoute
   '/_authenticated/dashboard/article-builder': typeof AuthenticatedDashboardArticleBuilderRoute
-  '/_authenticated/dashboard/faq': typeof AuthenticatedDashboardFaqRoute
   '/_authenticated/dashboard/learning-path': typeof AuthenticatedDashboardLearningPathRoute
   '/_authenticated/dashboard/mentoring': typeof AuthenticatedDashboardMentoringRoute
   '/_authenticated/dashboard/roadmap-discovery': typeof AuthenticatedDashboardRoadmapDiscoveryRoute
@@ -310,7 +300,6 @@ export interface FileRouteTypes {
     | '/profile'
     | '/resources'
     | '/dashboard/article-builder'
-    | '/dashboard/faq'
     | '/dashboard/learning-path'
     | '/dashboard/mentoring'
     | '/dashboard/roadmap-discovery'
@@ -339,7 +328,6 @@ export interface FileRouteTypes {
     | '/profile'
     | '/resources'
     | '/dashboard/article-builder'
-    | '/dashboard/faq'
     | '/dashboard/learning-path'
     | '/dashboard/mentoring'
     | '/dashboard/roadmap-discovery'
@@ -372,7 +360,6 @@ export interface FileRouteTypes {
     | '/_site/profile'
     | '/_site/resources'
     | '/_authenticated/dashboard/article-builder'
-    | '/_authenticated/dashboard/faq'
     | '/_authenticated/dashboard/learning-path'
     | '/_authenticated/dashboard/mentoring'
     | '/_authenticated/dashboard/roadmap-discovery'
@@ -565,13 +552,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardLearningPathRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
-    '/_authenticated/dashboard/faq': {
-      id: '/_authenticated/dashboard/faq'
-      path: '/faq'
-      fullPath: '/dashboard/faq'
-      preLoaderRoute: typeof AuthenticatedDashboardFaqRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
-    }
     '/_authenticated/dashboard/article-builder': {
       id: '/_authenticated/dashboard/article-builder'
       path: '/article-builder'
@@ -626,7 +606,6 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardArticleBuilderRoute: typeof AuthenticatedDashboardArticleBuilderRoute
-  AuthenticatedDashboardFaqRoute: typeof AuthenticatedDashboardFaqRoute
   AuthenticatedDashboardLearningPathRoute: typeof AuthenticatedDashboardLearningPathRoute
   AuthenticatedDashboardMentoringRoute: typeof AuthenticatedDashboardMentoringRoute
   AuthenticatedDashboardRoadmapDiscoveryRoute: typeof AuthenticatedDashboardRoadmapDiscoveryRoute
@@ -637,7 +616,6 @@ const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
   {
     AuthenticatedDashboardArticleBuilderRoute:
       AuthenticatedDashboardArticleBuilderRoute,
-    AuthenticatedDashboardFaqRoute: AuthenticatedDashboardFaqRoute,
     AuthenticatedDashboardLearningPathRoute:
       AuthenticatedDashboardLearningPathRoute,
     AuthenticatedDashboardMentoringRoute: AuthenticatedDashboardMentoringRoute,
