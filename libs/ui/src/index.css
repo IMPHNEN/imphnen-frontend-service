@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Bai+Jamjuree:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
 @import 'tailwindcss';
+@import 'tw-animate-css';
+
 @source "../../../libs/ui/**/*.{ts,tsx}";
 
 @theme {
@@ -96,6 +98,45 @@
   /* ~10px */
   --text-label3: 0.677rem;
   /* ~8px */
+
+  /* shadcn/ui semantic tokens — aliased to existing palette (keep colors consistent) */
+  --color-background: #ffffff;
+  --color-foreground: #3d3d3d;
+  --color-card: #ffffff;
+  --color-card-foreground: #3d3d3d;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #3d3d3d;
+  --color-primary: #23a1eb;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #e7e7e7;
+  --color-secondary-foreground: #3d3d3d;
+  --color-muted: #f6f6f6;
+  --color-muted-foreground: #6d6d6d;
+  --color-accent: #e1f0fd;
+  --color-accent-foreground: #085f9c;
+  --color-destructive: #ff5242;
+  --color-destructive-foreground: #ffffff;
+  --color-border: #d1d1d1;
+  --color-input: #d1d1d1;
+  --color-ring: #3eb0f2;
+
+  --color-sidebar: #ffffff;
+  --color-sidebar-foreground: #4f4f4f;
+  --color-sidebar-primary: #23a1eb;
+  --color-sidebar-primary-foreground: #ffffff;
+  --color-sidebar-accent: #f0f8ff;
+  --color-sidebar-accent-foreground: #085f9c;
+  --color-sidebar-border: #e7e7e7;
+  --color-sidebar-ring: #3eb0f2;
+
+  --color-chart-1: #23a1eb;
+  --color-chart-2: #35ba43;
+  --color-chart-3: #04acf3;
+  --color-chart-4: #ffed27;
+  --color-chart-5: #ff5242;
+
+  --radius: 8px;
+  --font-sans: 'Bai Jamjuree', sans-serif;
 }
 
 @layer base {

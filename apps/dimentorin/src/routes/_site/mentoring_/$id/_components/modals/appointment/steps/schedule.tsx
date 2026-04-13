@@ -1,4 +1,4 @@
-import { Input, Select, Textarea } from "@imphnen-frontend-service/ui/atoms"
+import { Input, NativeSelect as Select, Textarea } from "@imphnen-frontend-service/ui/atoms"
 import { cn } from "@imphnen-frontend-service/utils"
 import { motion } from "framer-motion"
 

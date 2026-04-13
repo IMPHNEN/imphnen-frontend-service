@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "new-york",
+  "rsc": false,
+  "tsx": true,
+  "tailwind": {
+    "config": "",
+    "css": "libs/ui/src/index.css",
+    "baseColor": "neutral",
+    "cssVariables": true,
+    "prefix": ""
+  },
+  "aliases": {
+    "components": "@imphnen-frontend-service/ui",
+    "utils": "@imphnen-frontend-service/utils",
+    "ui": "@imphnen-frontend-service/ui/atoms",
+    "lib": "@imphnen-frontend-service/utils",
+    "hooks": "@imphnen-frontend-service/utils"
+  },
+  "iconLibrary": "lucide"
+}

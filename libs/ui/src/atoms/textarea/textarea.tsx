@@ -1,18 +1,12 @@
+'use client';
+
+import * as React from 'react';
 import { cn } from '@imphnen-frontend-service/utils';
-import {
-  DetailedHTMLProps,
-  FC,
-  ReactElement,
-  TextareaHTMLAttributes,
-} from 'react';
 
 type TTextareaSize = 'sm' | 'md' | 'lg';
 
 type TTextareaProps = Omit<
-  DetailedHTMLProps<
-    TextareaHTMLAttributes<HTMLTextAreaElement>,
-    HTMLTextAreaElement
-  >,
+  React.TextareaHTMLAttributes<HTMLTextAreaElement>,
   'size'
 > & {
   size?: TTextareaSize;
@@ -20,40 +14,40 @@ type TTextareaProps = Omit<
 };
 
 const sizeClasses: Record<TTextareaSize, string> = {
-  sm: 'text-[10px]',
-  md: 'text-[12px]',
-  lg: 'text-[15px]',
+  sm: 'text-xs min-h-[60px]',
+  md: 'text-sm min-h-[72px]',
+  lg: 'text-base min-h-[96px]',
 };
 
-const disabledClass = 'opacity-50 hover:border-neutral-200 cursor-not-allowed';
-const errorClass =
-  'border-danger-500 hover:border-danger-500 focus:outline-danger-500';
-
-export const Textarea: FC<TTextareaProps> = ({
-  size = 'md',
-  placeholder = 'Placeholder',
-  disabled,
-  error,
-  className,
-  ...rest
-}): ReactElement => {
-  const mergedClassName = cn(
-    'rounded-md border border-neutral-200 hover:border-blue-300 focus:outline-1 focus:outline-blue-500 px-[12px] py-[8px] bg-white text-neutral-800 placeholder:text-neutral-300 invalid:border-danger-500 invalid:text-danger-500',
-    sizeClasses[size],
-    disabled && disabledClass,
-    error && errorClass,
-    className
-  );
-  return (
-    <>
-      <textarea
-        className={mergedClassName}
-        placeholder={placeholder}
-        disabled={disabled}
-        style={{ resize: disabled ? 'none' : 'both' }}
-        {...rest}
-      ></textarea>
-      {error && <p className="text-danger-500 text-xs">{error}</p>}
-    </>
-  );
-};
+export const Textarea = React.forwardRef<HTMLTextAreaElement, TTextareaProps>(
+  ({ size = 'md', placeholder, disabled, error, className, ...rest }, ref) => {
+    return (
+      <div className="w-full">
+        <textarea
+          ref={ref}
+          data-slot="textarea"
+          disabled={disabled}
+          placeholder={placeholder}
+          aria-invalid={!!error}
+          className={cn(
+            'flex w-full rounded-md border border-input bg-background px-3 py-2 font-bai-jamjuree text-foreground shadow-xs transition-colors',
+            'placeholder:text-muted-foreground',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1',
+            'aria-invalid:border-destructive aria-invalid:ring-destructive/20',
+            'disabled:cursor-not-allowed disabled:opacity-50 disabled:resize-none',
+            'resize-y',
+            sizeClasses[size],
+            className
+          )}
+          {...rest}
+        />
+        {error && (
+          <p className="mt-1 text-xs text-destructive" data-slot="textarea-error">
+            {error}
+          </p>
+        )}
+      </div>
+    );
+  }
+);
+Textarea.displayName = 'Textarea';

@@ -1,58 +1,74 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { BackofficeWrapper } from '@imphnen-frontend-service/ui/organisms'
-import { cn, For } from '@imphnen-frontend-service/utils'
-import { useState } from 'react'
-import { GeneralSettings } from './_components/settings-dimentorin/general'
-import { UserRolesPermission } from './_components/settings-dimentorin/user-roles-permission'
-import { NotificationSettings } from './_components/settings-dimentorin/notification'
-import { SecuritySettings } from './_components/settings-dimentorin/security'
-import { PaymentSettings } from './_components/settings-dimentorin/payment'
-
-const TABS = {
-  general: 'General Settings',
-  userRolePermissions: 'User Roles & Permissions',
-  notification: 'Notification Settings',
-  security: 'Security',
-  payment: 'Payment',
-} as const
-type Tabs = typeof TABS[keyof typeof TABS]
+import { createFileRoute } from '@tanstack/react-router';
+import * as React from 'react';
+import {
+  Card,
+  CardContent,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@imphnen-frontend-service/ui/atoms';
+import { BackofficeWrapper } from '@imphnen-frontend-service/ui/organisms';
+import { GeneralSettings } from './_components/settings-dimentorin/general';
+import { UserRolesPermission } from './_components/settings-dimentorin/user-roles-permission';
+import { NotificationSettings } from './_components/settings-dimentorin/notification';
+import { SecuritySettings } from './_components/settings-dimentorin/security';
+import { PaymentSettings } from './_components/settings-dimentorin/payment';
 
 export const Route = createFileRoute('/_authenticated/settings-dimentorin')({
   component: SettingsDimentorinPage,
-})
+});
 
 function SettingsDimentorinPage(): React.ReactElement {
-  const [activeTab, setActiveTab] = useState<Tabs>(TABS.general)
-
   return (
-    <BackofficeWrapper title="Dimentorin.dev">
-      <h1 className="text-p1 font-semibold text-neutral-700 mb-8">Settings</h1>
-
-      <div className="flex items-start gap-x-8">
-        <div className="w-64 bg-white p-2.5 shadow space-y-2 rounded-md">
-          <For data={Object.values(TABS)}>
-            {(tab) => (
-              <button
-                key={tab}
-                className={cn(
-                  'px-4 py-3 w-full text-left font-medium rounded-md text-neutral-400 cursor-pointer select-none hover:bg-primary-100',
-                  activeTab === tab && 'bg-primary-500 text-white hover:bg-primary-600'
-                )}
-                onClick={() => setActiveTab(tab)}
-              >
-                {tab}
-              </button>
-            )}
-          </For>
-        </div>
-        <div className="bg-white px-8 py-6 shadow space-y-2 rounded-md flex-1">
-          {activeTab === TABS.general && <GeneralSettings />}
-          {activeTab === TABS.userRolePermissions && <UserRolesPermission />}
-          {activeTab === TABS.notification && <NotificationSettings />}
-          {activeTab === TABS.security && <SecuritySettings />}
-          {activeTab === TABS.payment && <PaymentSettings />}
-        </div>
-      </div>
+    <BackofficeWrapper
+      title="Dimentorin Settings"
+      description="Konfigurasi platform Dimentorin.dev"
+    >
+      <Tabs defaultValue="general" className="gap-6">
+        <TabsList className="flex-wrap">
+          <TabsTrigger value="general">General</TabsTrigger>
+          <TabsTrigger value="roles">Roles & Permissions</TabsTrigger>
+          <TabsTrigger value="notification">Notification</TabsTrigger>
+          <TabsTrigger value="security">Security</TabsTrigger>
+          <TabsTrigger value="payment">Payment</TabsTrigger>
+        </TabsList>
+        <TabsContent value="general">
+          <Card>
+            <CardContent className="pt-6">
+              <GeneralSettings />
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="roles">
+          <Card>
+            <CardContent className="pt-6">
+              <UserRolesPermission />
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="notification">
+          <Card>
+            <CardContent className="pt-6">
+              <NotificationSettings />
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="security">
+          <Card>
+            <CardContent className="pt-6">
+              <SecuritySettings />
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="payment">
+          <Card>
+            <CardContent className="pt-6">
+              <PaymentSettings />
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </BackofficeWrapper>
-  )
+  );
 }

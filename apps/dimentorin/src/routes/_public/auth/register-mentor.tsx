@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { FC, ReactElement, useState } from 'react'
 import { ControlledInputField, RegisterResetBanner } from '@imphnen-frontend-service/ui/organisms'
-import { Button, Select } from '@imphnen-frontend-service/ui/atoms'
+import { Button } from '@imphnen-frontend-service/ui/atoms'
 import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons'
 import { InputField, RegisterMentorStep, SelectField } from '@imphnen-frontend-service/ui/molecules'
 

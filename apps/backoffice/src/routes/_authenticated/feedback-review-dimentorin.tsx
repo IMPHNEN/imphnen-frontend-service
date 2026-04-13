@@ -1,62 +1,91 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { SearchOutlined } from '@ant-design/icons'
-import { Button, Input, Select } from '@imphnen-frontend-service/ui/atoms'
-import { BackofficeWrapper, DataTable } from '@imphnen-frontend-service/ui/organisms'
-import { cn, For } from '@imphnen-frontend-service/utils'
-import { ColumnDef, getCoreRowModel, getPaginationRowModel, PaginationState, RowSelectionState, useReactTable } from '@tanstack/react-table'
-import { ReactElement, useState } from 'react'
-import { useMySessions, TSessionListItem } from '@imphnen-frontend-service/service'
+import { createFileRoute } from '@tanstack/react-router';
+import * as React from 'react';
+import { Search, MessageSquare } from 'lucide-react';
+import {
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Input,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@imphnen-frontend-service/ui/atoms';
+import {
+  BackofficeWrapper,
+  DataTable,
+} from '@imphnen-frontend-service/ui/organisms';
+import { cn } from '@imphnen-frontend-service/utils';
+import {
+  ColumnDef,
+  getCoreRowModel,
+  getPaginationRowModel,
+  PaginationState,
+  RowSelectionState,
+  useReactTable,
+} from '@tanstack/react-table';
+import { useMySessions, TSessionListItem } from '@imphnen-frontend-service/service';
+import {
+  SelectAllCheckbox,
+  RowSelectCheckbox,
+} from '../../components/list-helpers';
 
-const TABS = {
-  MENTORING: 'Mentoring',
-  PLATFORM: 'Platform'
-} as const
-type Tabs = typeof TABS[keyof typeof TABS]
-
-export const Route = createFileRoute('/_authenticated/feedback-review-dimentorin')({
+export const Route = createFileRoute(
+  '/_authenticated/feedback-review-dimentorin'
+)({
   component: FeedbackReviewDimentorinPage,
-})
+});
 
-function FeedbackReviewDimentorinPage(): ReactElement {
-  const [activeTab, setActiveTab] = useState<Tabs>(TABS.MENTORING)
+function FeedbackReviewDimentorinPage() {
+  const [activeTab, setActiveTab] = React.useState<'mentoring' | 'platform'>(
+    'mentoring'
+  );
+  const [ratingFilter, setRatingFilter] = React.useState<string>('all');
+  const [statusFilter, setStatusFilter] = React.useState<string>('all');
 
-  const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
-  const [pagination, setPagination] = useState<PaginationState>({
+  const [rowSelection, setRowSelection] =
+    React.useState<RowSelectionState>({});
+  const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
-    pageSize: 9,
-  })
+    pageSize: 10,
+  });
 
   const { data: sessionsData, isLoading } = useMySessions(
-    activeTab === TABS.MENTORING ? { status: 'completed' } : undefined
-  )
+    activeTab === 'mentoring' ? { status: 'completed' } : undefined
+  );
 
-  const sessions: TSessionListItem[] = activeTab === TABS.MENTORING
-    ? (sessionsData?.sessions ?? [])
-    : []
-  const totalItems = activeTab === TABS.MENTORING
-    ? (sessionsData?.total ?? sessions.length)
-    : 0
+  const allSessions: TSessionListItem[] =
+    activeTab === 'mentoring' ? (sessionsData?.sessions ?? []) : [];
+
+  const sessions = React.useMemo(() => {
+    return allSessions.filter((s) => {
+      if (statusFilter !== 'all') {
+        const hasRating = !!s.rating;
+        if (statusFilter === 'done' && !hasRating) return false;
+        if (statusFilter === 'todo' && hasRating) return false;
+      }
+      if (ratingFilter !== 'all' && String(s.rating ?? '') !== ratingFilter)
+        return false;
+      return true;
+    });
+  }, [allSessions, statusFilter, ratingFilter]);
+
+  const totalItems =
+    activeTab === 'mentoring' ? (sessionsData?.total ?? sessions.length) : 0;
 
   const columns: ColumnDef<TSessionListItem>[] = [
     {
       id: 'select',
-      meta: { cellClassName: cn('w-20') },
-      header: ({ table }) => (
-        <input
-          type="checkbox"
-          className="rounded"
-          checked={table.getIsAllRowsSelected()}
-          onChange={table.getToggleAllRowsSelectedHandler()}
-        />
-      ),
-      cell: ({ row }) => (
-        <input
-          type="checkbox"
-          className="rounded"
-          checked={row.getIsSelected()}
-          onChange={row.getToggleSelectedHandler()}
-        />
-      ),
+      meta: { cellClassName: cn('w-10') },
+      header: ({ table }) => <SelectAllCheckbox table={table} />,
+      cell: ({ row }) => <RowSelectCheckbox row={row} />,
     },
     {
       id: 'name',
@@ -81,39 +110,29 @@ function FeedbackReviewDimentorinPage(): ReactElement {
       header: 'Status',
       accessorKey: 'status',
       cell: ({ row }) => {
-        const hasRating = !!row.original.rating
+        const hasRating = !!row.original.rating;
         return (
-          <div className={`py-2 px-4 rounded-md text-center ${hasRating ? 'bg-success-200 text-success-500' : 'bg-primary-200 text-primary-500'}`}>
+          <Badge variant={hasRating ? 'success' : 'info'}>
             {hasRating ? 'Done' : 'To Do'}
-          </div>
-        )
+          </Badge>
+        );
       },
     },
     {
       header: 'Action',
-      meta: { cellClassName: cn('w-72') },
       cell: () => (
-        <Button
-          variant="primary"
-          size="sm"
-          onClick={(e) => {
-            e.stopPropagation()
-          }}
-          className="flex items-center gap-2 w-max"
-        >
-          <SearchOutlined className="text-[16px]" /> Lihat Feedback
+        <Button variant="secondary" size="sm">
+          <MessageSquare className="size-3.5" />
+          Lihat Feedback
         </Button>
       ),
     },
-  ]
+  ];
 
   const table = useReactTable({
     data: sessions,
     columns,
-    state: {
-      pagination,
-      rowSelection,
-    },
+    state: { pagination, rowSelection },
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     getCoreRowModel: getCoreRowModel(),
@@ -121,64 +140,85 @@ function FeedbackReviewDimentorinPage(): ReactElement {
     onPaginationChange: setPagination,
     pageCount: Math.ceil(totalItems / pagination.pageSize),
     manualPagination: true,
-  })
+  });
 
   return (
-    <BackofficeWrapper title="Dimentorin.dev">
-      <div className="mb-8 flex justify-between items-center">
-        <h1 className="text-p1 font-semibold text-neutral-700">Feedback</h1>
-        <div className="flex gap-2 bg-primary-100 p-1.5 rounded-md">
-          <For data={Object.values(TABS)}>
-            {(tab) => (
-              <Button
-                key={tab}
-                variant="text"
-                className={cn('px-3 py-2 capitalize', activeTab === tab && 'bg-white')}
-                onClick={() => {
-                  setActiveTab(tab)
-                  setPagination((p) => ({ ...p, pageIndex: 0 }))
-                }}
-              >
-                {tab}
-              </Button>
-            )}
-          </For>
-        </div>
-      </div>
-
-      <section className="flex flex-col gap-6 p-8 bg-white rounded-md">
-        <div className="flex justify-between items-center gap-5 mb-2">
-          <div className="relative w-full">
-            <Input
-              placeholder="Cari berdasarkan nama mentor/mentee"
-              className="pl-12 w-full max-h-full"
-            />
-            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[16px]">
-              <SearchOutlined />
+    <BackofficeWrapper
+      title="Feedback & Review"
+      description="Review feedback dari mentoring & platform"
+    >
+      <Card>
+        <CardContent className="pt-6">
+          <Tabs
+            value={activeTab}
+            onValueChange={(v) => {
+              setActiveTab(v as 'mentoring' | 'platform');
+              setPagination((p) => ({ ...p, pageIndex: 0 }));
+            }}
+          >
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <TabsList>
+                <TabsTrigger value="mentoring">Mentoring</TabsTrigger>
+                <TabsTrigger value="platform">Platform</TabsTrigger>
+              </TabsList>
+              <div className="flex flex-col gap-2 sm:flex-row">
+                <div className="relative w-full sm:w-72">
+                  <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    className="pl-9"
+                    placeholder="Cari nama mentor/mentee…"
+                  />
+                </div>
+                <Select value={ratingFilter} onValueChange={setRatingFilter}>
+                  <SelectTrigger className="w-28">
+                    <SelectValue placeholder="Rating" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Semua Rating</SelectItem>
+                    <SelectItem value="4.5">4.5</SelectItem>
+                    <SelectItem value="5">5</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger className="w-28">
+                    <SelectValue placeholder="Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Semua Status</SelectItem>
+                    <SelectItem value="done">Done</SelectItem>
+                    <SelectItem value="todo">To Do</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-          </div>
-          <Select>
-            <option disabled>Rating</option>
-            <option value="4.5">4.5</option>
-            <option value="5">5</option>
-          </Select>
-          <Select>
-            <option disabled>Status</option>
-            <option value="done">Done</option>
-            <option value="todo">To Do</option>
-          </Select>
-        </div>
 
-        {isLoading ? (
-          <div className="text-center py-8 text-neutral-400">Loading...</div>
-        ) : activeTab === TABS.PLATFORM ? (
-          <div className="text-center py-8 text-neutral-400">
-            Platform feedback tidak tersedia
-          </div>
-        ) : (
-          <DataTable data={sessions} columns={columns} table={table} />
-        )}
-      </section>
+            <TabsContent value="mentoring" className="mt-4">
+              {isLoading ? (
+                <div className="py-10 text-center text-sm text-muted-foreground">
+                  Memuat data…
+                </div>
+              ) : (
+                <DataTable
+                  data={sessions}
+                  columns={columns}
+                  table={table}
+                  manualPagination
+                  pageCount={Math.ceil(totalItems / pagination.pageSize)}
+                  currentPage={pagination.pageIndex + 1}
+                  onPageChange={(p) =>
+                    setPagination((prev) => ({ ...prev, pageIndex: p - 1 }))
+                  }
+                />
+              )}
+            </TabsContent>
+            <TabsContent value="platform" className="mt-4">
+              <div className="py-10 text-center text-sm text-muted-foreground">
+                Platform feedback belum tersedia
+              </div>
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
     </BackofficeWrapper>
-  )
+  );
 }

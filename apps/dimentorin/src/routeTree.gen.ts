@@ -18,7 +18,7 @@ import { Route as SiteProfileRouteImport } from './routes/_site/profile'
 import { Route as SiteMentoringRouteImport } from './routes/_site/mentoring'
 import { Route as SiteArticlesRouteImport } from './routes/_site/articles'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
-import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard_/index'
+import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard/index'
 import { Route as SiteProfileIdRouteImport } from './routes/_site/profile_/$id'
 import { Route as SiteMentoringIdRouteImport } from './routes/_site/mentoring_/$id'
 import { Route as SiteArticlesSlugRouteImport } from './routes/_site/articles_/$slug'
@@ -29,6 +29,9 @@ import { Route as PublicAuthGoogleOauthPopupRouteImport } from './routes/_public
 import { Route as PublicAuthGoogleCallbackRouteImport } from './routes/_public/auth/google-callback'
 import { Route as PublicAuthForgotRouteImport } from './routes/_public/auth/forgot'
 import { Route as AuthenticatedDashboardSettingsRouteImport } from './routes/_authenticated/dashboard_/settings'
+import { Route as AuthenticatedDashboardRoadmapDiscoveryRouteImport } from './routes/_authenticated/dashboard/roadmap-discovery'
+import { Route as AuthenticatedDashboardMentoringRouteImport } from './routes/_authenticated/dashboard/mentoring'
+import { Route as AuthenticatedDashboardLearningPathRouteImport } from './routes/_authenticated/dashboard/learning-path'
 import { Route as PublicAuthRegisterSuccessRouteImport } from './routes/_public/auth/register_/success'
 import { Route as PublicAuthRegisterOtpRouteImport } from './routes/_public/auth/register_/otp'
 import { Route as PublicAuthRegisterMentorSuccessRouteImport } from './routes/_public/auth/register-mentor_/success'
@@ -80,9 +83,9 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
 } as any)
 const AuthenticatedDashboardIndexRoute =
   AuthenticatedDashboardIndexRouteImport.update({
-    id: '/dashboard_/',
-    path: '/dashboard/',
-    getParentRoute: () => AuthenticatedRoute,
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
 const SiteProfileIdRoute = SiteProfileIdRouteImport.update({
   id: '/profile_/$id',
@@ -138,6 +141,24 @@ const AuthenticatedDashboardSettingsRoute =
     path: '/dashboard/settings',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedDashboardRoadmapDiscoveryRoute =
+  AuthenticatedDashboardRoadmapDiscoveryRouteImport.update({
+    id: '/roadmap-discovery',
+    path: '/roadmap-discovery',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardMentoringRoute =
+  AuthenticatedDashboardMentoringRouteImport.update({
+    id: '/mentoring',
+    path: '/mentoring',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardLearningPathRoute =
+  AuthenticatedDashboardLearningPathRouteImport.update({
+    id: '/learning-path',
+    path: '/learning-path',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
 const PublicAuthRegisterSuccessRoute =
   PublicAuthRegisterSuccessRouteImport.update({
     id: '/auth/register_/success',
@@ -174,11 +195,14 @@ const PublicAuthForgotOtpRoute = PublicAuthForgotOtpRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/articles': typeof SiteArticlesRoute
   '/mentoring': typeof SiteMentoringRoute
   '/profile': typeof SiteProfileRoute
   '/resources': typeof SiteResourcesRoute
+  '/dashboard/learning-path': typeof AuthenticatedDashboardLearningPathRoute
+  '/dashboard/mentoring': typeof AuthenticatedDashboardMentoringRoute
+  '/dashboard/roadmap-discovery': typeof AuthenticatedDashboardRoadmapDiscoveryRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/auth/forgot': typeof PublicAuthForgotRoute
   '/auth/google-callback': typeof PublicAuthGoogleCallbackRoute
@@ -199,11 +223,13 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/articles': typeof SiteArticlesRoute
   '/mentoring': typeof SiteMentoringRoute
   '/profile': typeof SiteProfileRoute
   '/resources': typeof SiteResourcesRoute
+  '/dashboard/learning-path': typeof AuthenticatedDashboardLearningPathRoute
+  '/dashboard/mentoring': typeof AuthenticatedDashboardMentoringRoute
+  '/dashboard/roadmap-discovery': typeof AuthenticatedDashboardRoadmapDiscoveryRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/auth/forgot': typeof PublicAuthForgotRoute
   '/auth/google-callback': typeof PublicAuthGoogleCallbackRoute
@@ -214,6 +240,7 @@ export interface FileRoutesByTo {
   '/articles/$slug': typeof SiteArticlesSlugRoute
   '/mentoring/$id': typeof SiteMentoringIdRoute
   '/profile/$id': typeof SiteProfileIdRoute
+  '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/auth/forgot/otp': typeof PublicAuthForgotOtpRoute
   '/auth/forgot/summon': typeof PublicAuthForgotSummonRoute
   '/auth/register-mentor/pending': typeof PublicAuthRegisterMentorPendingRoute
@@ -227,11 +254,14 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/_public': typeof PublicRouteWithChildren
   '/_site': typeof SiteRouteWithChildren
-  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/_site/articles': typeof SiteArticlesRoute
   '/_site/mentoring': typeof SiteMentoringRoute
   '/_site/profile': typeof SiteProfileRoute
   '/_site/resources': typeof SiteResourcesRoute
+  '/_authenticated/dashboard/learning-path': typeof AuthenticatedDashboardLearningPathRoute
+  '/_authenticated/dashboard/mentoring': typeof AuthenticatedDashboardMentoringRoute
+  '/_authenticated/dashboard/roadmap-discovery': typeof AuthenticatedDashboardRoadmapDiscoveryRoute
   '/_authenticated/dashboard_/settings': typeof AuthenticatedDashboardSettingsRoute
   '/_public/auth/forgot': typeof PublicAuthForgotRoute
   '/_public/auth/google-callback': typeof PublicAuthGoogleCallbackRoute
@@ -242,7 +272,7 @@ export interface FileRoutesById {
   '/_site/articles_/$slug': typeof SiteArticlesSlugRoute
   '/_site/mentoring_/$id': typeof SiteMentoringIdRoute
   '/_site/profile_/$id': typeof SiteProfileIdRoute
-  '/_authenticated/dashboard_/': typeof AuthenticatedDashboardIndexRoute
+  '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/_public/auth/forgot_/otp': typeof PublicAuthForgotOtpRoute
   '/_public/auth/forgot_/summon': typeof PublicAuthForgotSummonRoute
   '/_public/auth/register-mentor_/pending': typeof PublicAuthRegisterMentorPendingRoute
@@ -259,6 +289,9 @@ export interface FileRouteTypes {
     | '/mentoring'
     | '/profile'
     | '/resources'
+    | '/dashboard/learning-path'
+    | '/dashboard/mentoring'
+    | '/dashboard/roadmap-discovery'
     | '/dashboard/settings'
     | '/auth/forgot'
     | '/auth/google-callback'
@@ -279,11 +312,13 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/dashboard'
     | '/articles'
     | '/mentoring'
     | '/profile'
     | '/resources'
+    | '/dashboard/learning-path'
+    | '/dashboard/mentoring'
+    | '/dashboard/roadmap-discovery'
     | '/dashboard/settings'
     | '/auth/forgot'
     | '/auth/google-callback'
@@ -294,6 +329,7 @@ export interface FileRouteTypes {
     | '/articles/$slug'
     | '/mentoring/$id'
     | '/profile/$id'
+    | '/dashboard'
     | '/auth/forgot/otp'
     | '/auth/forgot/summon'
     | '/auth/register-mentor/pending'
@@ -311,6 +347,9 @@ export interface FileRouteTypes {
     | '/_site/mentoring'
     | '/_site/profile'
     | '/_site/resources'
+    | '/_authenticated/dashboard/learning-path'
+    | '/_authenticated/dashboard/mentoring'
+    | '/_authenticated/dashboard/roadmap-discovery'
     | '/_authenticated/dashboard_/settings'
     | '/_public/auth/forgot'
     | '/_public/auth/google-callback'
@@ -321,7 +360,7 @@ export interface FileRouteTypes {
     | '/_site/articles_/$slug'
     | '/_site/mentoring_/$id'
     | '/_site/profile_/$id'
-    | '/_authenticated/dashboard_/'
+    | '/_authenticated/dashboard/'
     | '/_public/auth/forgot_/otp'
     | '/_public/auth/forgot_/summon'
     | '/_public/auth/register-mentor_/pending'
@@ -402,12 +441,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
-    '/_authenticated/dashboard_/': {
-      id: '/_authenticated/dashboard_/'
-      path: '/dashboard'
+    '/_authenticated/dashboard/': {
+      id: '/_authenticated/dashboard/'
+      path: '/'
       fullPath: '/dashboard/'
       preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
-      parentRoute: typeof AuthenticatedRoute
+      parentRoute: typeof AuthenticatedDashboardRoute
     }
     '/_site/profile_/$id': {
       id: '/_site/profile_/$id'
@@ -479,6 +518,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardSettingsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/dashboard/roadmap-discovery': {
+      id: '/_authenticated/dashboard/roadmap-discovery'
+      path: '/roadmap-discovery'
+      fullPath: '/dashboard/roadmap-discovery'
+      preLoaderRoute: typeof AuthenticatedDashboardRoadmapDiscoveryRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/mentoring': {
+      id: '/_authenticated/dashboard/mentoring'
+      path: '/mentoring'
+      fullPath: '/dashboard/mentoring'
+      preLoaderRoute: typeof AuthenticatedDashboardMentoringRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/learning-path': {
+      id: '/_authenticated/dashboard/learning-path'
+      path: '/learning-path'
+      fullPath: '/dashboard/learning-path'
+      preLoaderRoute: typeof AuthenticatedDashboardLearningPathRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
     '/_public/auth/register_/success': {
       id: '/_public/auth/register_/success'
       path: '/auth/register/success'
@@ -524,16 +584,36 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface AuthenticatedRouteChildren {
-  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
-  AuthenticatedDashboardSettingsRoute: typeof AuthenticatedDashboardSettingsRoute
+interface AuthenticatedDashboardRouteChildren {
+  AuthenticatedDashboardLearningPathRoute: typeof AuthenticatedDashboardLearningPathRoute
+  AuthenticatedDashboardMentoringRoute: typeof AuthenticatedDashboardMentoringRoute
+  AuthenticatedDashboardRoadmapDiscoveryRoute: typeof AuthenticatedDashboardRoadmapDiscoveryRoute
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
 }
 
+const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
+  {
+    AuthenticatedDashboardLearningPathRoute:
+      AuthenticatedDashboardLearningPathRoute,
+    AuthenticatedDashboardMentoringRoute: AuthenticatedDashboardMentoringRoute,
+    AuthenticatedDashboardRoadmapDiscoveryRoute:
+      AuthenticatedDashboardRoadmapDiscoveryRoute,
+    AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
+  }
+
+const AuthenticatedDashboardRouteWithChildren =
+  AuthenticatedDashboardRoute._addFileChildren(
+    AuthenticatedDashboardRouteChildren,
+  )
+
+interface AuthenticatedRouteChildren {
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRouteWithChildren
+  AuthenticatedDashboardSettingsRoute: typeof AuthenticatedDashboardSettingsRoute
+}
+
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
-  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRouteWithChildren,
   AuthenticatedDashboardSettingsRoute: AuthenticatedDashboardSettingsRoute,
-  AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(

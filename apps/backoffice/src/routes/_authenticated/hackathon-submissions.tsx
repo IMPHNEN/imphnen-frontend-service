@@ -1,34 +1,27 @@
-import { createFileRoute } from '@tanstack/react-router'
-import {
-  FC,
-  ReactElement,
-  useState,
-  useEffect,
-  useMemo,
-  useCallback,
-} from 'react'
-import SubmissionModal from './_components/hackathon-submissions/submission-modal'
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import * as React from 'react';
+import { Search, Eye } from 'lucide-react';
+import SubmissionModal from './_components/hackathon-submissions/submission-modal';
 import {
   BackofficeWrapper,
   DataTable,
-} from '@imphnen-frontend-service/ui/organisms'
-import { ColumnDef } from '@tanstack/react-table'
-import { Button } from '@imphnen-frontend-service/ui/atoms'
-import { cn } from '@imphnen-frontend-service/utils'
+} from '@imphnen-frontend-service/ui/organisms';
+import { ColumnDef } from '@tanstack/react-table';
 import {
-  SearchOutlined,
-  FilterOutlined,
-  LoadingOutlined,
-  EyeOutlined,
-} from '@ant-design/icons'
-import { useQuery } from '@tanstack/react-query'
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Input,
+} from '@imphnen-frontend-service/ui/atoms';
+import { useQuery } from '@tanstack/react-query';
 import {
   getAdminSubmissions,
   TAdminSubmissionItem,
-} from '@imphnen-frontend-service/service'
-import { useNavigate } from '@tanstack/react-router'
+} from '@imphnen-frontend-service/service';
 
-type SubmissionType = TAdminSubmissionItem
+type SubmissionType = TAdminSubmissionItem;
 
 export const Route = createFileRoute('/_authenticated/hackathon-submissions')({
   component: HackathonSubmissionsPage,
@@ -38,20 +31,20 @@ export const Route = createFileRoute('/_authenticated/hackathon-submissions')({
     per_page: Number(search.per_page) || 10,
     status: (search.status as string) || 'all',
   }),
-})
+});
 
 function HackathonSubmissionsPage() {
-  const searchParams = Route.useSearch()
-  const navigate = useNavigate()
-  const currentPage = Math.max(1, searchParams.page)
-  const searchQuery = searchParams.search || ''
-  const perPage = searchParams.per_page || 10
-  const statusFilter = searchParams.status || 'all'
+  const searchParams = Route.useSearch();
+  const navigate = useNavigate();
+  const currentPage = Math.max(1, searchParams.page);
+  const searchQuery = searchParams.search || '';
+  const perPage = searchParams.per_page || 10;
+  const statusFilter = searchParams.status || 'all';
 
-  const [showSubmissionModal, setShowSubmissionModal] = useState(false)
+  const [showSubmissionModal, setShowSubmissionModal] = React.useState(false);
   const [selectedSubmission, setSelectedSubmission] =
-    useState<SubmissionType | null>(null)
-  const [globalFilter, setGlobalFilter] = useState(searchQuery)
+    React.useState<SubmissionType | null>(null);
+  const [globalFilter, setGlobalFilter] = React.useState(searchQuery);
 
   const {
     data: submissionsResponse,
@@ -74,12 +67,12 @@ function HackathonSubmissionsPage() {
       }),
     staleTime: 30000,
     gcTime: 5 * 60 * 1000,
-  })
+  });
 
-  const totalData = submissionsResponse?.meta?.total_data || 0
-  const totalPages = submissionsResponse?.meta?.total_page || 1
+  const totalData = submissionsResponse?.meta?.total_data || 0;
+  const totalPages = submissionsResponse?.meta?.total_page || 1;
 
-  const handlePageChange = useCallback(
+  const handlePageChange = React.useCallback(
     (newPage: number) => {
       navigate({
         search: {
@@ -88,23 +81,23 @@ function HackathonSubmissionsPage() {
           search: searchQuery || undefined,
           status: statusFilter !== 'all' ? statusFilter : undefined,
         } as any,
-      })
-      window.scrollTo({ top: 0, behavior: 'smooth' })
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     },
     [navigate, perPage, searchQuery, statusFilter]
-  )
+  );
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!isLoading && totalPages > 0 && currentPage > totalPages) {
-      navigate({ search: { page: totalPages } as any })
+      navigate({ search: { page: totalPages } as any });
     }
-  }, [currentPage, totalPages, navigate, isLoading])
+  }, [currentPage, totalPages, navigate, isLoading]);
 
-  useEffect(() => {
-    setGlobalFilter(searchQuery)
-  }, [searchQuery])
+  React.useEffect(() => {
+    setGlobalFilter(searchQuery);
+  }, [searchQuery]);
 
-  const handleSearch = useCallback(() => {
+  const handleSearch = React.useCallback(() => {
     navigate({
       search: {
         page: 1,
@@ -112,56 +105,29 @@ function HackathonSubmissionsPage() {
         search: globalFilter.trim() || undefined,
         status: statusFilter !== 'all' ? statusFilter : undefined,
       } as any,
-    })
-  }, [globalFilter, navigate, perPage, statusFilter])
+    });
+  }, [globalFilter, navigate, perPage, statusFilter]);
 
-  const handleSearchKeyPress = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'Enter') {
-        handleSearch()
-      }
-    },
-    [handleSearch]
-  )
+  const filteredData = React.useMemo<SubmissionType[]>(() => {
+    return (
+      ((submissionsResponse?.data as any)?.data as SubmissionType[]) ??
+      (submissionsResponse?.data as SubmissionType[]) ??
+      []
+    );
+  }, [submissionsResponse]);
 
-  const handlePerPageChange = useCallback(
-    (newPerPage: number) => {
-      navigate({
-        search: {
-          page: 1,
-          per_page: newPerPage,
-          search: searchQuery || undefined,
-          status: statusFilter !== 'all' ? statusFilter : undefined,
-        } as any,
-      })
-    },
-    [navigate, searchQuery, statusFilter]
-  )
+  const statusVariants: Record<string, 'success' | 'warning' | 'secondary'> = {
+    submitted: 'success',
+    pending: 'warning',
+  };
 
-  const handleShowSubmissionModal = useCallback(
-    (submission: SubmissionType) => {
-      setSelectedSubmission(submission)
-      setShowSubmissionModal(true)
-    },
-    []
-  )
-
-  const handleCloseSubmissionModal = useCallback(() => {
-    setShowSubmissionModal(false)
-    setSelectedSubmission(null)
-  }, [])
-
-  const filteredData = useMemo(() => {
-    return submissionsResponse?.data?.data || submissionsResponse?.data || []
-  }, [submissionsResponse])
-
-  const columns: ColumnDef<SubmissionType>[] = useMemo(
+  const columns: ColumnDef<SubmissionType>[] = React.useMemo(
     () => [
       {
         accessorKey: 'project_name',
         header: 'Project Name',
         cell: ({ row }) => (
-          <span className="font-medium text-neutral-900">
+          <span className="font-medium text-foreground">
             {row.original.project_name}
           </span>
         ),
@@ -171,7 +137,7 @@ function HackathonSubmissionsPage() {
         accessorKey: 'team_id',
         header: 'Team ID',
         cell: ({ row }) => (
-          <span className="text-sm text-neutral-700 font-mono">
+          <span className="font-mono text-xs text-muted-foreground">
             {row.original.team_id}
           </span>
         ),
@@ -180,30 +146,21 @@ function HackathonSubmissionsPage() {
       {
         accessorKey: 'status',
         header: 'Status',
-        cell: ({ row }) => {
-          const status = row.original.status
-          return (
-            <span
-              className={cn(
-                'inline-flex items-center gap-1 px-2 py-1 rounded-2xl text-xs font-medium',
-                status === 'submitted'
-                  ? 'bg-success-100 text-success-800'
-                  : status === 'pending'
-                  ? 'bg-orange-100 text-orange-800'
-                  : 'bg-neutral-100 text-neutral-700'
-              )}
-            >
-              {status.charAt(0).toUpperCase() + status.slice(1)}
-            </span>
-          )
-        },
+        cell: ({ row }) => (
+          <Badge
+            variant={statusVariants[row.original.status] ?? 'secondary'}
+            className="capitalize"
+          >
+            {row.original.status}
+          </Badge>
+        ),
         enableSorting: true,
       },
       {
         accessorKey: 'submitted_at',
         header: 'Submitted',
         cell: ({ row }) => (
-          <span className="text-neutral-900 text-sm">
+          <span className="text-sm text-foreground">
             {new Date(row.original.submitted_at).toLocaleDateString('en-US', {
               year: 'numeric',
               month: 'short',
@@ -217,109 +174,87 @@ function HackathonSubmissionsPage() {
       {
         id: 'actions',
         header: 'Actions',
-        meta: { cellClassName: cn('w-48') },
         cell: ({ row }) => (
           <Button
-            variant="primary"
+            variant="secondary"
             size="sm"
-            className="flex items-center gap-2 text-sm px-4 py-2"
-            onClick={() => handleShowSubmissionModal(row.original)}
+            onClick={() => {
+              setSelectedSubmission(row.original);
+              setShowSubmissionModal(true);
+            }}
           >
-            <EyeOutlined className="text-sm" />
+            <Eye className="size-3.5" />
             View
           </Button>
         ),
         enableSorting: false,
       },
     ],
-    [handleShowSubmissionModal]
-  )
+    []
+  );
 
   return (
-    <BackofficeWrapper title="IMPHNEN x Kolosal.ai Hackathon 2025">
-      <h1 className="mb-8 text-p1 font-semibold text-neutral-700">
-        Project Submissions
-      </h1>
-      <section className="bg-white rounded-md shadow p-8 flex flex-col gap-6">
-        <div className="flex flex-wrap gap-3 items-center justify-between">
-          <div className="flex flex-wrap gap-3 items-center">
-            <div className="relative">
-              <SearchOutlined className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 text-sm" />
-              <input
-                type="text"
-                className="border border-neutral-200 rounded-lg pl-10 pr-4 py-2.5 text-sm w-full sm:w-80 focus:border-primary-500 focus:outline-none"
-                placeholder="Search by project name..."
+    <BackofficeWrapper
+      title="Project Submissions"
+      description="IMPHNEN x Kolosal.ai Hackathon 2025"
+    >
+      <Card>
+        <CardHeader>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="relative w-full sm:max-w-sm">
+              <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                className="pl-9"
+                placeholder="Cari nama project…"
                 value={globalFilter}
                 onChange={(e) => setGlobalFilter(e.target.value)}
-                onKeyPress={handleSearchKeyPress}
+                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
               />
             </div>
-
-            <div className="relative">
-              <select
-                className="border border-neutral-200 rounded-lg px-4 py-2.5 text-sm w-28 focus:border-primary-500 focus:outline-none appearance-none bg-white cursor-pointer"
-                value={perPage}
-                onChange={(e) =>
-                  handlePerPageChange(parseInt(e.target.value, 10))
-                }
-              >
-                <option value={10}>10 / page</option>
-                <option value={20}>20 / page</option>
-                <option value={50}>50 / page</option>
-                <option value={100}>100 / page</option>
-              </select>
+          </div>
+        </CardHeader>
+        <CardContent>
+          {isLoading ? (
+            <div className="py-12 text-center text-sm text-muted-foreground">
+              Memuat submissions…
             </div>
-
-            {}
-            {
-}
-          </div>
-        </div>
-
-        {}
-        {
-}
-
-        {isLoading ? (
-          <div className="flex items-center justify-center py-12">
-            <LoadingOutlined className="text-3xl text-primary-500 animate-spin" />
-            <span className="ml-3 text-neutral-600">
-              Loading submissions...
-            </span>
-          </div>
-        ) : filteredData.length > 0 ? (
-          <>
-            <div className="text-sm text-neutral-600">
-              Showing {filteredData.length} of {totalData} submissions (Page{' '}
-              {currentPage} of {totalPages})
-              {isFetching && (
-                <span className="ml-2 text-primary-500">(Updating...)</span>
-              )}
+          ) : filteredData.length > 0 ? (
+            <>
+              <div className="mb-3 text-xs text-muted-foreground">
+                Menampilkan {filteredData.length} dari {totalData} submissions
+                (page {currentPage} / {totalPages})
+                {isFetching && (
+                  <span className="ml-2 text-primary-500">Updating…</span>
+                )}
+              </div>
+              <DataTable
+                data={filteredData}
+                columns={columns}
+                pageSize={perPage}
+                manualPagination
+                pageCount={totalPages}
+                currentPage={currentPage}
+                onPageChange={handlePageChange}
+              />
+            </>
+          ) : (
+            <div className="py-12 text-center text-sm text-muted-foreground">
+              Tidak ada submissions.
             </div>
-            <DataTable
-              data={filteredData}
-              columns={columns}
-              pageSize={perPage}
-              manualPagination={true}
-              pageCount={totalPages}
-              currentPage={currentPage}
-              onPageChange={handlePageChange}
-            />
-          </>
-        ) : (
-          <div className="text-center py-12 text-neutral-500">
-            No submissions found. Try adjusting your filters.
-          </div>
-        )}
-      </section>
+          )}
+        </CardContent>
+      </Card>
 
       {selectedSubmission && (
         <SubmissionModal
           isOpen={showSubmissionModal}
-          onClose={handleCloseSubmissionModal}
+          onClose={() => {
+            setShowSubmissionModal(false);
+            setSelectedSubmission(null);
+          }}
           submission={selectedSubmission}
         />
       )}
     </BackofficeWrapper>
-  )
+  );
 }
