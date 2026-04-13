@@ -7,7 +7,7 @@ const meta: Meta<typeof Button> = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['primary', 'secondary', 'success', 'danger'],
+      options: ['primary', 'secondary', 'text', 'bordered', 'success', 'danger'],
     },
     size: {
       control: 'select',
@@ -100,5 +100,14 @@ export const Small: Story = {
     variant: 'primary',
     size: 'sm',
     children: 'Small Button',
+  },
+};
+
+export const Focus: Story = {
+  args: {
+    variant: 'primary',
+    size: 'md',
+    autoFocus: true,
+    children: 'Focused Button',
   },
 };

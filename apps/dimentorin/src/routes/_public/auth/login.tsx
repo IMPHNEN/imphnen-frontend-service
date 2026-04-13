@@ -5,6 +5,7 @@ import { GithubOutlined } from '@ant-design/icons'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
+import { LoginBanner } from '@imphnen-frontend-service/ui/organisms'
 import { Icon } from '@iconify/react'
 
 export const Route = createFileRoute('/_public/auth/login')({
@@ -60,76 +61,68 @@ function LoginPage() {
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-50 p-4">
-      <div className="bg-white w-full max-w-md p-8 rounded-2xl shadow-lg border border-gray-200">
-        <div className="flex items-center justify-between mb-6">
-          <Link to="/" className="cursor-pointer text-primary-500 hover:text-primary-600 text-base font-sans flex items-center">
-            <Icon icon="ic:baseline-chevron-left" width="24" height="24" />
-            Back to Homepage
-          </Link>
-        </div>
+    <div className="min-h-screen bg-primary-50 flex items-center justify-center p-5">
+      <div className="flex w-[90%] max-w-[1120px] min-h-[712px] bg-white rounded-[48px] shadow-auth border border-border-light overflow-hidden relative z-[1] p-10 gap-6">
+        <LoginBanner />
 
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h2>
-          <p className="text-gray-600 font-sans">Sign in to the mentoring platform</p>
-        </div>
-
-        {error && (
-          <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-red-600 text-sm">{error}</p>
-          </div>
-        )}
-
-        <form onSubmit={onSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-            <input id="email" type="text" {...register('email')} placeholder="your@email.com" disabled={loginMutation.isPending}
-              className={`w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white text-gray-900 placeholder:text-gray-400 disabled:bg-gray-100 disabled:cursor-not-allowed ${errors.email ? 'border-red-400' : 'border-gray-300'}`} />
-            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
-          </div>
-
-          <div>
-            <div className="flex items-center justify-between mb-1">
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
-              <Link to="/auth/forgot" className="text-sm text-primary-600 hover:text-primary-700">Forgot password?</Link>
+        <div className="flex-1 py-[53px] px-10 bg-white border border-border-light rounded-[48px] flex flex-col items-center justify-start w-full">
+          <div className="w-full max-w-[404px]">
+            <div className="mb-8">
+              <h1 className="text-[46px] leading-[1.2] font-bold text-primary-accent mb-2">Hallo Minna-san</h1>
+              <p className="text-[19px] leading-[1.2] font-medium text-primary-accent">Welcome to Dimentorin by IMPHNEN</p>
             </div>
-            <div className="relative">
-              <input id="password" type={showPassword ? 'text' : 'password'} {...register('password')} placeholder="••••••••" disabled={loginMutation.isPending}
-                className={`w-full px-4 py-2.5 pr-12 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white text-gray-900 placeholder:text-gray-400 disabled:bg-gray-100 disabled:cursor-not-allowed ${errors.password ? 'border-red-400' : 'border-gray-300'}`} />
-              <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700">
-                <Icon icon={showPassword ? 'mdi:eye-off' : 'mdi:eye'} className="text-xl" />
+
+            {error && (
+              <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-red-600 text-sm text-center">{error}</p>
+              </div>
+            )}
+
+            <form onSubmit={onSubmit} className="space-y-5">
+              <div>
+                <label htmlFor="email" className="block text-[15px] leading-[19.5px] font-medium text-text-label mb-2">Email</label>
+                <input id="email" type="text" {...register('email')} placeholder="Masukkan email-mu, Senpai~! ✨" disabled={loginMutation.isPending}
+                  className={`w-full h-[52px] px-5 border rounded-md bg-white text-text-dark text-[15px] focus:outline-none focus:border-primary-accent focus:shadow-[0_0_0_3px_rgba(35,161,235,0.12)] placeholder:text-placeholder disabled:bg-neutral-100 disabled:cursor-not-allowed transition-all duration-200 ease-in-out ${errors.email ? 'border-red-400' : 'border-[#d1d1d1]'}`} />
+                {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label htmlFor="password" className="block text-[15px] leading-[19.5px] font-medium text-text-label">Password</label>
+                  <Link to="/auth/forgot" className="text-[15px] font-medium text-primary-accent hover:underline cursor-pointer">Lupa Password?</Link>
+                </div>
+                <div className="relative">
+                  <input id="password" type={showPassword ? 'text' : 'password'} {...register('password')} placeholder="Masukkan password rahasiamu! 🔒" disabled={loginMutation.isPending}
+                    className={`w-full h-[52px] px-5 border rounded-md bg-white text-text-dark text-[15px] focus:outline-none focus:border-primary-accent focus:shadow-[0_0_0_3px_rgba(35,161,235,0.12)] placeholder:text-placeholder pr-12 disabled:bg-neutral-100 disabled:cursor-not-allowed transition-all duration-200 ease-in-out ${errors.password ? 'border-red-400' : 'border-[#d1d1d1]'}`} />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-dark">
+                    <Icon icon={showPassword ? 'mdi:eye-off' : 'mdi:eye'} className="text-xl" />
+                  </button>
+                </div>
+                {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
+              </div>
+
+              <button type="submit" disabled={!isValid || loginMutation.isPending}
+                className="w-full h-[34px] bg-primary-accent text-[#f6f6f6] rounded-md text-[15px] font-semibold flex items-center justify-center hover:bg-[#1e8cd1] focus:outline-none focus:ring-2 focus:ring-primary-accent focus:ring-offset-2 disabled:bg-neutral-400 disabled:cursor-not-allowed transition-all duration-200 ease-in-out cursor-pointer">
+                {loginMutation.isPending ? 'Entering...' : 'Enter Isekai'}
               </button>
+            </form>
+
+            <div className="my-6 flex items-center justify-center gap-4">
+              <div className="flex-1 h-px bg-divider-blue"></div>
+              <span className="text-xs font-medium text-primary-accent">Or</span>
+              <div className="flex-1 h-px bg-divider-blue"></div>
             </div>
-            {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
+
+            <button onClick={handleGithubLogin} disabled={isGithubLoading} type="button"
+              className="w-full h-[44px] flex items-center justify-center gap-3 bg-bg-secondary border border-border-subtle rounded-md font-semibold text-text-label hover:bg-[#f0f0f0] focus:outline-none focus:ring-2 focus:ring-neutral-300 focus:ring-offset-2 disabled:bg-neutral-100 disabled:cursor-not-allowed transition-all duration-200 ease-in-out cursor-pointer">
+              <GithubOutlined className="text-lg" />
+              <span className="text-[19px] leading-[1.2] font-semibold">{isGithubLoading ? 'Connecting...' : 'Log In With GitHub'}</span>
+            </button>
+
+            <div className="mt-4 text-center">
+              <p className="text-[15px] font-medium text-text-secondary">Belum punya akun? <Link to="/auth/register" className="text-primary-accent font-medium text-[15px] hover:underline cursor-pointer">Daftar disini</Link></p>
+            </div>
           </div>
-
-          <button type="submit" disabled={!isValid || loginMutation.isPending}
-            className="w-full py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors cursor-pointer">
-            {loginMutation.isPending ? 'Signing in...' : 'Sign in with Email'}
-          </button>
-        </form>
-
-        <div className="my-6 flex items-center">
-          <div className="flex-1 border-t border-gray-300"></div>
-          <span className="px-4 text-sm text-gray-500">OR</span>
-          <div className="flex-1 border-t border-gray-300"></div>
-        </div>
-
-        <button onClick={handleGithubLogin} disabled={isGithubLoading} type="button"
-          className="w-full py-3 flex items-center justify-center gap-2 bg-gray-100 border border-gray-300 rounded-lg font-semibold text-gray-900 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors cursor-pointer">
-          <GithubOutlined className="text-xl" />
-          <span>{isGithubLoading ? 'Connecting...' : 'Sign in with GitHub'}</span>
-        </button>
-
-        <p className="mt-3 text-xs text-center text-gray-500 font-sans">
-          Make sure your GitHub email is <a href="https://github.com/settings/emails" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline">set to public</a> for GitHub sign in to work.
-        </p>
-
-        <div className="mt-6 text-center">
-          <p className="text-gray-600 text-sm">Don't have an account? <Link to="/auth/register" className="text-primary-600 hover:text-primary-700 font-semibold">Sign up</Link></p>
-        </div>
-        <div className="mt-6 text-center">
-          <p className="text-gray-500 text-xs">By signing in, you agree to our Terms of Service and Privacy Policy</p>
         </div>
       </div>
     </div>

@@ -87,6 +87,22 @@
   --text-p2: 1.23rem; /* ~19.68px */
   --text-label1: 0.98rem; /* ~15.74px */
   --text-label2: 0.78rem; /* ~12.59px */
+
+  /* Custom Colors for CSS Hex Exact Matches - IMPHNEN Dimentorin Brand */
+  --color-bg-light-blue: #f7fbff;      /* Primary dashboard background */
+  --color-primary-accent: #23a1eb;     /* Primary interactive color (buttons, links, active states) */
+  --color-text-dark: #1a1a1a;          /* Ultra-dark text (auth titles, headers) */
+  --color-text-secondary: #6d6d6d;     /* Secondary text (subtitles, descriptions) */
+  --color-text-label: #454545;         /* Form labels and descriptive labels */
+  --color-text-muted: #888888;         /* Muted text (nav items, metric labels) */
+  --color-border-light: #bce1fb;       /* Light blue borders (inputs, tabs) */
+  --color-placeholder: #b0b0b0;        /* Input placeholder text, disabled backgrounds */
+  --color-bg-hover: #f6f6f6;           /* Hover state backgrounds (nav items) */
+  --color-divider-blue: #81cbf8;       /* Divider lines and gradient fills */
+  --color-border-subtle: #e5e5e5;      /* Very light borders (buttons) */
+  --color-bg-secondary: #f8f8f8;       /* Secondary backgrounds (alt button) */
+  --color-bg-placeholder: #d9d9d9;     /* Placeholder backgrounds (avatars, images) */
+  --color-text-tab-default: #4f4f4f;   /* Tab button text color */
 }
 
 @layer base {
@@ -123,5 +139,9 @@
 @layer utilities {
   .scrollbar-hide::-webkit-scrollbar {
     @apply hidden;
+  }
+
+  .shadow-auth {
+    box-shadow: 0 10px 40px rgba(35, 161, 235, 0.1);
   }
 }

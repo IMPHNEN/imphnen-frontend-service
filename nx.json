@@ -66,7 +66,7 @@
         "linter": "eslint",
         "unitTestRunner": "vitest"
       }
-    },
+    }
   },
   "release": {
     "version": {
@@ -77,5 +77,6 @@
     "e2e-ci--**/**": {
       "dependsOn": ["^build"]
     }
-  }
+  },
+  "analytics": false
 }
