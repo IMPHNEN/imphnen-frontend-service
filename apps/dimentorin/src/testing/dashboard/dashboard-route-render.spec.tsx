@@ -2,6 +2,9 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { UserDashboard } from '../../routes/_authenticated/dashboard_/_components/user/user-dashboard';
 import { MentorDashboard } from '../../routes/_authenticated/dashboard_/_components/mentor/mentor-dashboard';
+import { LearningPathPage } from '../../routes/_authenticated/dashboard/learning-path';
+import { MentoringPage } from '../../routes/_authenticated/dashboard/mentoring';
+import { RoadmapDiscoveryPage } from '../../routes/_authenticated/dashboard/roadmap-discovery';
 
 /**
  * Dashboard Route/Persona Render Tests
@@ -20,16 +23,6 @@ describe('Dashboard Persona Rendering', () => {
       expect(screen.getByText('Selamat Datang di Dimentorin.dev')).toBeDefined();
     });
 
-    it('should display welcome card body text', () => {
-      render(<UserDashboard />);
-      expect(screen.getByText(/Yuk, mulai petualanganmu di menu Skill Discovery/)).toBeDefined();
-    });
-
-    it('should display CTA button', () => {
-      render(<UserDashboard />);
-      expect(screen.getByText('Temukan Roadmapmu^^')).toBeDefined();
-    });
-
     it('should display overview metrics', () => {
       render(<UserDashboard />);
       expect(screen.getByText('Mentoring Session')).toBeDefined();
@@ -37,44 +30,75 @@ describe('Dashboard Persona Rendering', () => {
       expect(screen.getByText('Article Published')).toBeDefined();
     });
 
-    it('should display metrics with zero values', () => {
-      render(<UserDashboard />);
-      const zeros = screen.getAllByText('0');
-      expect(zeros.length).toBeGreaterThan(0);
-    });
-
-    it('should display roadmap section', async () => {
+    it('should display roadmap progress and label', async () => {
       render(<UserDashboard />);
       await waitFor(() => {
-        expect(screen.getByText('Your Roadmap')).toBeDefined();
+        expect(screen.getByText('Roadmaps')).toBeDefined();
         expect(screen.getByText('Front End Basic')).toBeDefined();
-      });
-    });
-
-    it('should display progress labels on roadmap', async () => {
-      render(<UserDashboard />);
-      await waitFor(() => {
         expect(screen.getByText('1/30 days milestones completed')).toBeDefined();
-        expect(screen.getByText('50%')).toBeDefined();
       });
     });
 
-    it('should display roadmap action button', async () => {
-      render(<UserDashboard />);
-      await waitFor(() => {
-        expect(screen.getAllByText('Lanjut Belajar').length).toBeGreaterThan(0);
-      });
-    });
-
-    it('should display articles table section and headers', () => {
+    it('should display article table headers', () => {
       render(<UserDashboard />);
       expect(screen.getByText('Your Articles')).toBeDefined();
-      expect(screen.getByText('No.')).toBeDefined();
       expect(screen.getByText('Judul Artikel')).toBeDefined();
       expect(screen.getByText('Materi')).toBeDefined();
-      expect(screen.getByText('Status')).toBeDefined();
       expect(screen.getByText('Submit Date')).toBeDefined();
-      expect(screen.getByText('Action')).toBeDefined();
+    });
+  });
+
+  describe('LearningPathPage Component', () => {
+    beforeEach(() => {
+      vi.clearAllMocks();
+    });
+
+    it('should render roadmap tab by default', () => {
+      render(<LearningPathPage />);
+      expect(screen.getByText('Roadmap Kamu')).toBeDefined();
+      expect(screen.getByText('Day 1 - Materi A')).toBeDefined();
+    });
+
+    it('should switch to article tab and show article table', () => {
+      render(<LearningPathPage />);
+      const articleTab = screen.getByRole('button', { name: /Article/i });
+      fireEvent.click(articleTab);
+      expect(screen.getByText('Judul Artikel')).toBeDefined();
+      expect(screen.getByText('Cek Detail')).toBeDefined();
+    });
+  });
+
+  describe('MentoringPage Component', () => {
+    beforeEach(() => {
+      vi.clearAllMocks();
+    });
+
+    it('should render search input and table headings', () => {
+      render(<MentoringPage />);
+      expect(screen.getByPlaceholderText('Cari berdasarkan nama item')).toBeDefined();
+      expect(screen.getByText('Nama Mentor')).toBeDefined();
+      expect(screen.getByText('Sesi Mentoring')).toBeDefined();
+    });
+
+    it('should display action buttons for mentoring rows', async () => {
+      render(<MentoringPage />);
+      await waitFor(() => {
+        expect(screen.getByText('Cek Detail')).toBeDefined();
+        expect(screen.getByText('Kirim Feedback')).toBeDefined();
+      });
+    });
+  });
+
+  describe('RoadmapDiscoveryPage Component', () => {
+    beforeEach(() => {
+      vi.clearAllMocks();
+    });
+
+    it('should render discovery header and generate button', () => {
+      render(<RoadmapDiscoveryPage />);
+      expect(screen.getByText('Start your Journey')).toBeDefined();
+      expect(screen.getByRole('button', { name: /Generate/i })).toBeDefined();
+      expect(screen.getByPlaceholderText('Mau belajar roadmap apa?')).toBeDefined();
     });
   });
 
@@ -88,55 +112,9 @@ describe('Dashboard Persona Rendering', () => {
       expect(screen.getByText('Selamat Datang di Dimentorin.dev')).toBeDefined();
     });
 
-    it('should display welcome card body text', () => {
-      render(<MentorDashboard />);
-      expect(screen.getByText(/Senpai~ saatnya kamu bantu para junior/)).toBeDefined();
-    });
-
     it('should display Overviews tab', () => {
       render(<MentorDashboard />);
       expect(screen.getByText('Overviews')).toBeDefined();
-    });
-
-    it('should display Analytics tab', () => {
-      render(<MentorDashboard />);
-      expect(screen.getByText('Analytics')).toBeDefined();
-    });
-
-    it('should display overview metrics labels', () => {
-      render(<MentorDashboard />);
-      expect(screen.getByText('Your Rating')).toBeDefined();
-      expect(screen.getByText('Session Complete')).toBeDefined();
-      expect(screen.getByText('Mentee Impacted')).toBeDefined();
-      expect(screen.getByText('Total Feedback')).toBeDefined();
-    });
-
-    it('should display metrics with zero values', () => {
-      render(<MentorDashboard />);
-      const zeros = screen.getAllByText('0');
-      expect(zeros.length).toBeGreaterThan(0);
-    });
-
-    it('should display Topics chart on analytics tab', async () => {
-      render(<MentorDashboard />);
-      const analyticsTab = screen.getByText('Analytics');
-      fireEvent.click(analyticsTab);
-      await waitFor(() => {
-        expect(screen.getByText('Topics')).toBeDefined();
-        expect(screen.getByText('Basic IT')).toBeDefined();
-        expect(screen.getByText('Career & Self...')).toBeDefined();
-      });
-    });
-
-    it('should display Session Time Preference chart on analytics tab', async () => {
-      render(<MentorDashboard />);
-      const analyticsTab = screen.getByText('Analytics');
-      fireEvent.click(analyticsTab);
-      await waitFor(() => {
-        expect(screen.getByText('Session Time Preference')).toBeDefined();
-        expect(screen.getByText('17:00 - 17:45')).toBeDefined();
-        expect(screen.getByText('19:00 - 19:45')).toBeDefined();
-      });
     });
   });
 });

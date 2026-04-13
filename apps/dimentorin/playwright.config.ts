@@ -39,5 +39,8 @@ export default defineConfig({
     reuseExistingServer: true,
     cwd: '../../', // Run from root where Nx is available
     timeout: 120000,
+    env: {
+      VITE_BYPASS_AUTH_MIDDLEWARE: 'true',
+    },
   },
 });
