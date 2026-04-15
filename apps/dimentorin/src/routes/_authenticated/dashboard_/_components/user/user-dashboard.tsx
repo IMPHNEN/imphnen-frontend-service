@@ -1,5 +1,6 @@
 'use client';
 
+import { useNavigate } from '@tanstack/react-router';
 import { getUserMockDashboardData } from '../../../dashboard/_data/mock/dashboard-mock';
 
 /**
@@ -8,6 +9,15 @@ import { getUserMockDashboardData } from '../../../dashboard/_data/mock/dashboar
  */
 export function UserDashboard() {
   const data = getUserMockDashboardData();
+  const navigate = useNavigate();
+
+  const handleStartDiscovery = () => {
+    navigate({ to: '/dashboard/roadmap-discovery' });
+  };
+
+  const handleContinueLearning = () => {
+    navigate({ to: '/dashboard/learning-path' });
+  };
 
   const gradientStyle = {
     background: 'linear-gradient(135deg, #ffffff 30.3%, rgba(255, 255, 255, 0) 100%), #f0f8ff',
@@ -28,7 +38,12 @@ export function UserDashboard() {
               roadmap 30 hari yang direkomendasikan AI khusus buat kamu~
             </p>
           </div>
-          <button className="w-[178px] h-[30px] mt-3 bg-primary-accent text-white rounded text-xs font-semibold leading-[14.4px] hover:bg-[#1e8cd1] transition-colors">Temukan Roadmapmu^^</button>
+          <button
+            onClick={handleStartDiscovery}
+            className="w-[178px] h-[30px] mt-3 bg-primary-accent text-white rounded text-xs font-semibold leading-[14.4px] hover:bg-[#1e8cd1] transition-colors cursor-pointer"
+          >
+            Temukan Roadmapmu^^
+          </button>
         </div>
         <img
           src="/image/mascot-character.webp"
@@ -70,7 +85,12 @@ export function UserDashboard() {
                   />
                 </div>
               </div>
-              <button className="w-[120px] h-[30px] bg-white border border-primary-accent rounded-sm text-primary-accent font-semibold text-xs leading-[14.4px] cursor-pointer">Lanjut Belajar</button>
+              <button
+                onClick={handleContinueLearning}
+                className="w-[120px] h-[30px] bg-white border border-primary-accent rounded-sm text-primary-accent font-semibold text-xs leading-[14.4px] cursor-pointer"
+              >
+                Lanjut Belajar
+              </button>
             </div>
           ))}
         </div>

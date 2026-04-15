@@ -1,13 +1,24 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
+import { Icon } from '@iconify/react'
 
 export const Route = createFileRoute('/_authenticated/dashboard/learning-path')({
   component: LearningPathPage,
 })
 
 function LearningPathPage() {
+  const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState<'roadmap' | 'article'>('roadmap')
   const [isSubmitArticlePopupOpen, setIsSubmitArticlePopupOpen] = useState(false)
+  const [selectedArticles, setSelectedArticles] = useState<number[]>([])
+
+  const handleEditArticle = () => {
+    navigate({ to: '/dashboard/article-builder' })
+  }
+
+  const toggleSelectArticle = (no: number) => {
+    setSelectedArticles((prev) => (prev.includes(no) ? prev.filter((id) => id !== no) : [...prev, no]))
+  }
 
   return (
     <section className="w-[972px]">
@@ -16,7 +27,7 @@ function LearningPathPage() {
           type="button"
           onClick={() => setActiveTab('roadmap')}
           className={`h-8 px-4 rounded-sm text-xs font-semibold transition-colors cursor-pointer ${
-            activeTab === 'roadmap' ? 'bg-primary-accent text-white' : 'text-text-label hover:bg-primary-50'
+            activeTab === 'roadmap' ? 'bg-primary-accent text-white shadow-sm' : 'text-text-label hover:bg-primary-50'
           }`}
         >
           Roadmap
@@ -25,7 +36,7 @@ function LearningPathPage() {
           type="button"
           onClick={() => setActiveTab('article')}
           className={`h-8 px-4 rounded-sm text-xs font-semibold transition-colors cursor-pointer ${
-            activeTab === 'article' ? 'bg-primary-accent text-white' : 'text-text-label hover:bg-primary-50'
+            activeTab === 'article' ? 'bg-primary-accent text-white shadow-sm' : 'text-text-label hover:bg-primary-50'
           }`}
         >
           Article
@@ -47,15 +58,21 @@ function LearningPathPage() {
               <div className="space-y-2">
                 <div className="flex items-center justify-between rounded-sm bg-primary-50 px-3 py-2">
                   <span className="text-xs text-text-label">1. Submateri 1</span>
-                  <span className="text-[10px] font-semibold text-success-600">Done</span>
+                  <span className="h-6 px-3 flex items-center justify-center rounded-sm bg-[#cde6dd] text-[10px] font-semibold text-[#2f7c66]">
+                    Done
+                  </span>
                 </div>
                 <div className="flex items-center justify-between rounded-sm bg-primary-50 px-3 py-2">
                   <span className="text-xs text-text-label">2. Submateri 2</span>
-                  <span className="text-[10px] font-semibold text-primary-accent">To do</span>
+                  <span className="h-6 px-3 flex items-center justify-center rounded-sm bg-[#bce1fb] text-[10px] font-semibold text-[#23a1eb]">
+                    To do
+                  </span>
                 </div>
                 <div className="flex items-center justify-between rounded-sm bg-primary-50 px-3 py-2">
                   <span className="text-xs text-text-label">3. Tugas : Membuat Artikel</span>
-                  <span className="text-[10px] font-semibold text-primary-accent">To do</span>
+                  <span className="h-6 px-3 flex items-center justify-center rounded-sm bg-[#bce1fb] text-[10px] font-semibold text-[#23a1eb]">
+                    To do
+                  </span>
                 </div>
               </div>
             </article>
@@ -63,7 +80,7 @@ function LearningPathPage() {
             {['Day 2 - Materi B', 'Day 3 - Materi C', 'Day 4 - Materi D', 'Day 5 - Materi E'].map((day) => (
               <article key={day} className="border border-border-light rounded-sm p-4 flex items-center justify-between">
                 <h3 className="text-[15px] font-semibold text-text-label">{day}</h3>
-                <span className="text-xs text-text-muted">Selesaikan materi sebelumnya</span>
+                <span className="text-xs font-medium text-[#ff7a00]">Selesaikan materi sebelumnya</span>
               </article>
             ))}
           </div>
@@ -72,11 +89,12 @@ function LearningPathPage() {
 
       {activeTab === 'article' && (
         <div className="w-full bg-white rounded-sm shadow-sm p-6">
-          <div className="mb-4">
+          <div className="mb-4 relative">
+            <Icon icon="lucide:search" className="absolute left-3 top-1/2 -translate-y-1/2 text-placeholder" width="16" />
             <input
               type="text"
               placeholder="Cari berdasarkan nama item"
-              className="w-[320px] h-[34px] border border-border-light rounded-sm px-3 text-[15px] text-text-label placeholder:text-placeholder focus:outline-none focus:border-primary-accent"
+              className="w-full h-[43px] border border-border-light rounded-sm pl-10 pr-3 text-[15px] text-text-label placeholder:text-placeholder focus:outline-none focus:border-primary-accent"
             />
           </div>
 
@@ -84,42 +102,86 @@ function LearningPathPage() {
             <table className="w-full border-collapse">
               <thead>
                 <tr className="bg-primary-50">
+                  <th className="px-4 py-3 text-left w-10">
+                    <input type="checkbox" className="w-4 h-4 rounded border-border-light text-primary-accent" />
+                  </th>
                   <th className="text-left text-xs font-semibold text-text-label px-4 py-3">No.</th>
                   <th className="text-left text-xs font-semibold text-text-label px-4 py-3">Judul Artikel</th>
                   <th className="text-left text-xs font-semibold text-text-label px-4 py-3">Materi</th>
-                  <th className="text-left text-xs font-semibold text-text-label px-4 py-3">Status</th>
+                  <th className="text-left text-xs font-semibold text-text-label px-4 py-3 text-center">Status</th>
                   <th className="text-left text-xs font-semibold text-text-label px-4 py-3">Submit Date</th>
-                  <th className="text-left text-xs font-semibold text-text-label px-4 py-3">Action</th>
+                  <th className="text-left text-xs font-semibold text-text-label px-4 py-3 text-center">Action</th>
                 </tr>
               </thead>
               <tbody>
-                <tr className="border-t border-neutral-100">
-                  <td className="text-xs text-text-muted px-4 py-3">1</td>
-                  <td className="text-xs text-text-muted px-4 py-3">How to install linux dist..</td>
-                  <td className="text-xs text-text-muted px-4 py-3">Day 1</td>
-                  <td className="px-4 py-3"><span className="text-[10px] font-semibold text-success-600">Done</span></td>
-                  <td className="text-xs text-text-muted px-4 py-3">22 Maret 2025, 20:30 WIB</td>
-                  <td className="px-4 py-3">
-                    <button className="h-7 px-2 rounded-sm border border-border-light text-text-label text-[10px] font-semibold cursor-pointer">View</button>
-                  </td>
-                </tr>
-                <tr className="border-t border-neutral-100">
-                  <td className="text-xs text-text-muted px-4 py-3">2.</td>
-                  <td className="text-xs text-text-muted px-4 py-3">How to install linux dist..</td>
-                  <td className="text-xs text-text-muted px-4 py-3">Day 2</td>
-                  <td className="px-4 py-3"><span className="text-[10px] font-semibold text-primary-accent">On Progress</span></td>
-                  <td className="text-xs text-text-muted px-4 py-3">-</td>
-                  <td className="px-4 py-3">
-                    <button
-                      onClick={() => setIsSubmitArticlePopupOpen(true)}
-                      className="h-7 px-2 rounded-sm border border-primary-accent text-primary-accent text-[10px] font-semibold cursor-pointer"
-                    >
-                      Submit
-                    </button>
-                  </td>
-                </tr>
+                {[
+                  { no: 1, judul: 'How to install linux dist..', materi: 'Day 1', status: 'Done', date: '22 Maret 2025, 20:30 WIB' },
+                  { no: 2, judul: 'How to install linux dist..', materi: 'Day 2', status: 'On Progress', date: '-' },
+                ].map((row) => (
+                  <tr key={row.no} className={`border-t border-neutral-100 ${row.no % 2 === 0 ? 'bg-primary-50' : 'bg-white'}`}>
+                    <td className="px-4 py-3">
+                      <input
+                        type="checkbox"
+                        checked={selectedArticles.includes(row.no)}
+                        onChange={() => toggleSelectArticle(row.no)}
+                        className="w-4 h-4 rounded border-border-light text-primary-accent"
+                      />
+                    </td>
+                    <td className="text-xs text-text-muted px-4 py-3">{row.no}.</td>
+                    <td className="text-xs text-text-muted px-4 py-3">{row.judul}</td>
+                    <td className="text-xs text-text-muted px-4 py-3">{row.materi}</td>
+                    <td className="px-4 py-3 text-center">
+                      <span
+                        className={`h-6 px-3 inline-flex items-center justify-center rounded-sm text-[10px] font-semibold ${
+                          row.status === 'Done' ? 'bg-[#cde6dd] text-[#2f7c66]' : 'bg-[#fef39b] text-[#d7a20f]'
+                        }`}
+                      >
+                        {row.status}
+                      </span>
+                    </td>
+                    <td className="text-xs text-text-muted px-4 py-3">{row.date}</td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center justify-center gap-2">
+                        <button
+                          onClick={handleEditArticle}
+                          className="h-7 w-[84px] rounded-sm bg-[#fef39b] text-[#d7a20f] text-[10px] font-semibold cursor-pointer flex items-center justify-center gap-1 hover:opacity-90 transition-all"
+                        >
+                          <Icon icon="mdi:pencil" width="12" />
+                          Edit
+                        </button>
+                        <button className="h-7 w-[100px] rounded-sm bg-primary-accent text-white text-[10px] font-semibold cursor-pointer flex items-center justify-center gap-1 hover:opacity-90 transition-all">
+                          <Icon icon="lucide:search" width="12" />
+                          Cek Detail
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
+          </div>
+
+          <div className="mt-8 flex items-center justify-between">
+            <button className="flex items-center gap-2 text-[10px] font-semibold text-text-muted hover:text-primary-accent transition-colors">
+              <Icon icon="mdi:chevron-left" width="16" />
+            </button>
+
+            <div className="flex items-center gap-2">
+              {[1, 2, 3, 4, '...', 7, 8, 9, 10].map((page, idx) => (
+                <button
+                  key={idx}
+                  className={`h-7 min-w-7 px-2 rounded-sm text-[10px] font-semibold cursor-pointer transition-all ${
+                    page === 1 ? 'bg-primary-accent text-white' : 'bg-[#e1f0fd] text-primary-accent hover:bg-primary-100'
+                  }`}
+                >
+                  {page}
+                </button>
+              ))}
+            </div>
+
+            <button className="flex items-center gap-2 text-[10px] font-semibold text-text-muted hover:text-primary-accent transition-colors">
+              <Icon icon="mdi:chevron-right" width="16" />
+            </button>
           </div>
         </div>
       )}

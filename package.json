@@ -15,6 +15,7 @@
     "backoffice:lint": "nx run backoffice:lint",
     "dimentorin:dev": "nx dev dimentorin",
     "dimentorin:test": "nx test dimentorin",
+    "dimentorin:ss": "playwright test --config=apps/dimentorin/playwright.config.ts apps/dimentorin/e2e/screenshots.test.ts",
     "dimentorin:build": "nx build dimentorin",
     "dimentorin:prod": "serve ./dist/apps/dimentorin",
     "dimentorin:lint": "nx run dimentorin:lint",
