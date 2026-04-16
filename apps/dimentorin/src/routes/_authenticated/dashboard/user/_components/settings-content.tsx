@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useLocation, useNavigate } from '@tanstack/react-router'
+import { Navigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import {
   useAuthStore,
@@ -7,105 +7,20 @@ import {
 import { cn } from '@imphnen-frontend-service/utils'
 import { Icon } from '@iconify/react'
 import { toast } from 'sonner'
-import { resolvePersona } from '../dashboard/_data/persona-resolver'
 
-type SettingsSection = 'account' | 'privacy' | 'preferences' | 'faq' | 'report' | 'feedback'
+export type SettingsSection = 'account' | 'privacy' | 'preferences' | 'faq' | 'report' | 'feedback'
 
-export const Route = createFileRoute('/_authenticated/dashboard_/settings')({
-  component: SettingsPage,
-})
-
-/**
- * Header component for the dashboard, containing the app brand and user profile.
- * Replicated from dashboard.tsx for consistency.
- */
-function HeaderDashboard({ persona, user, onLogout }: { persona: 'user' | 'mentor', user: any, onLogout: () => void }) {
-  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
-
-  const notifications = [
-    { id: 1, title: 'Mentoring Sesi Baru', message: 'Kamu punya sesi mentoring besok jam 20:00 WIB', time: '2 jam yang lalu', unread: true },
-    { id: 2, title: 'Artikel Disetujui', message: 'Artikel "How to install linux" kamu telah disetujui mentor', time: '5 jam yang lalu', unread: false },
-    { id: 3, title: 'Roadmap Selesai', message: 'Selamat! Kamu telah menyelesaikan roadmap Front-end Basic', time: '1 hari yang lalu', unread: false },
-  ]
-
-  return (
-    <header className="h-[58px] w-[972px] mx-auto mt-[52px] mb-[62px] bg-white rounded-sm shadow-sm flex items-center justify-between px-5 relative">
-      <Link to="/dashboard" className="text-[19px] font-semibold text-primary-accent">
-        Dimentorin.dev
-      </Link>
-
-      <div className="flex items-center gap-4">
-        <div className="relative">
-          <button
-            onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
-            className={`w-7 h-7 rounded-sm flex items-center justify-center cursor-pointer transition-colors ${
-              isNotificationsOpen ? 'bg-primary-50 text-primary-accent' : 'bg-white text-neutral-600'
-            }`}
-          >
-            <Icon icon="lucide:bell" width="16" />
-            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white" />
-          </button>
-
-          {isNotificationsOpen && (
-            <div className="absolute right-0 top-full mt-2 w-[320px] bg-white rounded-xl shadow-2xl border border-gray-100 z-50 overflow-hidden animate-in fade-in slide-in-from-top-2">
-              <div className="p-4 border-b border-gray-50 flex items-center justify-between">
-                <h3 className="font-bold text-gray-900">Notifikasi</h3>
-                <button className="text-xs text-primary-600 font-medium hover:underline cursor-pointer">Tandai semua dibaca</button>
-              </div>
-              <div className="max-h-[400px] overflow-y-auto">
-                {notifications.map((n) => (
-                  <div key={n.id} className={`p-4 border-b border-gray-50 last:border-0 hover:bg-gray-50 transition-colors cursor-pointer ${n.unread ? 'bg-primary-50/30' : ''}`}>
-                    <div className="flex justify-between items-start mb-1">
-                      <p className={`text-sm font-bold ${n.unread ? 'text-gray-900' : 'text-gray-700'}`}>{n.title}</p>
-                      <span className="text-[10px] text-gray-400 whitespace-nowrap">{n.time}</span>
-                    </div>
-                    <p className="text-xs text-gray-500 line-clamp-2">{n.message}</p>
-                  </div>
-                ))}
-              </div>
-              <div className="p-3 bg-gray-50 text-center">
-                <button className="text-xs font-bold text-gray-600 hover:text-primary-600 transition-colors cursor-pointer">Lihat Semua Notifikasi</button>
-              </div>
-            </div>
-          )}
-        </div>
-        <Link 
-          to="/dashboard/settings"
-          className="w-7 h-7 rounded-sm bg-white text-neutral-600 flex items-center justify-center cursor-pointer"
-        >
-          <Icon icon="lucide:settings" width="16" />
-        </Link>
-        
-        <Link 
-          to="/profile" 
-          className="h-[42px] flex items-center gap-3 pl-2.5 cursor-pointer border-none bg-transparent"
-        >
-          <div className="flex flex-col items-end text-right">
-            <span className="text-xs font-medium text-neutral-600">{user?.fullname || 'User'}</span>
-            <span className="text-[10px] font-medium text-neutral-600">{persona === 'mentor' ? 'Mentor' : 'Mentee'}</span>
-          </div>
-          <div 
-            className="w-7 h-7 rounded-full bg-bg-placeholder bg-cover bg-center" 
-            style={user?.avatar ? { backgroundImage: `url(${user.avatar})` } : {}}
-          />
-        </Link>
-      </div>
-    </header>
-  );
+interface SettingsContentProps {
+  section: SettingsSection
 }
 
-function SettingsPage() {
-  const { session, clearSession } = useAuthStore()
-  const location = useLocation()
-  const navigate = useNavigate()
+export function SettingsContent({ section }: SettingsContentProps) {
+  const { session } = useAuthStore()
   const { data: meData } = useSessionQuery()
-  const [activeSection, setActiveSection] = useState<SettingsSection>('account')
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null)
   const [twoStepAuthStep, setTwoStepAuthStep] = useState<'off' | 'input-email' | 'input-otp' | 'done'>('off')
 
   const user = session?.user
-  const searchParams = new URLSearchParams(location.search);
-  const persona = resolvePersona(user, searchParams);
 
   const sections = [
     { id: 'account' as const, label: 'Detail Akun', icon: 'mdi:account-outline', category: 'Account' },
@@ -116,96 +31,22 @@ function SettingsPage() {
     { id: 'feedback' as const, label: 'Umpan Balik', icon: 'mdi:message-draw', category: 'Help & Feedback' },
   ]
 
-  const handleLogout = () => {
-    clearSession();
-    navigate({ to: '/auth/login' });
+  const activeSection: SettingsSection =
+    section && sections.some((item) => item.id === section)
+      ? (section as SettingsSection)
+      : 'account'
+
+  if (!sections.some((item) => item.id === section)) {
+    return <Navigate to="/dashboard/user/settings/account" />
   }
 
   return (
-    <div className="min-h-screen bg-bg-light-blue flex">
-      {/* Sidebar Navigation */}
-      <aside className="w-[228px] bg-white flex flex-col sticky top-0 h-screen z-100">
-        {/* Logo */}
-        <div className="pt-[60px] px-6 pb-8">
-          <div className="h-12 flex items-center justify-center">
-            <img
-              src="/logos/logo.svg"
-              alt="Dimentorin"
-              style={{ width: '128px', height: '48px', objectFit: 'contain' }}
-            />
-          </div>
-        </div>
+    <div className="min-w-0">
+      <h1 className="text-[23px] font-semibold text-[#454545] mb-8">
+        {sections.find(s => s.id === activeSection)?.label}
+      </h1>
 
-        {/* Navigation Items */}
-        <nav className="flex-1 px-6 space-y-8 overflow-y-auto">
-          <div>
-            <p className="px-3 text-[10px] font-medium text-[#888888] uppercase tracking-wider mb-2">Account</p>
-            <div className="space-y-1">
-              {sections.filter(s => s.category === 'Account').map((s) => (
-                <button
-                  key={s.id}
-                  onClick={() => setActiveSection(s.id)}
-                  className={`w-full h-8 px-3 rounded-sm flex items-center gap-3 cursor-pointer text-xs font-medium transition-all duration-200 ${
-                    activeSection === s.id
-                      ? 'bg-primary-accent text-white'
-                      : 'text-text-muted hover:bg-bg-hover hover:text-primary-accent'
-                  }`}
-                >
-                  <Icon icon={s.icon} width="16" className={activeSection === s.id ? 'text-white' : 'text-text-muted'} />
-                  {s.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <p className="px-3 text-[10px] font-medium text-[#888888] uppercase tracking-wider mb-2">Help & Feedback</p>
-            <div className="space-y-1">
-              {sections.filter(s => s.category === 'Help & Feedback').map((s) => (
-                <button
-                  key={s.id}
-                  onClick={() => setActiveSection(s.id)}
-                  className={`w-full h-8 px-3 rounded-sm flex items-center gap-3 cursor-pointer text-xs font-medium transition-all duration-200 ${
-                    activeSection === s.id
-                      ? 'bg-primary-accent text-white'
-                      : 'text-text-muted hover:bg-bg-hover hover:text-primary-accent'
-                  }`}
-                >
-                  <Icon icon={s.icon} width="16" className={activeSection === s.id ? 'text-white' : 'text-text-muted'} />
-                  {s.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        </nav>
-
-        {/* Sidebar Footer */}
-        <div className="flex flex-col pt-4 px-6 pb-[34px]">
-          <div className="h-px bg-border-light mb-4" />
-          <button
-            onClick={handleLogout}
-            className="h-8 px-3 rounded-sm flex items-center gap-3 cursor-pointer text-xs font-medium leading-[1.3] text-text-muted transition-all duration-200 hover:bg-bg-hover"
-          >
-            <Icon icon="mdi:logout" width="16" />
-            Log Out
-          </button>
-        </div>
-      </aside>
-
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
-        <HeaderDashboard 
-          persona={persona} 
-          user={session?.user} 
-          onLogout={handleLogout} 
-        />
-        
-        <main className="w-[1052px] mx-auto px-10 pt-6 pb-10">
-          <h1 className="text-[23px] font-semibold text-[#454545] mb-8">
-            {sections.find(s => s.id === activeSection)?.label}
-          </h1>
-
-          <div className="bg-white rounded-sm shadow-sm p-10">
+      <div className="bg-white rounded-sm shadow-sm p-10">
             {activeSection === 'account' && (
               <div className="max-w-[732px]">
                 <div className="flex items-center gap-6 mb-12">
@@ -312,7 +153,7 @@ function SettingsPage() {
                 </div>
 
                 <div className="w-full p-6 border border-neutral-100 rounded-sm space-y-8">
-                  <h3 className="text-[19px] font-semibold text-[#454545]">Rubah Password</h3>
+                  <h3 className="text-[19px] font-semibold text-[#454545]">Ubah Password</h3>
                   <div className="space-y-6">
                     <div className="space-y-2">
                       <label className="text-[15px] font-medium text-[#454545]">Password Lama</label>
@@ -645,8 +486,6 @@ function SettingsPage() {
               </div>
             )}
 
-          </div>
-        </main>
       </div>
 
       {/* Two Step Auth Modals */}

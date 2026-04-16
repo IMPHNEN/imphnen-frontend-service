@@ -1,7 +1,8 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { Icon } from '@iconify/react'
+import { Button, Card, Input, NativeSelect } from '@imphnen-frontend-service/ui/atoms'
 
-export const Route = createFileRoute('/_authenticated/dashboard/roadmap-discovery')({
+export const Route = createFileRoute('/_authenticated/dashboard/user/roadmap-discovery')({
   component: RoadmapDiscoveryPage,
 })
 
@@ -9,11 +10,11 @@ function RoadmapDiscoveryPage() {
   const navigate = useNavigate()
 
   const handleGenerate = () => {
-    navigate({ to: '/dashboard/learning-path' })
+    navigate({ to: '/dashboard/user/learning-path' })
   }
 
   return (
-    <section className="flex flex-col items-center justify-center min-h-screen py-10 bg-gradient-to-t from-bg-light-blue via-bg-light-blue to-white">
+    <section className="flex flex-col items-center pt-10 min-h-screen bg-linear-to-t from-bg-light-blue via-bg-light-blue to-white">
       <div className="text-center mb-12">
         <h2 className="text-[23px] font-normal text-text-secondary mb-2">
           Welcome to <span className="text-primary-accent">Roadmap Discovery</span>
@@ -30,39 +31,32 @@ function RoadmapDiscoveryPage() {
         <img
           src="/image/mascot-1.png"
           alt="Mascot"
-          className="w-[146px] h-[146px] object-contain"
+          className="w-36.5 h-36.5 object-contain"
         />
 
-        <div className="relative bg-white rounded-xl shadow-sm p-6 border border-neutral-100 max-w-[380px]">
+        <Card className="relative p-6 max-w-95">
           {/* Speech bubble arrow */}
-          <div className="absolute left-[-8px] top-1/2 -translate-y-1/2 w-0 h-0 border-t-[8px] border-t-transparent border-r-[8px] border-r-white border-b-[8px] border-b-transparent" />
+          <div className="absolute -left-2 top-1/2 -translate-y-1/2 w-0 h-0 border-t-8 border-t-transparent border-r-8 border-r-white border-b-8 border-b-transparent" />
           <p className="text-[19px] leading-[1.3] text-text-secondary">
             Lagi pengen belajar apa? Ketik aja di sini,
             <br />
             biar AI bantuin bikin roadmap-nya.
           </p>
-        </div>
+        </Card>
       </div>
 
-      <div className="w-full max-w-[732px]">
+      <div className="w-full max-w-183">
         <div className="flex gap-4 mb-12">
-          <input
-            type="text"
-            placeholder="Mau belajar roadmap apa?"
-            className="flex-1 h-[43px] border border-neutral-200 rounded-sm px-4 text-[15px] text-text-label placeholder:text-placeholder focus:outline-none focus:border-primary-accent transition-all bg-white"
-          />
-          <div className="relative w-[248px]">
-            <select
-              className="w-full h-[43px] border border-neutral-200 rounded-sm px-4 text-[15px] text-text-label bg-white focus:outline-none focus:border-primary-accent appearance-none cursor-pointer"
-              defaultValue=""
-            >
+          <Input type="text" size="lg" placeholder="Mau belajar roadmap apa?" />
+          <div className="relative w-62">
+            <NativeSelect size="lg" defaultValue="">
               <option value="" disabled>
                 Tingkat Belajar
               </option>
               <option value="pemula">Pemula</option>
               <option value="menengah">Menengah</option>
               <option value="lanjutan">Lanjutan</option>
-            </select>
+            </NativeSelect>
             <Icon
               icon="mdi:chevron-down"
               className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none"
@@ -72,13 +66,13 @@ function RoadmapDiscoveryPage() {
         </div>
 
         <div className="flex justify-center">
-          <button
+          <Button
+            size="lg"
             onClick={handleGenerate}
-            className="h-[43px] px-10 bg-primary-accent text-white rounded-sm text-[15px] font-semibold hover:opacity-90 transition-all cursor-pointer flex items-center gap-2 shadow-sm"
           >
             <Icon icon="mdi:sparkles" width="16" />
             Generate
-          </button>
+          </Button>
         </div>
       </div>
     </section>

@@ -1,11 +1,12 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useMemo, useState } from 'react'
 import { Icon } from '@iconify/react'
-import { MentorContactModal } from './_components/modals/mentor-contact-modal'
-import { MentoringFeedbackModal } from './_components/modals/mentoring-feedback-modal'
-import { MentoringDetailModal } from './_components/modals/mentoring-detail-modal'
+import { Badge, Button, Card, Checkbox, Input, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@imphnen-frontend-service/ui/atoms'
+import { MentorContactModal } from '../_components/modals/mentor-contact-modal'
+import { MentoringFeedbackModal } from '../_components/modals/mentoring-feedback-modal'
+import { MentoringDetailModal } from '../_components/modals/mentoring-detail-modal'
 
-export const Route = createFileRoute('/_authenticated/dashboard/mentoring')({
+export const Route = createFileRoute('/_authenticated/dashboard/user/mentoring')({
   component: MentoringPage,
 })
 
@@ -97,94 +98,80 @@ function MentoringPage() {
     setCurrentPage(page)
   }
 
-  const actionButtonBaseClass =
-    'h-7 rounded-sm px-1 text-[10px] font-medium leading-none text-center whitespace-nowrap cursor-pointer inline-flex items-center justify-center gap-1 transition-all hover:opacity-90'
-
   return (
-    <section className="w-[972px]">
-      <div className="w-full bg-white rounded-sm shadow-sm p-6">
+    <section className="w-243">
+      <Card className="w-full p-6">
         <div className="mb-4 relative">
           <Icon icon="lucide:search" className="absolute left-3 top-1/2 -translate-y-1/2 text-placeholder" width="16" />
-          <input
-            type="text"
-            placeholder="Cari berdasarkan nama item"
-            className="w-full h-[43px] border border-border-light rounded-sm pl-10 pr-3 text-[15px] text-text-label placeholder:text-placeholder focus:outline-none focus:border-primary-accent"
-          />
+          <Input type="text" size="lg" placeholder="Cari berdasarkan nama item" className="pl-10" />
         </div>
 
         <div className="overflow-hidden rounded-sm border border-border-light">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="bg-primary-50">
-                <th className="px-4 py-3 text-left w-10">
-                  <input type="checkbox" className="w-4 h-4 rounded border-border-light text-primary-accent" />
-                </th>
-                <th className="text-left text-xs font-semibold text-text-label px-4 py-3">No.</th>
-                <th className="text-left text-xs font-semibold text-text-label px-4 py-3">Nama Mentor</th>
-                <th className="text-left text-xs font-semibold text-text-label px-4 py-3">Topik</th>
-                <th className="text-left text-xs font-semibold text-text-label px-4 py-3">Sesi Mentoring</th>
-                <th className="text-left text-xs font-semibold text-text-label px-4 py-3 text-center">Status</th>
-                <th className="px-4 py-3 text-center text-xs font-semibold text-text-label min-w-[220px]">Action</th>
-              </tr>
-            </thead>
-            <tbody>
+          <Table>
+            <TableHeader className="bg-primary-50">
+              <TableRow>
+                <TableHead className="w-10"><Checkbox /></TableHead>
+                <TableHead>No.</TableHead>
+                <TableHead>Nama Mentor</TableHead>
+                <TableHead>Topik</TableHead>
+                <TableHead>Sesi Mentoring</TableHead>
+                <TableHead className="text-center">Status</TableHead>
+                <TableHead className="text-center">Action</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {pagedRows.map((row) => (
-                <tr key={row.no} className={`border-t border-neutral-100 ${row.no % 2 === 0 ? 'bg-primary-50' : 'bg-white'}`}>
-                  <td className="px-4 py-3">
-                    <input
-                      type="checkbox"
+                <TableRow key={row.no} className={row.no % 2 === 0 ? 'bg-primary-50' : 'bg-white'}>
+                  <TableCell>
+                    <Checkbox
                       checked={selectedRows.includes(row.no)}
-                      onChange={() => toggleSelectRow(row.no)}
-                      className="w-4 h-4 rounded border-border-light text-primary-accent"
+                      onCheckedChange={() => toggleSelectRow(row.no)}
                     />
-                  </td>
-                  <td className="text-xs text-text-muted px-4 py-3">{row.no}.</td>
-                  <td className="text-xs text-text-muted px-4 py-3">{row.mentorName}</td>
-                  <td className="text-xs text-text-muted px-4 py-3">{row.topic}</td>
-                  <td className="text-xs text-text-muted px-4 py-3">{row.sessionTime}</td>
-                  <td className="px-4 py-3 text-center">
-                    <span
-                      className={`h-6 px-3 inline-flex items-center justify-center whitespace-nowrap rounded-sm text-[10px] font-semibold ${
-                        row.status === 'Done' ? 'bg-[#cde6dd] text-[#2f7c66]' : 'bg-[#bce1fb] text-[#23a1eb]'
-                      }`}
-                    >
+                  </TableCell>
+                  <TableCell className="text-xs text-text-muted">{row.no}.</TableCell>
+                  <TableCell className="text-xs text-text-muted">{row.mentorName}</TableCell>
+                  <TableCell className="text-xs text-text-muted">{row.topic}</TableCell>
+                  <TableCell className="text-xs text-text-muted">{row.sessionTime}</TableCell>
+                  <TableCell className="text-center">
+                    <Badge variant={row.status === 'Done' ? 'success' : 'info'}>
                       {row.status}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="mx-auto flex w-[200px] items-center justify-center gap-2">
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <div className="mx-auto flex w-50 items-center justify-center gap-2">
                       {row.status === 'Done' ? (
-                        <button
+                        <Button
                           onClick={() => handleShowFeedback(row)}
-                          className={`${actionButtonBaseClass} w-full px-4 bg-primary-accent text-white`}
+                          size="sm"
                         >
                           <Icon icon="lucide:search" width="12" />
                           Kirim Feedback
-                        </button>
+                        </Button>
                       ) : (
                         <>
-                          <button
+                          <Button
                             onClick={() => handleShowDetail(row)}
-                            className={`${actionButtonBaseClass} flex-1 min-w-[90px] bg-primary-accent text-white`}
+                            size="sm"
                           >
                             <Icon icon="lucide:search" width="12" />
                             Cek Detail
-                          </button>
-                          <button
+                          </Button>
+                          <Button
                             onClick={() => handleContactMentor(row)}
-                            className={`${actionButtonBaseClass} flex-1 min-w-[90px] bg-[#ffe8da] text-[#ff5242]`}
+                            variant="danger"
+                            size="sm"
                           >
                             <Icon icon="lucide:x" width="12" />
                             Cancel
-                          </button>
+                          </Button>
                         </>
                       )}
                     </div>
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
 
         <div className="mt-8 flex items-center justify-between">
@@ -211,7 +198,7 @@ function MentoringPage() {
                   type="button"
                   onClick={() => goToPage(page)}
                   className={`h-7 min-w-7 px-2 rounded-sm text-[10px] font-semibold cursor-pointer transition-all ${
-                    isActive ? 'bg-primary-accent text-white' : 'bg-[#e1f0fd] text-primary-accent hover:bg-primary-100'
+                    isActive ? 'bg-primary-accent text-white' : 'bg-primary-100 text-primary-accent hover:bg-primary-100'
                   }`}
                 >
                   {page}
@@ -224,7 +211,7 @@ function MentoringPage() {
             <Icon icon="mdi:chevron-right" width="16" />
           </button>
         </div>
-      </div>
+      </Card>
 
       <MentorContactModal
         isOpen={activeModal === 'contact'}

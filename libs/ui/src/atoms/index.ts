@@ -14,6 +14,7 @@ export * from './label';
 export * from './popover';
 export * from './radio-group';
 export * from './scroll-area';
+export * from './segmented-switch';
 export * from './select';
 export * from './separator';
 export * from './sheet';

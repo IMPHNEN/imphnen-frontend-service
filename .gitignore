@@ -80,3 +80,10 @@ result
 /playwright-report/
 /blob-report/
 /playwright/.cache
+docs/dependency-map.md
+docs/handoff-log.jsonl
+docs/observability.md
+docs/quality-gates.json
+docs/todo.md
+docs/workflow-state.json
+docs/adr/**
