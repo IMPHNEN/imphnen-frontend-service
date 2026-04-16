@@ -66,26 +66,23 @@ export const SkillsModal: FC<SkillsModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
 
       <button
-        className="absolute inset-0 bg-black/20 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/20"
         onClick={handleCancel}
         type="button"
         aria-label="Close modal"
       />
 
+      <div className="relative max-h-[90vh] w-full max-w-[520px] overflow-y-auto rounded-2xl bg-[#F6F6F6] p-5 sm:p-6">
 
-      <div className="relative bg-white rounded-xl shadow-xl w-full max-w-5xl mx-auto max-h-[95vh] overflow-hidden">
-
-        <div className="p-6 pb-4 border-b border-gray-200">
-          <div className="flex">
-            <h2 className="text-xl font-semibold text-gray-900 px-3 py-1 bg-[#23A1EB]/10 rounded-md flex-1">Edit Skills</h2>
-          </div>
+        <div className="rounded-[6px] bg-[#DFECF7] px-4 py-2">
+          <h2 className="text-2xl font-semibold leading-8 text-[#4B4B4B]">Skills</h2>
         </div>
 
 
-        <div className="p-6 max-h-[60vh] overflow-y-auto">
+        <div className="max-h-[60vh] overflow-y-auto pt-8">
 
           <div className="mb-6 p-4 border border-gray-200 rounded-lg bg-gray-50">
             <h3 className="text-sm font-medium text-gray-700 mb-3">Add New Skill</h3>
@@ -143,17 +140,17 @@ export const SkillsModal: FC<SkillsModalProps> = ({
         </div>
 
 
-        <div className="flex gap-3 p-6 pt-4">
+        <div className="flex justify-end gap-3 pt-8">
           <ModalButton variant="secondary"
             onClick={handleCancel}
-            className="flex-1"
+            className="w-[110px]"
             disabled={isLoading}
           >
             Batal
           </ModalButton>
           <ModalButton variant="primary"
             onClick={handleSave}
-            className="flex-1"
+            className="w-[110px]"
             disabled={isLoading}
             loading={isLoading}
           >

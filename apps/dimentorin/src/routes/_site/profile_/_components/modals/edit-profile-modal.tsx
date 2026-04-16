@@ -146,14 +146,20 @@ export const EditProfileModal: FC<EditProfileModalProps> = ({ isOpen, onClose, s
       }
       showNotification('error', 'Failed to save changes', apiMessage || 'Please try again.');
     }
-  };  return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <Modal.Header>
-        <Modal.Title>Edit Profile</Modal.Title>
+  };
+
+  return (
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      className="max-h-[90vh] max-w-[520px] overflow-y-auto rounded-2xl border-none bg-[#F6F6F6] p-5 sm:p-6"
+    >
+      <Modal.Header className="rounded-[6px] bg-[#DFECF7] px-4 py-2">
+        <Modal.Title className="text-2xl font-semibold leading-8 text-[#4B4B4B]">Introduction</Modal.Title>
       </Modal.Header>
-      <Modal.Content>
+      <Modal.Content className="pt-8">
         {}
-        <div className="flex justify-center pt-6 pb-4">
+        <div className="flex justify-center pb-4">
           <div className="relative">
             {}
             <input
@@ -194,7 +200,8 @@ export const EditProfileModal: FC<EditProfileModalProps> = ({ isOpen, onClose, s
               </div>
             </label>
           </div>
-        </div>        <div className="px-6 pb-6 space-y-6">
+        </div>
+        <div className="space-y-6">
           {}
           <div className="space-y-2">
             <InputField
@@ -212,11 +219,11 @@ export const EditProfileModal: FC<EditProfileModalProps> = ({ isOpen, onClose, s
         </div>
       </Modal.Content>
       <Modal.Footer>
-        <div className="flex gap-3 w-full">
+        <div className="flex w-full justify-end gap-3">
           <Button
             variant="secondary"
             onClick={onClose}
-            className="flex-1"
+            className="h-10 w-[110px] rounded-[6px] text-sm"
             disabled={isUploading}
           >
             Cancel
@@ -224,7 +231,7 @@ export const EditProfileModal: FC<EditProfileModalProps> = ({ isOpen, onClose, s
           <Button
             variant="primary"
             onClick={handleSave}
-            className="flex-1"
+            className="h-10 w-[110px] rounded-[6px] text-sm"
             disabled={isUploading}
           >
             {isUploading ? (
