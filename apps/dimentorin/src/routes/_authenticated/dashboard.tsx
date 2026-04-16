@@ -89,7 +89,7 @@ function DashboardLayout() {
         <div className="pt-15 px-6 pb-8">
           <div className="h-12 flex items-center justify-center">
             <img
-              src="/logos/logo.svg"
+              src="/image/ImphnenSimple1.png"
               alt="Dimentorin"
               style={{ width: '128px', height: '48px', objectFit: 'contain' }}
             />
