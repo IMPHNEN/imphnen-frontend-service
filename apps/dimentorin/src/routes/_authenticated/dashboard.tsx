@@ -33,6 +33,15 @@ const userSettingsNavItems: NavItem[] = [
   { path: '/dashboard/user/settings/feedback', label: 'Umpan Balik', icon: 'mdi:message-draw', isLink: true },
 ]
 
+const mentorSettingsNavItems: NavItem[] = [
+  { path: '/dashboard/mentor/settings/account', label: 'Detail Akun', icon: 'mdi:account-outline', isLink: true },
+  { path: '/dashboard/mentor/settings/privacy', label: 'Privasi & Keamanan', icon: 'mdi:shield-lock-outline', isLink: true },
+  { path: '/dashboard/mentor/settings/preferences', label: 'Monetization', icon: 'mdi:tune-variant', isLink: true },
+  { path: '/dashboard/mentor/settings/faq', label: 'FAQ', icon: 'mdi:help-circle-outline', isLink: true },
+  { path: '/dashboard/mentor/settings/report', label: 'Laporkan Kendala', icon: 'mdi:alert-circle-outline', isLink: true },
+  { path: '/dashboard/mentor/settings/feedback', label: 'Umpan Balik', icon: 'mdi:message-draw', isLink: true },
+]
+
 export const Route = createFileRoute('/_authenticated/dashboard')({
   component: DashboardLayout,
 })
@@ -50,9 +59,10 @@ function DashboardLayout() {
   const isSettingsSection =
     location.pathname.startsWith('/dashboard/user/settings') ||
     location.pathname.startsWith('/dashboard/mentor/settings')
+  const isMentorSettingsSection = location.pathname.startsWith('/dashboard/mentor/settings')
   const persona: 'user' | 'mentor' = isMentorSection ? 'mentor' : 'user'
   const navItems = isSettingsSection
-    ? userSettingsNavItems
+    ? (isMentorSettingsSection ? mentorSettingsNavItems : userSettingsNavItems)
     : isMentorSection
       ? mentorNavItems
       : userNavItems
@@ -201,7 +211,7 @@ function HeaderDashboard({ persona, user }: { persona: 'user' | 'mentor', user: 
           )}
         </div>
         <Link 
-          to={persona === 'mentor' ? '/dashboard/mentor/mentoring-setup' : '/dashboard/user/settings/account'}
+          to={persona === 'mentor' ? '/dashboard/mentor/settings/account' : '/dashboard/user/settings/account'}
           className="w-7 h-7 rounded-sm bg-white text-neutral-600 flex items-center justify-center cursor-pointer"
         >
           <Icon icon="lucide:settings" width="16" />
