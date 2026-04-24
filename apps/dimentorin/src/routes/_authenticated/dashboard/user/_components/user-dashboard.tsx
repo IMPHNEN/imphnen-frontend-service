@@ -1,5 +1,3 @@
-'use client';
-
 import { useNavigate } from '@tanstack/react-router';
 import { getUserMockDashboardData } from '../../_data/mock/dashboard-mock';
 import { Button, Card } from '@imphnen-frontend-service/ui/atoms';

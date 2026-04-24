@@ -1,5 +1,3 @@
-'use client';
-
 import React, { createContext, useContext, useMemo, useCallback } from 'react';
 import { useParams } from '@tanstack/react-router';
 import { useQueryClient } from '@tanstack/react-query';
@@ -65,7 +63,10 @@ export const ProfileProvider: React.FC<ProfileProviderProps> = ({
   profileId,
   profileType: forcedProfileType
 }) => {
-  const params = useParams({ strict: false });
+  const params = useParams({
+    strict: false,
+    select: (params) => params as { mentor?: string; id?: string }
+  });
   const { session } = useAuthStore();
   const queryClient = useQueryClient();
 
@@ -105,44 +106,37 @@ export const ProfileProvider: React.FC<ProfileProviderProps> = ({
 
 
 
-  const userMeQuery = useUserMe({
-    queryKey: ['user-me'],
-    enabled: isOwnProfile && profileType === 'user',
-  });
-  const userByIdQuery = useUserById(id || '', {
-    queryKey: ['user-by-id', id],
-    enabled: !isOwnProfile && !!id && profileType === 'user',
-  });
+  const userMeQuery = useUserMe();
+  const userByIdQuery = useUserById(id || '');
   const updateUserMeMutation = useUpdateUserMe();
   const updateUserByIdMutation = useUpdateUserById();
 
-  const mentorMeQuery = useMentorMe({
-    queryKey: ['mentor-me'],
-    enabled: isOwnProfile && profileType === 'mentor' && canAccessMentor,
-  });
-  const mentorByIdQuery = useMentorById(id || '', {
-    queryKey: ['mentor-by-id', id],
-    enabled: !isOwnProfile && !!id && profileType === 'mentor' && canAccessMentor,
-  });
+  const mentorMeQuery = useMentorMe();
+  const mentorByIdQuery = useMentorById(id || '');
   const updateMentorMeMutation = useUpdateMentorMe();
   const updateMentorByIdMutation = useUpdateMentorById();
 
 
-  const selectedUserQuery = isOwnProfile ? userMeQuery : userByIdQuery;
-  const selectedMentorQuery = isOwnProfile ? mentorMeQuery : mentorByIdQuery;
-
-  const {
-    data: profileData,
-    isLoading,
-    error
-  } = useMemo(() => {
-
+  const selectedQuery = useMemo(() => {
     if (canAccessMentor && profileType === 'mentor') {
-      return selectedMentorQuery;
+      return isOwnProfile ? mentorMeQuery : mentorByIdQuery;
     }
 
-    return selectedUserQuery;
-  }, [profileType, canAccessMentor, selectedUserQuery, selectedMentorQuery]);
+    return isOwnProfile ? userMeQuery : userByIdQuery;
+  }, [canAccessMentor, profileType, isOwnProfile, userMeQuery, userByIdQuery, mentorMeQuery, mentorByIdQuery]);
+
+  const selectedQueryData = selectedQuery.data;
+
+  const profileData = useMemo<ProfileData | undefined>(() => {
+    if (canAccessMentor && profileType === 'mentor') {
+      return selectedQueryData as MentorDetailResponseDto | undefined;
+    }
+
+    return (selectedQueryData as { data?: UserDetailResponseDto } | undefined)?.data;
+  }, [selectedQueryData, canAccessMentor, profileType]);
+
+  const isLoading = selectedQuery.isLoading;
+  const error = selectedQuery.error;
 
 
   const selectedUserMutation = isOwnProfile ? updateUserMeMutation : updateUserByIdMutation;

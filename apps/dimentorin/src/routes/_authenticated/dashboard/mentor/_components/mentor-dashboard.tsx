@@ -1,5 +1,3 @@
-'use client';
-
 import { useState } from 'react';
 import { getMentorMockDashboardData } from '../../_data/mock/dashboard-mock';
 import { Button, Card } from '@imphnen-frontend-service/ui/atoms';
