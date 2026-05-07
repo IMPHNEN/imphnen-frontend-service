@@ -54,29 +54,25 @@ export const SocialMediaModal: FC<SocialMediaModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
 
       <button
-        className="absolute inset-0 bg-black/20 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/20"
         onClick={handleCancel}
         aria-label="Close modal"
         type="button"
       />
 
+      <div className="relative max-h-[90vh] w-full max-w-[520px] overflow-y-auto rounded-2xl bg-[#F6F6F6] p-5 sm:p-6">
 
-      <div className="relative bg-white rounded-xl shadow-xl w-full max-w-5xl mx-auto">
-
-        <div className="p-6 pb-4 border-b border-gray-200">
-          <div className="flex">
-            <h2 className="text-xl font-semibold text-gray-900 px-3 py-1 bg-[#23A1EB]/10 rounded-md flex-1">Edit Social Media</h2>
-          </div>
+        <div className="rounded-[6px] bg-[#DFECF7] px-4 py-2">
+          <h2 className="text-2xl font-semibold leading-8 text-[#4B4B4B]">Social Media</h2>
         </div>
 
-
-        <div className="px-6 py-4 space-y-4 max-h-[60vh] overflow-y-auto">
+        <div className="max-h-[60vh] space-y-4 overflow-y-auto pt-8">
           {socialLinks.map((link, index) => (
             <div key={link.platform}>
-              <label htmlFor={`social-${index}`} className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor={`social-${index}`} className="mb-2 block text-lg font-medium leading-7 text-[#4B4B4B]">
                 {link.platform}
               </label>
               <input
@@ -85,18 +81,17 @@ export const SocialMediaModal: FC<SocialMediaModalProps> = ({
                 placeholder={link.placeholder}
                 value={link.value}
                 onChange={(e) => handleSocialLinkChange(index, e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#23A1EB] focus:border-[#23A1EB] outline-none transition-colors"
+                className="h-12 w-full rounded-[6px] border border-[#D9D9D9] bg-[#F6F6F6] px-4 text-base leading-6 text-[#4B4B4B] placeholder:text-[#B8B8B8] focus:border-[#23A1EB] focus:outline-none"
               />
             </div>
           ))}
         </div>
 
-
-        <div className="flex gap-3 p-6 pt-4">
+        <div className="flex justify-end gap-3 pt-8">
           <ModalButton
             variant="secondary"
             onClick={handleCancel}
-            className="flex-1"
+            className="w-[110px]"
             disabled={isLoading}
           >
             Batal
@@ -104,7 +99,7 @@ export const SocialMediaModal: FC<SocialMediaModalProps> = ({
           <ModalButton
             variant="primary"
             onClick={handleSave}
-            className="flex-1"
+            className="w-[110px]"
             disabled={isLoading}
             loading={isLoading}
           >

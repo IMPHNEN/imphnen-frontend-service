@@ -1,7 +1,5 @@
-import { FC, useState, useEffect } from 'react';
-import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
+import { FC, useEffect, useMemo, useState } from 'react';
 import { ModalButton } from '../buttons/modal-button';
-import { InputField } from '@imphnen-frontend-service/ui/molecules';
 
 interface Education {
   id: string;
@@ -20,6 +18,100 @@ interface EducationModalProps {
   showNotification?: (type: 'success' | 'error', title: string, message?: string) => void;
 }
 
+interface EducationFormData {
+  institution: string;
+  degree: string;
+  field: string;
+  startMonth: string;
+  startYear: string;
+  endMonth: string;
+  endYear: string;
+  isCurrentRole: boolean;
+  description: string;
+}
+
+const MONTH_OPTIONS = [
+  'Januari',
+  'Februari',
+  'Maret',
+  'April',
+  'Mei',
+  'Juni',
+  'Juli',
+  'Agustus',
+  'September',
+  'Oktober',
+  'November',
+  'Desember',
+];
+
+function buildYearOptions(): string[] {
+  const currentYear = new Date().getFullYear();
+  const years: string[] = [];
+  for (let year = currentYear; year >= currentYear - 70; year -= 1) {
+    years.push(String(year));
+  }
+  return years;
+}
+
+const YEAR_OPTIONS = buildYearOptions();
+
+function parsePeriod(period: string) {
+  const [startPart = '', endPart = ''] = period.split(' - ');
+  const [startMonth = '', startYear = ''] = startPart.split(' ');
+  const [endMonth = '', endYear = ''] = endPart.split(' ');
+
+  return {
+    startMonth,
+    startYear,
+    endMonth,
+    endYear,
+  };
+}
+
+function toInitialFormData(source?: Education): EducationFormData {
+  if (!source) {
+    return {
+      institution: '',
+      degree: '',
+      field: '',
+      startMonth: '',
+      startYear: '',
+      endMonth: '',
+      endYear: '',
+      isCurrentRole: false,
+      description: '',
+    };
+  }
+
+  const parsed = parsePeriod(source.period || '');
+
+  return {
+    institution: source.institution || '',
+    degree: source.degree || '',
+    field: source.field || '',
+    startMonth: parsed.startMonth,
+    startYear: parsed.startYear,
+    endMonth: parsed.endMonth,
+    endYear: parsed.endYear,
+    isCurrentRole: false,
+    description: '',
+  };
+}
+
+function normalizeEducationFromForm(form: EducationFormData, existingId?: string): Education {
+  const endValue = form.isCurrentRole ? 'Sekarang' : [form.endMonth, form.endYear].filter(Boolean).join(' ');
+  const period = `${[form.startMonth, form.startYear].filter(Boolean).join(' ')} - ${endValue}`.trim();
+
+  return {
+    id: existingId || Date.now().toString(),
+    institution: form.institution.trim(),
+    degree: form.degree.trim(),
+    field: form.field.trim(),
+    period,
+  };
+}
+
 export const EducationModal: FC<EducationModalProps> = ({
   isOpen,
   onClose,
@@ -28,157 +120,221 @@ export const EducationModal: FC<EducationModalProps> = ({
   isLoading = false,
   showNotification,
 }) => {
-  const [educations, setEducations] = useState<Education[]>(initialValue);
+  const firstEducation = useMemo(() => initialValue[0], [initialValue]);
+  const [formData, setFormData] = useState<EducationFormData>(toInitialFormData(firstEducation));
+  const [isSuccessState, setIsSuccessState] = useState(false);
 
-  
   useEffect(() => {
-    setEducations(initialValue);
-  }, [initialValue]);
-
-  const handleSave = async () => {
-
-    const hasEmpty = educations.some(edu =>
-      !edu.institution.trim() || !edu.degree.trim() || !edu.field.trim() || !edu.period.trim()
-    );
-    if (hasEmpty) {
-      if (showNotification) {
-        showNotification('error', 'Data Tidak Lengkap', 'Semua field harus diisi pada setiap pendidikan.');
-      } else {
-        alert('Semua field harus diisi pada setiap pendidikan.');
-      }
-      return;
-    }
-    try {
-      await onSave(educations);
-      onClose();
-    } catch (error) {
-      console.error('Save failed:', error);
-    }
-  };
+    if (!isOpen) return;
+    setFormData(toInitialFormData(firstEducation));
+    setIsSuccessState(false);
+  }, [isOpen, firstEducation]);
 
   const handleCancel = () => {
-    setEducations(initialValue);
+    setFormData(toInitialFormData(firstEducation));
+    setIsSuccessState(false);
     onClose();
   };
 
-  const addEducation = () => {
-    const newEducation: Education = {
-      id: Date.now().toString(),
-      institution: '',
-      degree: '',
-      field: '',
-      period: '',
-    };
-    setEducations([...educations, newEducation]);
+  const handleChange = (field: keyof EducationFormData, value: string | boolean) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const removeEducation = (id: string) => {
-    setEducations(educations.filter(edu => edu.id !== id));
+  const handleSave = async () => {
+    const hasMissingRequired = !formData.institution.trim() || !formData.degree.trim() || !formData.field.trim()
+      || !formData.startMonth || !formData.startYear || (!formData.isCurrentRole && (!formData.endMonth || !formData.endYear));
+
+    if (hasMissingRequired) {
+      showNotification?.('error', 'Data Tidak Lengkap', 'Mohon lengkapi semua data pendidikan wajib.');
+      return;
+    }
+
+    try {
+      const nextEducation = normalizeEducationFromForm(formData, firstEducation?.id);
+      const updated = firstEducation
+        ? [nextEducation, ...initialValue.slice(1)]
+        : [nextEducation, ...initialValue];
+
+      await onSave(updated);
+      setIsSuccessState(true);
+    } catch (error) {
+      console.error('Save failed:', error);
+      showNotification?.('error', 'Gagal Menyimpan', 'Terjadi kesalahan saat menyimpan pendidikan.');
+    }
   };
 
-  const updateEducation = (id: string, field: keyof Education, value: string) => {
-    setEducations(educations.map(edu =>
-      edu.id === id ? { ...edu, [field]: value } : edu
-    ));
+  const finishSuccess = () => {
+    setIsSuccessState(false);
+    onClose();
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
       <button
-        className="absolute inset-0 bg-black/20 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/20"
         onClick={handleCancel}
         aria-label="Close modal"
-      ></button>
+        type="button"
+      />
 
-      <div className="relative bg-white rounded-xl shadow-xl max-w-5xl w-full max-h-[95vh] overflow-hidden">
-
-        <div className="p-6 border-b border-gray-200">
-          <div className="flex">
-            <h2 className="text-xl font-semibold text-gray-900 px-3 py-1 bg-[#23A1EB]/10 rounded-md flex-1">Edit Education</h2>
-          </div>
+      <div className="relative max-h-[90vh] w-full max-w-[520px] overflow-y-auto rounded-2xl bg-[#F1F1F1] p-5 sm:p-6">
+        <div className="rounded-[6px] bg-[#DFECF7] px-4 py-2">
+          <h2 className="text-xl font-semibold leading-7 text-[#4B4B4B]">Education</h2>
         </div>
 
-
-        <div className="p-6 max-h-[60vh] overflow-y-auto">
-          <div className="space-y-6">
-            {educations.map((education, index) => (
-              <div key={education.id} className="border border-gray-200 rounded-lg p-4">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-medium text-gray-900">Education {index + 1}</h3>
-                  <ModalButton
-                    variant="danger"
-                    size="sm"
-                    onClick={() => removeEducation(education.id)}
-                    className="text-red-500 hover:text-red-700"
-                  >
-                    <DeleteOutlined />
-                  </ModalButton>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <InputField
-                    label="Institution"
-                    value={education.institution}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateEducation(education.id, 'institution', e.target.value)}
-                    placeholder="Enter institution name"
-                  />
-                  <InputField
-                    label="Degree"
-                    value={education.degree}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateEducation(education.id, 'degree', e.target.value)}
-                    placeholder="Enter degree"
-                  />
-                  <InputField
-                    label="Field"
-                    value={education.field}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateEducation(education.id, 'field', e.target.value)}
-                    placeholder="Enter field of study"
-                  />
-                  <InputField
-                    label="Period"
-                    value={education.period}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateEducation(education.id, 'period', e.target.value)}
-                    placeholder="e.g., Sep 2022 - Current"
-                  />
-                </div>
+        {isSuccessState ? (
+          <div className="pt-10 text-center">
+            <div className="mx-auto flex h-23 w-23 items-center justify-center rounded-full bg-[#B7F0B1]">
+              <div className="flex h-15 w-15 items-center justify-center rounded-full bg-[#2DB84D]">
+                <svg viewBox="0 0 24 24" className="h-8 w-8 text-white" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M20 6 9 17l-5-5" />
+                </svg>
               </div>
-            ))}
-
+            </div>
+            <p className="mt-5 text-lg font-medium leading-7 text-[#2DB84D]">Pendidikan berhasil ditambahkan</p>
             <ModalButton
-              variant="secondary"
-              onClick={addEducation}
-              className="w-full border-2 border-dashed border-gray-300 rounded-lg p-4 text-gray-500 hover:border-[#23A1EB] hover:text-[#23A1EB] transition-colors flex items-center justify-center gap-2"
+              variant="primary"
+              onClick={finishSuccess}
+              className="mt-8 h-12 w-full text-base"
             >
-              <PlusOutlined />
-              Add Education
+              Selesai
             </ModalButton>
           </div>
-        </div>
+        ) : (
+          <div className="space-y-4 pt-8">
+            <h3 className="text-base font-semibold text-[#4B4B4B]">Informasi Pendidikan</h3>
 
+            <label className="flex items-center gap-2 text-sm text-[#757575]">
+              <input
+                type="checkbox"
+                checked={formData.isCurrentRole}
+                onChange={(e) => handleChange('isCurrentRole', e.target.checked)}
+                className="h-4 w-4 rounded border border-[#BDBDBD]"
+              />
+              Ini adalah role saya saat ini
+            </label>
 
-        <div className="flex items-center justify-end gap-3 p-6 border-t border-gray-200 bg-gray-50">
-          <ModalButton
-            variant="secondary"
-            className="bg-white shadow-md"
-            onClick={handleCancel}
-            disabled={isLoading}
-          >
-            Batal
-          </ModalButton>
-          <ModalButton
-            variant="primary"
-            onClick={handleSave}
-            disabled={isLoading}
-            loading={isLoading}
-          >
-            {isLoading ? 'Menyimpan...' : 'Simpan'}
-          </ModalButton>
-        </div>
+            <div>
+              <label className="mb-2 block text-base font-medium leading-6 text-[#4B4B4B]">Universitas/Sekolah</label>
+              <input
+                value={formData.institution}
+                onChange={(e) => handleChange('institution', e.target.value)}
+                placeholder="Mis: Universitas Galatama"
+                className="h-12 w-full rounded-[6px] border border-[#C8C8C8] bg-[#F1F1F1] px-4 text-base text-[#4B4B4B] placeholder:text-[#B8B8B8] focus:border-[#23A1EB] focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="mb-2 block text-base font-medium leading-6 text-[#4B4B4B]">Gelar</label>
+              <input
+                value={formData.degree}
+                onChange={(e) => handleChange('degree', e.target.value)}
+                placeholder="Mis: Sarjana"
+                className="h-12 w-full rounded-[6px] border border-[#C8C8C8] bg-[#F1F1F1] px-4 text-base text-[#4B4B4B] placeholder:text-[#B8B8B8] focus:border-[#23A1EB] focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="mb-2 block text-base font-medium leading-6 text-[#4B4B4B]">Jurusan</label>
+              <input
+                value={formData.field}
+                onChange={(e) => handleChange('field', e.target.value)}
+                placeholder="Mis: Teknik Informatika"
+                className="h-12 w-full rounded-[6px] border border-[#C8C8C8] bg-[#F1F1F1] px-4 text-base text-[#4B4B4B] placeholder:text-[#B8B8B8] focus:border-[#23A1EB] focus:outline-none"
+              />
+            </div>
+
+            <h3 className="pt-2 text-base font-semibold text-[#4B4B4B]">Periode Pendidikan</h3>
+
+            <div>
+              <p className="mb-2 text-base font-medium leading-6 text-[#4B4B4B]">Tanggal Mulai</p>
+              <div className="grid grid-cols-2 gap-3">
+                <select
+                  value={formData.startMonth}
+                  onChange={(e) => handleChange('startMonth', e.target.value)}
+                  className="h-12 rounded-[6px] border border-[#C8C8C8] bg-[#F1F1F1] px-4 text-base text-[#4B4B4B]"
+                >
+                  <option value="">Bulan</option>
+                  {MONTH_OPTIONS.map((month) => (
+                    <option key={month} value={month}>{month}</option>
+                  ))}
+                </select>
+                <select
+                  value={formData.startYear}
+                  onChange={(e) => handleChange('startYear', e.target.value)}
+                  className="h-12 rounded-[6px] border border-[#C8C8C8] bg-[#F1F1F1] px-4 text-base text-[#4B4B4B]"
+                >
+                  <option value="">Tahun</option>
+                  {YEAR_OPTIONS.map((year) => (
+                    <option key={year} value={year}>{year}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {!formData.isCurrentRole && (
+              <div>
+                <p className="mb-2 text-base font-medium leading-6 text-[#4B4B4B]">Tanggal Berakhir</p>
+                <div className="grid grid-cols-2 gap-3">
+                  <select
+                    value={formData.endMonth}
+                    onChange={(e) => handleChange('endMonth', e.target.value)}
+                    className="h-12 rounded-[6px] border border-[#C8C8C8] bg-[#F1F1F1] px-4 text-base text-[#4B4B4B]"
+                  >
+                    <option value="">Bulan</option>
+                    {MONTH_OPTIONS.map((month) => (
+                      <option key={month} value={month}>{month}</option>
+                    ))}
+                  </select>
+                  <select
+                    value={formData.endYear}
+                    onChange={(e) => handleChange('endYear', e.target.value)}
+                    className="h-12 rounded-[6px] border border-[#C8C8C8] bg-[#F1F1F1] px-4 text-base text-[#4B4B4B]"
+                  >
+                    <option value="">Tahun</option>
+                    {YEAR_OPTIONS.map((year) => (
+                      <option key={year} value={year}>{year}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            )}
+
+            <div>
+              <label className="mb-2 block text-base font-medium leading-6 text-[#4B4B4B]">Deskripsi</label>
+              <textarea
+                value={formData.description}
+                onChange={(e) => handleChange('description', e.target.value)}
+                rows={5}
+                placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                className="w-full resize-none rounded-[6px] border border-[#C8C8C8] bg-[#F1F1F1] px-4 py-3 text-sm leading-6 text-[#4B4B4B] placeholder:text-[#B8B8B8] focus:border-[#23A1EB] focus:outline-none"
+              />
+            </div>
+
+            <div className="flex justify-end gap-3 pt-2">
+              <ModalButton
+                variant="secondary"
+                onClick={handleCancel}
+                className="w-27.5"
+                disabled={isLoading}
+              >
+                Batal
+              </ModalButton>
+              <ModalButton
+                variant="primary"
+                onClick={handleSave}
+                className="w-27.5"
+                disabled={isLoading}
+                loading={isLoading}
+              >
+                {isLoading ? 'Menyimpan...' : 'Simpan'}
+              </ModalButton>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
 };
-
-

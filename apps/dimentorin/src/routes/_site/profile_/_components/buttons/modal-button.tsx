@@ -17,26 +17,26 @@ interface ModalButtonProps {
 const getVariantClasses = (variant: ButtonVariant): string => {
   switch (variant) {
     case 'primary':
-      return 'bg-[#23A1EB] hover:bg-[#1e90d6] text-white shadow-lg hover:shadow-xl';
+      return 'bg-[#23A1EB] hover:bg-[#1e90d6] text-white shadow-[0px_4px_12px_0px_rgba(35,161,235,0.28)]';
     case 'secondary':
-      return 'bg-white hover:bg-gray-200 text-[#23A1EB] shadow-md hover:shadow-lg';
+      return 'bg-white hover:bg-gray-100 text-[#23A1EB] shadow-[0px_8px_24px_0px_rgba(0,0,0,0.08)]';
     case 'danger':
-      return 'bg-red-600 hover:bg-red-500 text-white shadow-lg hover:shadow-xl';
+      return 'bg-red-600 hover:bg-red-500 text-white shadow-[0px_4px_12px_0px_rgba(220,38,38,0.25)]';
     default:
-      return 'bg-[#23A1EB] hover:bg-[#1e90d6] text-white shadow-lg hover:shadow-xl';
+      return 'bg-[#23A1EB] hover:bg-[#1e90d6] text-white shadow-[0px_4px_12px_0px_rgba(35,161,235,0.28)]';
   }
 };
 
 const getSizeClasses = (size: ButtonSize): string => {
   switch (size) {
     case 'sm':
-      return 'px-3 py-1.5 text-sm';
+      return 'h-8 px-3 text-sm';
     case 'md':
-      return 'px-4 py-2 text-sm';
+      return 'h-10 min-w-[100px] px-5 text-sm leading-5';
     case 'lg':
-      return 'px-6 py-3 text-base';
+      return 'h-12 min-w-[120px] px-6 text-base';
     default:
-      return 'px-4 py-2 text-sm';
+      return 'h-10 min-w-[100px] px-5 text-sm leading-5';
   }
 };
 
@@ -50,7 +50,7 @@ export const ModalButton: FC<ModalButtonProps> = ({
   loading = false,
   className = '',
 }) => {
-  const baseClasses = 'font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#23A1EB] disabled:opacity-50 disabled:cursor-not-allowed';
+  const baseClasses = 'inline-flex items-center justify-center font-medium rounded-[6px] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#23A1EB] disabled:opacity-50 disabled:cursor-not-allowed';
   const variantClasses = getVariantClasses(variant);
   const sizeClasses = getSizeClasses(size);
 

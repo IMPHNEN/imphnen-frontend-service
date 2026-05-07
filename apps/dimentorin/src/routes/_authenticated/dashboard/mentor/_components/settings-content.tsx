@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useLocation, useNavigate } from '@tanstack/react-router'
+import { Navigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import {
   useAuthStore,
@@ -7,205 +7,47 @@ import {
 import { cn } from '@imphnen-frontend-service/utils'
 import { Icon } from '@iconify/react'
 import { toast } from 'sonner'
-import { resolvePersona } from '../dashboard/_data/persona-resolver'
 
-type SettingsSection = 'account' | 'privacy' | 'preferences' | 'faq' | 'report' | 'feedback'
+export type MentorSettingsSection = 'account' | 'privacy' | 'preferences' | 'faq' | 'report' | 'feedback'
 
-export const Route = createFileRoute('/_authenticated/dashboard_/settings')({
-  component: SettingsPage,
-})
-
-/**
- * Header component for the dashboard, containing the app brand and user profile.
- * Replicated from dashboard.tsx for consistency.
- */
-function HeaderDashboard({ persona, user, onLogout }: { persona: 'user' | 'mentor', user: any, onLogout: () => void }) {
-  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
-
-  const notifications = [
-    { id: 1, title: 'Mentoring Sesi Baru', message: 'Kamu punya sesi mentoring besok jam 20:00 WIB', time: '2 jam yang lalu', unread: true },
-    { id: 2, title: 'Artikel Disetujui', message: 'Artikel "How to install linux" kamu telah disetujui mentor', time: '5 jam yang lalu', unread: false },
-    { id: 3, title: 'Roadmap Selesai', message: 'Selamat! Kamu telah menyelesaikan roadmap Front-end Basic', time: '1 hari yang lalu', unread: false },
-  ]
-
-  return (
-    <header className="h-[58px] w-[972px] mx-auto mt-[52px] mb-[62px] bg-white rounded-sm shadow-sm flex items-center justify-between px-5 relative">
-      <Link to="/dashboard" className="text-[19px] font-semibold text-primary-accent">
-        Dimentorin.dev
-      </Link>
-
-      <div className="flex items-center gap-4">
-        <div className="relative">
-          <button
-            onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
-            className={`w-7 h-7 rounded-sm flex items-center justify-center cursor-pointer transition-colors ${
-              isNotificationsOpen ? 'bg-primary-50 text-primary-accent' : 'bg-white text-neutral-600'
-            }`}
-          >
-            <Icon icon="lucide:bell" width="16" />
-            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white" />
-          </button>
-
-          {isNotificationsOpen && (
-            <div className="absolute right-0 top-full mt-2 w-[320px] bg-white rounded-xl shadow-2xl border border-gray-100 z-50 overflow-hidden animate-in fade-in slide-in-from-top-2">
-              <div className="p-4 border-b border-gray-50 flex items-center justify-between">
-                <h3 className="font-bold text-gray-900">Notifikasi</h3>
-                <button className="text-xs text-primary-600 font-medium hover:underline cursor-pointer">Tandai semua dibaca</button>
-              </div>
-              <div className="max-h-[400px] overflow-y-auto">
-                {notifications.map((n) => (
-                  <div key={n.id} className={`p-4 border-b border-gray-50 last:border-0 hover:bg-gray-50 transition-colors cursor-pointer ${n.unread ? 'bg-primary-50/30' : ''}`}>
-                    <div className="flex justify-between items-start mb-1">
-                      <p className={`text-sm font-bold ${n.unread ? 'text-gray-900' : 'text-gray-700'}`}>{n.title}</p>
-                      <span className="text-[10px] text-gray-400 whitespace-nowrap">{n.time}</span>
-                    </div>
-                    <p className="text-xs text-gray-500 line-clamp-2">{n.message}</p>
-                  </div>
-                ))}
-              </div>
-              <div className="p-3 bg-gray-50 text-center">
-                <button className="text-xs font-bold text-gray-600 hover:text-primary-600 transition-colors cursor-pointer">Lihat Semua Notifikasi</button>
-              </div>
-            </div>
-          )}
-        </div>
-        <Link 
-          to="/dashboard/settings"
-          className="w-7 h-7 rounded-sm bg-white text-neutral-600 flex items-center justify-center cursor-pointer"
-        >
-          <Icon icon="lucide:settings" width="16" />
-        </Link>
-        
-        <Link 
-          to="/profile" 
-          className="h-[42px] flex items-center gap-3 pl-2.5 cursor-pointer border-none bg-transparent"
-        >
-          <div className="flex flex-col items-end text-right">
-            <span className="text-xs font-medium text-neutral-600">{user?.fullname || 'User'}</span>
-            <span className="text-[10px] font-medium text-neutral-600">{persona === 'mentor' ? 'Mentor' : 'Mentee'}</span>
-          </div>
-          <div 
-            className="w-7 h-7 rounded-full bg-bg-placeholder bg-cover bg-center" 
-            style={user?.avatar ? { backgroundImage: `url(${user.avatar})` } : {}}
-          />
-        </Link>
-      </div>
-    </header>
-  );
+interface MentorSettingsContentProps {
+  section: MentorSettingsSection
 }
 
-function SettingsPage() {
-  const { session, clearSession } = useAuthStore()
-  const location = useLocation()
-  const navigate = useNavigate()
+export function MentorSettingsContent({ section }: MentorSettingsContentProps) {
+  const { session } = useAuthStore()
   const { data: meData } = useSessionQuery()
-  const [activeSection, setActiveSection] = useState<SettingsSection>('account')
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null)
   const [twoStepAuthStep, setTwoStepAuthStep] = useState<'off' | 'input-email' | 'input-otp' | 'done'>('off')
+  const [isBankConnected, setIsBankConnected] = useState(false)
 
   const user = session?.user
-  const searchParams = new URLSearchParams(location.search);
-  const persona = resolvePersona(user, searchParams);
 
   const sections = [
     { id: 'account' as const, label: 'Detail Akun', icon: 'mdi:account-outline', category: 'Account' },
     { id: 'privacy' as const, label: 'Privasi & Keamanan', icon: 'mdi:shield-lock-outline', category: 'Account' },
-    { id: 'preferences' as const, label: 'Preferences', icon: 'mdi:tune-variant', category: 'Account' },
+    { id: 'preferences' as const, label: 'Monetization', icon: 'mdi:tune-variant', category: 'Account' },
     { id: 'faq' as const, label: 'FAQ', icon: 'mdi:help-circle-outline', category: 'Help & Feedback' },
     { id: 'report' as const, label: 'Laporkan Kendala', icon: 'mdi:alert-circle-outline', category: 'Help & Feedback' },
     { id: 'feedback' as const, label: 'Umpan Balik', icon: 'mdi:message-draw', category: 'Help & Feedback' },
   ]
 
-  const handleLogout = () => {
-    clearSession();
-    navigate({ to: '/auth/login' });
+  const activeSection: MentorSettingsSection =
+    section && sections.some((item) => item.id === section)
+      ? (section as MentorSettingsSection)
+      : 'account'
+
+  if (!sections.some((item) => item.id === section)) {
+    return <Navigate to="/dashboard/mentor/settings/account" />
   }
 
   return (
-    <div className="min-h-screen bg-bg-light-blue flex">
-      {/* Sidebar Navigation */}
-      <aside className="w-[228px] bg-white flex flex-col sticky top-0 h-screen z-100">
-        {/* Logo */}
-        <div className="pt-[60px] px-6 pb-8">
-          <div className="h-12 flex items-center justify-center">
-            <img
-              src="/logos/logo.svg"
-              alt="Dimentorin"
-              style={{ width: '128px', height: '48px', objectFit: 'contain' }}
-            />
-          </div>
-        </div>
+    <div className="min-w-0">
+      <h1 className="text-[23px] font-semibold text-[#454545] mb-8">
+        {sections.find(s => s.id === activeSection)?.label}
+      </h1>
 
-        {/* Navigation Items */}
-        <nav className="flex-1 px-6 space-y-8 overflow-y-auto">
-          <div>
-            <p className="px-3 text-[10px] font-medium text-[#888888] uppercase tracking-wider mb-2">Account</p>
-            <div className="space-y-1">
-              {sections.filter(s => s.category === 'Account').map((s) => (
-                <button
-                  key={s.id}
-                  onClick={() => setActiveSection(s.id)}
-                  className={`w-full h-8 px-3 rounded-sm flex items-center gap-3 cursor-pointer text-xs font-medium transition-all duration-200 ${
-                    activeSection === s.id
-                      ? 'bg-primary-accent text-white'
-                      : 'text-text-muted hover:bg-bg-hover hover:text-primary-accent'
-                  }`}
-                >
-                  <Icon icon={s.icon} width="16" className={activeSection === s.id ? 'text-white' : 'text-text-muted'} />
-                  {s.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <p className="px-3 text-[10px] font-medium text-[#888888] uppercase tracking-wider mb-2">Help & Feedback</p>
-            <div className="space-y-1">
-              {sections.filter(s => s.category === 'Help & Feedback').map((s) => (
-                <button
-                  key={s.id}
-                  onClick={() => setActiveSection(s.id)}
-                  className={`w-full h-8 px-3 rounded-sm flex items-center gap-3 cursor-pointer text-xs font-medium transition-all duration-200 ${
-                    activeSection === s.id
-                      ? 'bg-primary-accent text-white'
-                      : 'text-text-muted hover:bg-bg-hover hover:text-primary-accent'
-                  }`}
-                >
-                  <Icon icon={s.icon} width="16" className={activeSection === s.id ? 'text-white' : 'text-text-muted'} />
-                  {s.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        </nav>
-
-        {/* Sidebar Footer */}
-        <div className="flex flex-col pt-4 px-6 pb-[34px]">
-          <div className="h-px bg-border-light mb-4" />
-          <button
-            onClick={handleLogout}
-            className="h-8 px-3 rounded-sm flex items-center gap-3 cursor-pointer text-xs font-medium leading-[1.3] text-text-muted transition-all duration-200 hover:bg-bg-hover"
-          >
-            <Icon icon="mdi:logout" width="16" />
-            Log Out
-          </button>
-        </div>
-      </aside>
-
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
-        <HeaderDashboard 
-          persona={persona} 
-          user={session?.user} 
-          onLogout={handleLogout} 
-        />
-        
-        <main className="w-[1052px] mx-auto px-10 pt-6 pb-10">
-          <h1 className="text-[23px] font-semibold text-[#454545] mb-8">
-            {sections.find(s => s.id === activeSection)?.label}
-          </h1>
-
-          <div className="bg-white rounded-sm shadow-sm p-10">
+      <div className="bg-white rounded-sm shadow-sm p-10">
             {activeSection === 'account' && (
               <div className="max-w-[732px]">
                 <div className="flex items-center gap-6 mb-12">
@@ -278,7 +120,8 @@ function SettingsPage() {
                     <div className="flex-1 space-y-1">
                       <h3 className="text-[19px] font-semibold text-[#454545]">Two Step Authentication</h3>
                       <p className="text-[15px] text-[#888888]">
-                        Tambahkan lapisan keamanan ekstra ke akun kamu.
+                        Aktifkan 2FA biar akunmu sekuat pertahanan tembok kastil,
+                        sehingga aman dari serangan Titan (atau hacker)!
                       </p>
                     </div>
                     <button
@@ -299,7 +142,7 @@ function SettingsPage() {
                   <h3 className="text-[19px] font-semibold text-[#454545]">Notifikasi Email</h3>
                   <div className="space-y-4">
                     {[
-                      'Informasi roadmap, mentoring, dan artikel.',
+                      'Informasi artikel yang di publish',
                       'Pembaruan sistem/update fitur/fixing/patch notes.',
                       'Informasi penawaran/promosi program.'
                     ].map((label, i) => (
@@ -312,7 +155,7 @@ function SettingsPage() {
                 </div>
 
                 <div className="w-full p-6 border border-neutral-100 rounded-sm space-y-8">
-                  <h3 className="text-[19px] font-semibold text-[#454545]">Rubah Password</h3>
+                  <h3 className="text-[19px] font-semibold text-[#454545]">Ubah Password</h3>
                   <div className="space-y-6">
                     <div className="space-y-2">
                       <label className="text-[15px] font-medium text-[#454545]">Password Lama</label>
@@ -361,103 +204,94 @@ function SettingsPage() {
             )}
 
             {activeSection === 'preferences' && (
-              <div className="grid grid-cols-2 gap-8">
-                <div className="p-8 border border-neutral-100 rounded-sm space-y-8">
-                  <h3 className="text-[23px] font-semibold text-[#454545]">Learning Roadmap</h3>
-                  
-                  <div className="space-y-6">
-                    <div className="space-y-4">
-                      <p className="text-[15px] font-medium text-[#454545]">Preferensi Belajar/Materi Roadmap</p>
-                      <div className="flex gap-4">
-                        {['Visual', 'Audio', 'Kinestetik'].map(label => (
-                          <label key={label} className="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" className="w-4 h-4 rounded border-neutral-200 text-primary-accent" />
-                            <span className="text-[15px] text-[#6d6d6d]">{label}</span>
-                          </label>
-                        ))}
+              <div className="space-y-8">
+                {!isBankConnected ? (
+                  <div className="w-full p-6 border border-neutral-100 rounded-sm flex items-center justify-between gap-6">
+                    <div className="flex items-center gap-4">
+                      <img src="/image/IllustrationBankAccount1.png" alt="Illustration Bank Account" className="w-[124px] h-[96px] object-contain" />
+                      <div>
+                        <h3 className="text-[23px] font-semibold text-[#454545]">Tambahkan Rekening Bank Anda</h3>
+                        <p className="text-[15px] text-[#6d6d6d]">Rekening bank Anda belum terhubung. Lengkapi data agar transaksi berjalan lancar.</p>
                       </div>
                     </div>
-
-                    <div className="space-y-4">
-                      <p className="text-[15px] font-medium text-[#454545]">Tujuan Belajar</p>
-                      <div className="space-y-3">
-                        {['Mempelajari skillset baru', 'Rencana perpindahan karir', 'Persiapan Karir'].map(label => (
-                          <label key={label} className="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" className="w-4 h-4 rounded border-neutral-200 text-primary-accent" />
-                            <span className="text-[15px] text-[#6d6d6d]">{label}</span>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="space-y-4">
-                      <p className="text-[15px] font-medium text-[#454545]">Rata - rata waktu belajar</p>
-                      <select className="w-full h-[43px] px-5 border border-neutral-200 rounded-sm text-[15px] text-[#6d6d6d] outline-none bg-white">
-                        <option>Waktu Belajar</option>
-                        <option>1-2 jam / hari</option>
-                        <option>3-5 jam / hari</option>
-                      </select>
-                    </div>
-
-                    <div className="space-y-4">
-                      <p className="text-[15px] font-medium text-[#454545]">Fitur platform yang disukai</p>
-                      <div className="space-y-3">
-                        {['Video Interaktif', 'Text + Quiz', 'Project Based Learning', 'Guided Daily Task'].map(label => (
-                          <label key={label} className="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" className="w-4 h-4 rounded border-neutral-200 text-primary-accent" />
-                            <span className="text-[15px] text-[#6d6d6d]">{label}</span>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-
-                    <button className="w-full h-[43px] bg-primary-accent text-white rounded-sm text-[15px] font-semibold hover:opacity-90 transition-all cursor-pointer">
-                      Kirim Preferensi
+                    <button
+                      onClick={() => setIsBankConnected(true)}
+                      className="h-[34px] px-6 bg-primary-accent text-white rounded-sm text-xs font-semibold hover:opacity-90 transition-all cursor-pointer"
+                    >
+                      Tambah Rekening
                     </button>
                   </div>
-                </div>
-
-                <div className="p-8 border border-neutral-100 rounded-sm space-y-8">
-                  <h3 className="text-[23px] font-semibold text-[#454545]">Mentoring</h3>
-                  
-                  <div className="space-y-8">
-                    <div className="space-y-4">
-                      <p className="text-[15px] font-medium text-[#454545]">Gaya Mentoring</p>
-                      <div className="space-y-3">
-                        {['Santai & Friendly', 'To The Point', 'Menjelaskan dengan praktik', 'Mulai dari fundamental'].map(label => (
-                          <label key={label} className="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" className="w-4 h-4 rounded border-neutral-200 text-primary-accent" />
-                            <span className="text-[15px] text-[#6d6d6d]">{label}</span>
-                          </label>
-                        ))}
+                ) : (
+                  <div className="grid grid-cols-2 gap-6">
+                    <div className="w-full p-6 border border-neutral-100 rounded-sm flex items-center justify-between gap-6">
+                      <div className="flex items-center gap-4">
+                        <img src="/image/payment/bca.webp" alt="BCA" className="w-[95px] h-[35px] object-contain" />
+                        <div>
+                          <p className="text-[23px] font-medium text-[#454545]">Your Bank Account</p>
+                          <p className="text-[35px] font-semibold text-[#454545] leading-none">628xxxxx</p>
+                        </div>
                       </div>
+                      <button
+                        onClick={() => setIsBankConnected(false)}
+                        className="h-[34px] px-6 bg-primary-accent text-white rounded-sm text-xs font-semibold hover:opacity-90 transition-all cursor-pointer"
+                      >
+                        Ubah Rekening
+                      </button>
                     </div>
 
-                    <div className="space-y-4">
-                      <p className="text-[15px] font-medium text-[#454545]">Waktu Mentoring</p>
-                      <select className="w-full h-[43px] px-5 border border-neutral-200 rounded-sm text-[15px] text-[#6d6d6d] outline-none bg-white">
-                        <option>Waktu Mentoring</option>
-                        <option>Pagi (08:00 - 12:00)</option>
-                        <option>Sore (13:00 - 17:00)</option>
-                        <option>Malam (19:00 - 22:00)</option>
-                      </select>
-                    </div>
-
-                    <div className="space-y-4">
-                      <p className="text-[15px] font-medium text-[#454545]">Metode Komunikasi</p>
-                      <div className="space-y-3">
-                        {['Chat', 'Online Meeting', 'Offline(Jika Memungkinkan)', 'Asynchronous', 'Option 5'].map(label => (
-                          <label key={label} className="flex items-center gap-3 cursor-pointer group">
-                            <input type="radio" name="comm" className="w-4 h-4 border-neutral-200 text-primary-accent focus:ring-primary-accent" />
-                            <span className="text-[15px] text-[#6d6d6d] group-hover:text-[#454545] transition-colors">{label}</span>
-                          </label>
-                        ))}
+                    <div className="w-full p-6 border border-neutral-100 rounded-sm flex items-center justify-between gap-6">
+                      <div className="flex items-center gap-4">
+                        <img src="/image/payment/qris.webp" alt="Income" className="w-[40px] h-[40px] object-contain" />
+                        <div>
+                          <p className="text-[23px] font-medium text-[#454545]">Your Income</p>
+                          <p className="text-[35px] font-semibold text-[#454545] leading-none">Rp. 100.000.000</p>
+                        </div>
                       </div>
+                      <button className="h-[34px] px-6 bg-primary-accent text-white rounded-sm text-xs font-semibold hover:opacity-90 transition-all cursor-pointer">
+                        Withdraw
+                      </button>
                     </div>
+                  </div>
+                )}
 
-                    <button className="w-full h-[43px] bg-primary-accent text-white rounded-sm text-[15px] font-semibold hover:opacity-90 transition-all cursor-pointer">
-                      Kirim Preferensi
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-[23px] font-semibold text-[#454545]">Payments History</h3>
+                    <button className="h-[34px] px-5 bg-primary-accent text-white rounded-sm text-xs font-semibold hover:opacity-90 transition-all cursor-pointer flex items-center gap-2">
+                      <Icon icon="mdi:filter-outline" width="16" />
+                      Filter
                     </button>
+                  </div>
+                  <div className="w-full p-6 border border-neutral-100 rounded-sm">
+                    <div className="overflow-hidden rounded-sm border border-neutral-100">
+                      <table className="w-full border-collapse">
+                        <thead>
+                          <tr className="bg-primary-50">
+                            <th className="px-4 py-3 text-left"><input type="checkbox" className="w-4 h-4" /></th>
+                            <th className="px-4 py-3 text-left text-[15px] font-medium text-[#454545]">No.</th>
+                            <th className="px-4 py-3 text-left text-[15px] font-medium text-[#454545]">Tanggal Mentoring</th>
+                            <th className="px-4 py-3 text-left text-[15px] font-medium text-[#454545]">Sesi</th>
+                            <th className="px-4 py-3 text-left text-[15px] font-medium text-[#454545]">Nama Mentee</th>
+                            <th className="px-4 py-3 text-left text-[15px] font-medium text-[#454545]">Jumlah</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {[
+                            { no: '1', date: '28-01-2025', sesi: 'Senin, 19:00 - 19:45', mentee: 'Firdaus Wijaye', jumlah: 'Rp.100.000' },
+                            { no: '2.', date: '27-01-2025', sesi: 'Senin, 19:00 - 19:45', mentee: 'Muhammad Alveriz Alcatraz', jumlah: 'Rp.100.000' },
+                          ].map((row, idx) => (
+                            <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-primary-50'}>
+                              <td className="px-4 py-3"><input type="checkbox" className="w-4 h-4" defaultChecked={idx === 0} /></td>
+                              <td className="px-4 py-3 text-[15px] text-[#454545]">{row.no}</td>
+                              <td className="px-4 py-3 text-[15px] text-[#454545]">{row.date}</td>
+                              <td className="px-4 py-3 text-[15px] text-[#454545]">{row.sesi}</td>
+                              <td className="px-4 py-3 text-[15px] text-[#454545]">{row.mentee}</td>
+                              <td className="px-4 py-3 text-[15px] text-[#454545]">{row.jumlah}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -479,11 +313,11 @@ function SettingsPage() {
 
                 <div className="space-y-4">
                   {[
-                    { q: 'Bagaimana cara AI menyesuaikan roadmap belajar saya?', a: 'AI kami menggunakan data preferensi pembelajaran Anda (seperti topik favorit, gaya belajar, dan ketersediaan waktu) untuk membuat roadmap yang personal. Anda bisa mengedit preferensi ini di Settings > Preferensi Pembelajaran agar rekomendasi lebih akurat.' },
-                    { q: 'Apakah roadmap belajar diperbarui secara otomatis saat saya menyelesaikan materi?', a: 'Ya, sistem kami akan melacak progres Anda dan memberikan materi selanjutnya secara otomatis.' },
-                    { q: 'Bisakah saya memberikan umpan balik untuk platform ini', a: 'Tentu saja! Kami sangat menghargai feedback Anda melalui menu Umpan Balik.' },
-                    { q: 'Bisakah saya mengganti mentor atau membatalkan sesi mentoring?', a: 'Anda dapat membatalkan sesi minimal 24 jam sebelumnya melalui dashboard mentoring.' },
-                    { q: 'Apa yang harus saya lakukan jika mentor tidak hadir dalam sesi yang dijadwalkan?', a: 'Silakan laporkan kendala melalui menu Laporkan Kendala agar tim kami bisa segera menindaklanjuti.' }
+                    { q: 'Bagaimana cara mendapatkan komisi dari sesi mentoring?', a: 'Komisi akan ditambahkan ke saldo Anda setelah sesi mentoring selesai. Anda bisa melihat riwayat pembayaran di Monetisasi > Riwayat Pembayaran . Dana dapat dicairkan dengan menekan tombol "Cairkan Sekarang".' },
+                    { q: 'Bagaimana cara berkomunikasi dengan mentee?', a: '' },
+                    { q: 'Apa yang harus saya lakukan jika mentee tidak hadir dalam sesi?', a: '' },
+                    { q: 'Bagaimana sistem penilaian atau feedback dari mentee?', a: '' },
+                    { q: 'Bisakah saya mengubah informasi profil atau keterampilan?', a: '' }
                   ].map((item, i) => (
                     <div key={i} className="border-b border-neutral-100 pb-4">
                       <button
@@ -497,7 +331,7 @@ function SettingsPage() {
                           width="24"
                         />
                       </button>
-                      {expandedFaq === i && (
+                      {expandedFaq === i && item.a && (
                         <div className="pb-4 animate-in fade-in slide-in-from-top-2">
                           <p className="text-[15px] text-[#888888] leading-relaxed">{item.a}</p>
                         </div>
@@ -509,8 +343,8 @@ function SettingsPage() {
             )}
 
             {activeSection === 'report' && (
-              <div className="max-w-[732px] space-y-8">
-                <div className="grid grid-cols-2 gap-x-8 gap-y-6">
+              <div className="space-y-8">
+                <div className="grid grid-cols-3 gap-x-8 gap-y-6">
                   <div className="space-y-2">
                     <label className="text-[15px] font-medium text-[#454545]">Kode Laporan</label>
                     <input readOnly value="IMP-00001" className="w-full h-[43px] px-5 bg-bg-light-blue border border-neutral-100 rounded-sm text-[15px] text-[#888888]" />
@@ -521,7 +355,7 @@ function SettingsPage() {
                       <option>Placeholder</option>
                     </select>
                   </div>
-                  <div className="col-span-2 space-y-2">
+                  <div className="col-span-3 space-y-2">
                     <label className="text-[15px] font-medium text-[#454545]">Kendala yang dialami</label>
                     <input placeholder="Tulis kendala kamu" className="w-full h-[43px] px-5 border border-neutral-200 rounded-sm text-[15px] outline-none focus:border-primary-accent" />
                     <p className="text-[10px] text-[#888888]">Jelaskan secara singkat masalah yang kamu alami</p>
@@ -537,6 +371,11 @@ function SettingsPage() {
                     <select className="w-full h-[43px] px-5 border border-neutral-200 rounded-sm text-[15px] text-[#888888] outline-none bg-white">
                       <option>Placeholder</option>
                     </select>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[15px] font-medium text-[#454545]">Kendala yang dialami</label>
+                    <input placeholder="Tulis kendala kamu" className="w-full h-[43px] px-5 border border-neutral-200 rounded-sm text-[15px] outline-none focus:border-primary-accent" />
+                    <p className="text-[10px] text-[#888888]">Jelaskan secara singkat masalah yang kamu alami</p>
                   </div>
                   <div className="col-span-2 space-y-2">
                     <label className="text-[15px] font-medium text-[#454545]">Deskripsi Kendala</label>
@@ -577,15 +416,6 @@ function SettingsPage() {
                   <p className="text-[10px] text-[#888888] text-center tracking-widest uppercase">1 = Sangat Tidak Puas, 5 = Sangat Puas</p>
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-[15px] font-semibold text-[#454545]">Apa hal yang paling kamu sukai dari platform ini</label>
-                  <textarea
-                    placeholder="Deskripsi Detail Kendala"
-                    className="w-full h-[140px] p-5 border border-neutral-200 rounded-sm text-[15px] text-[#454545] outline-none focus:border-primary-accent resize-none placeholder:text-[#BBBBBB]"
-                  />
-                  <p className="text-[10px] text-[#888888]">Deskripsikan kendala yang kamu alami secara detail dan kronologisnya</p>
-                </div>
-
                 <div className="grid grid-cols-3 gap-8">
                   <div className="space-y-2">
                     <label className="text-[15px] font-semibold text-[#454545]">Seberapa mudah Anda menggunakan platform ini ?</label>
@@ -614,14 +444,37 @@ function SettingsPage() {
                     </div>
                   </div>
                   <div className="space-y-2">
+                    <label className="text-[15px] font-semibold text-[#454545]">Apakah proses pencairan upah melalui platform ini transparan dan cepat?</label>
+                    <div className="relative">
+                      <select className="w-full h-[47px] px-5 border border-neutral-200 rounded-sm text-[15px] text-[#888888] outline-none bg-white cursor-pointer appearance-none">
+                        <option>Placeholder</option>
+                      </select>
+                      <Icon icon="mdi:chevron-down" className="absolute right-4 top-1/2 -translate-y-1/2 text-[#888888] pointer-events-none" width="20" />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[15px] font-semibold text-[#454545]">Seberapa baik dukungan tim platform jika Anda mengalami kendala teknis?</label>
+                    <div className="relative">
+                      <select className="w-full h-[47px] px-5 border border-neutral-200 rounded-sm text-[15px] text-[#888888] outline-none bg-white cursor-pointer appearance-none">
+                        <option>Placeholder</option>
+                      </select>
+                      <Icon icon="mdi:chevron-down" className="absolute right-4 top-1/2 -translate-y-1/2 text-[#888888] pointer-events-none" width="20" />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[15px] font-semibold text-[#454545]">Platform ini membantu perkembangan karier Anda?</label>
+                    <div className="relative">
+                      <select className="w-full h-[47px] px-5 border border-neutral-200 rounded-sm text-[15px] text-[#888888] outline-none bg-white cursor-pointer appearance-none">
+                        <option>Placeholder</option>
+                      </select>
+                      <Icon icon="mdi:chevron-down" className="absolute right-4 top-1/2 -translate-y-1/2 text-[#888888] pointer-events-none" width="20" />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
                     <label className="text-[15px] font-semibold text-[#454545]">Bagian apa yang perlu kami ditingkatkan?</label>
                     <div className="relative">
                       <select className="w-full h-[47px] px-5 border border-neutral-200 rounded-sm text-[15px] text-[#888888] outline-none bg-white cursor-pointer appearance-none">
                         <option>Placeholder</option>
-                        <option>Roadmap</option>
-                        <option>Mentoring</option>
-                        <option>UI/UX</option>
-                        <option>Materi</option>
                       </select>
                       <Icon icon="mdi:chevron-down" className="absolute right-4 top-1/2 -translate-y-1/2 text-[#888888] pointer-events-none" width="20" />
                     </div>
@@ -645,8 +498,6 @@ function SettingsPage() {
               </div>
             )}
 
-          </div>
-        </main>
       </div>
 
       {/* Two Step Auth Modals */}
