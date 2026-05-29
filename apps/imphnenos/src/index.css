@@ -1,0 +1,151 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import 'tailwindcss';
+
+@source "../../../libs/ui/**/*.{ts,tsx}";
+
+@theme {
+  /* Primary Blue - IMPHNEN brand */
+  --color-primary-50: #f0f8ff;
+  --color-primary-100: #e1f0fd;
+  --color-primary-200: #bce1fb;
+  --color-primary-300: #81cbf8;
+  --color-primary-400: #3eb0f2;
+  --color-primary-500: #23a1eb;
+  --color-primary-600: #0877c1;
+  --color-primary-700: #085f9c;
+  --color-primary-800: #0b5181;
+  --color-primary-900: #0f446b;
+  --color-primary-950: #0a2b47;
+
+  /* Neutral */
+  --color-neutral-50: #f6f6f6;
+  --color-neutral-100: #e7e7e7;
+  --color-neutral-200: #d1d1d1;
+  --color-neutral-300: #b0b0b0;
+  --color-neutral-400: #888888;
+  --color-neutral-500: #6d6d6d;
+  --color-neutral-600: #5d5d5d;
+  --color-neutral-700: #4f4f4f;
+  --color-neutral-800: #454545;
+  --color-neutral-900: #3d3d3d;
+  --color-neutral-950: #2b2b2b;
+
+  /* Semantic */
+  --color-success: #35ba43;
+  --color-info: #04acf3;
+  --color-warning: #ffed27;
+  --color-danger: #ff5242;
+
+  /* Background / Surface */
+  --color-background: #ffffff;
+  --color-foreground: #3d3d3d;
+  --color-muted: #f6f6f6;
+  --color-muted-foreground: #6d6d6d;
+  --color-surface: #f8fafc;
+  --color-card: #ffffff;
+  --color-card-foreground: #3d3d3d;
+  --color-border: #e7e7e7;
+  --color-ring: #3eb0f2;
+
+  /* Radius */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-3xl: 24px;
+
+  /* Fonts */
+  --font-sans: 'Poppins', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  
+  body {
+    font-family: var(--font-sans);
+    color: var(--color-foreground);
+    background-color: var(--color-background);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.6;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-neutral-300);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-neutral-400);
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-400));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .bg-grid {
+    background-image: linear-gradient(rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+      linear-gradient(to right, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .glow {
+    box-shadow: 0 0 20px rgba(35, 161, 235, 0.15);
+  }
+
+  .glow-hover:hover {
+    box-shadow: 0 0 30px rgba(35, 161, 235, 0.25);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes blink {
+  50% { border-color: transparent; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 5px rgba(35, 161, 235, 0.2); }
+  50% { box-shadow: 0 0 20px rgba(35, 161, 235, 0.4); }
+}

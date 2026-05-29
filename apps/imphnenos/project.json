@@ -1,0 +1,8 @@
+{
+  "name": "imphnenos",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/imphnenos/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {}
+}

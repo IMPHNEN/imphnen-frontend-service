@@ -1,0 +1,38 @@
+{
+  "categories": [
+    {
+      "name": "Memulai",
+      "icon": "rocket",
+      "articles": [
+        { "slug": "getting-started", "title": "Memulai dengan ImphnenOS", "order": 1 },
+        { "slug": "system-requirements", "title": "Persyaratan Sistem", "order": 2 }
+      ]
+    },
+    {
+      "name": "Instalasi",
+      "icon": "disc",
+      "articles": [
+        { "slug": "installation-guide", "title": "Panduan Instalasi", "order": 1 },
+        { "slug": "dual-boot", "title": "Dual Boot dengan Windows", "order": 2 },
+        { "slug": "post-installation", "title": "Setelah Instalasi", "order": 3 }
+      ]
+    },
+    {
+      "name": "Penggunaan",
+      "icon": "settings",
+      "articles": [
+        { "slug": "package-management", "title": "Manajemen Paket", "order": 1 },
+        { "slug": "customization", "title": "Kustomisasi Window Manager", "order": 2 },
+        { "slug": "development-setup", "title": "Setup Development Environment", "order": 3 }
+      ]
+    },
+    {
+      "name": "Troubleshooting",
+      "icon": "wrench",
+      "articles": [
+        { "slug": "common-issues", "title": "Masalah Umum", "order": 1 },
+        { "slug": "faq-troubleshoot", "title": "FAQ Teknis", "order": 2 }
+      ]
+    }
+  ]
+}
