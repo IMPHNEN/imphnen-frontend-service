@@ -24,7 +24,7 @@
     "hackathon:test": "nx test hackathon",
     "hackathon:prod": "serve ./dist/apps/hackathon",
     "hackathon:lint": "nx run hackathon:lint",
-    "landing:dev": "nx serve landing",
+    "landing:dev": "nx dev landing",
     "landing:build": "nx build landing",
     "landing:prod": "cd ./dist/apps/landing && npx next start",
     "landing:openapi": "npx openapi-typescript https://api.imphnen.dev/openapi.json -o ./apps/landing/src/openapi-types.ts",

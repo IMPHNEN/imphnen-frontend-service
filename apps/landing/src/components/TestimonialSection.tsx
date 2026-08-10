@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { FaQuoteLeft } from 'react-icons/fa';
+import { getApiUrl } from '../utils/api';
 
 interface ApiTestimonial {
   id: number;
@@ -39,7 +40,7 @@ export default function TestimonialSection() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
 
   useEffect(() => {
-    fetch('https://api.imphnen.dev/v1/landing/cms/testimonials')
+    fetch(getApiUrl('/v1/landing/cms/testimonials'))
       .then((res) => (res.ok ? res.json() : Promise.reject()))
       .then((json) => {
         setTestimonials(
@@ -58,20 +59,20 @@ export default function TestimonialSection() {
   }, []);
 
   return (
-    <section className="w-full py-20 md:py-28 bg-gray-50">
+    <section className="w-full py-16 md:py-24 bg-gray-50">
       <div className="container">
-        <div className="flex flex-col items-center justify-center space-y-4 text-center mb-16">
-          <h2 className="text-3xl font-semibold tracking-tight md:text-4xl animate-[fadeInUp_0.4s_ease-out]">
+        <div className="flex flex-col items-center justify-center space-y-3 text-center mb-12 sm:mb-16">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight animate-[fadeInUp_0.4s_ease-out]">
             Apa Kata Mereka Tentang
-            <span className="block mt-2 text-primary-500">Komunitas Kami?</span>
+            <span className="block sm:inline sm:ml-2 text-primary-500">Komunitas Kami?</span>
           </h2>
         </div>
 
-        <div className="grid gap-8 md:gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-16">
+        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mb-12 sm:mb-16">
           {testimonials.map((testimonial, index) => (
             <div
               key={testimonial.id}
-              className="p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 animate-[fadeInUp_0.4s_ease-out]"
+              className="p-6 bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 animate-[fadeInUp_0.4s_ease-out] flex flex-col justify-between"
               style={{
                 animationDelay: `${index * 100}ms`,
                 animationFillMode: 'both',
@@ -80,7 +81,7 @@ export default function TestimonialSection() {
               <div className="flex flex-col space-y-4">
                 <div className="flex items-center gap-4">
                   <div
-                    className={`w-12 h-12 rounded-full flex items-center justify-center text-lg font-semibold ${getAvatarColor(index)}`}
+                    className={`w-12 h-12 rounded-full flex items-center justify-center text-lg font-semibold shrink-0 ${getAvatarColor(index)}`}
                   >
                     {getInitial(testimonial.name)}
                   </div>
@@ -88,12 +89,12 @@ export default function TestimonialSection() {
                     <h4 className="font-semibold text-gray-900">
                       {testimonial.name}
                     </h4>
-                    <p className="text-sm text-gray-600">{testimonial.role}</p>
+                    <p className="text-xs sm:text-sm text-gray-600">{testimonial.role}</p>
                   </div>
                 </div>
                 <div className="text-gray-600 relative">
                   <FaQuoteLeft className="text-primary-500/30 w-6 h-6 mb-2" />
-                  <p className="text-sm/relaxed">{testimonial.text}</p>
+                  <p className="text-sm leading-relaxed">{testimonial.text}</p>
                 </div>
               </div>
             </div>
@@ -103,7 +104,7 @@ export default function TestimonialSection() {
         <div className="flex justify-center">
           <a
             href="/testimonials"
-            className="inline-flex items-center justify-center rounded-lg bg-primary text-primary-foreground px-6 py-3 text-sm font-medium hover:bg-primary/90 transition-colors"
+            className="inline-flex items-center justify-center rounded-lg bg-primary text-primary-foreground px-6 py-3 text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm"
           >
             Tulis Testimonimu
           </a>

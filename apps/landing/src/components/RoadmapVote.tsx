@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { BiUpvote } from 'react-icons/bi';
 import { FiCheckCircle } from 'react-icons/fi';
 import { MdOutlineOpenInNew } from 'react-icons/md';
+import { getApiUrl } from '../utils/api';
 
 interface RoadmapItem {
   id: string;
@@ -18,7 +19,7 @@ export default function RoadmapVote() {
   const [votedIds, setVotedIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
-    fetch('https://api.imphnen.dev/v1/landing/cms/roadmap')
+    fetch(getApiUrl('/v1/landing/cms/roadmap'))
       .then((r) => r.json())
       .then((json) => {
         setItems(json.data || []);
@@ -50,7 +51,7 @@ export default function RoadmapVote() {
       });
     } else {
       setVotedIds((prev) => new Set(prev).add(id));
-      fetch(`https://api.imphnen.dev/v1/landing/cms/roadmap/vote/${id}`, {
+      fetch(getApiUrl(`/v1/landing/cms/roadmap/vote/${id}`), {
         method: 'POST',
       }).catch(() => {});
     }

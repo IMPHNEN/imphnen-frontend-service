@@ -1,5 +1,6 @@
 ---
 import Public from '../../layouts/Public.astro';
+import { getApiUrl } from '../../utils/api';
 
 interface ApiTestimonial {
   id: number;
@@ -13,7 +14,7 @@ interface ApiTestimonial {
 
 let testimonials: ApiTestimonial[] = [];
 try {
-  const res = await fetch('https://api.imphnen.dev/v1/landing/cms/testimonials');
+  const res = await fetch(getApiUrl('/v1/landing/cms/testimonials'));
   const json = await res.json();
   testimonials = (json.data || []).filter((t: ApiTestimonial) => !t.is_deleted);
 } catch {
@@ -57,7 +58,7 @@ function getInitial(name: string) {
       </a>
     </div>
 
-    <div class="grid gap-8 md:gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 my-16 container">
+    <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 my-12 md:my-16 container">
       {testimonials.map((testimonial, index) => (
         <div class="p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300">
           <div class="flex flex-col space-y-4">
