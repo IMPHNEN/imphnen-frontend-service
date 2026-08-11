@@ -5,7 +5,7 @@ import heroStats from '../data/hero-stats.json';
 const { communityLabel, headingLine1, headingLine2, description, buttons } = heroContent;
 ---
 
-<section class="relative w-full py-20 md:py-32 lg:py-40 overflow-hidden">
+<section class="relative w-full py-12 sm:py-16 md:py-24 lg:py-28 overflow-hidden">
   <div class="absolute inset-0 -z-10 overflow-hidden">
     <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-background to-background/50"></div>
     <div class="absolute top-1/4 -left-20 w-80 h-80 rounded-full bg-gradient-to-r from-primary/20 to-blue-400/20 blur-3xl opacity-60"></div>
@@ -13,74 +13,74 @@ const { communityLabel, headingLine1, headingLine2, description, buttons } = her
     <div class="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.05)_1px,transparent_1px),linear-gradient(to_right,rgba(59,130,246,0.05)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
   </div>
 
-  <div class="container px-4 md:px-6 relative">
-    <div class="grid gap-6 lg:grid-cols-2 lg:gap-12 items-center">
-      <div class="flex flex-col justify-center space-y-8 animate-[fadeInUp_0.5s_ease-out]">
+  <div class="container relative">
+    <div class="grid gap-10 lg:grid-cols-2 lg:gap-12 items-center">
+      <div class="flex flex-col justify-center space-y-6 sm:space-y-8 animate-[fadeInUp_0.5s_ease-out]">
         <div class="flex flex-wrap items-center gap-2">
-          <span class="inline-flex items-center rounded-full border px-3 py-1 text-sm">
+          <span class="inline-flex items-center rounded-full border border-primary-200 bg-primary-50/50 px-3 py-1 text-xs sm:text-sm font-medium text-primary-700">
             {communityLabel}
           </span>
           <a
             href="https://ancikri.com"
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-flex items-center rounded-full border px-3 py-1 text-sm hover:bg-muted transition-colors"
+            class="inline-flex items-center rounded-full border px-3 py-1 text-xs sm:text-sm font-medium hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
           >
             Powered By Ancikri
           </a>
         </div>
 
         <div class="space-y-4">
-          <h1 class="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-foreground via-foreground to-foreground/70">
+          <h1 class="text-3xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground via-foreground to-foreground/70 leading-[1.1]">
             {headingLine1}{' '}
-            <span class="bg-clip-text bg-gradient-to-r text-primary-500">
+            <span class="bg-clip-text text-transparent bg-gradient-to-r from-primary-500 to-primary-600 block sm:inline">
               {headingLine2}
             </span>
           </h1>
-          <p class="max-w-[600px] text-muted-foreground md:text-xl">
+          <p class="max-w-[600px] text-muted-foreground text-base sm:text-lg md:text-xl leading-relaxed">
             {description}
           </p>
         </div>
 
-        <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+        <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto">
           <a
             href={buttons.joinUrl}
-            class="inline-flex items-center justify-center rounded-lg bg-primary text-primary-foreground px-6 py-3 text-sm font-medium hover:bg-primary/90 transition-colors"
+            class="inline-flex items-center justify-center rounded-lg bg-primary text-primary-foreground px-6 py-3.5 text-sm sm:text-base font-semibold hover:bg-primary/90 transition-all shadow-sm hover:shadow"
           >
             {buttons.join}
           </a>
           <a
             href={buttons.exploreUrl}
-            class="inline-flex items-center justify-center rounded-lg border border-input bg-background px-6 py-3 text-sm font-medium hover:bg-accent hover:text-accent-foreground transition-colors w-full sm:w-auto"
+            class="inline-flex items-center justify-center rounded-lg border border-input bg-background px-6 py-3.5 text-sm sm:text-base font-medium hover:bg-accent hover:text-accent-foreground transition-all w-full sm:w-auto"
           >
             {buttons.explore}
           </a>
         </div>
 
-        <div class="flex flex-wrap justify-center md:justify-start gap-6 sm:gap-8">
+        <div class="flex flex-wrap items-center justify-start gap-4 sm:gap-8 pt-2">
           {heroStats.map(({ value, label }: { value: string; label: string }, i: number) => (
-            <>
-              <div class="flex flex-col items-center">
-                <div class="text-2xl font-bold bg-clip-text text-primary-500">
+            <div class="flex items-center gap-4 sm:gap-8">
+              <div class="flex flex-col items-start">
+                <div class="text-2xl sm:text-3xl font-bold text-primary-500">
                   {value}
                 </div>
-                <div class="text-xs text-muted-foreground">{label}</div>
+                <div class="text-xs sm:text-sm text-muted-foreground">{label}</div>
               </div>
               {i < heroStats.length - 1 && (
-                <div class="hidden sm:block h-10 border-r border-border mx-4"></div>
+                <div class="h-9 border-r border-border"></div>
               )}
-            </>
+            </div>
           ))}
         </div>
       </div>
 
-      <div class="relative w-full lg:w-auto mx-auto lg:ml-auto animate-[fadeIn_0.5s_ease-out_0.2s_both]">
+      <div class="relative w-full max-w-md lg:max-w-lg mx-auto lg:mr-0 animate-[fadeIn_0.5s_ease-out_0.2s_both] flex justify-center">
         <img
           src="/logo.webp"
           alt="logo"
           width="600"
           height="500"
-          class="w-full h-auto object-cover"
+          class="w-full h-auto max-h-[450px] object-contain drop-shadow-xl"
         />
       </div>
     </div>

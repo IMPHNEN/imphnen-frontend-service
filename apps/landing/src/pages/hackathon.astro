@@ -1,5 +1,6 @@
 ---
 import Public from '../layouts/Public.astro';
+import { getApiUrl } from '../utils/api';
 
 interface TeamItem {
   id: string;
@@ -23,8 +24,8 @@ let winners: WinnerItem[] = [];
 
 try {
   const [teamsRes, winnersRes] = await Promise.all([
-    fetch('https://api.imphnen.dev/v1/hackathon/teams/browse?per_page=20'),
-    fetch('https://api.imphnen.dev/v1/hackathon/winners'),
+    fetch(getApiUrl('/v1/hackathon/teams/browse?per_page=20')),
+    fetch(getApiUrl('/v1/hackathon/winners')),
   ]);
   const teamsJson = await teamsRes.json();
   const winnersJson = await winnersRes.json();
@@ -44,7 +45,7 @@ const sortedWinners = [...winners].sort((a, b) => a.rank - b.rank);
 ---
 
 <Public title="Hackathon - IMPHNEN">
-  <section class="min-h-screen bg-background container py-10">
+  <section class="min-h-screen bg-background container py-8 md:py-16">
     {teams.length === 0 ? (
       <div class="flex items-center justify-center min-h-[50vh]">
         <div class="text-center">

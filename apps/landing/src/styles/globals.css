@@ -3,7 +3,22 @@
 @custom-variant dark (&:is(.dark *));
 
 .container {
+  width: 100%;
+  max-width: 80rem;
   margin-inline: auto;
+  padding-inline: 1rem;
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding-inline: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding-inline: 2rem;
+  }
 }
 
 @theme inline {

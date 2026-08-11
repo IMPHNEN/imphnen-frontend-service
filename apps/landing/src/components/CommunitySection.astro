@@ -20,44 +20,44 @@ const COLOR_MAP: Record<string, string> = {
 };
 ---
 
-<section id="community" class="w-full py-20 md:py-28">
+<section id="community" class="w-full py-16 md:py-24">
   <div class="container">
-    <div class="flex flex-col items-center justify-center space-y-4 text-center mb-16">
-      <h2 class="text-3xl font-semibold tracking-tight md:text-4xl">
+    <div class="flex flex-col items-center justify-center space-y-3 text-center mb-12 sm:mb-16">
+      <h2 class="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight">
         Bergabung dengan Komunitas Kami di
-        <span class="block mt-2 text-primary-500">Berbagai Platform</span>
+        <span class="block sm:inline sm:ml-2 text-primary-500">Berbagai Platform</span>
       </h2>
-      <p class="max-w-[600px] mx-auto text-gray-600 md:text-lg/relaxed mt-4">
+      <p class="max-w-[600px] mx-auto text-muted-foreground text-sm sm:text-base md:text-lg mt-2">
         Terhubung dengan sesama developer di komunitas kami
       </p>
     </div>
 
-    <div class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+    <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
       {socials.map((community: any, index: number) => {
         const iconColor = COLOR_MAP[community.icon] || 'text-primary-500';
         const iconSvg = ICON_SVG[community.icon] || '';
 
         return (
           <div
-            class="group relative p-8 bg-white border border-gray-200 rounded-xl hover:border-gray-300 transition-all duration-300 animate-[fadeInUp_0.4s_ease-out]"
+            class="group relative p-6 sm:p-8 bg-card border border-border rounded-xl hover:border-primary-300 hover:shadow-md transition-all duration-300 animate-[fadeInUp_0.4s_ease-out] flex flex-col justify-between"
             style={`animation-delay: ${index * 80}ms; animation-fill-mode: both;`}
           >
-            <div class="flex flex-col items-start gap-5">
-              <div class="flex items-center gap-4">
+            <div class="flex flex-col items-start gap-4">
+              <div class="flex items-center gap-3.5">
                 <div class={iconColor} set:html={iconSvg} />
-                <h3 class="text-xl font-semibold text-gray-900">{community.name}</h3>
+                <h3 class="text-lg sm:text-xl font-semibold text-foreground">{community.name}</h3>
               </div>
-              <p class="text-gray-600 text-sm/relaxed">{community.description}</p>
-              <a
-                href={community.link}
-                class="inline-flex items-center gap-2 mt-2 text-sm font-medium transition-colors"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <span>Jelajahi Komunitas</span>
-                <svg fill="currentColor" viewBox="0 0 448 512" class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/></svg>
-              </a>
+              <p class="text-muted-foreground text-sm leading-relaxed">{community.description}</p>
             </div>
+            <a
+              href={community.link}
+              class="inline-flex items-center gap-2 mt-6 text-sm font-medium text-primary hover:text-primary-600 transition-colors"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span>Jelajahi Komunitas</span>
+              <svg fill="currentColor" viewBox="0 0 448 512" class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/></svg>
+            </a>
           </div>
         );
       })}

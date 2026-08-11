@@ -1,35 +1,38 @@
 ---
 import navigations from '../data/navigations.json';
 import MobileMenu from './MobileMenu';
+import NavbarAuthControls from './NavbarAuthControls';
 
 const currentPath = Astro.url.pathname;
 ---
 
-<header class="sticky top-0 w-full z-50 bg-background/70 backdrop-blur-sm">
-  <div class="container flex h-20 items-center">
-    <a href="/" class="relative overflow-hidden rounded z-50 shrink-0" aria-label="Home">
-      <img src="/logo.webp" alt="IMPHNEN" class="w-24 md:w-28 h-auto" />
+<header class="sticky top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-border/40">
+  <div class="container flex h-20 items-center justify-between gap-4">
+    <a href="/" class="relative overflow-hidden rounded z-50 shrink-0 flex items-center" aria-label="Home">
+      <img src="/logo.webp" alt="IMPHNEN" class="w-24 md:w-28 h-auto object-contain" />
     </a>
 
-    <nav class="hidden md:flex items-center gap-8 flex-1 justify-center">
+    <nav class="hidden md:flex items-center justify-center gap-4 lg:gap-8 flex-1 px-4">
       {navigations.map(({ link, title }: { link: string; title: string }) => (
         <a
           href={link}
           class:list={[
-            'text-sm font-medium relative group px-1 py-2',
-            currentPath === link ? 'text-primary' : 'text-foreground/90',
+            'text-xs lg:text-sm font-medium relative group px-2 py-2 transition-colors',
+            currentPath === link ? 'text-primary' : 'text-foreground/80 hover:text-primary',
           ]}
         >
-          <span class="transition-colors hover:text-primary block">{title}</span>
+          <span class="block">{title}</span>
           {currentPath === link && (
-            <span class="absolute bottom-0 left-0 w-full h-0.5 bg-primary-500" />
+            <span class="absolute bottom-0 left-0 w-full h-0.5 bg-primary rounded-full" />
           )}
         </a>
       ))}
     </nav>
 
-    <!-- Spacer to balance the logo on the left -->
-    <div class="hidden md:block w-24 md:w-28 shrink-0"></div>
+    <!-- Auth controls (login/logout) for desktop -->
+    <div class="hidden md:flex items-center shrink-0">
+      <NavbarAuthControls client:load />
+    </div>
 
     <div class="md:hidden ml-auto">
       <MobileMenu client:idle navigations={navigations} currentPath={currentPath} />

@@ -1,5 +1,6 @@
 ---
 import Public from '../layouts/Public.astro';
+import { getApiUrl } from '../utils/api';
 
 interface ApiEvent {
   id: number;
@@ -18,7 +19,7 @@ interface ApiEvent {
 
 let events: ApiEvent[] = [];
 try {
-  const res = await fetch('https://api.imphnen.dev/v1/landing/cms/events');
+  const res = await fetch(getApiUrl('/v1/landing/cms/events'));
   const json = await res.json();
   events = (json.data || []).filter((e: ApiEvent) => !e.is_deleted);
 } catch {
@@ -55,7 +56,7 @@ function getEventStatus(endDate: string) {
 ---
 
 <Public title="Events - IMPHNEN">
-  <section class="min-h-screen bg-background container py-10">
+  <section class="min-h-screen bg-background container py-8 md:py-16">
     {sortedEvents.length === 0 ? (
       <p class="text-center text-muted-foreground">
         Belum ada event tersedia.

@@ -11,6 +11,13 @@ export default defineConfig(() => ({
   server: {
     port: 3003,
     host: 'localhost',
+    proxy: {
+      '/v1': {
+        target: 'https://api.imphnen.dev',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
   },
   preview: {
     port: 3001,
