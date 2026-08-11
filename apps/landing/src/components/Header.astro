@@ -1,6 +1,7 @@
 ---
 import navigations from '../data/navigations.json';
 import MobileMenu from './MobileMenu';
+import NavbarAuthControls from './NavbarAuthControls';
 
 const currentPath = Astro.url.pathname;
 ---
@@ -28,8 +29,10 @@ const currentPath = Astro.url.pathname;
       ))}
     </nav>
 
-    <!-- Balanced placeholder for logo width on desktop -->
-    <div class="hidden md:block w-24 md:w-28 shrink-0"></div>
+    <!-- Auth controls (login/logout) for desktop -->
+    <div class="hidden md:flex items-center shrink-0">
+      <NavbarAuthControls client:load />
+    </div>
 
     <div class="md:hidden ml-auto">
       <MobileMenu client:idle navigations={navigations} currentPath={currentPath} />

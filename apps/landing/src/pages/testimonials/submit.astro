@@ -1,9 +1,10 @@
 ---
 import Public from '../../layouts/Public.astro';
+import TestimonialSubmitForm from '../../components/TestimonialSubmitForm';
 ---
 
-<Public title="Submit Testimonial - IMPHNEN">
-  <div class="min-h-screen flex items-center justify-center">
-    <p class="text-muted-foreground">Coming soon.</p>
+<Public title="Tulis Testimoni - IMPHNEN" description="Bagikan pengalamanmu bergabung di komunitas IMPHNEN">
+  <div class="min-h-screen bg-gray-50 py-10">
+    <TestimonialSubmitForm client:load />
   </div>
 </Public>

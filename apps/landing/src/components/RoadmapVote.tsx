@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { BiUpvote } from 'react-icons/bi';
 import { FiCheckCircle } from 'react-icons/fi';
-import { MdOutlineOpenInNew } from 'react-icons/md';
 import { getApiUrl } from '../utils/api';
 
 interface RoadmapItem {

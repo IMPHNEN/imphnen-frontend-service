@@ -3,49 +3,49 @@ import { getApiUrl } from '../utils/api';
 
 const ICON_MAIL = (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="2" y="4" width="20" height="16" rx="2"/>
-    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+    <rect x="2" y="4" width="20" height="16" rx="2" />
+    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
   </svg>
 );
 
 const ICON_LOCK = (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
   </svg>
 );
 
 const ICON_EYE = (
   <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-    <circle cx="12" cy="12" r="3"/>
+    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+    <circle cx="12" cy="12" r="3" />
   </svg>
 );
 
 const ICON_EYE_OFF = (
   <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
-    <line x1="1" y1="1" x2="23" y2="23"/>
+    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+    <line x1="1" y1="1" x2="23" y2="23" />
   </svg>
 );
 
 const ICON_ALERT = (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="12" r="10"/>
-    <line x1="12" y1="8" x2="12" y2="12"/>
-    <line x1="12" y1="16" x2="12.01" y2="16"/>
+    <circle cx="12" cy="12" r="10" />
+    <line x1="12" y1="8" x2="12" y2="12" />
+    <line x1="12" y1="16" x2="12.01" y2="16" />
   </svg>
 );
 
 const ICON_CHECK = (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-    <polyline points="22 4 12 14.01 9 11.01"/>
+    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+    <polyline points="22 4 12 14.01 9 11.01" />
   </svg>
 );
 
 export default function LoginForm() {
-  const [identifier, setIdentifier] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
@@ -64,7 +64,7 @@ export default function LoginForm() {
       const response = await fetch(getApiUrl('/v1/iam/auth/login'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: identifier, username: identifier, password }),
+        body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
@@ -73,18 +73,24 @@ export default function LoginForm() {
         throw new Error(data.message || data.error || 'Login gagal. Periksa kembali email dan password Anda.');
       }
 
-      const tokenData = data.data || data;
-      const accessToken = tokenData.access_token || tokenData.token?.access_token || tokenData.token;
+      const payload = data.data ?? data;
+      const tokenObj = payload.token ?? payload;
+      const accessToken: string = tokenObj.access_token ?? tokenObj;
 
       if (accessToken) {
         const expires = new Date();
         expires.setDate(expires.getDate() + (rememberMe ? 30 : 1));
-        document.cookie = `token=${encodeURIComponent(JSON.stringify(tokenData))}; expires=${expires.toUTCString()}; path=/; samesite=strict`;
-        localStorage.setItem('access_token', typeof accessToken === 'string' ? accessToken : JSON.stringify(accessToken));
+        const cookieValue = encodeURIComponent(JSON.stringify(tokenObj));
+        document.cookie = `token=${cookieValue}; expires=${expires.toUTCString()}; path=/; samesite=strict`;
+        localStorage.setItem('access_token', accessToken);
       }
 
       setSuccess('Login berhasil! Mengalihkan...');
-      setTimeout(() => { window.location.href = '/'; }, 1200);
+      setTimeout(() => {
+        const params = new URLSearchParams(window.location.search);
+        const redirectTo = params.get('redirect') || '/';
+        window.location.href = redirectTo;
+      }, 1200);
     } catch (err: any) {
       setError(err.message || 'Terjadi kesalahan saat login.');
     } finally {
@@ -152,18 +158,18 @@ export default function LoginForm() {
             Email atau Username
           </label>
           <div style={{ position: 'relative' }}>
-            <span style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: focusedField === 'identifier' ? '#23a1eb' : '#b0b0b0', pointerEvents: 'none', display: 'flex', alignItems: 'center', transition: 'color 0.2s' }}>
+            <span style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: focusedField === 'email' ? '#23a1eb' : '#b0b0b0', pointerEvents: 'none', display: 'flex', alignItems: 'center', transition: 'color 0.2s' }}>
               {ICON_MAIL}
             </span>
             <input
               type="text"
               required
-              value={identifier}
-              onChange={(e) => setIdentifier(e.target.value)}
-              onFocus={() => setFocusedField('identifier')}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onFocus={() => setFocusedField('email')}
               onBlur={() => setFocusedField(null)}
               placeholder="nama@email.com atau username"
-              style={inputStyle('identifier')}
+              style={inputStyle('email')}
             />
           </div>
         </div>
