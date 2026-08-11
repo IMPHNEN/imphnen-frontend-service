@@ -68,9 +68,8 @@ export const getBaseURL = () => {
     if (meta.env?.PUBLIC_API_URL) return meta.env.PUBLIC_API_URL;
     if (meta.env?.NEXT_PUBLIC_API_URL) return meta.env.NEXT_PUBLIC_API_URL;
     if (meta.env?.VITE_API_URL) return meta.env.VITE_API_URL;
-  } catch {
-    // not in Vite/Astro context
-  }
+    return '';
+  } catch { }
   return 'https://api.imphnen.dev';
 };
 

@@ -20,11 +20,26 @@ export default function RoadmapVote() {
 
   useEffect(() => {
     fetch(getApiUrl('/v1/landing/cms/roadmap'))
-      .then((r) => r.json())
-      .then((json) => {
-        setItems(json.data || []);
+      .then(async (r) => {
+        if (!r.ok) {
+          throw new Error(`HTTP ${r.status}: ${r.statusText}`);
+        }
+        return r.json();
       })
-      .catch(() => {})
+      .then((json) => {
+        const rawData = Array.isArray(json.data)
+          ? json.data
+          : Array.isArray(json.data?.data)
+            ? json.data.data
+            : Array.isArray(json)
+              ? json
+              : [];
+        setItems(rawData);
+      })
+      .catch((e) => {
+        console.error('ERROR GET Roadmap:', e);
+        setItems([]);
+      })
       .finally(() => setLoading(false));
   }, []);
 
@@ -53,7 +68,9 @@ export default function RoadmapVote() {
       setVotedIds((prev) => new Set(prev).add(id));
       fetch(getApiUrl(`/v1/landing/cms/roadmap/vote/${id}`), {
         method: 'POST',
-      }).catch(() => {});
+      }).catch((err) => {
+        console.error('ERROR POST Vote:', err);
+      });
     }
   };
 
@@ -92,16 +109,14 @@ export default function RoadmapVote() {
                 <div className="flex items-center justify-between border-t border-gray-100 pt-3">
                   <button
                     onClick={() => handleVote(item.id)}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                      votedIds.has(item.id)
-                        ? 'bg-primary-500 text-white hover:bg-primary-600'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${votedIds.has(item.id)
+                      ? 'bg-primary-500 text-white hover:bg-primary-600'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
                   >
                     <BiUpvote
-                      className={`w-4 h-4 ${
-                        votedIds.has(item.id) ? 'text-white' : 'text-gray-600'
-                      }`}
+                      className={`w-4 h-4 ${votedIds.has(item.id) ? 'text-white' : 'text-gray-600'
+                        }`}
                     />
                     <span>{votedIds.has(item.id) ? 'Voted' : 'Vote'}</span>
                   </button>
@@ -188,10 +203,12 @@ export default function RoadmapVote() {
                     <FiCheckCircle className="w-4 h-4" />
                     <span className="text-sm font-medium">Implemented</span>
                   </div>
+                  {/**
                   <button className="inline-flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-3 py-1.5 text-sm font-medium hover:bg-primary/90 transition-colors">
                     Coba sekarang
                     <MdOutlineOpenInNew className="size-4" />
                   </button>
+                   */}
                 </div>
               </div>
             </div>

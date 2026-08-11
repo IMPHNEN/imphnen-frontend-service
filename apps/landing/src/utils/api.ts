@@ -7,15 +7,14 @@
  * Fallback: 'https://api.imphnen.dev'
  */
 export const getApiUrl = (path: string = ''): string => {
-  const baseUrl =
+  const baseUrl = (
     import.meta.env.PUBLIC_API_URL ||
     import.meta.env.NEXT_PUBLIC_API_URL ||
     import.meta.env.VITE_API_URL ||
-    (typeof process !== 'undefined' && (process.env.PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL)) ||
-    'https://api.imphnen.dev';
+    'https://api.imphnen.dev'
+  ).replace(/\/+$/, '');
 
-  const cleanBase = baseUrl.replace(/\/+$/, '');
-  if (!path) return cleanBase;
+  if (!path) return baseUrl;
   const cleanPath = path.startsWith('/') ? path : `/${path}`;
-  return `${cleanBase}${cleanPath}`;
+  return `${baseUrl}${cleanPath}`;
 };
